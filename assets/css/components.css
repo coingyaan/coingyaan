@@ -1,33 +1,4 @@
-/* =========================
-   ADS
-========================= */
-
-.ad-slot {
-  margin: 16px 0;
-  padding: 14px;
-  text-align: center;
-  font-size: 12px;
-  color: #94a3b8;
-  background: #0f172a;
-  border: 1px dashed #334155;
-  border-radius: 8px;
-}
-
-/* =========================
-   GRID
-========================= */
-
-.tool-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-top: 32px;
-}
-
-/* =========================
-   CARDS
-========================= */
-
+/* ===== CARDS ===== */
 .card {
   background: #111827;
   border: 1px solid #1f2937;
@@ -35,68 +6,42 @@
   padding: 20px;
 }
 
-.card h2 {
-  margin-top: 0;
-  font-size: 20px;
+/* ===== GRID ===== */
+.tool-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 32px;
 }
 
-.subtext {
-  font-size: 14px;
-  color: #9ca3af;
-  margin-bottom: 12px;
-}
-
-/* =========================
-   INPUT & BUTTON
-========================= */
-
+/* ===== INPUTS & BUTTONS ===== */
 input {
   width: 100%;
   padding: 12px;
-  background: #0b0f14;
-  border: 1px solid #1f2937;
   border-radius: 8px;
+  border: 1px solid #1f2937;
+  background: #0b0f14;
   color: #e5e7eb;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 button {
-  width: 100%;
   margin-top: 12px;
+  width: 100%;
   padding: 12px;
-  background: #38bdf8;
-  border: none;
   border-radius: 8px;
-  font-size: 16px;
+  border: none;
+  background: #38bdf8;
+  color: #020617;
   font-weight: 600;
   cursor: pointer;
-  color: #020617;
 }
 
 button:hover {
   background: #0ea5e9;
 }
 
-/* =========================
-   SENTIMENT RESULT
-========================= */
-
-.result {
-  margin-top: 20px;
-}
-
-.hidden {
-  display: none;
-}
-
-.overall {
-  margin: 12px 0;
-}
-
-/* =========================
-   BADGES
-========================= */
-
+/* ===== BADGES ===== */
 .badge {
   padding: 4px 10px;
   border-radius: 999px;
@@ -119,9 +64,14 @@ button:hover {
   color: #9ca3af;
 }
 
-/* =========================
-   SIGNAL LIST
-========================= */
+/* ===== SENTIMENT RESULT ===== */
+.result {
+  margin-top: 16px;
+}
+
+.hidden {
+  display: none;
+}
 
 .signals div {
   margin: 6px 0;
@@ -129,16 +79,12 @@ button:hover {
 }
 
 ul {
-  margin-top: 8px;
-  padding-left: 18px;
+  margin: 8px 0 0 18px;
   font-size: 14px;
   color: #d1d5db;
 }
 
-/* =========================
-   SHARE BUTTONS
-========================= */
-
+/* ===== SHARE ===== */
 .share-row {
   display: flex;
   gap: 12px;
@@ -155,59 +101,54 @@ ul {
   border-color: #38bdf8;
 }
 
-/* =========================
-   FEAR & GREED
-========================= */
-
-.fear-greed {
-  margin-top: 16px;
-}
-
+/* ===== FEAR & GREED ===== */
 .fg-score {
   font-size: 42px;
   font-weight: 700;
 }
 
 .fg-label {
-  font-size: 16px;
+  font-size: 14px;
   color: #9ca3af;
 }
 
 .progress {
-  margin: 12px 0;
   height: 10px;
   background: #1f2937;
   border-radius: 999px;
   overflow: hidden;
+  margin: 12px 0;
 }
 
 .progress-bar {
   height: 100%;
-  width: 50%;
-  background: linear-gradient(
-    90deg,
-    #ef4444,
-    #facc15,
-    #22c55e
-  );
+  width: 62%;
+  background: linear-gradient(90deg, #ef4444, #facc15, #22c55e);
 }
 
-.updated {
+/* ===== ADS ===== */
+.ad-slot {
+  background: #0f172a;
+  border: 1px dashed #334155;
+  color: #94a3b8;
+  text-align: center;
+  font-size: 12px;
+  padding: 12px;
+  margin: 12px 0;
+}
+
+/* ===== FOOTER ===== */
+.footer-links {
+  display: flex;
+  gap: 16px;
   font-size: 13px;
   color: #9ca3af;
+  margin-top: 16px;
+  flex-wrap: wrap;
 }
 
-/* =========================
-   INFO SECTION
-========================= */
-
-.info-section {
-  margin-top: 64px;
-  max-width: 820px;
+.footer-note {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #6b7280;
 }
-
-.info-section h2 {
-  font-size: 22px;
-  margin-top: 32px;
-}
-
