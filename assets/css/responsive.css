@@ -1,20 +1,15 @@
-/* =========================
-   RESPONSIVE
-========================= */
+@media (max-width: 768px) {
 
-@media (max-width: 900px) {
   .tool-grid {
     grid-template-columns: 1fr;
   }
-}
 
-@media (max-width: 600px) {
   .page-title {
     font-size: 26px;
   }
 
-  button {
-    font-size: 15px;
+  .share-row {
+    flex-direction: column;
   }
-}
 
+}
