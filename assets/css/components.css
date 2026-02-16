@@ -1,1 +1,213 @@
+/* =========================
+   ADS
+========================= */
+
+.ad-slot {
+  margin: 16px 0;
+  padding: 14px;
+  text-align: center;
+  font-size: 12px;
+  color: #94a3b8;
+  background: #0f172a;
+  border: 1px dashed #334155;
+  border-radius: 8px;
+}
+
+/* =========================
+   GRID
+========================= */
+
+.tool-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 32px;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card {
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.subtext {
+  font-size: 14px;
+  color: #9ca3af;
+  margin-bottom: 12px;
+}
+
+/* =========================
+   INPUT & BUTTON
+========================= */
+
+input {
+  width: 100%;
+  padding: 12px;
+  background: #0b0f14;
+  border: 1px solid #1f2937;
+  border-radius: 8px;
+  color: #e5e7eb;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  background: #38bdf8;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #020617;
+}
+
+button:hover {
+  background: #0ea5e9;
+}
+
+/* =========================
+   SENTIMENT RESULT
+========================= */
+
+.result {
+  margin-top: 20px;
+}
+
+.hidden {
+  display: none;
+}
+
+.overall {
+  margin: 12px 0;
+}
+
+/* =========================
+   BADGES
+========================= */
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.bullish {
+  background: #052e1b;
+  color: #22c55e;
+}
+
+.bearish {
+  background: #3f0a0a;
+  color: #ef4444;
+}
+
+.neutral {
+  background: #1f2937;
+  color: #9ca3af;
+}
+
+/* =========================
+   SIGNAL LIST
+========================= */
+
+.signals div {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+ul {
+  margin-top: 8px;
+  padding-left: 18px;
+  font-size: 14px;
+  color: #d1d5db;
+}
+
+/* =========================
+   SHARE BUTTONS
+========================= */
+
+.share-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.share-row button {
+  background: #020617;
+  color: #38bdf8;
+  border: 1px solid #1f2937;
+}
+
+.share-row button:hover {
+  border-color: #38bdf8;
+}
+
+/* =========================
+   FEAR & GREED
+========================= */
+
+.fear-greed {
+  margin-top: 16px;
+}
+
+.fg-score {
+  font-size: 42px;
+  font-weight: 700;
+}
+
+.fg-label {
+  font-size: 16px;
+  color: #9ca3af;
+}
+
+.progress {
+  margin: 12px 0;
+  height: 10px;
+  background: #1f2937;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 50%;
+  background: linear-gradient(
+    90deg,
+    #ef4444,
+    #facc15,
+    #22c55e
+  );
+}
+
+.updated {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+/* =========================
+   INFO SECTION
+========================= */
+
+.info-section {
+  margin-top: 64px;
+  max-width: 820px;
+}
+
+.info-section h2 {
+  font-size: 22px;
+  margin-top: 32px;
+}
 
