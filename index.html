@@ -1,1 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO -->
+  <title>Crypto Sentiment Checker & Fear and Greed Index | CoinGyaan</title>
+  <meta name="description" content="Check crypto market sentiment for Bitcoin and altcoins. See if the market is bullish or bearish using our sentiment checker and Fear & Greed Index.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://coingyaan.com/">
+
+  <!-- Open Graph (default – will improve later with OG images) -->
+  <meta property="og:title" content="Crypto Sentiment Checker & Fear and Greed Index | CoinGyaan">
+  <meta property="og:description" content="Track crypto market mood. Check if Bitcoin is bullish or bearish today with CoinGyaan.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://coingyaan.com/">
+  <meta property="og:image" content="https://coingyaan.com/assets/images/og/neutral.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@coin_gyaan">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/responsive.css">
+
+  <!-- Google AdSense (ADD ID LATER) -->
+  <!--
+  <script async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXX"
+    crossorigin="anonymous"></script>
+  -->
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container header-bar">
+      <div class="logo">CoinGyaan</div>
+      <nav class="nav">
+        <span>Sentiment Checker</span>
+      </nav>
+    </div>
+
+    <!-- Header Ad -->
+    <div class="container">
+      <div class="ad-slot">
+        Responsive AdSense – Header
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="container">
+
+    <h1 class="page-title">Crypto Sentiment Checker</h1>
+    <p class="page-subtitle">
+      Understand crypto market sentiment and track the Fear & Greed Index before making decisions.
+    </p>
+
+    <!-- TOOL GRID -->
+    <section class="tool-grid">
+
+      <!-- LEFT: SENTIMENT CHECKER -->
+      <div class="card">
+        <h2>Market Sentiment</h2>
+        <p class="subtext">Check if the market is bullish or bearish.</p>
+
+        <input
+          type="text"
+          id="assetInput"
+          placeholder="Bitcoin, Ethereum, Solana..."
+          autocomplete="off"
+        />
+
+        <button id="checkSentimentBtn">
+          Check Sentiment
+        </button>
+
+        <!-- Sentiment Result -->
+        <div id="sentimentResult" class="result hidden">
+          <h3 id="assetTitle">Bitcoin</h3>
+
+          <p class="overall">
+            Overall Sentiment:
+            <span id="overallSentiment" class="badge neutral">Neutral</span>
+          </p>
+
+          <div class="signals">
+            <div>News Bias: <span id="newsSignal" class="badge neutral">Neutral</span></div>
+            <div>Price Context: <span id="priceSignal" class="badge neutral">Neutral</span></div>
+            <div>Community Mood: <span id="moodSignal" class="badge neutral">Neutral</span></div>
+          </div>
+
+          <strong>Why this sentiment?</strong>
+          <ul id="sentimentReasons">
+            <!-- Filled by JS -->
+          </ul>
+
+          <div class="share-row">
+            <button id="shareSentimentX">Share on X</button>
+            <button id="shareSentimentTG">Telegram</button>
+          </div>
+
+          <p class="disclaimer">
+            Educational only. Not financial advice.
+          </p>
+        </div>
+      </div>
+
+      <!-- RIGHT: FEAR & GREED -->
+      <div class="card">
+        <h2>Fear & Greed Index</h2>
+        <p class="subtext">Overall crypto market emotion.</p>
+
+        <div class="fear-greed">
+          <div id="fgScore" class="fg-score">--</div>
+          <div id="fgLabel" class="fg-label">Loading</div>
+
+          <div class="progress">
+            <div id="fgBar" class="progress-bar"></div>
+          </div>
+
+          <p class="updated">Updated today</p>
+        </div>
+
+        <div class="share-row">
+          <button id="shareFGX">Share on X</button>
+          <button id="shareFGTG">Telegram</button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- INFO / SEO SUPPORT -->
+    <section class="info-section">
+      <h2>How Crypto Market Sentiment Works</h2>
+      <p>
+        Crypto market sentiment reflects the overall mood of traders and investors.
+        CoinGyaan combines recent news signals, price context, and market behavior
+        to help you understand whether the market is leaning bullish, bearish, or neutral.
+      </p>
+
+      <h2>What Is the Crypto Fear and Greed Index?</h2>
+      <p>
+        The Fear & Greed Index measures emotions driving the crypto market.
+        Extreme fear may signal caution, while extreme greed can indicate overheating.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+
+      <!-- Footer Ad -->
+      <div class="ad-slot">
+        Responsive AdSense – Footer
+      </div>
+
+      <div class="footer-links">
+        <span>About</span>
+        <span>Disclaimer</span>
+        <span>Privacy</span>
+        <span>Advertise</span>
+      </div>
+
+      <p class="footer-note">
+        © CoinGyaan.com
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/assets/js/main.js" defer></script>
+  <script src="/assets/js/sentiment.js" defer></script>
+  <script src="/assets/js/feargreed.js" defer></script>
+
+</body>
+</html>
 
