@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="google-adsense-account" content="ca-pub-9704432095241296">
+
+  <!-- AdSense ownership -->
+  <meta name="google-adsense-account" content="ca-pub-9704432095241296" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Primary SEO -->
@@ -44,148 +47,148 @@
   <link rel="stylesheet" href="/assets/css/main.css" />
   <link rel="stylesheet" href="/assets/css/components.css" />
   <link rel="stylesheet" href="/assets/css/responsive.css" />
-
-  <!-- Google AdSense (ADD LATER) -->
-  <!--
-  <script async
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXX"
-    crossorigin="anonymous"></script>
-  -->
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header>
-    <div class="container header-bar">
-      <div class="logo">CoinGyaan</div>
-      <nav class="nav">
-        <span>Sentiment Checker</span>
-      </nav>
+<!-- HEADER -->
+<header>
+  <div class="container header-bar">
+
+    <!-- Logo -->
+    <div class="logo">
+      <a href="/">
+        <img
+          src="/assets/images/logo/coingyaan-logo-icon.png"
+          alt="CoinGyaan – Crypto Sentiment & Fear and Greed Index"
+          height="36"
+        />
+      </a>
     </div>
 
-  </header>
+    <!-- Navigation -->
+    <nav class="nav">
+      <span>Sentiment Checker</span>
+    </nav>
 
-  <!-- MAIN CONTENT -->
-  <main class="container">
+  </div>
+</header>
 
-    <h1 class="page-title">Crypto Sentiment Checker</h1>
-    <p class="page-subtitle">
-      Understand crypto market sentiment and track the Fear & Greed Index before making decisions.
-    </p>
+<!-- MAIN CONTENT -->
+<main class="container">
 
-    <!-- TOOL GRID -->
-    <section class="tool-grid">
+  <h1 class="page-title">Crypto Sentiment Checker</h1>
+  <p class="page-subtitle">
+    Understand crypto market sentiment and track the Fear & Greed Index before making decisions.
+  </p>
 
-      <!-- LEFT: SENTIMENT CHECKER -->
-      <div class="card">
-        <h2>Market Sentiment</h2>
-        <p class="subtext">Check if the market is bullish or bearish.</p>
+  <!-- TOOL GRID -->
+  <section class="tool-grid">
 
-        <input
-          type="text"
-          id="assetInput"
-          placeholder="Bitcoin, Ethereum, Solana..."
-          autocomplete="off"
-        />
+    <!-- LEFT: SENTIMENT CHECKER -->
+    <div class="card">
+      <h2>Market Sentiment</h2>
+      <p class="subtext">Check if the market is bullish or bearish.</p>
 
-        <button id="checkSentimentBtn">
-          Check Sentiment
-        </button>
+      <input
+        type="text"
+        id="assetInput"
+        placeholder="Bitcoin, Ethereum, Solana..."
+        autocomplete="off"
+      />
 
-        <!-- Sentiment Result -->
-        <div id="sentimentResult" class="result hidden">
-          <h3 id="assetTitle">Bitcoin</h3>
+      <button id="checkSentimentBtn">
+        Check Sentiment
+      </button>
 
-          <p class="overall">
-            Overall Sentiment:
-            <span id="overallSentiment" class="badge neutral">Neutral</span>
-          </p>
+      <!-- Sentiment Result -->
+      <div id="sentimentResult" class="result hidden">
+        <h3 id="assetTitle">Bitcoin</h3>
 
-          <div class="signals">
-            <div>News Bias: <span id="newsSignal" class="badge neutral">Neutral</span></div>
-            <div>Price Context: <span id="priceSignal" class="badge neutral">Neutral</span></div>
-            <div>Community Mood: <span id="moodSignal" class="badge neutral">Neutral</span></div>
-          </div>
+        <p class="overall">
+          Overall Sentiment:
+          <span id="overallSentiment" class="badge neutral">Neutral</span>
+        </p>
 
-          <strong>Why this sentiment?</strong>
-          <ul id="sentimentReasons">
-            <!-- Filled by JS -->
-          </ul>
-
-          <div class="share-row">
-            <button id="shareSentimentX">Share on X</button>
-            <button id="shareSentimentTG">Telegram</button>
-          </div>
-
-          <p class="disclaimer">
-            Educational only. Not financial advice.
-          </p>
+        <div class="signals">
+          <div>News Bias: <span id="newsSignal" class="badge neutral">Neutral</span></div>
+          <div>Price Context: <span id="priceSignal" class="badge neutral">Neutral</span></div>
+          <div>Community Mood: <span id="moodSignal" class="badge neutral">Neutral</span></div>
         </div>
-      </div>
 
-      <!-- RIGHT: FEAR & GREED -->
-      <div class="card">
-        <h2>Fear & Greed Index</h2>
-        <p class="subtext">Overall crypto market emotion.</p>
-
-        <div class="fear-greed">
-          <div id="fgScore" class="fg-score">--</div>
-          <div id="fgLabel" class="fg-label">Loading</div>
-
-          <div class="progress">
-            <div id="fgBar" class="progress-bar"></div>
-          </div>
-
-          <p class="updated">Updated today</p>
-        </div>
+        <strong>Why this sentiment?</strong>
+        <ul id="sentimentReasons"></ul>
 
         <div class="share-row">
-          <button id="shareFGX">Share on X</button>
-          <button id="shareFGTG">Telegram</button>
+          <button id="shareSentimentX">Share on X</button>
+          <button id="shareSentimentTG">Telegram</button>
         </div>
+
+        <p class="disclaimer">
+          Educational only. Not financial advice.
+        </p>
+      </div>
+    </div>
+
+    <!-- RIGHT: FEAR & GREED -->
+    <div class="card">
+      <h2>Fear & Greed Index</h2>
+      <p class="subtext">Overall crypto market emotion.</p>
+
+      <div class="fear-greed">
+        <div id="fgScore" class="fg-score">--</div>
+        <div id="fgLabel" class="fg-label">Loading</div>
+
+        <div class="progress">
+          <div id="fgBar" class="progress-bar"></div>
+        </div>
+
+        <p class="updated">Updated today</p>
       </div>
 
-    </section>
+      <div class="share-row">
+        <button id="shareFGX">Share on X</button>
+        <button id="shareFGTG">Telegram</button>
+      </div>
+    </div>
 
-    <!-- INFO / SEO SUPPORT -->
-    <section class="info-section">
-      <h2>How Crypto Market Sentiment Works</h2>
-      <p>
-        Crypto market sentiment reflects the overall mood of traders and investors.
-        CoinGyaan combines recent news signals, price context, and market behavior
-        to help you understand whether the market is leaning bullish, bearish, or neutral.
-      </p>
+  </section>
 
-      <h2>What Is the Crypto Fear and Greed Index?</h2>
-      <p>
-        The Fear & Greed Index measures emotions driving the crypto market.
-        Extreme fear may signal caution, while extreme greed can indicate overheating.
-      </p>
-    </section>
+  <!-- INFO / SEO -->
+  <section class="info-section">
+    <h2>How Crypto Market Sentiment Works</h2>
+    <p>
+      Crypto market sentiment reflects the overall mood of traders and investors.
+      CoinGyaan combines news signals, price context, and market behavior
+      to indicate bullish, bearish, or neutral conditions.
+    </p>
 
-  </main>
+    <h2>What Is the Crypto Fear and Greed Index?</h2>
+    <p>
+      The Fear & Greed Index measures emotions driving the crypto market.
+      Extreme fear may signal caution, while extreme greed can indicate overheating.
+    </p>
+  </section>
 
-  <!-- FOOTER -->
-  <footer>
+</main>
+
+<!-- FOOTER -->
+<footer>
   <div class="container">
 
-    <!-- Footer Promo / Placeholder (AdSense-safe) -->
+    <!-- Safe promo placeholder (AdSense friendly) -->
     <div class="footer-promo">
-      <p>
-        🚀 Building useful crypto tools for traders & creators.
-      </p>
+      <p>🚀 Building useful crypto tools for traders & creators.</p>
     </div>
 
     <!-- Footer Links -->
     <div class="footer-links">
       <a href="/about.html" target="_blank" rel="noopener">About</a>
-<a href="/disclaimer.html" target="_blank" rel="noopener">Disclaimer</a>
-<a href="/privacy.html" target="_blank" rel="noopener">Privacy</a>
-<a href="/advertise.html" target="_blank" rel="noopener">Advertise</a>
+      <a href="/disclaimer.html" target="_blank" rel="noopener">Disclaimer</a>
+      <a href="/privacy.html" target="_blank" rel="noopener">Privacy</a>
+      <a href="/advertise.html" target="_blank" rel="noopener">Advertise</a>
     </div>
 
-    <!-- Footer Note -->
     <p class="footer-note">
       © <span id="year"></span> CoinGyaan.com
     </p>
@@ -197,12 +200,10 @@
   document.getElementById("year").textContent = new Date().getFullYear();
 </script>
 
-
-  <!-- Scripts -->
-  <script src="/assets/js/main.js" defer></script>
-  <script src="/assets/js/sentiment.js" defer></script>
-  <script src="/assets/js/feargreed.js" defer></script>
+<!-- Scripts -->
+<script src="/assets/js/main.js" defer></script>
+<script src="/assets/js/sentiment.js" defer></script>
+<script src="/assets/js/feargreed.js" defer></script>
 
 </body>
 </html>
-
