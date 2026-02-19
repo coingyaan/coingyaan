@@ -174,25 +174,35 @@
 
   <!-- FOOTER -->
   <footer>
-    <div class="container">
+  <div class="container">
 
-      <!-- Footer Ad -->
-      <div class="ad-slot">
-        Responsive AdSense – Footer
-      </div>
-
-      <div class="footer-links">
-        <span>About</span>
-        <span>Disclaimer</span>
-        <span>Privacy</span>
-        <span>Advertise</span>
-      </div>
-
-      <p class="footer-note">
-        © CoinGyaan.com
+    <!-- Footer Promo / Placeholder (AdSense-safe) -->
+    <div class="footer-promo">
+      <p>
+        🚀 Building useful crypto tools for traders & creators.
       </p>
     </div>
-  </footer>
+
+    <!-- Footer Links -->
+    <div class="footer-links">
+      <a href="/about.html">About</a>
+      <a href="/disclaimer.html">Disclaimer</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/advertise.html">Advertise</a>
+    </div>
+
+    <!-- Footer Note -->
+    <p class="footer-note">
+      © <span id="year"></span> CoinGyaan.com
+    </p>
+
+  </div>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
 
   <!-- Scripts -->
   <script src="/assets/js/main.js" defer></script>
