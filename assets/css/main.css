@@ -1,4 +1,6 @@
-/* ===== RESET & BASE ===== */
+/* ================================
+   RESET & BASE
+================================ */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -12,24 +14,31 @@ body {
   line-height: 1.6;
 }
 
-/* ===== LINKS (SOOTHING COLOR) ===== */
+/* ================================
+   LINKS – SOOTHING (NOT BRIGHT)
+================================ */
 a {
-  color: #7cc4ff;
+  color: #7fb3d5;
   text-decoration: none;
 }
 
 a:hover {
-  color: #9ad7ff;
+  color: #9ccae6;
   text-decoration: underline;
 }
 
-/* ===== LAYOUT ===== */
+/* ================================
+   LAYOUT
+================================ */
 .container {
   max-width: 1100px;
   margin: 0 auto;
   padding: 16px;
 }
 
+/* ================================
+   HEADER & FOOTER
+================================ */
 header,
 footer {
   background: linear-gradient(135deg, #0b1c2d, #102a43);
@@ -42,46 +51,43 @@ footer {
   margin-top: 48px;
 }
 
-/* ===== HEADER ===== */
+/* ================================
+   HEADER BAR
+================================ */
 .header-bar {
   display: flex;
   align-items: center;
+  height: 64px;
 }
 
-/* Brand container */
+/* ================================
+   BRAND (LOGO + NAME)
+================================ */
 .brand {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-/* Logo image */
+/* Transparent logo */
 .brand img {
-  height: 36px;
+  height: 34px;       /* SAFE SIZE */
   width: auto;
   display: block;
+  object-fit: contain;
 }
 
-/* Brand text */
+/* Brand text (ONLY CoinGyaan) */
 .brand-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-}
-
-.brand-text strong {
   font-size: 18px;
   font-weight: 700;
+  letter-spacing: 0.3px;
   color: #e6edf3;
 }
 
-.brand-text span {
-  font-size: 13px;
-  font-weight: 400;
-  color: #9fb3c8;
-}
-
-/* ===== TYPOGRAPHY ===== */
+/* ================================
+   PAGE TYPOGRAPHY
+================================ */
 .page-title {
   font-size: 32px;
   margin-top: 24px;
@@ -104,12 +110,37 @@ h3 {
   font-size: 14px;
   margin-bottom: 12px;
 }
-.brand img {
-  height: 32px;
-  width: auto;
+
+/* ================================
+   FOOTER
+================================ */
+footer p,
+footer a {
+  font-size: 14px;
+  color: #9fb3c8;
 }
 
-.brand-text strong {
-  font-size: 18px;
-  letter-spacing: 0.2px;
+footer a:hover {
+  color: #cfe6f5;
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+@media (max-width: 640px) {
+  .header-bar {
+    height: 56px;
+  }
+
+  .brand img {
+    height: 30px;
+  }
+
+  .brand-text {
+    font-size: 16px;
+  }
+
+  .page-title {
+    font-size: 26px;
+  }
 }
