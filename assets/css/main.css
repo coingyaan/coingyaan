@@ -104,3 +104,12 @@ h3 {
   font-size: 14px;
   margin-bottom: 12px;
 }
+.brand img {
+  height: 32px;
+  width: auto;
+}
+
+.brand-text strong {
+  font-size: 18px;
+  letter-spacing: 0.2px;
+}
