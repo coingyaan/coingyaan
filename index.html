@@ -47,6 +47,40 @@
   <link rel="stylesheet" href="/assets/css/main.css" />
   <link rel="stylesheet" href="/assets/css/components.css" />
   <link rel="stylesheet" href="/assets/css/responsive.css" />
+
+  <style>
+    .fg-main-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .fg-left {
+      flex: 1;
+    }
+
+    .fg-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 140px;
+    }
+
+    #fgGauge {
+      filter: drop-shadow(0 0 6px rgba(255,255,255,0.1));
+    }
+
+    #fgGaugeLabel {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #94a3b8;
+      margin-top: 2px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+  </style>
 </head>
 
 <body>
@@ -56,10 +90,10 @@
   <div class="container header-bar">
     <a href="/" class="brand">
       <img 
-  src="/assets/images/logo/coingyaan-logo-transparent.png"
-  alt="CoinGyaan – Crypto Sentiment Checker and Fear & Greed Index"
-  loading="eager"
-/>
+        src="/assets/images/logo/coingyaan-logo-transparent.png"
+        alt="CoinGyaan – Crypto Sentiment Checker and Fear & Greed Index"
+        loading="eager"
+      />
       <div class="brand-text">
         <strong>CoinGyaan</strong>
       </div>
@@ -129,14 +163,75 @@
       <p class="subtext">Overall crypto market emotion.</p>
 
       <div class="fear-greed">
-        <div id="fgScore" class="fg-score">--</div>
-        <div id="fgLabel" class="fg-label">Loading</div>
+        <div class="fg-main-row">
 
-        <div class="progress">
-          <div id="fgBar" class="progress-bar"></div>
+          <!-- Left: score + label + bar -->
+          <div class="fg-left">
+            <div id="fgScore" class="fg-score">--</div>
+            <div id="fgLabel" class="fg-label">Loading</div>
+
+            <div class="progress">
+              <div id="fgBar" class="progress-bar"></div>
+            </div>
+
+            <p class="updated">Updated today</p>
+          </div>
+
+          <!-- Right: SVG Gauge -->
+          <div class="fg-right">
+            <svg id="fgGauge" viewBox="0 0 120 70" width="140" height="85">
+              <!-- Zone colors: fear to greed -->
+              <defs>
+                <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%"   stop-color="#ef4444"/>
+                  <stop offset="25%"  stop-color="#f59e0b"/>
+                  <stop offset="50%"  stop-color="#94a3b8"/>
+                  <stop offset="75%"  stop-color="#10b981"/>
+                  <stop offset="100%" stop-color="#22c55e"/>
+                </linearGradient>
+              </defs>
+
+              <!-- Background arc (dark track) -->
+              <path
+                d="M10,65 A50,50 0 0,1 110,65"
+                fill="none"
+                stroke="#1e293b"
+                stroke-width="10"
+                stroke-linecap="round"
+              />
+
+              <!-- Gradient arc (full, clipped by dasharray) -->
+              <path
+                id="fgGaugeArc"
+                d="M10,65 A50,50 0 0,1 110,65"
+                fill="none"
+                stroke="#94a3b8"
+                stroke-width="10"
+                stroke-linecap="round"
+                stroke-dasharray="0 157"
+                style="transition: stroke-dasharray 1.2s ease, stroke 0.6s ease;"
+              />
+
+              <!-- Needle -->
+              <line
+                id="fgNeedle"
+                x1="60" y1="65"
+                x2="60" y2="22"
+                stroke="white"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                style="transform-origin: 60px 65px; transform: rotate(-90deg); transition: transform 1.2s ease;"
+              />
+              <!-- Needle center dot -->
+              <circle cx="60" cy="65" r="4.5" fill="white" opacity="0.9"/>
+              <circle cx="60" cy="65" r="2" fill="#0f172a"/>
+            </svg>
+
+            <!-- Gauge label below needle -->
+            <div id="fgGaugeLabel">--</div>
+          </div>
+
         </div>
-
-        <p class="updated">Updated today</p>
       </div>
 
       <div class="share-row">
