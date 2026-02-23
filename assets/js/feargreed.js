@@ -1,60 +1,99 @@
 // ============================================
-// COINGYAAN - FEAR & GREED INDEX (Real API)
+// COINGYAAN - FEAR & GREED INDEX (Fixed Version)
 // ============================================
 
-// API endpoint
 const FNG_API = 'https://api.alternative.me/fng/';
 
-// Fetch Fear & Greed Index from API
+// Fetch Fear & Greed Index
 async function getFearGreedIndex() {
     try {
+        console.log('Fetching Fear & Greed Index...');
         const response = await fetch(FNG_API);
         const data = await response.json();
+        
+        console.log('F&G API Response:', data);
         
         if (data && data.data && data.data[0]) {
             const fngData = data.data[0];
             return {
                 value: parseInt(fngData.value),
                 classification: fngData.value_classification,
-                timestamp: fngData.timestamp,
-                previousValue: data.data[1] ? parseInt(data.data[1].value) : null
+                timestamp: fngData.timestamp
             };
         }
     } catch (error) {
         console.error('Error fetching Fear & Greed Index:', error);
-        // Return neutral fallback if API fails
         return {
             value: 50,
             classification: 'Neutral',
-            timestamp: Math.floor(Date.now() / 1000),
-            previousValue: null
+            timestamp: Math.floor(Date.now() / 1000)
         };
     }
 }
 
-// Display Fear & Greed Index in UI
+// Display Fear & Greed Index
 async function displayFearGreed() {
+    console.log('displayFearGreed() called');
+    
     const data = await getFearGreedIndex();
+    console.log('F&G Data to display:', data);
+    
+    // Try multiple possible selectors
+    const valueSelectors = [
+        '#fngValue',
+        '#fng-value', 
+        '.fng-value',
+        '.fg-value',
+        '.fear-greed-value',
+        '[data-fng-value]'
+    ];
+    
+    const labelSelectors = [
+        '#fngLabel',
+        '#fng-label',
+        '.fng-label', 
+        '.fg-label',
+        '.fear-greed-label',
+        '[data-fng-label]'
+    ];
+    
+    // Find value element
+    let valueElement = null;
+    for (const selector of valueSelectors) {
+        valueElement = document.querySelector(selector);
+        if (valueElement) {
+            console.log('Found value element with selector:', selector);
+            break;
+        }
+    }
+    
+    // Find label element
+    let labelElement = null;
+    for (const selector of labelSelectors) {
+        labelElement = document.querySelector(selector);
+        if (labelElement) {
+            console.log('Found label element with selector:', selector);
+            break;
+        }
+    }
     
     // Update value
-    const valueElement = document.getElementById('fngValue') || 
-                        document.querySelector('.fg-value') ||
-                        document.querySelector('.fear-greed-value');
-    
     if (valueElement) {
         valueElement.textContent = data.value;
+        console.log('Updated value to:', data.value);
+    } else {
+        console.error('Could not find value element. Add id="fngValue" to your HTML element.');
     }
     
-    // Update label/classification
-    const labelElement = document.getElementById('fngLabel') || 
-                        document.querySelector('.fg-label') ||
-                        document.querySelector('.fear-greed-label');
-    
+    // Update label
     if (labelElement) {
         labelElement.textContent = data.classification;
+        console.log('Updated label to:', data.classification);
+    } else {
+        console.error('Could not find label element. Add id="fngLabel" to your HTML element.');
     }
     
-    // Apply color based on value
+    // Apply color
     const colorMap = {
         'Extreme Fear': '#ef4444',
         'Fear': '#f59e0b',
@@ -70,31 +109,68 @@ async function displayFearGreed() {
     }
     
     // Update gauge/meter if exists
-    const meterElement = document.getElementById('fngMeter') ||
-                        document.querySelector('.fg-meter') ||
-                        document.querySelector('.fear-greed-meter');
+    updateGauge(data.value);
     
-    if (meterElement) {
-        // Set gauge position (0-100)
-        meterElement.style.setProperty('--fng-value', data.value);
-        // Or if using a rotation-based gauge:
-        const rotation = (data.value / 100) * 180 - 90; // -90 to 90 degrees
-        meterElement.style.transform = `rotate(${rotation}deg)`;
-    }
-    
-    console.log('Fear & Greed Index updated:', data.value, '-', data.classification);
+    // Remove "Loading" text
+    const loadingElements = document.querySelectorAll('.loading, [data-loading]');
+    loadingElements.forEach(el => {
+        el.style.display = 'none';
+        el.textContent = '';
+    });
 }
 
-// Initialize on page load
+// Update gauge visualization
+function updateGauge(value) {
+    const gaugeSelectors = [
+        '#fngGauge',
+        '#fng-gauge',
+        '.fng-gauge',
+        '.fg-gauge',
+        '.fear-greed-gauge',
+        '[data-fng-gauge]'
+    ];
+    
+    let gaugeElement = null;
+    for (const selector of gaugeSelectors) {
+        gaugeElement = document.querySelector(selector);
+        if (gaugeElement) break;
+    }
+    
+    if (gaugeElement) {
+        // Update CSS custom property
+        gaugeElement.style.setProperty('--fng-value', value);
+        
+        // Or update a child element
+        const needle = gaugeElement.querySelector('.needle, .gauge-needle, [data-needle]');
+        if (needle) {
+            const rotation = (value / 100) * 180 - 90; // -90 to 90 degrees
+            needle.style.transform = `rotate(${rotation}deg)`;
+        }
+        
+        // Update progress bar if using that style
+        const progressBar = gaugeElement.querySelector('.progress-bar, .gauge-progress, [data-progress]');
+        if (progressBar) {
+            progressBar.style.width = value + '%';
+        }
+    }
+}
+
+// Initialize
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing Fear & Greed...');
+    
     // Display immediately
     displayFearGreed();
     
-    // Update every 5 minutes (API updates every 8 hours, but we check more frequently)
+    // Update every 5 minutes
     setInterval(displayFearGreed, 5 * 60 * 1000);
 });
 
-// Export for use in other scripts if needed
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { getFearGreedIndex, displayFearGreed };
+// Also try to run immediately in case DOM is already loaded
+if (document.readyState === 'loading') {
+    // Still loading, wait for DOMContentLoaded
+} else {
+    // Already loaded, run now
+    console.log('DOM already loaded, running immediately');
+    displayFearGreed();
 }
