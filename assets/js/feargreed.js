@@ -1,5 +1,6 @@
 // ============================================
-// COINGYAAN - FEAR & GREED INDEX (Fixed Version)
+// COINGYAAN - FEAR & GREED INDEX
+// Matches HTML IDs: fgScore, fgLabel, fgBar
 // ============================================
 
 const FNG_API = 'https://api.alternative.me/fng/';
@@ -38,62 +39,25 @@ async function displayFearGreed() {
     const data = await getFearGreedIndex();
     console.log('F&G Data to display:', data);
     
-    // Try multiple possible selectors
-    const valueSelectors = [
-        '#fngValue',
-        '#fng-value', 
-        '.fng-value',
-        '.fg-value',
-        '.fear-greed-value',
-        '[data-fng-value]'
-    ];
-    
-    const labelSelectors = [
-        '#fngLabel',
-        '#fng-label',
-        '.fng-label', 
-        '.fg-label',
-        '.fear-greed-label',
-        '[data-fng-label]'
-    ];
-    
-    // Find value element
-    let valueElement = null;
-    for (const selector of valueSelectors) {
-        valueElement = document.querySelector(selector);
-        if (valueElement) {
-            console.log('Found value element with selector:', selector);
-            break;
-        }
-    }
-    
-    // Find label element
-    let labelElement = null;
-    for (const selector of labelSelectors) {
-        labelElement = document.querySelector(selector);
-        if (labelElement) {
-            console.log('Found label element with selector:', selector);
-            break;
-        }
-    }
-    
-    // Update value
-    if (valueElement) {
-        valueElement.textContent = data.value;
-        console.log('Updated value to:', data.value);
+    // Update score (YOUR ID: fgScore)
+    const scoreElement = document.getElementById('fgScore');
+    if (scoreElement) {
+        scoreElement.textContent = data.value;
+        console.log('Updated fgScore to:', data.value);
     } else {
-        console.error('Could not find value element. Add id="fngValue" to your HTML element.');
+        console.error('Could not find #fgScore element');
     }
     
-    // Update label
+    // Update label (YOUR ID: fgLabel)
+    const labelElement = document.getElementById('fgLabel');
     if (labelElement) {
         labelElement.textContent = data.classification;
-        console.log('Updated label to:', data.classification);
+        console.log('Updated fgLabel to:', data.classification);
     } else {
-        console.error('Could not find label element. Add id="fngLabel" to your HTML element.');
+        console.error('Could not find #fgLabel element');
     }
     
-    // Apply color
+    // Apply color based on value
     const colorMap = {
         'Extreme Fear': '#ef4444',
         'Fear': '#f59e0b',
@@ -104,58 +68,24 @@ async function displayFearGreed() {
     
     const color = colorMap[data.classification] || '#94a3b8';
     
-    if (valueElement) {
-        valueElement.style.color = color;
+    if (scoreElement) {
+        scoreElement.style.color = color;
     }
     
-    // Update gauge/meter if exists
-    updateGauge(data.value);
+    // Update progress bar (YOUR ID: fgBar)
+    const barElement = document.getElementById('fgBar');
+    if (barElement) {
+        barElement.style.width = data.value + '%';
+        barElement.style.backgroundColor = color;
+        console.log('Updated fgBar width to:', data.value + '%');
+    } else {
+        console.error('Could not find #fgBar element');
+    }
     
-    // Remove "Loading" text
-    const loadingElements = document.querySelectorAll('.loading, [data-loading]');
-    loadingElements.forEach(el => {
-        el.style.display = 'none';
-        el.textContent = '';
-    });
+    console.log('✅ Fear & Greed display complete');
 }
 
-// Update gauge visualization
-function updateGauge(value) {
-    const gaugeSelectors = [
-        '#fngGauge',
-        '#fng-gauge',
-        '.fng-gauge',
-        '.fg-gauge',
-        '.fear-greed-gauge',
-        '[data-fng-gauge]'
-    ];
-    
-    let gaugeElement = null;
-    for (const selector of gaugeSelectors) {
-        gaugeElement = document.querySelector(selector);
-        if (gaugeElement) break;
-    }
-    
-    if (gaugeElement) {
-        // Update CSS custom property
-        gaugeElement.style.setProperty('--fng-value', value);
-        
-        // Or update a child element
-        const needle = gaugeElement.querySelector('.needle, .gauge-needle, [data-needle]');
-        if (needle) {
-            const rotation = (value / 100) * 180 - 90; // -90 to 90 degrees
-            needle.style.transform = `rotate(${rotation}deg)`;
-        }
-        
-        // Update progress bar if using that style
-        const progressBar = gaugeElement.querySelector('.progress-bar, .gauge-progress, [data-progress]');
-        if (progressBar) {
-            progressBar.style.width = value + '%';
-        }
-    }
-}
-
-// Initialize
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initializing Fear & Greed...');
     
@@ -166,11 +96,26 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(displayFearGreed, 5 * 60 * 1000);
 });
 
-// Also try to run immediately in case DOM is already loaded
-if (document.readyState === 'loading') {
-    // Still loading, wait for DOMContentLoaded
-} else {
-    // Already loaded, run now
-    console.log('DOM already loaded, running immediately');
-    displayFearGreed();
-}
+// Share on X button
+document.addEventListener('DOMContentLoaded', function() {
+    const shareFGX = document.getElementById('shareFGX');
+    if (shareFGX) {
+        shareFGX.addEventListener('click', async function() {
+            const data = await getFearGreedIndex();
+            const text = encodeURIComponent(`Crypto Fear & Greed Index: ${data.value} (${data.classification})\n\nCheck the market sentiment on CoinGyaan 👉`);
+            const url = encodeURIComponent('https://coingyaan.com');
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+        });
+    }
+    
+    const shareFGTG = document.getElementById('shareFGTG');
+    if (shareFGTG) {
+        shareFGTG.addEventListener('click', async function() {
+            const data = await getFearGreedIndex();
+            const text = encodeURIComponent(`Crypto Fear & Greed Index: ${data.value} (${data.classification})\n\nCheck on CoinGyaan: https://coingyaan.com`);
+            window.open(`https://t.me/share/url?url=https://coingyaan.com&text=${text}`, '_blank');
+        });
+    }
+});
+
+console.log('feargreed.js loaded');
