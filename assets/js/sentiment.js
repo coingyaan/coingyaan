@@ -6,16 +6,31 @@ const SENTIMENT_COINGECKO_API = 'https://api.coingecko.com/api/v3';
 const SENTIMENT_NEWS_API = 'https://min-api.cryptocompare.com/data/v2/news/';
 const SENTIMENT_FNG_API = 'https://api.alternative.me/fng/';
 
-const CRYPTO_IDS = {
-    'bitcoin': 'bitcoin', 'btc': 'bitcoin',
-    'ethereum': 'ethereum', 'eth': 'ethereum',
-    'solana': 'solana', 'sol': 'solana',
-    'bnb': 'binancecoin', 'binance': 'binancecoin',
-    'cardano': 'cardano', 'ada': 'cardano',
-    'ripple': 'ripple', 'xrp': 'ripple',
-    'dogecoin': 'dogecoin', 'doge': 'dogecoin',
-    'polkadot': 'polkadot', 'dot': 'polkadot'
-};
+// ============================================
+// DYNAMIC COIN LOOKUP (supports top 100+)
+// ============================================
+async function getCryptoId(coinName) {
+    try {
+        console.log('🔎 Searching CoinGecko for:', coinName);
+        const response = await fetch(
+            `${SENTIMENT_COINGECKO_API}/search?query=${encodeURIComponent(coinName)}`
+        );
+        const data = await response.json();
+
+        if (data.coins && data.coins.length > 0) {
+            // Pick the first result (most relevant match)
+            const match = data.coins[0];
+            console.log('✅ Found coin:', match.name, '| ID:', match.id);
+            return match.id;
+        }
+
+        console.warn('⚠️ No coin found for:', coinName, '— using raw name');
+        return coinName.toLowerCase();
+    } catch (error) {
+        console.error('❌ Coin search failed:', error);
+        return coinName.toLowerCase();
+    }
+}
 
 // Get crypto prices
 async function getCryptoPrices(cryptoId) {
@@ -145,7 +160,9 @@ async function calculateSentiment(cryptoName) {
     console.log('🔍 Calculating sentiment for:', cryptoName);
     
     const normalizedName = cryptoName.toLowerCase().trim();
-    const cryptoId = CRYPTO_IDS[normalizedName] || normalizedName;
+
+    // Dynamic lookup — supports any coin on CoinGecko
+    const cryptoId = await getCryptoId(normalizedName);
     
     console.log('🎯 Using crypto ID:', cryptoId);
     
@@ -191,6 +208,8 @@ async function calculateSentiment(cryptoName) {
         } else {
             explanations.push(`Price stable at ${sign}${change}% in 24 hours`);
         }
+    } else {
+        explanations.push(`Price data unavailable for ${cryptoName}`);
     }
     
     if (communityMood === 'bullish') {
@@ -273,6 +292,10 @@ async function checkSentiment() {
     const btn = document.getElementById('checkSentimentBtn');
     const originalText = btn ? btn.textContent : '';
     if (btn) btn.textContent = 'Analyzing...';
+
+    // Hide previous result while loading
+    const resultCard = document.getElementById('sentimentResult');
+    if (resultCard) resultCard.classList.add('hidden');
     
     try {
         const sentiment = await calculateSentiment(cryptoName);
