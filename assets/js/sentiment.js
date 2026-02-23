@@ -1,39 +1,31 @@
 // ============================================
-// COINGYAAN - SENTIMENT ANALYZER (Real APIs)
+// COINGYAAN - SENTIMENT ANALYZER (Fixed Version)
 // ============================================
 
-// API Configuration
 const COINGECKO_API = 'https://api.coingecko.com/api/v3';
 const CRYPTO_NEWS_API = 'https://min-api.cryptocompare.com/data/v2/news/';
 const FNG_API = 'https://api.alternative.me/fng/';
 
-// Crypto ID mapping for CoinGecko
 const CRYPTO_IDS = {
-    'bitcoin': 'bitcoin',
-    'btc': 'bitcoin',
-    'ethereum': 'ethereum',
-    'eth': 'ethereum',
-    'solana': 'solana',
-    'sol': 'solana',
-    'bnb': 'binancecoin',
-    'binance': 'binancecoin',
-    'cardano': 'cardano',
-    'ada': 'cardano',
-    'ripple': 'ripple',
-    'xrp': 'ripple',
-    'dogecoin': 'dogecoin',
-    'doge': 'dogecoin',
-    'polkadot': 'polkadot',
-    'dot': 'polkadot'
+    'bitcoin': 'bitcoin', 'btc': 'bitcoin',
+    'ethereum': 'ethereum', 'eth': 'ethereum',
+    'solana': 'solana', 'sol': 'solana',
+    'bnb': 'binancecoin', 'binance': 'binancecoin',
+    'cardano': 'cardano', 'ada': 'cardano',
+    'ripple': 'ripple', 'xrp': 'ripple',
+    'dogecoin': 'dogecoin', 'doge': 'dogecoin',
+    'polkadot': 'polkadot', 'dot': 'polkadot'
 };
 
 // Get crypto prices
 async function getCryptoPrices(cryptoId) {
     try {
+        console.log('Fetching price for:', cryptoId);
         const response = await fetch(
             `${COINGECKO_API}/simple/price?ids=${cryptoId}&vs_currencies=usd&include_24hr_change=true`
         );
         const data = await response.json();
+        console.log('Price data:', data);
         
         if (data && data[cryptoId]) {
             return {
@@ -43,7 +35,7 @@ async function getCryptoPrices(cryptoId) {
         }
         return null;
     } catch (error) {
-        console.error('Error fetching crypto prices:', error);
+        console.error('Error fetching prices:', error);
         return null;
     }
 }
@@ -51,105 +43,81 @@ async function getCryptoPrices(cryptoId) {
 // Get crypto news
 async function getCryptoNews(limit = 20) {
     try {
+        console.log('Fetching crypto news...');
         const response = await fetch(`${CRYPTO_NEWS_API}?lang=EN&sortOrder=latest`);
         const data = await response.json();
+        console.log('News data received:', data.Data?.length, 'articles');
         
         if (data && data.Data) {
             return data.Data.slice(0, limit).map(item => ({
                 title: item.title,
                 body: item.body,
-                url: item.url,
-                source: item.source,
-                published: new Date(item.published_on * 1000)
+                url: item.url
             }));
         }
         return [];
     } catch (error) {
-        console.error('Error fetching crypto news:', error);
+        console.error('Error fetching news:', error);
         return [];
     }
 }
 
-// Get Fear & Greed Index
+// Get Fear & Greed
 async function getFearGreed() {
     try {
         const response = await fetch(FNG_API);
         const data = await response.json();
-        return data && data.data && data.data[0] ? parseInt(data.data[0].value) : 50;
+        return data?.data?.[0] ? parseInt(data.data[0].value) : 50;
     } catch (error) {
-        console.error('Error fetching Fear & Greed:', error);
+        console.error('Error fetching F&G:', error);
         return 50;
     }
 }
 
 // Analyze news sentiment
 function analyzeNewsBias(news, cryptoName) {
-    const positiveKeywords = [
-        'surge', 'rally', 'bullish', 'gains', 'up', 'rise', 'soar',
-        'adoption', 'partnership', 'upgrade', 'milestone', 'breakthrough',
-        'institutional', 'approval', 'record', 'high', 'moon', 'pump',
-        'positive', 'growth', 'increase', 'boost', 'profit'
-    ];
+    const positiveKeywords = ['surge', 'rally', 'bullish', 'gains', 'up', 'rise', 'soar', 'adoption', 'partnership', 'upgrade', 'milestone', 'breakthrough', 'institutional', 'approval', 'record', 'high', 'moon', 'pump', 'positive', 'growth'];
     
-    const negativeKeywords = [
-        'crash', 'plunge', 'bearish', 'falls', 'down', 'drop', 'dump',
-        'hack', 'scam', 'sec', 'regulation', 'ban', 'lawsuit', 'fraud',
-        'concerns', 'warning', 'risk', 'selloff', 'decline', 'slump',
-        'negative', 'loss', 'decrease', 'threat', 'damage'
-    ];
+    const negativeKeywords = ['crash', 'plunge', 'bearish', 'falls', 'down', 'drop', 'dump', 'hack', 'scam', 'sec', 'regulation', 'ban', 'lawsuit', 'fraud', 'concerns', 'warning', 'risk', 'selloff', 'decline', 'slump'];
     
     let positiveScore = 0;
     let negativeScore = 0;
-    let relevantNews = 0;
-    
-    const searchTerms = [cryptoName.toLowerCase(), 'btc', 'eth', 'sol', 'bnb'];
     
     news.forEach(article => {
         const text = (article.title + ' ' + article.body).toLowerCase();
         
-        // Check if article is relevant
-        const isRelevant = searchTerms.some(term => text.includes(term));
-        
-        if (isRelevant) {
-            relevantNews++;
-            
+        if (text.includes(cryptoName.toLowerCase())) {
             positiveKeywords.forEach(word => {
                 if (text.includes(word)) positiveScore++;
             });
-            
             negativeKeywords.forEach(word => {
                 if (text.includes(word)) negativeScore++;
             });
         }
     });
     
-    // If no relevant news, use general market sentiment
-    if (relevantNews === 0) {
+    // Fallback to general sentiment if no specific news
+    if (positiveScore === 0 && negativeScore === 0) {
         news.slice(0, 10).forEach(article => {
             const text = (article.title + ' ' + article.body).toLowerCase();
-            
             positiveKeywords.forEach(word => {
                 if (text.includes(word)) positiveScore += 0.5;
             });
-            
             negativeKeywords.forEach(word => {
                 if (text.includes(word)) negativeScore += 0.5;
             });
         });
     }
     
-    const threshold = 2;
-    if (positiveScore > negativeScore + threshold) return 'bullish';
-    if (negativeScore > positiveScore + threshold) return 'bearish';
+    if (positiveScore > negativeScore + 2) return 'bullish';
+    if (negativeScore > positiveScore + 2) return 'bearish';
     return 'neutral';
 }
 
 // Analyze price context
 function analyzePriceContext(priceData) {
-    if (!priceData || !priceData.change24h) return 'neutral';
-    
+    if (!priceData) return 'neutral';
     const change = priceData.change24h;
-    
     if (change > 3) return 'bullish';
     if (change < -3) return 'bearish';
     return 'neutral';
@@ -164,23 +132,27 @@ function analyzeCommunityMood(fngValue) {
 
 // Main sentiment calculation
 async function calculateSentiment(cryptoName) {
-    // Normalize crypto name
+    console.log('Calculating sentiment for:', cryptoName);
+    
     const normalizedName = cryptoName.toLowerCase().trim();
     const cryptoId = CRYPTO_IDS[normalizedName] || normalizedName;
     
-    // Fetch all data in parallel
+    console.log('Using crypto ID:', cryptoId);
+    
     const [priceData, news, fngValue] = await Promise.all([
         getCryptoPrices(cryptoId),
         getCryptoNews(20),
         getFearGreed()
     ]);
     
-    // Calculate individual signals
+    console.log('All data fetched:', { priceData, newsCount: news.length, fngValue });
+    
     const newsBias = analyzeNewsBias(news, cryptoName);
     const priceContext = analyzePriceContext(priceData);
     const communityMood = analyzeCommunityMood(fngValue);
     
-    // Determine overall sentiment
+    console.log('Signals:', { newsBias, priceContext, communityMood });
+    
     const signals = [newsBias, priceContext, communityMood];
     const bullishCount = signals.filter(s => s === 'bullish').length;
     const bearishCount = signals.filter(s => s === 'bearish').length;
@@ -189,119 +161,123 @@ async function calculateSentiment(cryptoName) {
     if (bullishCount >= 2) overall = 'bullish';
     else if (bearishCount >= 2) overall = 'bearish';
     
-    // Generate explanations
     const explanations = [];
     
-    // News explanation
     if (newsBias === 'bullish') {
-        explanations.push(`Recent news coverage shows predominantly positive sentiment for ${cryptoName}`);
+        explanations.push(`Recent news shows positive sentiment for ${cryptoName}`);
     } else if (newsBias === 'bearish') {
-        explanations.push(`News sentiment indicates concerns around ${cryptoName} developments`);
+        explanations.push(`News indicates concerns around ${cryptoName}`);
     } else {
-        explanations.push(`News coverage for ${cryptoName} appears balanced with mixed signals`);
+        explanations.push(`News coverage for ${cryptoName} is balanced`);
     }
     
-    // Price explanation
     if (priceData) {
         const change = priceData.change24h.toFixed(2);
         const sign = change >= 0 ? '+' : '';
         if (priceContext === 'bullish') {
-            explanations.push(`Price shows upward momentum with ${sign}${change}% gain in the last 24 hours`);
+            explanations.push(`Price up ${sign}${change}% in 24 hours`);
         } else if (priceContext === 'bearish') {
-            explanations.push(`Price is down ${change}% over the last 24 hours showing selling pressure`);
+            explanations.push(`Price down ${change}% in 24 hours`);
         } else {
-            explanations.push(`Price movement is relatively stable at ${sign}${change}% change over 24 hours`);
+            explanations.push(`Price stable at ${sign}${change}% in 24 hours`);
         }
     }
     
-    // Community mood explanation
     if (communityMood === 'bullish') {
-        explanations.push(`Market-wide sentiment (Fear & Greed: ${fngValue}) reflects optimism`);
+        explanations.push(`Market Fear & Greed (${fngValue}) shows optimism`);
     } else if (communityMood === 'bearish') {
-        explanations.push(`Market-wide sentiment (Fear & Greed: ${fngValue}) shows caution and fear`);
+        explanations.push(`Market Fear & Greed (${fngValue}) shows fear`);
     } else {
-        explanations.push(`Overall market sentiment (Fear & Greed: ${fngValue}) remains neutral`);
+        explanations.push(`Market sentiment (F&G: ${fngValue}) is neutral`);
     }
     
     return {
         crypto: cryptoName,
-        overall: overall,
-        signals: {
-            news: newsBias,
-            price: priceContext,
-            mood: communityMood
-        },
-        explanations: explanations,
-        data: {
-            price: priceData ? priceData.price : null,
-            change24h: priceData ? priceData.change24h : null,
-            fng: fngValue
-        },
+        overall,
+        signals: { news: newsBias, price: priceContext, mood: communityMood },
+        explanations,
+        data: { price: priceData?.price, change24h: priceData?.change24h, fng: fngValue },
         timestamp: new Date()
     };
 }
 
-// Display sentiment results in UI
-function displaySentiment(sentimentData) {
-    // Update asset name
-    const assetEl = document.getElementById('assetName') || document.querySelector('.asset-name');
-    if (assetEl) assetEl.textContent = sentimentData.crypto;
+// Display results
+function displaySentiment(data) {
+    console.log('Displaying sentiment:', data);
     
-    // Update overall sentiment badge
-    const badgeEl = document.getElementById('sentimentBadge') || document.querySelector('.sentiment-badge');
-    if (badgeEl) {
-        badgeEl.className = 'sentiment-badge ' + sentimentData.overall;
-    }
+    // Find elements with multiple selectors
+    const findElement = (selectors) => {
+        for (const sel of selectors) {
+            const el = document.querySelector(sel);
+            if (el) return el;
+        }
+        return null;
+    };
+    
+    // Update asset name
+    const assetEl = findElement(['#assetName', '.asset-name', '[data-asset-name]']);
+    if (assetEl) assetEl.textContent = data.crypto;
+    
+    // Update sentiment badge
+    const badgeEl = findElement(['#sentimentBadge', '.sentiment-badge', '[data-sentiment-badge]']);
+    if (badgeEl) badgeEl.className = 'sentiment-badge ' + data.overall;
     
     const icons = { bullish: '🟢', bearish: '🔴', neutral: '⚪' };
     
-    // Update sentiment icon
-    const iconEl = document.getElementById('sentimentIcon') || document.querySelector('.sentiment-icon');
-    if (iconEl) iconEl.textContent = icons[sentimentData.overall];
+    const iconEl = findElement(['#sentimentIcon', '.sentiment-icon', '[data-sentiment-icon]']);
+    if (iconEl) iconEl.textContent = icons[data.overall];
     
-    // Update sentiment text
-    const textEl = document.getElementById('sentimentText') || document.querySelector('.sentiment-text');
-    if (textEl) {
-        textEl.textContent = sentimentData.overall.charAt(0).toUpperCase() + sentimentData.overall.slice(1);
-    }
+    const textEl = findElement(['#sentimentText', '.sentiment-text', '[data-sentiment-text]']);
+    if (textEl) textEl.textContent = data.overall.charAt(0).toUpperCase() + data.overall.slice(1);
     
-    // Update individual signals
-    updateSignal('news', sentimentData.signals.news);
-    updateSignal('price', sentimentData.signals.price);
-    updateSignal('mood', sentimentData.signals.mood);
+    // Update signals
+    updateSignal('news', data.signals.news);
+    updateSignal('price', data.signals.price);
+    updateSignal('mood', data.signals.mood);
     
     // Update explanations
-    const listEl = document.getElementById('explanationList') || document.querySelector('.explanation-list');
+    const listEl = findElement(['#explanationList', '.explanation-list', '[data-explanation-list]']);
     if (listEl) {
-        listEl.innerHTML = sentimentData.explanations.map(exp => `<li>${exp}</li>`).join('');
+        listEl.innerHTML = data.explanations.map(exp => `<li>${exp}</li>`).join('');
     }
     
-    // Show results card
-    const resultCard = document.getElementById('resultCard') || document.querySelector('.result-card');
+    // Show result card
+    const resultCard = findElement(['#resultCard', '.result-card', '[data-result-card]']);
     if (resultCard) {
         resultCard.classList.add('active');
         resultCard.style.display = 'block';
     }
+    
+    console.log('Display complete');
 }
 
-// Update individual signal display
+// Update signal
 function updateSignal(type, sentiment) {
     const icons = { bullish: '🟢', bearish: '🔴', neutral: '⚪' };
     
-    const iconEl = document.getElementById(type + 'Icon') || document.querySelector(`.${type}-icon`);
+    const iconEl = document.querySelector(`#${type}Icon, .${type}-icon, [data-${type}-icon]`);
     if (iconEl) iconEl.textContent = icons[sentiment];
     
-    const statusEl = document.getElementById(type + 'Status') || document.querySelector(`.${type}-status`);
+    const statusEl = document.querySelector(`#${type}Status, .${type}-status, [data-${type}-status]`);
     if (statusEl) {
         statusEl.textContent = sentiment.charAt(0).toUpperCase() + sentiment.slice(1);
         statusEl.className = `signal-status ${sentiment}`;
     }
 }
 
-// Main analyze function (called from button)
+// Main analyze function
 async function analyzeSentiment() {
-    const input = document.getElementById('cryptoInput') || document.querySelector('.crypto-input');
+    console.log('analyzeSentiment() called');
+    
+    const inputSelectors = ['#cryptoInput', '.crypto-input', '[data-crypto-input]', 'input[type="text"]'];
+    let input = null;
+    for (const sel of inputSelectors) {
+        input = document.querySelector(sel);
+        if (input) break;
+    }
+    
     const cryptoName = input ? input.value.trim() : '';
+    console.log('Input value:', cryptoName);
     
     if (!cryptoName) {
         alert('Please enter a cryptocurrency name');
@@ -309,24 +285,25 @@ async function analyzeSentiment() {
     }
     
     // Show loading
-    const loading = document.getElementById('loading') || document.querySelector('.loading');
+    const loading = document.querySelector('#loading, .loading, [data-loading]');
     if (loading) {
         loading.classList.add('active');
         loading.style.display = 'block';
     }
     
     // Hide previous results
-    const resultCard = document.getElementById('resultCard') || document.querySelector('.result-card');
+    const resultCard = document.querySelector('#resultCard, .result-card, [data-result-card]');
     if (resultCard) {
         resultCard.classList.remove('active');
+        resultCard.style.display = 'none';
     }
     
     try {
         const sentiment = await calculateSentiment(cryptoName);
         displaySentiment(sentiment);
     } catch (error) {
-        console.error('Error analyzing sentiment:', error);
-        alert('Error analyzing sentiment. Please try again.');
+        console.error('Error in analyzeSentiment:', error);
+        alert('Error analyzing sentiment: ' + error.message);
     } finally {
         if (loading) {
             loading.classList.remove('active');
@@ -335,30 +312,46 @@ async function analyzeSentiment() {
     }
 }
 
-// Initialize on page load
+// Initialize
 document.addEventListener('DOMContentLoaded', function() {
-    // Add click handler to analyze button
-    const analyzeBtn = document.getElementById('analyzeBtn') || 
-                      document.getElementById('checkBtn') ||
-                      document.querySelector('.analyze-btn') ||
-                      document.querySelector('.check-btn');
+    console.log('Sentiment analyzer loaded');
     
-    if (analyzeBtn) {
-        analyzeBtn.addEventListener('click', analyzeSentiment);
+    const buttonSelectors = [
+        '#analyzeBtn', '#checkBtn', '.analyze-btn', '.check-btn',
+        'button[onclick*="analyze"]', '[data-analyze-btn]'
+    ];
+    
+    let analyzeBtn = null;
+    for (const sel of buttonSelectors) {
+        analyzeBtn = document.querySelector(sel);
+        if (analyzeBtn) {
+            console.log('Found button with selector:', sel);
+            break;
+        }
     }
     
-    // Add enter key support
-    const input = document.getElementById('cryptoInput') || document.querySelector('.crypto-input');
+    if (analyzeBtn) {
+        analyzeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Button clicked');
+            analyzeSentiment();
+        });
+    } else {
+        console.error('Could not find analyze button');
+    }
+    
+    // Enter key support
+    const input = document.querySelector('#cryptoInput, .crypto-input, [data-crypto-input]');
     if (input) {
         input.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
+                e.preventDefault();
                 analyzeSentiment();
             }
         });
     }
 });
 
-// Export for use in other scripts if needed
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { calculateSentiment, analyzeSentiment, displaySentiment };
-}
+// Expose function globally for onclick handlers
+window.analyzeSentiment = analyzeSentiment;
+window.checkSentiment = analyzeSentiment; // Alias
