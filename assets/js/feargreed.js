@@ -106,6 +106,37 @@ async function displayFearGreed() {
     } else {
         console.error('❌ Could not find #fgBar element');
     }
+
+    // ============================================
+    // UPDATE SVG GAUGE
+    // ============================================
+    const gaugeArc    = document.getElementById('fgGaugeArc');
+    const gaugeNeedle = document.getElementById('fgNeedle');
+    const gaugeLabel  = document.getElementById('fgGaugeLabel');
+
+    if (gaugeArc && gaugeNeedle) {
+        // Total arc length of the semicircle path (pi * r = pi * 50 ≈ 157)
+        const totalLength = 157;
+        const filled = (data.value / 100) * totalLength;
+
+        // Animate the arc fill
+        gaugeArc.style.stroke = color;
+        gaugeArc.setAttribute('stroke-dasharray', `${filled} ${totalLength - filled}`);
+
+        // Needle: -90deg = value 0 (far left), 0deg = value 50, +90deg = value 100
+        const angle = (data.value / 100) * 180 - 90;
+        gaugeNeedle.style.transform = `rotate(${angle}deg)`;
+
+        // Update gauge label below the dial
+        if (gaugeLabel) {
+            gaugeLabel.textContent = data.classification;
+            gaugeLabel.style.color = color;
+        }
+
+        console.log('✅ Updated SVG gauge to:', data.value, '| angle:', angle, '| color:', color);
+    } else {
+        console.warn('⚠️ SVG gauge elements not found — skipping gauge update');
+    }
     
     console.log('🎉 Fear & Greed display complete!');
 }
