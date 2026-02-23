@@ -1,5 +1,6 @@
 // ============================================
-// COINGYAAN - SENTIMENT ANALYZER (Fixed Version)
+// COINGYAAN - SENTIMENT ANALYZER
+// Matches HTML IDs: assetInput, checkSentimentBtn, sentimentResult, etc.
 // ============================================
 
 const COINGECKO_API = 'https://api.coingecko.com/api/v3';
@@ -96,7 +97,6 @@ function analyzeNewsBias(news, cryptoName) {
         }
     });
     
-    // Fallback to general sentiment if no specific news
     if (positiveScore === 0 && negativeScore === 0) {
         news.slice(0, 10).forEach(article => {
             const text = (article.title + ' ' + article.body).toLowerCase();
@@ -201,82 +201,64 @@ async function calculateSentiment(cryptoName) {
     };
 }
 
-// Display results
+// Display results (YOUR HTML STRUCTURE)
 function displaySentiment(data) {
     console.log('Displaying sentiment:', data);
     
-    // Find elements with multiple selectors
-    const findElement = (selectors) => {
-        for (const sel of selectors) {
-            const el = document.querySelector(sel);
-            if (el) return el;
-        }
-        return null;
-    };
+    // Update asset title (YOUR ID: assetTitle)
+    const assetTitle = document.getElementById('assetTitle');
+    if (assetTitle) assetTitle.textContent = data.crypto;
     
-    // Update asset name
-    const assetEl = findElement(['#assetName', '.asset-name', '[data-asset-name]']);
-    if (assetEl) assetEl.textContent = data.crypto;
-    
-    // Update sentiment badge
-    const badgeEl = findElement(['#sentimentBadge', '.sentiment-badge', '[data-sentiment-badge]']);
-    if (badgeEl) badgeEl.className = 'sentiment-badge ' + data.overall;
-    
-    const icons = { bullish: '🟢', bearish: '🔴', neutral: '⚪' };
-    
-    const iconEl = findElement(['#sentimentIcon', '.sentiment-icon', '[data-sentiment-icon]']);
-    if (iconEl) iconEl.textContent = icons[data.overall];
-    
-    const textEl = findElement(['#sentimentText', '.sentiment-text', '[data-sentiment-text]']);
-    if (textEl) textEl.textContent = data.overall.charAt(0).toUpperCase() + data.overall.slice(1);
-    
-    // Update signals
-    updateSignal('news', data.signals.news);
-    updateSignal('price', data.signals.price);
-    updateSignal('mood', data.signals.mood);
-    
-    // Update explanations
-    const listEl = findElement(['#explanationList', '.explanation-list', '[data-explanation-list]']);
-    if (listEl) {
-        listEl.innerHTML = data.explanations.map(exp => `<li>${exp}</li>`).join('');
+    // Update overall sentiment (YOUR ID: overallSentiment)
+    const overallEl = document.getElementById('overallSentiment');
+    if (overallEl) {
+        overallEl.textContent = data.overall.charAt(0).toUpperCase() + data.overall.slice(1);
+        overallEl.className = 'badge ' + data.overall;
     }
     
-    // Show result card
-    const resultCard = findElement(['#resultCard', '.result-card', '[data-result-card]']);
+    // Update individual signals (YOUR IDs: newsSignal, priceSignal, moodSignal)
+    const newsSignal = document.getElementById('newsSignal');
+    if (newsSignal) {
+        newsSignal.textContent = data.signals.news.charAt(0).toUpperCase() + data.signals.news.slice(1);
+        newsSignal.className = 'badge ' + data.signals.news;
+    }
+    
+    const priceSignal = document.getElementById('priceSignal');
+    if (priceSignal) {
+        priceSignal.textContent = data.signals.price.charAt(0).toUpperCase() + data.signals.price.slice(1);
+        priceSignal.className = 'badge ' + data.signals.price;
+    }
+    
+    const moodSignal = document.getElementById('moodSignal');
+    if (moodSignal) {
+        moodSignal.textContent = data.signals.mood.charAt(0).toUpperCase() + data.signals.mood.slice(1);
+        moodSignal.className = 'badge ' + data.signals.mood;
+    }
+    
+    // Update explanations (YOUR ID: sentimentReasons)
+    const reasonsList = document.getElementById('sentimentReasons');
+    if (reasonsList) {
+        reasonsList.innerHTML = data.explanations.map(exp => `<li>${exp}</li>`).join('');
+    }
+    
+    // Show result card (YOUR ID: sentimentResult)
+    const resultCard = document.getElementById('sentimentResult');
     if (resultCard) {
-        resultCard.classList.add('active');
-        resultCard.style.display = 'block';
+        resultCard.classList.remove('hidden');
+        console.log('Showing result card');
     }
     
-    console.log('Display complete');
+    console.log('✅ Display complete');
 }
 
-// Update signal
-function updateSignal(type, sentiment) {
-    const icons = { bullish: '🟢', bearish: '🔴', neutral: '⚪' };
+// Main check function (called by YOUR button: checkSentimentBtn)
+async function checkSentiment() {
+    console.log('checkSentiment() called');
     
-    const iconEl = document.querySelector(`#${type}Icon, .${type}-icon, [data-${type}-icon]`);
-    if (iconEl) iconEl.textContent = icons[sentiment];
-    
-    const statusEl = document.querySelector(`#${type}Status, .${type}-status, [data-${type}-status]`);
-    if (statusEl) {
-        statusEl.textContent = sentiment.charAt(0).toUpperCase() + sentiment.slice(1);
-        statusEl.className = `signal-status ${sentiment}`;
-    }
-}
-
-// Main analyze function
-async function analyzeSentiment() {
-    console.log('analyzeSentiment() called');
-    
-    const inputSelectors = ['#cryptoInput', '.crypto-input', '[data-crypto-input]', 'input[type="text"]'];
-    let input = null;
-    for (const sel of inputSelectors) {
-        input = document.querySelector(sel);
-        if (input) break;
-    }
-    
+    // Get input value (YOUR ID: assetInput)
+    const input = document.getElementById('assetInput');
     const cryptoName = input ? input.value.trim() : '';
+    
     console.log('Input value:', cryptoName);
     
     if (!cryptoName) {
@@ -284,31 +266,19 @@ async function analyzeSentiment() {
         return;
     }
     
-    // Show loading
-    const loading = document.querySelector('#loading, .loading, [data-loading]');
-    if (loading) {
-        loading.classList.add('active');
-        loading.style.display = 'block';
-    }
-    
-    // Hide previous results
-    const resultCard = document.querySelector('#resultCard, .result-card, [data-result-card]');
-    if (resultCard) {
-        resultCard.classList.remove('active');
-        resultCard.style.display = 'none';
-    }
+    // Change button text to show loading
+    const btn = document.getElementById('checkSentimentBtn');
+    const originalText = btn ? btn.textContent : '';
+    if (btn) btn.textContent = 'Analyzing...';
     
     try {
         const sentiment = await calculateSentiment(cryptoName);
         displaySentiment(sentiment);
     } catch (error) {
-        console.error('Error in analyzeSentiment:', error);
-        alert('Error analyzing sentiment: ' + error.message);
+        console.error('Error in checkSentiment:', error);
+        alert('Error analyzing sentiment. Please try again.');
     } finally {
-        if (loading) {
-            loading.classList.remove('active');
-            loading.style.display = 'none';
-        }
+        if (btn) btn.textContent = originalText;
     }
 }
 
@@ -316,42 +286,57 @@ async function analyzeSentiment() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Sentiment analyzer loaded');
     
-    const buttonSelectors = [
-        '#analyzeBtn', '#checkBtn', '.analyze-btn', '.check-btn',
-        'button[onclick*="analyze"]', '[data-analyze-btn]'
-    ];
-    
-    let analyzeBtn = null;
-    for (const sel of buttonSelectors) {
-        analyzeBtn = document.querySelector(sel);
-        if (analyzeBtn) {
-            console.log('Found button with selector:', sel);
-            break;
-        }
-    }
-    
-    if (analyzeBtn) {
-        analyzeBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Button clicked');
-            analyzeSentiment();
-        });
+    // Add click handler to button (YOUR ID: checkSentimentBtn)
+    const btn = document.getElementById('checkSentimentBtn');
+    if (btn) {
+        btn.addEventListener('click', checkSentiment);
+        console.log('✅ Button click handler attached');
     } else {
-        console.error('Could not find analyze button');
+        console.error('❌ Could not find #checkSentimentBtn');
     }
     
-    // Enter key support
-    const input = document.querySelector('#cryptoInput, .crypto-input, [data-crypto-input]');
+    // Add enter key support (YOUR ID: assetInput)
+    const input = document.getElementById('assetInput');
     if (input) {
         input.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                analyzeSentiment();
+                checkSentiment();
             }
+        });
+        console.log('✅ Enter key handler attached');
+    }
+    
+    // Share buttons
+    const shareX = document.getElementById('shareSentimentX');
+    if (shareX) {
+        shareX.addEventListener('click', function() {
+            const assetTitle = document.getElementById('assetTitle');
+            const overallSentiment = document.getElementById('overallSentiment');
+            const crypto = assetTitle ? assetTitle.textContent : 'Crypto';
+            const sentiment = overallSentiment ? overallSentiment.textContent : 'Unknown';
+            
+            const text = encodeURIComponent(`${crypto} sentiment is ${sentiment}! 📊\n\nCheck crypto sentiment on CoinGyaan 👉`);
+            const url = encodeURIComponent('https://coingyaan.com');
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+        });
+    }
+    
+    const shareTG = document.getElementById('shareSentimentTG');
+    if (shareTG) {
+        shareTG.addEventListener('click', function() {
+            const assetTitle = document.getElementById('assetTitle');
+            const overallSentiment = document.getElementById('overallSentiment');
+            const crypto = assetTitle ? assetTitle.textContent : 'Crypto';
+            const sentiment = overallSentiment ? overallSentiment.textContent : 'Unknown';
+            
+            const text = encodeURIComponent(`${crypto} sentiment is ${sentiment}!\n\nCheck on CoinGyaan: https://coingyaan.com`);
+            window.open(`https://t.me/share/url?url=https://coingyaan.com&text=${text}`, '_blank');
         });
     }
 });
 
-// Expose function globally for onclick handlers
-window.analyzeSentiment = analyzeSentiment;
-window.checkSentiment = analyzeSentiment; // Alias
+// Expose function globally
+window.checkSentiment = checkSentiment;
+
+console.log('sentiment.js loaded');
