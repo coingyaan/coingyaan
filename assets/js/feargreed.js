@@ -1,10 +1,9 @@
 // ============================================
-// COINGYAAN - FEAR & GREED INDEX (FINAL FIX)
+// COINGYAAN - FEAR & GREED INDEX (COMPLETE WITH DYNAMIC SHARE)
 // ============================================
 
-const FEARGREED_API_URL = 'https://api.alternative.me/fng/'; // Renamed to avoid conflict
+const FEARGREED_API_URL = 'https://api.alternative.me/fng/';
 
-// Fetch Fear & Greed Index
 async function getFearGreedIndex() {
     try {
         console.log('🔄 Fetching Fear & Greed Index...');
@@ -34,7 +33,6 @@ async function getFearGreedIndex() {
     } catch (error) {
         console.error('❌ Error fetching Fear & Greed Index:', error);
         
-        // DON'T return hardcoded fallback - fetch from page if available
         const currentScore = document.getElementById('fgScore');
         if (currentScore && currentScore.textContent !== '--') {
             console.log('ℹ️ Using existing value from page');
@@ -45,7 +43,6 @@ async function getFearGreedIndex() {
             };
         }
         
-        // Only as last resort, return neutral
         console.warn('⚠️ Returning neutral fallback');
         return {
             value: 50,
@@ -55,24 +52,21 @@ async function getFearGreedIndex() {
     }
 }
 
-// Display Fear & Greed Index
 async function displayFearGreed() {
     console.log('🎨 displayFearGreed() called');
     
     const data = await getFearGreedIndex();
     console.log('📈 F&G Data to display:', data);
     
-    // Update score (YOUR ID: fgScore)
     const scoreElement = document.getElementById('fgScore');
     if (scoreElement) {
         scoreElement.textContent = data.value;
         console.log('✅ Updated fgScore to:', data.value);
     } else {
         console.error('❌ Could not find #fgScore element');
-        return; // Exit if element not found
+        return;
     }
     
-    // Update label (YOUR ID: fgLabel)
     const labelElement = document.getElementById('fgLabel');
     if (labelElement) {
         labelElement.textContent = data.classification;
@@ -81,7 +75,6 @@ async function displayFearGreed() {
         console.error('❌ Could not find #fgLabel element');
     }
     
-    // Color map
     const colorMap = {
         'Extreme Fear': '#ef4444',
         'Fear': '#f59e0b',
@@ -92,12 +85,10 @@ async function displayFearGreed() {
     
     const color = colorMap[data.classification] || '#94a3b8';
     
-    // Apply color to score
     if (scoreElement) {
         scoreElement.style.color = color;
     }
     
-    // Update progress bar (YOUR ID: fgBar)
     const barElement = document.getElementById('fgBar');
     if (barElement) {
         barElement.style.width = data.value + '%';
@@ -107,27 +98,20 @@ async function displayFearGreed() {
         console.error('❌ Could not find #fgBar element');
     }
 
-    // ============================================
-    // UPDATE SVG GAUGE
-    // ============================================
-    const gaugeArc    = document.getElementById('fgGaugeArc');
+    const gaugeArc = document.getElementById('fgGaugeArc');
     const gaugeNeedle = document.getElementById('fgNeedle');
-    const gaugeLabel  = document.getElementById('fgGaugeLabel');
+    const gaugeLabel = document.getElementById('fgGaugeLabel');
 
     if (gaugeArc && gaugeNeedle) {
-        // Total arc length of the semicircle path (pi * r = pi * 50 ≈ 157)
         const totalLength = 157;
         const filled = (data.value / 100) * totalLength;
 
-        // Animate the arc fill
         gaugeArc.style.stroke = color;
         gaugeArc.setAttribute('stroke-dasharray', `${filled} ${totalLength - filled}`);
 
-        // Needle: -90deg = value 0 (far left), 0deg = value 50, +90deg = value 100
         const angle = (data.value / 100) * 180 - 90;
         gaugeNeedle.style.transform = `rotate(${angle}deg)`;
 
-        // Update gauge label below the dial
         if (gaugeLabel) {
             gaugeLabel.textContent = data.classification;
             gaugeLabel.style.color = color;
@@ -141,7 +125,6 @@ async function displayFearGreed() {
     console.log('🎉 Fear & Greed display complete!');
 }
 
-// Initialize with retry logic
 let fgAttempts = 0;
 const FG_MAX_ATTEMPTS = 5;
 
@@ -151,7 +134,6 @@ async function initFearGreed() {
     
     await displayFearGreed();
     
-    // Check if it worked
     const scoreEl = document.getElementById('fgScore');
     if (scoreEl) {
         const currentValue = scoreEl.textContent.trim();
@@ -166,44 +148,61 @@ async function initFearGreed() {
     }
 }
 
-// Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 DOM loaded, initializing Fear & Greed...');
     
-    // Wait a moment for other scripts to load
     setTimeout(() => {
         initFearGreed();
     }, 500);
     
-    // Update every 10 minutes (API updates every 8 hours anyway)
     setInterval(displayFearGreed, 10 * 60 * 1000);
 });
 
-// Also try immediately if DOM already loaded
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
     console.log('📄 DOM already loaded, running Fear & Greed immediately');
     setTimeout(initFearGreed, 500);
 }
 
-// Share buttons
+// ============================================
+// UPDATED SHARE BUTTONS (DYNAMIC OG IMAGES)
+// ============================================
 document.addEventListener('DOMContentLoaded', function() {
     const shareFGX = document.getElementById('shareFGX');
     if (shareFGX) {
         shareFGX.addEventListener('click', async function() {
-            const data = await getFearGreedIndex();
-            const emoji = data.value < 25 ? '😱' : data.value < 50 ? '😰' : data.value < 75 ? '😊' : '🤑';
-            const text = encodeURIComponent(`Crypto Fear & Greed Index: ${data.value} (${data.classification}) ${emoji}\n\nCheck live market sentiment 👉`);
-            const url = encodeURIComponent('https://coingyaan.com');
-            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+            const value = parseInt(document.getElementById('fgScore')?.textContent || '50');
+            const label = document.getElementById('fgLabel')?.textContent || 'Neutral';
+            
+            // Determine trend for dynamic image
+            let trend = 'neutral';
+            if (value >= 60) trend = 'bullish';
+            else if (value <= 40) trend = 'bearish';
+            
+            // Create dynamic share URL
+            const shareUrl = `https://coingyaan.com/share?coin=Market&trend=${encodeURIComponent(trend)}`;
+            
+            // Tweet text
+            const emoji = trend === 'bullish' ? '🤑' : trend === 'bearish' ? '😱' : '😐';
+            const text = encodeURIComponent(`Crypto Fear & Greed Index: ${value} (${label}) ${emoji}\n\nCheck live market sentiment 👉`);
+            
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${shareUrl}`, '_blank');
         });
     }
     
     const shareFGTG = document.getElementById('shareFGTG');
     if (shareFGTG) {
         shareFGTG.addEventListener('click', async function() {
-            const data = await getFearGreedIndex();
-            const text = encodeURIComponent(`Crypto Fear & Greed Index: ${data.value} (${data.classification})\n\nCheck on CoinGyaan: https://coingyaan.com`);
-            window.open(`https://t.me/share/url?url=https://coingyaan.com&text=${text}`, '_blank');
+            const value = parseInt(document.getElementById('fgScore')?.textContent || '50');
+            const label = document.getElementById('fgLabel')?.textContent || 'Neutral';
+            
+            let trend = 'neutral';
+            if (value >= 60) trend = 'bullish';
+            else if (value <= 40) trend = 'bearish';
+            
+            const shareUrl = `https://coingyaan.com/share?coin=Market&trend=${encodeURIComponent(trend)}`;
+            const text = encodeURIComponent(`Crypto Fear & Greed Index: ${value} (${label})\n\nCheck on CoinGyaan: https://coingyaan.com`);
+            
+            window.open(`https://t.me/share/url?url=${shareUrl}&text=${text}`, '_blank');
         });
     }
 });
