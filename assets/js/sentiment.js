@@ -1,14 +1,11 @@
 // ============================================
-// COINGYAAN - SENTIMENT ANALYZER (Updated)
+// COINGYAAN - SENTIMENT ANALYZER (COMPLETE WITH DYNAMIC SHARE)
 // ============================================
 
 const SENTIMENT_COINGECKO_API = 'https://api.coingecko.com/api/v3';
 const SENTIMENT_NEWS_API = 'https://min-api.cryptocompare.com/data/v2/news/';
 const SENTIMENT_FNG_API = 'https://api.alternative.me/fng/';
 
-// ============================================
-// DYNAMIC COIN LOOKUP (supports top 100+)
-// ============================================
 async function getCryptoId(coinName) {
     try {
         console.log('🔎 Searching CoinGecko for:', coinName);
@@ -18,7 +15,6 @@ async function getCryptoId(coinName) {
         const data = await response.json();
 
         if (data.coins && data.coins.length > 0) {
-            // Pick the first result (most relevant match)
             const match = data.coins[0];
             console.log('✅ Found coin:', match.name, '| ID:', match.id);
             return match.id;
@@ -32,7 +28,6 @@ async function getCryptoId(coinName) {
     }
 }
 
-// Get crypto prices
 async function getCryptoPrices(cryptoId) {
     try {
         console.log('💰 Fetching price for:', cryptoId);
@@ -55,7 +50,6 @@ async function getCryptoPrices(cryptoId) {
     }
 }
 
-// Get crypto news
 async function getCryptoNews(limit = 20) {
     try {
         console.log('📰 Fetching crypto news...');
@@ -77,7 +71,6 @@ async function getCryptoNews(limit = 20) {
     }
 }
 
-// Get Fear & Greed (for sentiment calculation only)
 async function getSentimentFearGreed() {
     try {
         const response = await fetch(SENTIMENT_FNG_API);
@@ -86,7 +79,6 @@ async function getSentimentFearGreed() {
     } catch (error) {
         console.error('❌ Error fetching F&G for sentiment:', error);
         
-        // Try to get from the Fear & Greed display if available
         const fgScore = document.getElementById('fgScore');
         if (fgScore && fgScore.textContent && fgScore.textContent !== '--') {
             const value = parseInt(fgScore.textContent);
@@ -100,7 +92,6 @@ async function getSentimentFearGreed() {
     }
 }
 
-// Analyze news sentiment
 function analyzeNewsBias(news, cryptoName) {
     const positiveKeywords = ['surge', 'rally', 'bullish', 'gains', 'up', 'rise', 'soar', 'adoption', 'partnership', 'upgrade', 'milestone', 'breakthrough', 'institutional', 'approval', 'record', 'high', 'moon', 'pump', 'positive', 'growth'];
     
@@ -139,7 +130,6 @@ function analyzeNewsBias(news, cryptoName) {
     return 'neutral';
 }
 
-// Analyze price context
 function analyzePriceContext(priceData) {
     if (!priceData) return 'neutral';
     const change = priceData.change24h;
@@ -148,20 +138,16 @@ function analyzePriceContext(priceData) {
     return 'neutral';
 }
 
-// Analyze community mood
 function analyzeCommunityMood(fngValue) {
     if (fngValue >= 60) return 'bullish';
     if (fngValue <= 40) return 'bearish';
     return 'neutral';
 }
 
-// Main sentiment calculation
 async function calculateSentiment(cryptoName) {
     console.log('🔍 Calculating sentiment for:', cryptoName);
     
     const normalizedName = cryptoName.toLowerCase().trim();
-
-    // Dynamic lookup — supports any coin on CoinGecko
     const cryptoId = await getCryptoId(normalizedName);
     
     console.log('🎯 Using crypto ID:', cryptoId);
@@ -230,7 +216,6 @@ async function calculateSentiment(cryptoName) {
     };
 }
 
-// Display results
 function displaySentiment(data) {
     console.log('🎨 Displaying sentiment:', data);
     
@@ -275,7 +260,6 @@ function displaySentiment(data) {
     console.log('🎉 Display complete!');
 }
 
-// Main check function
 async function checkSentiment() {
     console.log('🚀 checkSentiment() called');
     
@@ -293,7 +277,6 @@ async function checkSentiment() {
     const originalText = btn ? btn.textContent : '';
     if (btn) btn.textContent = 'Analyzing...';
 
-    // Hide previous result while loading
     const resultCard = document.getElementById('sentimentResult');
     if (resultCard) resultCard.classList.add('hidden');
     
@@ -308,7 +291,6 @@ async function checkSentiment() {
     }
 }
 
-// Initialize
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 Sentiment analyzer loaded');
     
@@ -331,37 +313,41 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('✅ Enter key handler attached');
     }
     
-    // Share buttons
+    // ============================================
+    // UPDATED SHARE BUTTONS (DYNAMIC OG IMAGES)
+    // ============================================
     const shareX = document.getElementById('shareSentimentX');
     if (shareX) {
         shareX.addEventListener('click', function() {
-            const assetTitle = document.getElementById('assetTitle');
-            const overallSentiment = document.getElementById('overallSentiment');
-            const crypto = assetTitle ? assetTitle.textContent : 'Crypto';
-            const sentiment = overallSentiment ? overallSentiment.textContent : 'Unknown';
+            const crypto = document.getElementById('assetTitle')?.textContent || 'Bitcoin';
+            const sentiment = document.getElementById('overallSentiment')?.textContent.toLowerCase() || 'neutral';
             
-            const emoji = sentiment === 'Bullish' ? '📈' : sentiment === 'Bearish' ? '📉' : '➡️';
-            const text = encodeURIComponent(`${crypto} sentiment is ${sentiment}! ${emoji}\n\nCheck crypto sentiment on CoinGyaan 👉`);
-            const url = encodeURIComponent('https://coingyaan.com');
-            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+            // Create dynamic share URL
+            const shareUrl = `https://coingyaan.com/share?coin=${encodeURIComponent(crypto)}&trend=${encodeURIComponent(sentiment)}`;
+            
+            // Tweet text
+            const emoji = sentiment === 'bullish' ? '📈' : sentiment === 'bearish' ? '📉' : '➡️';
+            const text = encodeURIComponent(`Check ${crypto} sentiment! ${emoji}`);
+            
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${shareUrl}`, '_blank');
         });
     }
     
     const shareTG = document.getElementById('shareSentimentTG');
     if (shareTG) {
         shareTG.addEventListener('click', function() {
-            const assetTitle = document.getElementById('assetTitle');
-            const overallSentiment = document.getElementById('overallSentiment');
-            const crypto = assetTitle ? assetTitle.textContent : 'Crypto';
-            const sentiment = overallSentiment ? overallSentiment.textContent : 'Unknown';
+            const crypto = document.getElementById('assetTitle')?.textContent || 'Bitcoin';
+            const sentiment = document.getElementById('overallSentiment')?.textContent.toLowerCase() || 'neutral';
             
-            const text = encodeURIComponent(`${crypto} sentiment is ${sentiment}!\n\nCheck on CoinGyaan: https://coingyaan.com`);
-            window.open(`https://t.me/share/url?url=https://coingyaan.com&text=${text}`, '_blank');
+            // Create dynamic share URL
+            const shareUrl = `https://coingyaan.com/share?coin=${encodeURIComponent(crypto)}&trend=${encodeURIComponent(sentiment)}`;
+            const text = encodeURIComponent(`${crypto} sentiment is ${sentiment}!\n\nCheck on CoinGyaan:`);
+            
+            window.open(`https://t.me/share/url?url=${shareUrl}&text=${text}`, '_blank');
         });
     }
 });
 
-// Expose globally
 window.checkSentiment = checkSentiment;
 
 console.log('✅ sentiment.js loaded successfully');
