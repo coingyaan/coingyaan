@@ -137,6 +137,27 @@ ul {
   margin: 12px 0;
 }
 
+/* ===== INFO SECTION ===== */
+.info-section {
+  margin-top: 48px;
+  margin-bottom: 32px;
+}
+
+.info-section h2 {
+  margin-bottom: 8px;
+  margin-top: 24px;
+}
+
+.info-section h2:first-child {
+  margin-top: 0;
+}
+
+.info-section p {
+  color: #9ca3af;
+  font-size: 15px;
+  max-width: 720px;
+}
+
 /* ===== FOOTER ===== */
 .footer-links {
   display: flex;
