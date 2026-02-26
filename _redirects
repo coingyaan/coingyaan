@@ -1,0 +1,9 @@
+# Serve static assets directly
+/assets/*  200
+/images/*  200
+/css/*     200
+/js/*      200
+/fonts/*   200
+
+# Everything else goes to index.html for SPA routing
+/*  /index.html  200
