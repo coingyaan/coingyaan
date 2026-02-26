@@ -48,6 +48,19 @@ async function getFearGreedIndex() {
     }
 }
 
+// Format date like: "Last updated: Feb 27, 2026"
+function formatDate(timestamp) {
+    const date = timestamp
+        ? new Date(parseInt(timestamp) * 1000)
+        : new Date();
+
+    return 'Last updated: ' + date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    });
+}
+
 async function displayFearGreed() {
     console.log('🎨 displayFearGreed() called');
 
@@ -87,8 +100,6 @@ async function displayFearGreed() {
     }
 
     // ── Needle ──
-    // Arc goes from left (0) to right (100)
-    // -90deg = pointing left (score 0), +90deg = pointing right (score 100)
     const gaugeNeedle = document.getElementById('fgNeedle');
     const gaugeLabel  = document.getElementById('fgGaugeLabel');
 
@@ -101,6 +112,12 @@ async function displayFearGreed() {
     if (gaugeLabel) {
         gaugeLabel.textContent = data.classification;
         gaugeLabel.style.color = color;
+    }
+
+    // ── Date: replace "Updated today" with actual date ──
+    const updatedEl = document.querySelector('.updated');
+    if (updatedEl) {
+        updatedEl.textContent = formatDate(data.timestamp);
     }
 
     console.log('🎉 Fear & Greed display complete!');
