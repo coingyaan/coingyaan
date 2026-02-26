@@ -1,5 +1,5 @@
 // ============================================
-// COINGYAAN - SENTIMENT ANALYZER (FIXED SHARE BUTTONS)
+// COINGYAAN - SENTIMENT ANALYZER (FINAL - WITH CACHE BUSTING)
 // ============================================
 
 const SENTIMENT_COINGECKO_API = 'https://api.coingecko.com/api/v3';
@@ -13,13 +13,11 @@ async function getCryptoId(coinName) {
             `${SENTIMENT_COINGECKO_API}/search?query=${encodeURIComponent(coinName)}`
         );
         const data = await response.json();
-
         if (data.coins && data.coins.length > 0) {
             const match = data.coins[0];
             console.log('✅ Found coin:', match.name, '| ID:', match.id);
             return match.id;
         }
-
         console.warn('⚠️ No coin found for:', coinName, '— using raw name');
         return coinName.toLowerCase();
     } catch (error) {
@@ -276,7 +274,6 @@ async function checkSentiment() {
     const btn = document.getElementById('checkSentimentBtn');
     const originalText = btn ? btn.textContent : '';
     if (btn) btn.textContent = 'Analyzing...';
-
     const resultCard = document.getElementById('sentimentResult');
     if (resultCard) resultCard.classList.add('hidden');
     
@@ -314,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // ============================================
-    // FIXED SHARE BUTTONS
+    // SHARE BUTTONS (WITH CACHE BUSTING v=2)
     // ============================================
     const shareX = document.getElementById('shareSentimentX');
     if (shareX) {
@@ -334,7 +331,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log('🐦 Sharing on X:', crypto, '|', sentiment);
             
-            const shareUrl = `https://coingyaan.com/share?coin=${encodeURIComponent(crypto)}&trend=${encodeURIComponent(sentiment)}`;
+            // ADD v=2 for cache busting!
+            const shareUrl = `https://coingyaan.com/share?coin=${encodeURIComponent(crypto)}&trend=${encodeURIComponent(sentiment)}&v=2`;
             const emoji = sentiment === 'bullish' ? '📈' : sentiment === 'bearish' ? '📉' : '➡️';
             const text = encodeURIComponent(`Check ${crypto} sentiment! ${emoji}`);
             
@@ -360,7 +358,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const sentimentText = overallSentiment.textContent.trim();
             const sentiment = sentimentText.toLowerCase();
             
-            const shareUrl = `https://coingyaan.com/share?coin=${encodeURIComponent(crypto)}&trend=${encodeURIComponent(sentiment)}`;
+            // ADD v=2 for cache busting!
+            const shareUrl = `https://coingyaan.com/share?coin=${encodeURIComponent(crypto)}&trend=${encodeURIComponent(sentiment)}&v=2`;
             const text = encodeURIComponent(`${crypto} sentiment is ${sentimentText}!\n\nCheck on CoinGyaan:`);
             
             window.open(`https://t.me/share/url?url=${shareUrl}&text=${text}`, '_blank');
@@ -370,5 +369,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 window.checkSentiment = checkSentiment;
-
 console.log('✅ sentiment.js loaded successfully');
