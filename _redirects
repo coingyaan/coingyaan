@@ -1,9 +1,15 @@
-# Serve static assets directly
-/assets/*  200
-/images/*  200
-/css/*     200
-/js/*      200
-/fonts/*   200
+# Prevent redirects for static files
+/assets/*  200!
+/*.png     200!
+/*.jpg     200!
+/*.jpeg    200!
+/*.gif     200!
+/*.svg     200!
+/*.webp    200!
+/*.css     200!
+/*.js      200!
+/*.json    200!
+/*.ico     200!
 
-# Everything else goes to index.html for SPA routing
+# SPA fallback
 /*  /index.html  200
