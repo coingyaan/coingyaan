@@ -1,5 +1,5 @@
 // ============================================
-// COINGYAAN - FEAR & GREED INDEX (FIXED SHARE BUTTONS)
+// COINGYAAN - FEAR & GREED INDEX (FINAL - WITH CACHE BUSTING)
 // ============================================
 
 const FEARGREED_API_URL = 'https://api.alternative.me/fng/';
@@ -164,7 +164,7 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
 }
 
 // ============================================
-// FIXED SHARE BUTTONS (WITH TREND PARAMETER)
+// SHARE BUTTONS (WITH CACHE BUSTING v=2)
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
     const shareFGX = document.getElementById('shareFGX');
@@ -199,8 +199,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log('🐦 Sharing Fear & Greed:', value, '|', labelText, '| Trend:', trend);
             
-            // Create dynamic share URL with trend
-            const shareUrl = `https://coingyaan.com/share?coin=Market&trend=${encodeURIComponent(trend)}`;
+            // ADD v=2 for cache busting!
+            const shareUrl = `https://coingyaan.com/share?coin=Market&trend=${encodeURIComponent(trend)}&v=2`;
             
             // Tweet text
             const emoji = trend === 'bullish' ? '🤑' : trend === 'bearish' ? '😱' : '😐';
@@ -241,7 +241,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 trend = 'bearish';
             }
             
-            const shareUrl = `https://coingyaan.com/share?coin=Market&trend=${encodeURIComponent(trend)}`;
+            // ADD v=2 for cache busting!
+            const shareUrl = `https://coingyaan.com/share?coin=Market&trend=${encodeURIComponent(trend)}&v=2`;
             const text = encodeURIComponent(`Crypto Fear & Greed Index: ${value} (${labelText})\n\nCheck on CoinGyaan: https://coingyaan.com`);
             
             window.open(`https://t.me/share/url?url=${shareUrl}&text=${text}`, '_blank');
