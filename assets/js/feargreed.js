@@ -1,5 +1,5 @@
 // ============================================
-// COINGYAAN - FEAR & GREED INDEX (COMPLETE WITH DYNAMIC SHARE)
+// COINGYAAN - FEAR & GREED INDEX (FIXED SHARE BUTTONS)
 // ============================================
 
 const FEARGREED_API_URL = 'https://api.alternative.me/fng/';
@@ -164,46 +164,89 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
 }
 
 // ============================================
-// UPDATED SHARE BUTTONS (DYNAMIC OG IMAGES)
+// FIXED SHARE BUTTONS (WITH TREND PARAMETER)
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
     const shareFGX = document.getElementById('shareFGX');
     if (shareFGX) {
         shareFGX.addEventListener('click', async function() {
-            const value = parseInt(document.getElementById('fgScore')?.textContent || '50');
-            const label = document.getElementById('fgLabel')?.textContent || 'Neutral';
+            const scoreElement = document.getElementById('fgScore');
+            const labelElement = document.getElementById('fgLabel');
             
-            // Determine trend for dynamic image
+            if (!scoreElement || !labelElement) {
+                console.error('❌ Could not find F&G elements');
+                alert('Please wait for Fear & Greed to load!');
+                return;
+            }
+            
+            const valueText = scoreElement.textContent.trim();
+            const labelText = labelElement.textContent.trim();
+            
+            if (valueText === '--' || valueText === '' || valueText === 'Loading') {
+                alert('Please wait for Fear & Greed to load!');
+                return;
+            }
+            
+            const value = parseInt(valueText);
+            
+            // Determine trend based on value
             let trend = 'neutral';
-            if (value >= 60) trend = 'bullish';
-            else if (value <= 40) trend = 'bearish';
+            if (value >= 60) {
+                trend = 'bullish';
+            } else if (value <= 40) {
+                trend = 'bearish';
+            }
             
-            // Create dynamic share URL
+            console.log('🐦 Sharing Fear & Greed:', value, '|', labelText, '| Trend:', trend);
+            
+            // Create dynamic share URL with trend
             const shareUrl = `https://coingyaan.com/share?coin=Market&trend=${encodeURIComponent(trend)}`;
             
             // Tweet text
             const emoji = trend === 'bullish' ? '🤑' : trend === 'bearish' ? '😱' : '😐';
-            const text = encodeURIComponent(`Crypto Fear & Greed Index: ${value} (${label}) ${emoji}\n\nCheck live market sentiment 👉`);
+            const text = encodeURIComponent(`Crypto Fear & Greed Index: ${value} (${labelText}) ${emoji}\n\nCheck live market sentiment 👉`);
+            
+            console.log('📤 Share URL:', shareUrl);
             
             window.open(`https://twitter.com/intent/tweet?text=${text}&url=${shareUrl}`, '_blank');
         });
+        console.log('✅ X share button attached');
     }
     
     const shareFGTG = document.getElementById('shareFGTG');
     if (shareFGTG) {
         shareFGTG.addEventListener('click', async function() {
-            const value = parseInt(document.getElementById('fgScore')?.textContent || '50');
-            const label = document.getElementById('fgLabel')?.textContent || 'Neutral';
+            const scoreElement = document.getElementById('fgScore');
+            const labelElement = document.getElementById('fgLabel');
+            
+            if (!scoreElement || !labelElement) {
+                alert('Please wait for Fear & Greed to load!');
+                return;
+            }
+            
+            const valueText = scoreElement.textContent.trim();
+            const labelText = labelElement.textContent.trim();
+            
+            if (valueText === '--' || valueText === '' || valueText === 'Loading') {
+                alert('Please wait for Fear & Greed to load!');
+                return;
+            }
+            
+            const value = parseInt(valueText);
             
             let trend = 'neutral';
-            if (value >= 60) trend = 'bullish';
-            else if (value <= 40) trend = 'bearish';
+            if (value >= 60) {
+                trend = 'bullish';
+            } else if (value <= 40) {
+                trend = 'bearish';
+            }
             
             const shareUrl = `https://coingyaan.com/share?coin=Market&trend=${encodeURIComponent(trend)}`;
-            const text = encodeURIComponent(`Crypto Fear & Greed Index: ${value} (${label})\n\nCheck on CoinGyaan: https://coingyaan.com`);
+            const text = encodeURIComponent(`Crypto Fear & Greed Index: ${value} (${labelText})\n\nCheck on CoinGyaan: https://coingyaan.com`);
             
             window.open(`https://t.me/share/url?url=${shareUrl}&text=${text}`, '_blank');
         });
+        console.log('✅ Telegram share button attached');
     }
 });
 
