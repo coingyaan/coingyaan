@@ -1,6 +1,5 @@
 // ============================================
 // COINGYAAN - FEAR & GREED INDEX
-// Updated gauge: large semicircle like alternative.me
 // ============================================
 
 const FEARGREED_API_URL = 'https://api.alternative.me/fng/';
@@ -55,7 +54,7 @@ async function displayFearGreed() {
     const data = await getFearGreedIndex();
     console.log('📈 F&G Data to display:', data);
 
-    // ── Score text ──
+    // ── Score ──
     const scoreElement = document.getElementById('fgScore');
     if (scoreElement) {
         scoreElement.textContent = data.value;
@@ -64,21 +63,20 @@ async function displayFearGreed() {
         return;
     }
 
-    // ── Label text ──
+    // ── Label ──
     const labelElement = document.getElementById('fgLabel');
     if (labelElement) labelElement.textContent = data.classification;
 
     // ── Color map ──
     const colorMap = {
         'Extreme Fear': '#ef4444',
-        'Fear':         '#f97316',
-        'Neutral':      '#eab308',
-        'Greed':        '#84cc16',
-        'Extreme Greed':'#22c55e'
+        'Fear':          '#f97316',
+        'Neutral':       '#eab308',
+        'Greed':         '#84cc16',
+        'Extreme Greed': '#22c55e'
     };
     const color = colorMap[data.classification] || '#94a3b8';
 
-    // Apply color to score
     scoreElement.style.color = color;
 
     // ── Progress bar ──
@@ -88,32 +86,16 @@ async function displayFearGreed() {
         barElement.style.backgroundColor = color;
     }
 
-    // ── SVG Gauge ──
-    // Arc total length for "M20,115 A90,90 0 0,1 200,115" ≈ π × 90 ≈ 283
-    const ARC_LENGTH = 283;
-
+    // ── Needle ──
+    // Arc goes from left (0) to right (100)
+    // -90deg = pointing left (score 0), +90deg = pointing right (score 100)
     const gaugeNeedle = document.getElementById('fgNeedle');
-    const gaugeMask   = document.getElementById('fgGaugeMask');
     const gaugeLabel  = document.getElementById('fgGaugeLabel');
 
     if (gaugeNeedle) {
-        // -90deg = far left (0), +90deg = far right (100)
         const angle = (data.value / 100) * 180 - 90;
         gaugeNeedle.style.transform = `rotate(${angle}deg)`;
         console.log('✅ Needle angle:', angle);
-    }
-
-    if (gaugeMask) {
-        // How much of the arc is "lit" (left portion)
-        const lit    = (data.value / 100) * ARC_LENGTH;
-        // The mask covers the remaining right portion
-        const unlit  = ARC_LENGTH - lit;
-
-        // dasharray: first segment = unlit (dark), gap = rest
-        // dashoffset: shift the dark segment to start from the right end
-        gaugeMask.setAttribute('stroke-dasharray',  `${unlit} ${ARC_LENGTH}`);
-        gaugeMask.setAttribute('stroke-dashoffset', `-${lit}`);
-        console.log('✅ Gauge mask — lit:', lit.toFixed(1), 'unlit:', unlit.toFixed(1));
     }
 
     if (gaugeLabel) {
@@ -181,6 +163,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             window.open(`https://twitter.com/intent/tweet?text=${text}&url=${shareUrl}`, '_blank');
         });
+        console.log('✅ X share button attached');
     }
 
     // ── Share on Telegram ──
@@ -203,6 +186,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             window.open(`https://t.me/share/url?url=${shareUrl}&text=${text}`, '_blank');
         });
+        console.log('✅ Telegram share button attached');
     }
 
 });
