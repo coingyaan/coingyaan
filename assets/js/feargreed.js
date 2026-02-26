@@ -1,5 +1,6 @@
 // ============================================
-// COINGYAAN - FEAR & GREED INDEX (FINAL - WITH CACHE BUSTING)
+// COINGYAAN - FEAR & GREED INDEX
+// Updated gauge: large semicircle like alternative.me
 // ============================================
 
 const FEARGREED_API_URL = 'https://api.alternative.me/fng/';
@@ -7,16 +8,14 @@ const FEARGREED_API_URL = 'https://api.alternative.me/fng/';
 async function getFearGreedIndex() {
     try {
         console.log('🔄 Fetching Fear & Greed Index...');
-        
+
         const response = await fetch(FEARGREED_API_URL);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
         const data = await response.json();
         console.log('📊 F&G API Response:', data);
-        
+
         if (data && data.data && data.data[0]) {
             const fngData = data.data[0];
             const result = {
@@ -27,23 +26,21 @@ async function getFearGreedIndex() {
             console.log('✅ Successfully parsed F&G data:', result);
             return result;
         }
-        
+
         throw new Error('Invalid data structure');
-        
+
     } catch (error) {
         console.error('❌ Error fetching Fear & Greed Index:', error);
-        
+
         const currentScore = document.getElementById('fgScore');
         if (currentScore && currentScore.textContent !== '--') {
-            console.log('ℹ️ Using existing value from page');
             return {
                 value: parseInt(currentScore.textContent) || 50,
                 classification: document.getElementById('fgLabel')?.textContent || 'Neutral',
                 timestamp: Math.floor(Date.now() / 1000)
             };
         }
-        
-        console.warn('⚠️ Returning neutral fallback');
+
         return {
             value: 50,
             classification: 'Neutral',
@@ -54,201 +51,160 @@ async function getFearGreedIndex() {
 
 async function displayFearGreed() {
     console.log('🎨 displayFearGreed() called');
-    
+
     const data = await getFearGreedIndex();
     console.log('📈 F&G Data to display:', data);
-    
+
+    // ── Score text ──
     const scoreElement = document.getElementById('fgScore');
     if (scoreElement) {
         scoreElement.textContent = data.value;
-        console.log('✅ Updated fgScore to:', data.value);
     } else {
         console.error('❌ Could not find #fgScore element');
         return;
     }
-    
+
+    // ── Label text ──
     const labelElement = document.getElementById('fgLabel');
-    if (labelElement) {
-        labelElement.textContent = data.classification;
-        console.log('✅ Updated fgLabel to:', data.classification);
-    } else {
-        console.error('❌ Could not find #fgLabel element');
-    }
-    
+    if (labelElement) labelElement.textContent = data.classification;
+
+    // ── Color map ──
     const colorMap = {
         'Extreme Fear': '#ef4444',
-        'Fear': '#f59e0b',
-        'Neutral': '#94a3b8',
-        'Greed': '#10b981',
-        'Extreme Greed': '#22c55e'
+        'Fear':         '#f97316',
+        'Neutral':      '#eab308',
+        'Greed':        '#84cc16',
+        'Extreme Greed':'#22c55e'
     };
-    
     const color = colorMap[data.classification] || '#94a3b8';
-    
-    if (scoreElement) {
-        scoreElement.style.color = color;
-    }
-    
+
+    // Apply color to score
+    scoreElement.style.color = color;
+
+    // ── Progress bar ──
     const barElement = document.getElementById('fgBar');
     if (barElement) {
-        barElement.style.width = data.value + '%';
+        barElement.style.width           = data.value + '%';
         barElement.style.backgroundColor = color;
-        console.log('✅ Updated fgBar to:', data.value + '% with color', color);
-    } else {
-        console.error('❌ Could not find #fgBar element');
     }
 
-    const gaugeArc = document.getElementById('fgGaugeArc');
+    // ── SVG Gauge ──
+    // Arc total length for "M20,115 A90,90 0 0,1 200,115" ≈ π × 90 ≈ 283
+    const ARC_LENGTH = 283;
+
     const gaugeNeedle = document.getElementById('fgNeedle');
-    const gaugeLabel = document.getElementById('fgGaugeLabel');
+    const gaugeMask   = document.getElementById('fgGaugeMask');
+    const gaugeLabel  = document.getElementById('fgGaugeLabel');
 
-    if (gaugeArc && gaugeNeedle) {
-        const totalLength = 157;
-        const filled = (data.value / 100) * totalLength;
-
-        gaugeArc.style.stroke = color;
-        gaugeArc.setAttribute('stroke-dasharray', `${filled} ${totalLength - filled}`);
-
+    if (gaugeNeedle) {
+        // -90deg = far left (0), +90deg = far right (100)
         const angle = (data.value / 100) * 180 - 90;
         gaugeNeedle.style.transform = `rotate(${angle}deg)`;
-
-        if (gaugeLabel) {
-            gaugeLabel.textContent = data.classification;
-            gaugeLabel.style.color = color;
-        }
-
-        console.log('✅ Updated SVG gauge to:', data.value, '| angle:', angle, '| color:', color);
-    } else {
-        console.warn('⚠️ SVG gauge elements not found — skipping gauge update');
+        console.log('✅ Needle angle:', angle);
     }
-    
+
+    if (gaugeMask) {
+        // How much of the arc is "lit" (left portion)
+        const lit    = (data.value / 100) * ARC_LENGTH;
+        // The mask covers the remaining right portion
+        const unlit  = ARC_LENGTH - lit;
+
+        // dasharray: first segment = unlit (dark), gap = rest
+        // dashoffset: shift the dark segment to start from the right end
+        gaugeMask.setAttribute('stroke-dasharray',  `${unlit} ${ARC_LENGTH}`);
+        gaugeMask.setAttribute('stroke-dashoffset', `-${lit}`);
+        console.log('✅ Gauge mask — lit:', lit.toFixed(1), 'unlit:', unlit.toFixed(1));
+    }
+
+    if (gaugeLabel) {
+        gaugeLabel.textContent = data.classification;
+        gaugeLabel.style.color = color;
+    }
+
     console.log('🎉 Fear & Greed display complete!');
 }
 
+// ── Init with retry ──
 let fgAttempts = 0;
 const FG_MAX_ATTEMPTS = 5;
 
 async function initFearGreed() {
     fgAttempts++;
     console.log(`🚀 Initializing Fear & Greed (attempt ${fgAttempts}/${FG_MAX_ATTEMPTS})...`);
-    
+
     await displayFearGreed();
-    
+
     const scoreEl = document.getElementById('fgScore');
     if (scoreEl) {
-        const currentValue = scoreEl.textContent.trim();
-        console.log('Current fgScore value:', currentValue);
-        
-        if ((currentValue === '--' || currentValue === '' || currentValue === 'Loading') && fgAttempts < FG_MAX_ATTEMPTS) {
-            console.log('⏳ Still not loaded, retrying in 3 seconds...');
+        const val = scoreEl.textContent.trim();
+        if ((val === '--' || val === '' || val === 'Loading') && fgAttempts < FG_MAX_ATTEMPTS) {
+            console.log('⏳ Retrying in 3s...');
             setTimeout(initFearGreed, 3000);
-        } else if (currentValue !== '--' && currentValue !== '' && currentValue !== 'Loading') {
-            console.log('🎉 Fear & Greed successfully loaded with value:', currentValue);
+        } else {
+            console.log('🎉 Fear & Greed loaded:', val);
         }
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('📄 DOM loaded, initializing Fear & Greed...');
-    
-    setTimeout(() => {
-        initFearGreed();
-    }, 500);
-    
+document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(initFearGreed, 500);
     setInterval(displayFearGreed, 10 * 60 * 1000);
 });
 
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    console.log('📄 DOM already loaded, running Fear & Greed immediately');
     setTimeout(initFearGreed, 500);
 }
 
 // ============================================
-// SHARE BUTTONS (WITH CACHE BUSTING v=2)
+// SHARE BUTTONS
 // ============================================
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+
+    // ── Share on X ──
     const shareFGX = document.getElementById('shareFGX');
     if (shareFGX) {
-        shareFGX.addEventListener('click', async function() {
-            const scoreElement = document.getElementById('fgScore');
-            const labelElement = document.getElementById('fgLabel');
-            
-            if (!scoreElement || !labelElement) {
-                console.error('❌ Could not find F&G elements');
+        shareFGX.addEventListener('click', function () {
+            const valueText = document.getElementById('fgScore')?.textContent.trim();
+            const labelText = document.getElementById('fgLabel')?.textContent.trim();
+
+            if (!valueText || valueText === '--' || valueText === 'Loading') {
                 alert('Please wait for Fear & Greed to load!');
                 return;
             }
-            
-            const valueText = scoreElement.textContent.trim();
-            const labelText = labelElement.textContent.trim();
-            
-            if (valueText === '--' || valueText === '' || valueText === 'Loading') {
-                alert('Please wait for Fear & Greed to load!');
-                return;
-            }
-            
+
             const value = parseInt(valueText);
-            
-            // Determine trend based on value
-            let trend = 'neutral';
-            if (value >= 60) {
-                trend = 'bullish';
-            } else if (value <= 40) {
-                trend = 'bearish';
-            }
-            
-            console.log('🐦 Sharing Fear & Greed:', value, '|', labelText, '| Trend:', trend);
-            
-            // ADD v=2 for cache busting!
-            const shareUrl = `https://coingyaan.com/share?coin=Market&trend=${encodeURIComponent(trend)}&v=2`;
-            
-            // Tweet text
+            const trend = value >= 60 ? 'bullish' : value <= 40 ? 'bearish' : 'neutral';
             const emoji = trend === 'bullish' ? '🤑' : trend === 'bearish' ? '😱' : '😐';
-            const text = encodeURIComponent(`Crypto Fear & Greed Index: ${value} (${labelText}) ${emoji}\n\nCheck live market sentiment 👉`);
-            
-            console.log('📤 Share URL:', shareUrl);
-            
+
+            const shareUrl = `https://coingyaan.com/share?coin=Market&trend=${encodeURIComponent(trend)}&v=2`;
+            const text     = encodeURIComponent(`Crypto Fear & Greed Index: ${value} (${labelText}) ${emoji}\n\nCheck live market sentiment 👉`);
+
             window.open(`https://twitter.com/intent/tweet?text=${text}&url=${shareUrl}`, '_blank');
         });
-        console.log('✅ X share button attached');
     }
-    
+
+    // ── Share on Telegram ──
     const shareFGTG = document.getElementById('shareFGTG');
     if (shareFGTG) {
-        shareFGTG.addEventListener('click', async function() {
-            const scoreElement = document.getElementById('fgScore');
-            const labelElement = document.getElementById('fgLabel');
-            
-            if (!scoreElement || !labelElement) {
+        shareFGTG.addEventListener('click', function () {
+            const valueText = document.getElementById('fgScore')?.textContent.trim();
+            const labelText = document.getElementById('fgLabel')?.textContent.trim();
+
+            if (!valueText || valueText === '--' || valueText === 'Loading') {
                 alert('Please wait for Fear & Greed to load!');
                 return;
             }
-            
-            const valueText = scoreElement.textContent.trim();
-            const labelText = labelElement.textContent.trim();
-            
-            if (valueText === '--' || valueText === '' || valueText === 'Loading') {
-                alert('Please wait for Fear & Greed to load!');
-                return;
-            }
-            
+
             const value = parseInt(valueText);
-            
-            let trend = 'neutral';
-            if (value >= 60) {
-                trend = 'bullish';
-            } else if (value <= 40) {
-                trend = 'bearish';
-            }
-            
-            // ADD v=2 for cache busting!
+            const trend = value >= 60 ? 'bullish' : value <= 40 ? 'bearish' : 'neutral';
+
             const shareUrl = `https://coingyaan.com/share?coin=Market&trend=${encodeURIComponent(trend)}&v=2`;
-            const text = encodeURIComponent(`Crypto Fear & Greed Index: ${value} (${labelText})\n\nCheck on CoinGyaan: https://coingyaan.com`);
-            
+            const text     = encodeURIComponent(`Crypto Fear & Greed Index: ${value} (${labelText})\n\nCheck on CoinGyaan: https://coingyaan.com`);
+
             window.open(`https://t.me/share/url?url=${shareUrl}&text=${text}`, '_blank');
         });
-        console.log('✅ Telegram share button attached');
     }
+
 });
 
 console.log('✅ feargreed.js loaded successfully');
