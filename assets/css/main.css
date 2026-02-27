@@ -198,3 +198,24 @@ footer a:hover {
     margin-bottom: 20px;
   }
 }
+/* Header Navigation */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-left: auto;
+  margin-right: 16px;
+}
+
+.header-nav a {
+  font-size: 14px;
+  font-weight: 500;
+  color: #94a3b8;
+  text-decoration: none;
+  transition: color 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.header-nav a:hover {
+  color: #e2e8f0;
+}
