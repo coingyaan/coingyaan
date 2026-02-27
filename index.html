@@ -83,6 +83,52 @@
       font-weight: 600;
       letter-spacing: 0.03em;
     }
+
+    /* ── NEW: Guide Banner Strip ── */
+    .guide-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-left: 3px solid #f59e0b;
+      border-radius: 10px;
+      padding: 14px 20px;
+      margin: 32px 0;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .guide-banner:hover {
+      background: #243044;
+      border-color: #f59e0b;
+    }
+    .guide-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .guide-banner-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f59e0b;
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 4px;
+      padding: 3px 8px;
+      white-space: nowrap;
+    }
+    .guide-banner-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: #e2e8f0;
+    }
+    .guide-banner-arrow {
+      font-size: 16px;
+      color: #f59e0b;
+      flex-shrink: 0;
+    }
   </style>
 </head>
 
@@ -102,6 +148,12 @@
           <strong>CoinGyaan</strong>
         </div>
       </a>
+
+      <!-- ── NEW: Nav links ── -->
+      <nav class="header-nav">
+        <a href="/guides.html">Guides</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
 
       <img 
         src="/assets/images/logo/owl-mascot.png" 
@@ -299,6 +351,15 @@
 
   </section>
 
+  <!-- ── NEW: Guide Banner Strip ── -->
+  <a href="/guides.html" class="guide-banner">
+    <div class="guide-banner-left">
+      <span class="guide-banner-tag">New Guide</span>
+      <span class="guide-banner-text">Top AI Prompts for Crypto Research</span>
+    </div>
+    <span class="guide-banner-arrow">→</span>
+  </a>
+
   <!-- INFO / SEO -->
   <section class="info-section">
     <h2>How Crypto Market Sentiment Works?</h2>
@@ -360,6 +421,7 @@
 
     <div class="footer-links">
       <a href="/about.html" target="_blank" rel="noopener">About</a>
+      <a href="/contact.html" target="_blank" rel="noopener">Contact</a>
       <a href="/disclaimer.html" target="_blank" rel="noopener">Disclaimer</a>
       <a href="/privacy.html" target="_blank" rel="noopener">Privacy</a>
       <a href="/advertise.html" target="_blank" rel="noopener">Advertise</a>
