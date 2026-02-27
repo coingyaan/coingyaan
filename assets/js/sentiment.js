@@ -309,63 +309,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         console.log('✅ Enter key handler attached');
     }
-    
-    // ============================================
-    // SHARE BUTTONS (WITH CACHE BUSTING v=2)
-    // ============================================
-    const shareX = document.getElementById('shareSentimentX');
-    if (shareX) {
-        shareX.addEventListener('click', function() {
-            const assetTitle = document.getElementById('assetTitle');
-            const overallSentiment = document.getElementById('overallSentiment');
-            
-            if (!assetTitle || !overallSentiment) {
-                console.error('❌ Could not find sentiment elements');
-                alert('Please check sentiment first before sharing!');
-                return;
-            }
-            
-            const crypto = assetTitle.textContent.trim();
-            const sentimentText = overallSentiment.textContent.trim();
-            const sentiment = sentimentText.toLowerCase();
-            
-            console.log('🐦 Sharing on X:', crypto, '|', sentiment);
-            
-            // ADD v=2 for cache busting!
-            const shareUrl = `https://coingyaan.com/share?coin=${encodeURIComponent(crypto)}&trend=${encodeURIComponent(sentiment)}&v=2`;
-            const emoji = sentiment === 'bullish' ? '📈' : sentiment === 'bearish' ? '📉' : '➡️';
-            const text = encodeURIComponent(`Check ${crypto} sentiment! ${emoji}`);
-            
-            console.log('📤 Share URL:', shareUrl);
-            
-            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${shareUrl}`, '_blank');
-        });
-        console.log('✅ X share button attached');
-    }
-    
-    const shareTG = document.getElementById('shareSentimentTG');
-    if (shareTG) {
-        shareTG.addEventListener('click', function() {
-            const assetTitle = document.getElementById('assetTitle');
-            const overallSentiment = document.getElementById('overallSentiment');
-            
-            if (!assetTitle || !overallSentiment) {
-                alert('Please check sentiment first before sharing!');
-                return;
-            }
-            
-            const crypto = assetTitle.textContent.trim();
-            const sentimentText = overallSentiment.textContent.trim();
-            const sentiment = sentimentText.toLowerCase();
-            
-            // ADD v=2 for cache busting!
-            const shareUrl = `https://coingyaan.com/share?coin=${encodeURIComponent(crypto)}&trend=${encodeURIComponent(sentiment)}&v=2`;
-            const text = encodeURIComponent(`${crypto} sentiment is ${sentimentText}!\n\nCheck on CoinGyaan:`);
-            
-            window.open(`https://t.me/share/url?url=${shareUrl}&text=${text}`, '_blank');
-        });
-        console.log('✅ Telegram share button attached');
-    }
 });
 
 window.checkSentiment = checkSentiment;
