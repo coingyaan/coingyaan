@@ -168,56 +168,30 @@
   </div>
 </footer>
 
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+
+<!-- Load shared guides data first then render cards -->
+<script src="/assets/js/guides-data.js"></script>
 <script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
-
-<script>
-// ============================================
-// HOW TO ADD A NEW GUIDE:
-// Add one new object at the TOP of this array.
-// Newest guide must always be first.
-// That is the only change needed — card appears automatically.
-// ============================================
-var GUIDES = [
-  {
-    url:      "/guides/ai-prompts.html",
-    tag:      "AI + Crypto",
-    readTime: "5 min read",
-    title:    "Top AI Prompts for Crypto Research",
-    desc:     "Most traders waste hours scrolling through noise before making a decision. These 5 AI prompts turn ChatGPT or Claude into a personal crypto research analyst in seconds.",
-    date:     "February 2026"
-  },
-  {
-    url:      "/guides/fear-greed-index.html",
-    tag:      "Sentiment",
-    readTime: "4 min read",
-    title:    "How to Read the Crypto Fear and Greed Index",
-    desc:     "Everyone talks about the Fear and Greed Index but very few traders actually know how to use it properly. This guide breaks down what the score means and how to apply it to your decisions.",
-    date:     "February 2026"
-  }
-];
-
-var grid = document.getElementById('guidesGrid');
-
-GUIDES.forEach(function(g) {
-  var html =
-    '<a href="' + g.url + '" class="guide-card-link">' +
-      '<div class="guide-card">' +
-        '<div class="guide-card-top">' +
-          '<span class="guide-tag">' + g.tag + '</span>' +
-          '<span class="guide-read-time">' + g.readTime + '</span>' +
+  var grid = document.getElementById('guidesGrid');
+  GUIDES_DATA.forEach(function(g) {
+    var html =
+      '<a href="' + g.url + '" class="guide-card-link">' +
+        '<div class="guide-card">' +
+          '<div class="guide-card-top">' +
+            '<span class="guide-tag">' + g.tag + '</span>' +
+            '<span class="guide-read-time">' + g.readTime + '</span>' +
+          '</div>' +
+          '<h2>' + g.title + '</h2>' +
+          '<p>' + g.desc + '</p>' +
+          '<div class="guide-card-footer">' +
+            '<span class="guide-date">' + g.date + '</span>' +
+            '<span class="guide-arrow">Read Guide →</span>' +
+          '</div>' +
         '</div>' +
-        '<h2>' + g.title + '</h2>' +
-        '<p>' + g.desc + '</p>' +
-        '<div class="guide-card-footer">' +
-          '<span class="guide-date">' + g.date + '</span>' +
-          '<span class="guide-arrow">Read Guide →</span>' +
-        '</div>' +
-      '</div>' +
-    '</a>';
-  grid.insertAdjacentHTML('beforeend', html);
-});
+      '</a>';
+    grid.insertAdjacentHTML('beforeend', html);
+  });
 </script>
 
 </body>
