@@ -10,7 +10,7 @@
   <!-- Primary SEO -->
   <title>Guides | CoinGyaan</title>
   <meta name="description" content="Practical guides from CoinGyaan covering crypto research, AI tools, market sentiment and more. New guides added regularly." />
-  <meta name="keywords" content="crypto guides, AI prompts crypto, fear and greed index guide, crypto research, market sentiment guide, CoinGyaan" />
+  <meta name="keywords" content="crypto guides, AI prompts crypto, fear and greed index guide, crypto research, market sentiment guide, LinkedIn prompts, job search AI prompts, CoinGyaan" />
   <meta name="author" content="CoinGyaan" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://coingyaan.com/guides.html" />
@@ -150,49 +150,7 @@
   <h1 class="page-title">Guides</h1>
   <p class="page-subtitle">Practical guides to help you learn, research and decide smarter.</p>
 
-  <div class="guides-grid">
-
-    <!--
-      HOW TO ADD A NEW POST:
-      1. Create a new file inside the /guides/ folder on GitHub e.g. guides/your-post-title.html
-      2. Copy the card block below and paste it ABOVE this comment as the first card
-      3. Update the href, tag, read time, title, description and date
-      Newest post should always be first.
-    -->
-
-    <!-- POST 1 – Newest first -->
-    <a href="/guides/ai-prompts.html" class="guide-card-link">
-      <div class="guide-card">
-        <div class="guide-card-top">
-          <span class="guide-tag">AI + Crypto</span>
-          <span class="guide-read-time">5 min read</span>
-        </div>
-        <h2>Top AI Prompts for Crypto Research</h2>
-        <p>Most traders waste hours scrolling through noise before making a decision. These 5 AI prompts turn ChatGPT or Claude into a personal crypto research analyst in seconds.</p>
-        <div class="guide-card-footer">
-          <span class="guide-date">February 2026</span>
-          <span class="guide-arrow">Read Guide →</span>
-        </div>
-      </div>
-    </a>
-
-    <!-- POST 2 -->
-    <a href="/guides/fear-greed-index.html" class="guide-card-link">
-      <div class="guide-card">
-        <div class="guide-card-top">
-          <span class="guide-tag">Sentiment</span>
-          <span class="guide-read-time">4 min read</span>
-        </div>
-        <h2>How to Read the Crypto Fear and Greed Index</h2>
-        <p>Everyone talks about the Fear and Greed Index but very few traders actually know how to use it properly. This guide breaks down what the score means and how to apply it to your decisions.</p>
-        <div class="guide-card-footer">
-          <span class="guide-date">February 2026</span>
-          <span class="guide-arrow">Read Guide →</span>
-        </div>
-      </div>
-    </a>
-
-  </div>
+  <div class="guides-grid" id="guidesGrid"></div>
 
 </main>
 
@@ -210,6 +168,57 @@
   </div>
 </footer>
 
-<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+<script>
+// ============================================
+// HOW TO ADD A NEW GUIDE:
+// Add one new object at the TOP of this array.
+// Newest guide must always be first.
+// That is the only change needed — card appears automatically.
+// ============================================
+var GUIDES = [
+  {
+    url:      "/guides/ai-prompts.html",
+    tag:      "AI + Crypto",
+    readTime: "5 min read",
+    title:    "Top AI Prompts for Crypto Research",
+    desc:     "Most traders waste hours scrolling through noise before making a decision. These 5 AI prompts turn ChatGPT or Claude into a personal crypto research analyst in seconds.",
+    date:     "February 2026"
+  },
+  {
+    url:      "/guides/fear-greed-index.html",
+    tag:      "Sentiment",
+    readTime: "4 min read",
+    title:    "How to Read the Crypto Fear and Greed Index",
+    desc:     "Everyone talks about the Fear and Greed Index but very few traders actually know how to use it properly. This guide breaks down what the score means and how to apply it to your decisions.",
+    date:     "February 2026"
+  }
+];
+
+var grid = document.getElementById('guidesGrid');
+
+GUIDES.forEach(function(g) {
+  var html =
+    '<a href="' + g.url + '" class="guide-card-link">' +
+      '<div class="guide-card">' +
+        '<div class="guide-card-top">' +
+          '<span class="guide-tag">' + g.tag + '</span>' +
+          '<span class="guide-read-time">' + g.readTime + '</span>' +
+        '</div>' +
+        '<h2>' + g.title + '</h2>' +
+        '<p>' + g.desc + '</p>' +
+        '<div class="guide-card-footer">' +
+          '<span class="guide-date">' + g.date + '</span>' +
+          '<span class="guide-arrow">Read Guide →</span>' +
+        '</div>' +
+      '</div>' +
+    '</a>';
+  grid.insertAdjacentHTML('beforeend', html);
+});
+</script>
+
 </body>
 </html>
