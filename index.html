@@ -84,11 +84,10 @@
       letter-spacing: 0.03em;
     }
 
-    /* ── Guide Banner Strip ── */
-    .guide-banner {
+    /* ── Guide Ticker ── */
+    .guide-ticker {
       display: flex;
       align-items: center;
-      justify-content: space-between;
       background: #1e293b;
       border: 1px solid #334155;
       border-left: 3px solid #f59e0b;
@@ -96,18 +95,10 @@
       padding: 14px 20px;
       margin: 32px 0;
       gap: 12px;
-      text-decoration: none;
+      overflow: hidden;
+      min-height: 52px;
     }
-    .guide-banner:hover {
-      background: #243044;
-      border-color: #f59e0b;
-    }
-    .guide-banner-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .guide-banner-tag {
+    .guide-ticker-tag {
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.08em;
@@ -118,17 +109,54 @@
       border-radius: 4px;
       padding: 3px 8px;
       white-space: nowrap;
+      flex-shrink: 0;
     }
-    .guide-banner-text {
+    .guide-ticker-wrap {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      height: 24px;
+    }
+    .guide-ticker-item {
+      position: absolute;
+      width: 100%;
       font-size: 14px;
       font-weight: 500;
       color: #e2e8f0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-decoration: none;
+      display: block;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      line-height: 24px;
     }
-    .guide-banner-arrow {
+    .guide-ticker-item.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .guide-ticker-item:hover { color: #f59e0b; }
+    .guide-ticker-arrow {
       font-size: 16px;
       color: #f59e0b;
       flex-shrink: 0;
     }
+    .guide-ticker-dots {
+      display: flex;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+    .guide-ticker-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #334155;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .guide-ticker-dot.active { background: #f59e0b; }
   </style>
 </head>
 
@@ -341,14 +369,82 @@
 
   </section>
 
-  <!-- Guide Banner Strip -->
-  <a href="/guides.html" class="guide-banner">
-    <div class="guide-banner-left">
-      <span class="guide-banner-tag">New Guide</span>
-      <span class="guide-banner-text">Top AI Prompts for Crypto Research</span>
-    </div>
-    <span class="guide-banner-arrow">→</span>
-  </a>
+  <!-- ============================================
+       GUIDE TICKER
+       HOW TO ADD A NEW GUIDE — only update this array:
+       Add new object at the TOP. Newest guide first.
+       { title: "Guide Title", url: "/guides/file.html", tag: "Tag" }
+       Ticker updates automatically. Nothing else to change.
+  =============================================== -->
+  <div class="guide-ticker">
+    <span class="guide-ticker-tag" id="tickerTag">Guides</span>
+    <div class="guide-ticker-wrap" id="tickerWrap"></div>
+    <div class="guide-ticker-dots" id="tickerDots"></div>
+    <span class="guide-ticker-arrow">→</span>
+  </div>
+
+  <script>
+    const GUIDES = [
+      {
+        title: "100 Free LinkedIn Prompts That Will Transform Your Job Search in 2026",
+        url: "/guides/linkedin-prompts.html",
+        tag: "AI + Career"
+      },
+      {
+        title: "Top AI Prompts for Crypto Research",
+        url: "/guides/ai-prompts.html",
+        tag: "AI + Crypto"
+      },
+      {
+        title: "How to Read the Crypto Fear and Greed Index",
+        url: "/guides/fear-greed-index.html",
+        tag: "Sentiment"
+      }
+    ];
+
+    var wrap   = document.getElementById('tickerWrap');
+    var dotsEl = document.getElementById('tickerDots');
+    var tagEl  = document.getElementById('tickerTag');
+    var current = 0;
+    var timer;
+
+    GUIDES.forEach(function(g, i) {
+      var a = document.createElement('a');
+      a.href = g.url;
+      a.className = 'guide-ticker-item' + (i === 0 ? ' active' : '');
+      a.textContent = g.title;
+      wrap.appendChild(a);
+
+      var dot = document.createElement('div');
+      dot.className = 'guide-ticker-dot' + (i === 0 ? ' active' : '');
+      dot.addEventListener('click', (function(idx) {
+        return function() { showGuide(idx); };
+      })(i));
+      dotsEl.appendChild(dot);
+    });
+
+    function showGuide(index) {
+      var items = wrap.querySelectorAll('.guide-ticker-item');
+      var dots  = dotsEl.querySelectorAll('.guide-ticker-dot');
+      items[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = index;
+      items[current].classList.add('active');
+      dots[current].classList.add('active');
+      tagEl.textContent = GUIDES[current].tag;
+      clearInterval(timer);
+      startTimer();
+    }
+
+    function startTimer() {
+      timer = setInterval(function() {
+        showGuide((current + 1) % GUIDES.length);
+      }, 4000);
+    }
+
+    tagEl.textContent = GUIDES[0].tag;
+    startTimer();
+  </script>
 
   <!-- INFO / SEO -->
   <section class="info-section">
