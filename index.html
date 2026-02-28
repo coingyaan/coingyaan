@@ -58,11 +58,7 @@
       justify-content: space-between;
       gap: 12px;
     }
-
-    .fg-left {
-      flex: 1;
-    }
-
+    .fg-left { flex: 1; }
     .fg-right {
       display: flex;
       flex-direction: column;
@@ -70,11 +66,7 @@
       justify-content: center;
       min-width: 140px;
     }
-
-    #fgGauge {
-      filter: drop-shadow(0 0 6px rgba(255,255,255,0.1));
-    }
-
+    #fgGauge { filter: drop-shadow(0 0 6px rgba(255,255,255,0.1)); }
     #fgGaugeLabel {
       text-align: center;
       font-size: 0.7rem;
@@ -133,21 +125,10 @@
       transition: opacity 0.5s ease, transform 0.5s ease;
       line-height: 24px;
     }
-    .guide-ticker-item.active {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .guide-ticker-item.active { opacity: 1; transform: translateY(0); }
     .guide-ticker-item:hover { color: #f59e0b; }
-    .guide-ticker-arrow {
-      font-size: 16px;
-      color: #f59e0b;
-      flex-shrink: 0;
-    }
-    .guide-ticker-dots {
-      display: flex;
-      gap: 5px;
-      flex-shrink: 0;
-    }
+    .guide-ticker-arrow { font-size: 16px; color: #f59e0b; flex-shrink: 0; }
+    .guide-ticker-dots { display: flex; gap: 5px; flex-shrink: 0; }
     .guide-ticker-dot {
       width: 6px;
       height: 6px;
@@ -167,7 +148,7 @@
   <div class="container">
     <div class="header-bar">
       <a href="/" class="brand">
-        <img 
+        <img
           src="/assets/images/logo/coingyaan-logo-transparent.png"
           alt="CoinGyaan – Crypto Sentiment Checker and Fear & Greed Index"
           loading="eager"
@@ -176,15 +157,13 @@
           <strong>CoinGyaan</strong>
         </div>
       </a>
-
       <nav class="header-nav">
         <a href="/guides.html">Guides</a>
         <a href="/contact.html">Contact</a>
       </nav>
-
-      <img 
-        src="/assets/images/logo/owl-mascot.png" 
-        alt="CoinGyaan Mascot" 
+      <img
+        src="/assets/images/logo/owl-mascot.png"
+        alt="CoinGyaan Mascot"
         class="owl-mascot"
         title="Meet our crypto owl mascot! 🦉"
         loading="eager"
@@ -264,101 +243,35 @@
           <div class="fg-right">
             <svg id="fgGauge" viewBox="0 0 120 70" width="140" height="85">
               <defs>
-                <!-- Segment 1: red to orange (0-25%) -->
                 <linearGradient id="seg1" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#ef4444"/>
                   <stop offset="100%" stop-color="#f97316"/>
                 </linearGradient>
-
-                <!-- Segment 2: orange to yellow (25-50%) -->
                 <linearGradient id="seg2" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#f97316"/>
                   <stop offset="100%" stop-color="#eab308"/>
                 </linearGradient>
-
-                <!-- Segment 3: yellow to light green (50-75%) -->
                 <linearGradient id="seg3" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#eab308"/>
                   <stop offset="100%" stop-color="#84cc16"/>
                 </linearGradient>
-
-                <!-- Segment 4: light green to green (75-100%) -->
                 <linearGradient id="seg4" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#84cc16"/>
                   <stop offset="100%" stop-color="#22c55e"/>
                 </linearGradient>
               </defs>
 
-              <!-- Dark background track -->
-              <path
-                d="M10,65 A50,50 0 0,1 110,65"
-                fill="none"
-                stroke="#1e293b"
-                stroke-width="10"
-                stroke-linecap="round"
-              />
+              <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="#1e293b" stroke-width="10" stroke-linecap="round"/>
+              <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="url(#seg1)" stroke-width="10" stroke-linecap="butt" stroke-dasharray="39 157" stroke-dashoffset="0"/>
+              <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="url(#seg2)" stroke-width="10" stroke-linecap="butt" stroke-dasharray="39 157" stroke-dashoffset="-39"/>
+              <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="url(#seg3)" stroke-width="10" stroke-linecap="butt" stroke-dasharray="39 157" stroke-dashoffset="-78"/>
+              <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="url(#seg4)" stroke-width="10" stroke-linecap="butt" stroke-dasharray="40 157" stroke-dashoffset="-117"/>
 
-              <!-- Segment 1: red to orange (0-25%) -->
-              <path
-                d="M10,65 A50,50 0 0,1 110,65"
-                fill="none"
-                stroke="url(#seg1)"
-                stroke-width="10"
-                stroke-linecap="butt"
-                stroke-dasharray="39 157"
-                stroke-dashoffset="0"
-              />
-
-              <!-- Segment 2: orange to yellow (25-50%) -->
-              <path
-                d="M10,65 A50,50 0 0,1 110,65"
-                fill="none"
-                stroke="url(#seg2)"
-                stroke-width="10"
-                stroke-linecap="butt"
-                stroke-dasharray="39 157"
-                stroke-dashoffset="-39"
-              />
-
-              <!-- Segment 3: yellow to light green (50-75%) -->
-              <path
-                d="M10,65 A50,50 0 0,1 110,65"
-                fill="none"
-                stroke="url(#seg3)"
-                stroke-width="10"
-                stroke-linecap="butt"
-                stroke-dasharray="39 157"
-                stroke-dashoffset="-78"
-              />
-
-              <!-- Segment 4: light green to green (75-100%) -->
-              <path
-                d="M10,65 A50,50 0 0,1 110,65"
-                fill="none"
-                stroke="url(#seg4)"
-                stroke-width="10"
-                stroke-linecap="butt"
-                stroke-dasharray="40 157"
-                stroke-dashoffset="-117"
-              />
-
-              <!-- Needle -->
-              <line
-                id="fgNeedle"
-                x1="60" y1="65"
-                x2="60" y2="22"
-                stroke="white"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                style="transform-origin: 60px 65px; transform: rotate(-90deg); transition: transform 1.2s ease;"
-              />
-
-              <!-- Needle center dot -->
+              <line id="fgNeedle" x1="60" y1="65" x2="60" y2="22" stroke="white" stroke-width="2.5" stroke-linecap="round" style="transform-origin: 60px 65px; transform: rotate(-90deg); transition: transform 1.2s ease;"/>
               <circle cx="60" cy="65" r="4.5" fill="white" opacity="0.9"/>
               <circle cx="60" cy="65" r="2" fill="#0f172a"/>
             </svg>
 
-            <!-- Gauge label below needle -->
             <div id="fgGaugeLabel">--</div>
           </div>
 
@@ -369,82 +282,13 @@
 
   </section>
 
-  <!-- ============================================
-       GUIDE TICKER
-       HOW TO ADD A NEW GUIDE — only update this array:
-       Add new object at the TOP. Newest guide first.
-       { title: "Guide Title", url: "/guides/file.html", tag: "Tag" }
-       Ticker updates automatically. Nothing else to change.
-  =============================================== -->
+  <!-- GUIDE TICKER — auto powered by /assets/js/guides-data.js -->
   <div class="guide-ticker">
     <span class="guide-ticker-tag" id="tickerTag">Guides</span>
     <div class="guide-ticker-wrap" id="tickerWrap"></div>
     <div class="guide-ticker-dots" id="tickerDots"></div>
     <span class="guide-ticker-arrow">→</span>
   </div>
-
-  <script>
-    const GUIDES = [
-      {
-        title: "100 Free LinkedIn Prompts That Will Transform Your Job Search in 2026",
-        url: "/guides/linkedin-prompts.html",
-        tag: "AI + Career"
-      },
-      {
-        title: "Top AI Prompts for Crypto Research",
-        url: "/guides/ai-prompts.html",
-        tag: "AI + Crypto"
-      },
-      {
-        title: "How to Read the Crypto Fear and Greed Index",
-        url: "/guides/fear-greed-index.html",
-        tag: "Sentiment"
-      }
-    ];
-
-    var wrap   = document.getElementById('tickerWrap');
-    var dotsEl = document.getElementById('tickerDots');
-    var tagEl  = document.getElementById('tickerTag');
-    var current = 0;
-    var timer;
-
-    GUIDES.forEach(function(g, i) {
-      var a = document.createElement('a');
-      a.href = g.url;
-      a.className = 'guide-ticker-item' + (i === 0 ? ' active' : '');
-      a.textContent = g.title;
-      wrap.appendChild(a);
-
-      var dot = document.createElement('div');
-      dot.className = 'guide-ticker-dot' + (i === 0 ? ' active' : '');
-      dot.addEventListener('click', (function(idx) {
-        return function() { showGuide(idx); };
-      })(i));
-      dotsEl.appendChild(dot);
-    });
-
-    function showGuide(index) {
-      var items = wrap.querySelectorAll('.guide-ticker-item');
-      var dots  = dotsEl.querySelectorAll('.guide-ticker-dot');
-      items[current].classList.remove('active');
-      dots[current].classList.remove('active');
-      current = index;
-      items[current].classList.add('active');
-      dots[current].classList.add('active');
-      tagEl.textContent = GUIDES[current].tag;
-      clearInterval(timer);
-      startTimer();
-    }
-
-    function startTimer() {
-      timer = setInterval(function() {
-        showGuide((current + 1) % GUIDES.length);
-      }, 4000);
-    }
-
-    tagEl.textContent = GUIDES[0].tag;
-    startTimer();
-  </script>
 
   <!-- INFO / SEO -->
   <section class="info-section">
@@ -500,11 +344,9 @@
 <!-- FOOTER -->
 <footer>
   <div class="container">
-
     <div class="footer-promo">
       <p>🚀 Building useful crypto tools for traders & creators.</p>
     </div>
-
     <div class="footer-links">
       <a href="/about.html" target="_blank" rel="noopener">About</a>
       <a href="/contact.html" target="_blank" rel="noopener">Contact</a>
@@ -512,21 +354,62 @@
       <a href="/privacy.html" target="_blank" rel="noopener">Privacy</a>
       <a href="/advertise.html" target="_blank" rel="noopener">Advertise</a>
     </div>
-
-    <p class="footer-note">
-      © <span id="year"></span> CoinGyaan.com
-    </p>
-
+    <p class="footer-note">© <span id="year"></span> CoinGyaan.com</p>
   </div>
 </footer>
 
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
 
 <script src="/assets/js/main.js" defer></script>
 <script src="/assets/js/sentiment.js" defer></script>
 <script src="/assets/js/feargreed.js" defer></script>
+
+<!-- Load shared guides data then build ticker -->
+<script src="/assets/js/guides-data.js"></script>
+<script>
+  var wrap    = document.getElementById('tickerWrap');
+  var dotsEl  = document.getElementById('tickerDots');
+  var tagEl   = document.getElementById('tickerTag');
+  var current = 0;
+  var timer;
+
+  GUIDES_DATA.forEach(function(g, i) {
+    var a = document.createElement('a');
+    a.href = g.url;
+    a.className = 'guide-ticker-item' + (i === 0 ? ' active' : '');
+    a.textContent = g.title;
+    wrap.appendChild(a);
+
+    var dot = document.createElement('div');
+    dot.className = 'guide-ticker-dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', (function(idx) {
+      return function() { showGuide(idx); };
+    })(i));
+    dotsEl.appendChild(dot);
+  });
+
+  function showGuide(index) {
+    var items = wrap.querySelectorAll('.guide-ticker-item');
+    var dots  = dotsEl.querySelectorAll('.guide-ticker-dot');
+    items[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = index;
+    items[current].classList.add('active');
+    dots[current].classList.add('active');
+    tagEl.textContent = GUIDES_DATA[current].tag;
+    clearInterval(timer);
+    startTimer();
+  }
+
+  function startTimer() {
+    timer = setInterval(function() {
+      showGuide((current + 1) % GUIDES_DATA.length);
+    }, 4000);
+  }
+
+  tagEl.textContent = GUIDES_DATA[0].tag;
+  startTimer();
+</script>
 
 </body>
 </html>
