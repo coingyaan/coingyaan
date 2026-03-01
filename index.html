@@ -147,6 +147,56 @@
       transition: background 0.3s;
     }
     .guide-ticker-dot.active { background: #f59e0b; }
+
+    /* ── Price Bar ── */
+    .page-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    .page-title-row .page-title { margin-bottom: 0; }
+    .price-bar {
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .price-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 7px 14px;
+      transition: border-color 0.2s;
+    }
+    .price-pill:hover { border-color: #f59e0b; }
+    .price-pill-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .btc-icon { background: rgba(247,147,26,0.15); color: #f7931a; }
+    .eth-icon { background: rgba(98,126,234,0.15); color: #627eea; }
+    .price-pill-info { display: flex; flex-direction: column; }
+    .price-pill-name { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; }
+    .price-pill-value { font-size: 13px; font-weight: 700; color: #e2e8f0; line-height: 1.4; }
+    .price-pill-change { font-size: 10px; font-weight: 700; }
+    .price-up { color: #22c55e; }
+    .price-down { color: #ef4444; }
+    @media (max-width: 600px) {
+      .price-bar { width: 100%; }
+      .price-pill { flex: 1; }
+    }
   </style>
 </head>
 
@@ -184,7 +234,27 @@
 <!-- MAIN CONTENT -->
 <main class="container">
 
-  <h1 class="page-title">Crypto Sentiment Checker</h1>
+  <div class="page-title-row">
+    <h1 class="page-title">Crypto Sentiment Checker</h1>
+    <div class="price-bar">
+      <div class="price-pill">
+        <div class="price-pill-icon btc-icon">₿</div>
+        <div class="price-pill-info">
+          <span class="price-pill-name">Bitcoin</span>
+          <span class="price-pill-value" id="btcPrice">$--</span>
+          <span class="price-pill-change" id="btcChange">--</span>
+        </div>
+      </div>
+      <div class="price-pill">
+        <div class="price-pill-icon eth-icon">Ξ</div>
+        <div class="price-pill-info">
+          <span class="price-pill-name">Ethereum</span>
+          <span class="price-pill-value" id="ethPrice">$--</span>
+          <span class="price-pill-change" id="ethChange">--</span>
+        </div>
+      </div>
+    </div>
+  </div>
   <p class="page-subtitle">
     Understand crypto market sentiment and track the Fear & Greed Index before making decisions.
   </p>
@@ -368,6 +438,33 @@
 </footer>
 
 <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+
+<script>
+  function fetchPrices() {
+    fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true')
+      .then(function(r){ return r.json(); })
+      .then(function(data) {
+        var btcPrice = data.bitcoin.usd;
+        var btcChange = data.bitcoin.usd_24h_change.toFixed(2);
+        var ethPrice = data.ethereum.usd;
+        var ethChange = data.ethereum.usd_24h_change.toFixed(2);
+
+        document.getElementById('btcPrice').textContent = '$' + btcPrice.toLocaleString();
+        document.getElementById('ethPrice').textContent = '$' + ethPrice.toLocaleString();
+
+        var btcEl = document.getElementById('btcChange');
+        btcEl.textContent = (btcChange >= 0 ? '▲ ' : '▼ ') + Math.abs(btcChange) + '%';
+        btcEl.className = 'price-pill-change ' + (btcChange >= 0 ? 'price-up' : 'price-down');
+
+        var ethEl = document.getElementById('ethChange');
+        ethEl.textContent = (ethChange >= 0 ? '▲ ' : '▼ ') + Math.abs(ethChange) + '%';
+        ethEl.className = 'price-pill-change ' + (ethChange >= 0 ? 'price-up' : 'price-down');
+      })
+      .catch(function(e){ console.log('Price fetch failed', e); });
+  }
+  fetchPrices();
+  setInterval(fetchPrices, 60000);
+</script>
 
 <script src="/assets/js/main.js" defer></script>
 <script src="/assets/js/sentiment.js" defer></script>
