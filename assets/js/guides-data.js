@@ -7,18 +7,17 @@
 // 3. Upload this file — both homepage ticker and guides page update automatically
 // Newest guide must always be FIRST in the array.
 // ============================================
-
 var GUIDES_DATA = [
   {
-  url:      "/guides/free-crypto-research-tools-2026.html",
-  tag:      "Research Tools",
-  readTime: "6 min read",
-  title:    "Top 10 Free Crypto Research Tools in 2026",
-  desc:     "Most traders lose money not because of bad luck but because they trade without data. These 10 free tools give you the edge every serious crypto trader needs.",
-  date:     "March 2026"
-},
+    url:      "/guides/free-crypto-research-tools-2026.html",
+    tag:      "Research Tools",
+    readTime: "6 min read",
+    title:    "Top 10 Free Crypto Research Tools in 2026",
+    desc:     "Most traders lose money not because of bad luck but because they trade without data. These 10 free tools give you the edge every serious crypto trader needs.",
+    date:     "March 2026"
+  },
   {
-    url:      "/guides/linkedin-prompts.html",
+    url:      "/guides/100-linkedin-prompts-job-search-2026.html",
     tag:      "AI + Career",
     readTime: "8 min read",
     title:    "100 Free LinkedIn Prompts That Will Transform Your Job Search in 2026",
@@ -26,7 +25,7 @@ var GUIDES_DATA = [
     date:     "February 2026"
   },
   {
-    url:      "/guides/ai-prompts.html",
+    url:      "/guides/top-ai-prompts-crypto-research.html",
     tag:      "AI + Crypto",
     readTime: "5 min read",
     title:    "Top AI Prompts for Crypto Research",
@@ -34,7 +33,7 @@ var GUIDES_DATA = [
     date:     "February 2026"
   },
   {
-    url:      "/guides/fear-greed-index.html",
+    url:      "/guides/how-to-read-crypto-fear-greed-index.html",
     tag:      "Sentiment",
     readTime: "4 min read",
     title:    "How to Read the Crypto Fear and Greed Index",
