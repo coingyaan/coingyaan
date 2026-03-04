@@ -10,6 +10,14 @@
 
 var GUIDES_DATA = [
   {
+  url:      "/guides/free-crypto-research-tools-2026.html",
+  tag:      "Research Tools",
+  readTime: "6 min read",
+  title:    "Top 10 Free Crypto Research Tools in 2026",
+  desc:     "Most traders lose money not because of bad luck but because they trade without data. These 10 free tools give you the edge every serious crypto trader needs.",
+  date:     "March 2026"
+},
+  {
     url:      "/guides/linkedin-prompts.html",
     tag:      "AI + Career",
     readTime: "8 min read",
