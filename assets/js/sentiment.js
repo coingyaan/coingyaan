@@ -198,13 +198,21 @@ function filterNewsForCoin(news, coinName) {
   return relevant.length >= 2 ? relevant.slice(0, 3) : news.slice(0, 3);
 }
 
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
 async function calculateSentiment(cryptoName) {
   const cryptoId = await getCryptoId(cryptoName.toLowerCase().trim());
-  const [priceData, news, fngValue, ohlcData] = await Promise.all([
-    getCryptoPrices(cryptoId),
+
+  // Sequence CoinGecko calls with small delays to avoid mobile rate limiting
+  const priceData = await getCryptoPrices(cryptoId);
+  await delay(600);
+  const ohlcData  = await getOHLC(cryptoId);
+  await delay(400);
+
+  // News and FNG can fire together — different APIs
+  const [news, fngValue] = await Promise.all([
     getCryptoNews(cryptoName, 20),
-    getSentimentFearGreed(),
-    getOHLC(cryptoId)
+    getSentimentFearGreed()
   ]);
   const rsiValue      = calculateRSI(ohlcData);
   const newsBias      = analyzeNewsBias(news, cryptoName);
