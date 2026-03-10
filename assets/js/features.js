@@ -61,6 +61,19 @@ async function loadTrending() {
         </div>`;
     }).join('');
 
+    // Sync BTC price in trending with the right side price pill for consistency
+    setTimeout(() => {
+      const btcPillEl = document.getElementById('btcPrice');
+      if (btcPillEl && btcPillEl.textContent !== '$--') {
+        grid.querySelectorAll('.trending-name').forEach((el, i) => {
+          if (el.textContent === 'Bitcoin') {
+            const priceEl = grid.querySelectorAll('.trending-price')[i];
+            if (priceEl) priceEl.textContent = btcPillEl.textContent;
+          }
+        });
+      }
+    }, 2000);
+
     if (refreshEl) refreshEl.textContent = 'Updated ' + timeNow();
 
   } catch (e) {
