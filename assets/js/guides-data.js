@@ -9,6 +9,14 @@
 // ============================================
 var GUIDES_DATA = [
   {
+    url:      "/guides/ai-agents-changing-web3-crypto-2026.html",
+    tag:      "AI + Crypto",
+    readTime: "7 min read",
+    title:    "AI Agents and Crypto: How AI Is Changing Web3 in 2026",
+    desc:     "AI agents are quietly reshaping crypto. They trade, manage funds, hire other agents and settle payments — all without human involvement. Here is what is happening and why it matters.",
+    date:     "March 2026"
+  },
+  {
     url:      "/guides/free-crypto-research-tools-2026.html",
     tag:      "Research Tools",
     readTime: "6 min read",
