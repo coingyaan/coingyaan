@@ -340,6 +340,272 @@
       text-align: center;
       padding: 8px;
     }
+
+    /* ── Trending Coins ── */
+    .trending-section {
+      margin: 8px 0 0;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .section-refresh {
+      font-size: 11px;
+      color: #334155;
+    }
+    .trending-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 700px) {
+      .trending-grid { grid-template-columns: repeat(2, 1fr); }
+      .trending-grid .trending-coin:last-child { display: none; }
+    }
+    .trending-coin {
+      background: #0d1526;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 12px 14px;
+      transition: border-color 0.2s;
+    }
+    .trending-coin:hover { border-color: #334155; }
+    .trending-rank {
+      font-size: 10px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+    .trending-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .trending-symbol {
+      font-size: 11px;
+      color: #475569;
+      margin-bottom: 8px;
+    }
+    .trending-price {
+      font-size: 13px;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-bottom: 4px;
+    }
+    .trending-change {
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .trending-change.up   { color: #22c55e; }
+    .trending-change.down { color: #ef4444; }
+    .trending-loading {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: 13px;
+      color: #334155;
+      padding: 20px;
+    }
+
+    /* ── Altcoin Season Index ── */
+    .altseason-section {
+      margin: 28px 0 0;
+    }
+    .altseason-card {
+      background: #0d1526;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 22px 24px;
+    }
+    .altseason-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      gap: 16px;
+    }
+    @media (max-width: 600px) {
+      .altseason-top { flex-direction: column; }
+    }
+    .altseason-score-wrap { text-align: center; }
+    .altseason-score {
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1;
+      color: #e2e8f0;
+    }
+    .altseason-score-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+    }
+    .altseason-badge {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-top: 10px;
+    }
+    .altseason-badge.alt  { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.2); }
+    .altseason-badge.btc  { background: rgba(245,158,11,0.12);  color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
+    .altseason-badge.neutral { background: rgba(148,163,184,0.1); color: #94a3b8; border: 1px solid rgba(148,163,184,0.15); }
+    .altseason-gauge-wrap { flex: 1; }
+    .altseason-gauge-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+    .altseason-track {
+      height: 10px;
+      border-radius: 5px;
+      background: linear-gradient(to right, #f59e0b, #94a3b8, #a78bfa);
+      position: relative;
+      margin-bottom: 8px;
+    }
+    .altseason-needle {
+      position: absolute;
+      top: -5px;
+      width: 4px;
+      height: 20px;
+      background: #fff;
+      border-radius: 2px;
+      transform: translateX(-50%);
+      transition: left 1s ease;
+      box-shadow: 0 0 6px rgba(255,255,255,0.4);
+    }
+    .altseason-desc {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.6;
+      margin-top: 12px;
+    }
+    .altseason-desc strong { color: #94a3b8; }
+    .altseason-stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .altseason-stat {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-align: center;
+    }
+    .altseason-stat-label { font-size: 10px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .altseason-stat-value { font-size: 15px; font-weight: 700; color: #e2e8f0; }
+
+    /* ── Telegram Alert ── */
+    .alert-section {
+      margin: 28px 0 0;
+    }
+    .alert-card {
+      background: #0d1526;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 22px 24px;
+    }
+    .alert-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .alert-tg-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(37,197,234,0.1);
+      border: 1px solid rgba(37,197,234,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .alert-title { font-size: 16px; font-weight: 700; color: #e2e8f0; }
+    .alert-subtitle { font-size: 13px; color: #475569; margin-bottom: 18px; }
+    .alert-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+    @media (max-width: 640px) {
+      .alert-form-row { grid-template-columns: 1fr 1fr; }
+      .alert-form-row .alert-btn { grid-column: 1 / -1; }
+    }
+    .alert-field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .alert-field input,
+    .alert-field select {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 7px;
+      padding: 9px 12px;
+      font-size: 13px;
+      color: #e2e8f0;
+      outline: none;
+      box-sizing: border-box;
+    }
+    .alert-field input:focus,
+    .alert-field select:focus { border-color: #334155; }
+    .alert-field select option { background: #0f172a; }
+    .alert-btn {
+      background: #229ed9;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      border-radius: 7px;
+      padding: 10px 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .alert-btn:hover { background: #1a8abf; }
+    .alert-btn:disabled { background: #1e293b; color: #475569; cursor: not-allowed; }
+    .alert-status {
+      margin-top: 12px;
+      font-size: 13px;
+      min-height: 20px;
+    }
+    .alert-status.success { color: #22c55e; }
+    .alert-status.error   { color: #ef4444; }
+    .alert-status.info    { color: #94a3b8; }
+    .alert-note {
+      font-size: 11px;
+      color: #334155;
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+    .alert-note a { color: #229ed9; text-decoration: none; }
   </style>
 </head>
 
@@ -378,7 +644,6 @@
 <main class="container">
 
   <div class="page-title-row">
-    <h1 class="page-title">Crypto Sentiment Checker</h1>
     <div class="price-bar">
       <div class="price-pill">
         <div class="price-pill-icon btc-icon">₿</div>
@@ -398,8 +663,19 @@
       </div>
     </div>
   </div>
+  <!-- TRENDING COINS -->
+  <section class="trending-section">
+    <div class="section-header">
+      <span class="section-title">🔥 Top 5 Trending Coins Today</span>
+      <span class="section-refresh" id="trendingRefreshTime"></span>
+    </div>
+    <div class="trending-grid" id="trendingGrid">
+      <div class="trending-loading">Loading trending coins...</div>
+    </div>
+  </section>
+
   <p class="page-subtitle">
-    Understand crypto market sentiment and track the Fear & Greed Index before making decisions.
+    Understand crypto market sentiment and track the Fear &amp; Greed Index before making decisions.
   </p>
 
   <!-- TOOL GRID -->
@@ -407,7 +683,7 @@
 
     <!-- LEFT: SENTIMENT CHECKER -->
     <div class="card">
-      <h2>Market Sentiment</h2>
+      <h2>Market Sentiment Checker</h2>
       <p class="subtext">Check if the market is bullish or bearish.</p>
 
       <input
@@ -556,6 +832,85 @@
     <span class="guide-ticker-arrow">→</span>
   </div>
 
+
+  <!-- ALTCOIN SEASON INDEX -->
+  <section class="altseason-section">
+    <div class="section-header">
+      <span class="section-title">⚡ Altcoin Season Index</span>
+      <span class="section-refresh" id="altseasonRefreshTime"></span>
+    </div>
+    <div class="altseason-card">
+      <div class="altseason-top">
+        <div class="altseason-score-wrap">
+          <div class="altseason-score" id="altseasonScore">--</div>
+          <div class="altseason-score-label">out of 100</div>
+          <div class="altseason-badge neutral" id="altseasonBadge">Loading...</div>
+        </div>
+        <div class="altseason-gauge-wrap">
+          <div class="altseason-gauge-labels">
+            <span>Bitcoin Season</span>
+            <span>Altcoin Season</span>
+          </div>
+          <div class="altseason-track">
+            <div class="altseason-needle" id="altseasonNeedle" style="left:50%;"></div>
+          </div>
+          <div class="altseason-desc" id="altseasonDesc">Calculating based on top 50 altcoin performance vs Bitcoin over 90 days...</div>
+        </div>
+      </div>
+      <div class="altseason-stat-row">
+        <div class="altseason-stat">
+          <div class="altseason-stat-label">Alts Outperforming BTC</div>
+          <div class="altseason-stat-value" id="altseasonOutperforming">--</div>
+        </div>
+        <div class="altseason-stat">
+          <div class="altseason-stat-label">BTC 90d Change</div>
+          <div class="altseason-stat-value" id="altseasonBtcChange">--</div>
+        </div>
+        <div class="altseason-stat">
+          <div class="altseason-stat-label">Avg Alt 90d Change</div>
+          <div class="altseason-stat-value" id="altseasonAvgAlt">--</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TELEGRAM ALERTS -->
+  <section class="alert-section">
+    <div class="section-header">
+      <span class="section-title">🔔 Sentiment Alerts</span>
+    </div>
+    <div class="alert-card">
+      <div class="alert-card-header">
+        <div class="alert-tg-icon">📩</div>
+        <div class="alert-title">Get Telegram Alerts</div>
+      </div>
+      <div class="alert-subtitle">We will message you on Telegram when your coin's sentiment changes.</div>
+      <div class="alert-form-row">
+        <div class="alert-field">
+          <label>Telegram Username</label>
+          <input type="text" id="alertUsername" placeholder="@yourhandle" />
+        </div>
+        <div class="alert-field">
+          <label>Coin</label>
+          <input type="text" id="alertCoin" placeholder="Bitcoin, ETH..." />
+        </div>
+        <div class="alert-field">
+          <label>Alert When</label>
+          <select id="alertTrigger">
+            <option value="bullish">Turns Bullish</option>
+            <option value="bearish">Turns Bearish</option>
+            <option value="any">Any Change</option>
+          </select>
+        </div>
+        <button class="alert-btn" id="alertSubmitBtn" onclick="submitAlert()">Set Alert</button>
+      </div>
+      <div class="alert-status" id="alertStatus"></div>
+      <div class="alert-note">
+        To receive alerts, start a chat with <a href="https://t.me/CoinGyaanBot" target="_blank" rel="noopener">@CoinGyaanBot</a> on Telegram first. &nbsp;·&nbsp; Educational only. Not financial advice.
+      </div>
+    </div>
+  </section>
+
   <!-- INFO / SEO -->
   <section class="info-section">
     <h2>How Crypto Market Sentiment Works?</h2>
@@ -654,6 +1009,7 @@
 </script>
 
 <script src="/assets/js/main.js" defer></script>
+<script src="/assets/js/features.js" defer></script>
 <script src="/assets/js/sentiment.js" defer></script>
 <script src="/assets/js/feargreed.js" defer></script>
 
