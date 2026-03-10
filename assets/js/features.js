@@ -71,86 +71,101 @@ async function loadTrending() {
 
 // ═══════════════════════════════════════════
 // FEATURE 5 — ALTCOIN SEASON INDEX
+// Uses /coins/markets (no 90d param) + /coins/{id}/market_chart for BTC 90d
+// All free tier compatible
 // ═══════════════════════════════════════════
 async function loadAltcoinSeason() {
-  const scoreEl          = document.getElementById('altseasonScore');
-  const badgeEl          = document.getElementById('altseasonBadge');
-  const needleEl         = document.getElementById('altseasonNeedle');
-  const descEl           = document.getElementById('altseasonDesc');
-  const outperformingEl  = document.getElementById('altseasonOutperforming');
-  const btcChangeEl      = document.getElementById('altseasonBtcChange');
-  const avgAltEl         = document.getElementById('altseasonAvgAlt');
-  const refreshEl        = document.getElementById('altseasonRefreshTime');
+  const scoreEl         = document.getElementById('altseasonScore');
+  const badgeEl         = document.getElementById('altseasonBadge');
+  const needleEl        = document.getElementById('altseasonNeedle');
+  const descEl          = document.getElementById('altseasonDesc');
+  const outperformingEl = document.getElementById('altseasonOutperforming');
+  const btcChangeEl     = document.getElementById('altseasonBtcChange');
+  const avgAltEl        = document.getElementById('altseasonAvgAlt');
+  const refreshEl       = document.getElementById('altseasonRefreshTime');
   if (!scoreEl) return;
 
   try {
-    // Get top 50 coins by market cap
-    await delay(1000);
-    const res  = await fetch(`${CG}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=51&page=1&price_change_percentage=90d`);
-    const data = await res.json();
+    // Step 1: Get top 51 coins current prices (free endpoint)
+    await delay(1200);
+    const marketsRes = await fetch(
+      `${CG}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=51&page=1&sparkline=false`
+    );
+    const markets = await marketsRes.json();
+    if (!markets || !markets.length) throw new Error('No market data');
 
-    if (!data || !data.length) return;
+    // Step 2: Get BTC 90-day price history (free endpoint)
+    await delay(700);
+    const btcChartRes = await fetch(
+      `${CG}/coins/bitcoin/market_chart?vs_currency=usd&days=90&interval=daily`
+    );
+    const btcChart = await btcChartRes.json();
 
-    // Find BTC
-    const btc    = data.find(c => c.id === 'bitcoin');
-    const btcChg = btc ? btc.price_change_percentage_90d_in_currency : null;
+    // Calculate BTC 90d change from chart
+    const btcPrices  = btcChart.prices || [];
+    const btcStart   = btcPrices.length > 0 ? btcPrices[0][1] : null;
+    const btcCurrent = markets.find(c => c.id === 'bitcoin');
+    const btcNow     = btcCurrent ? btcCurrent.current_price : null;
+    const btcChg90   = btcStart && btcNow ? ((btcNow - btcStart) / btcStart) * 100 : null;
 
-    // Filter out BTC — compare top 50 alts
-    const alts = data.filter(c => c.id !== 'bitcoin').slice(0, 50);
+    // Step 3: Use 24h change as proxy signal for top 50 alts
+    // (90d per-coin free calls would need 50 requests — too many)
+    // Instead use price_change_percentage_24h weighted signal
+    const alts = markets.filter(c => c.id !== 'bitcoin').slice(0, 50);
 
     let outperforming = 0;
     let totalAltChg   = 0;
     let validAlts     = 0;
+    const btc24h      = btcCurrent ? btcCurrent.price_change_percentage_24h : 0;
 
     alts.forEach(alt => {
-      const chg = alt.price_change_percentage_90d_in_currency;
+      const chg = alt.price_change_percentage_24h;
       if (chg !== null && chg !== undefined) {
         totalAltChg += chg;
         validAlts++;
-        if (btcChg !== null && chg > btcChg) outperforming++;
+        if (chg > btc24h) outperforming++;
       }
     });
 
     const avgAltChg = validAlts > 0 ? totalAltChg / validAlts : 0;
+    const score     = validAlts > 0 ? Math.round((outperforming / validAlts) * 100) : 50;
 
-    // Score = % of alts outperforming BTC (0-100)
-    const score = validAlts > 0 ? Math.round((outperforming / validAlts) * 100) : 50;
-
-    // Determine season
+    // Season label
     let season, badgeClass, desc;
     if (score >= 75) {
       season     = 'Altcoin Season 🚀';
       badgeClass = 'alt';
-      desc       = `<strong>${outperforming} out of ${validAlts}</strong> top altcoins are outperforming Bitcoin over 90 days. This is Altcoin Season — capital is flowing into alts. Historically a time of high volatility and big moves in smaller coins.`;
+      desc       = `<strong>${outperforming} of ${validAlts}</strong> top altcoins are outperforming Bitcoin over the last 24 hours. Capital is flowing into alts — historically a time of high volatility and big moves in smaller coins.`;
     } else if (score <= 25) {
       season     = 'Bitcoin Season ₿';
       badgeClass = 'btc';
-      desc       = `Only <strong>${outperforming} out of ${validAlts}</strong> top altcoins are outperforming Bitcoin over 90 days. This is Bitcoin Season — BTC is dominating. Altcoins tend to bleed relative to BTC during this phase.`;
+      desc       = `Only <strong>${outperforming} of ${validAlts}</strong> top altcoins are outperforming Bitcoin. BTC is dominating. Altcoins tend to underperform relative to BTC during this phase.`;
     } else {
       season     = 'Mixed Market';
       badgeClass = 'neutral';
-      desc       = `<strong>${outperforming} out of ${validAlts}</strong> top altcoins are outperforming Bitcoin over 90 days. The market is mixed — no clear dominance from BTC or alts. Watch for a breakout in either direction.`;
+      desc       = `<strong>${outperforming} of ${validAlts}</strong> top altcoins are outperforming Bitcoin. The market is mixed — no clear dominance from BTC or alts yet.`;
     }
 
     // Update UI
-    if (scoreEl)         scoreEl.textContent         = score;
+    if (scoreEl)         scoreEl.textContent        = score;
     if (badgeEl)         { badgeEl.textContent = season; badgeEl.className = 'altseason-badge ' + badgeClass; }
-    if (needleEl)        needleEl.style.left          = score + '%';
-    if (descEl)          descEl.innerHTML             = desc;
-    if (outperformingEl) outperformingEl.textContent  = outperforming + ' / ' + validAlts;
-    if (btcChangeEl)     {
-      btcChangeEl.textContent = fmtPct(btcChg);
-      btcChangeEl.style.color = btcChg >= 0 ? '#22c55e' : '#ef4444';
+    if (needleEl)        needleEl.style.left         = score + '%';
+    if (descEl)          descEl.innerHTML            = desc;
+    if (outperformingEl) outperformingEl.textContent = outperforming + ' / ' + validAlts;
+    if (btcChangeEl) {
+      btcChangeEl.textContent   = btcChg90 !== null ? fmtPct(btcChg90) : fmtPct(btc24h) + ' (24h)';
+      btcChangeEl.style.color   = (btcChg90 || btc24h) >= 0 ? '#22c55e' : '#ef4444';
     }
-    if (avgAltEl)        {
-      avgAltEl.textContent    = fmtPct(avgAltChg);
-      avgAltEl.style.color    = avgAltChg >= 0 ? '#22c55e' : '#ef4444';
+    if (avgAltEl) {
+      avgAltEl.textContent  = fmtPct(avgAltChg);
+      avgAltEl.style.color  = avgAltChg >= 0 ? '#22c55e' : '#ef4444';
     }
     if (refreshEl) refreshEl.textContent = 'Updated ' + timeNow();
 
   } catch (e) {
     console.error('Altcoin season error:', e);
-    if (descEl) descEl.textContent = 'Unable to load data. Please refresh.';
+    if (descEl) descEl.textContent = 'Unable to load data. Please refresh the page.';
+    if (scoreEl) scoreEl.textContent = '--';
   }
 }
 
