@@ -5,7 +5,7 @@
 
 const SENTIMENT_COINGECKO_API = 'https://api.coingecko.com/api/v3'; // kept for coin search and OHLC
 const SENTIMENT_CGAPI         = 'https://api.coingyaan.com';
-const SENTIMENT_NEWS_API      = 'https://min-api.cryptocompare.com/data/v2/news/';
+const SENTIMENT_NEWS_API      = 'https://api.coingyaan.com/news';
 const SENTIMENT_FNG_API       = 'https://api.coingyaan.com/feargreed';
 
 async function getCryptoId(coinName) {
@@ -45,16 +45,11 @@ async function getOHLC(cryptoId) {
 
 async function getCryptoNews(coinName, limit = 20) {
   try {
-    const res  = await fetch(`${SENTIMENT_NEWS_API}?lang=EN&sortOrder=latest`);
+    const res  = await fetch(SENTIMENT_NEWS_API);
     const data = await res.json();
-    if (data && data.Data) {
-      return data.Data.slice(0, limit).map(item => ({
-        title:       item.title,
-        body:        item.body,
-        url:         item.url,
-        publishedOn: item.published_on,
-        source:      item.source
-      }));
+    // CoinGyaan API format: { data: [...] }
+    if (data && data.data && data.data.length) {
+      return data.data.slice(0, limit);
     }
     return [];
   } catch (e) { return []; }
