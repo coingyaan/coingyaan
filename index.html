@@ -681,7 +681,7 @@
   </section>
 
   <p class="page-subtitle">
-    Check market sentiment for any coin, track the Fear &amp; Greed Index and monitor the Altcoin Season Index, all free.
+    Check market sentiment for any coin, track the Fear &amp; Greed Index and monitor the Altcoin Season Index — all free, all in one place.
   </p>
 
   <!-- TOOL GRID -->
@@ -972,7 +972,7 @@
 <footer>
   <div class="container">
     <div class="footer-promo">
-      <p>Built for crypto curious minds. Free tools, real data and no noise.</p>
+      <p>🚀 Free crypto sentiment tools and AI guides to help you trade smarter.</p>
     </div>
     <div class="footer-links">
       <a href="/about.html" target="_blank" rel="noopener">About</a>
@@ -989,13 +989,15 @@
 
 <script>
   function fetchPrices() {
-    fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true')
+    fetch('https://api.coingyaan.com/prices')
       .then(function(r){ return r.json(); })
-      .then(function(data) {
-        var btcPrice = data.bitcoin.usd;
-        var btcChange = data.bitcoin.usd_24h_change.toFixed(2);
-        var ethPrice = data.ethereum.usd;
-        var ethChange = data.ethereum.usd_24h_change.toFixed(2);
+      .then(function(res) {
+        var data = res.data || {};
+        var btcPrice = data.bitcoin ? data.bitcoin.usd : null;
+        var btcChange = data.bitcoin ? data.bitcoin.change24h.toFixed(2) : null;
+        var ethPrice = data.ethereum ? data.ethereum.usd : null;
+        var ethChange = data.ethereum ? data.ethereum.change24h.toFixed(2) : null;
+        if (!btcPrice || !ethPrice) return;
 
         document.getElementById('btcPrice').textContent = '$' + btcPrice.toLocaleString();
         document.getElementById('ethPrice').textContent = '$' + ethPrice.toLocaleString();
