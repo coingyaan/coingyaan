@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXY9ZZ543X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-DXY9ZZ543X");
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-9704432095241296" />
+
+  <!-- Primary SEO -->
+  <title>CoinGyaan API Docs — Free Crypto Sentiment API for Developers</title>
+  <meta name="description" content="CoinGyaan API gives developers free access to live crypto sentiment scores, Fear and Greed Index, BTC RSI, trending coins and Altcoin Season Index. No signup required." />
+  <meta name="keywords" content="crypto sentiment API, free crypto API, bitcoin sentiment API, fear and greed API, altcoin season API, crypto data API for developers" />
+  <meta name="author" content="CoinGyaan" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://coingyaan.com/api-docs.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="CoinGyaan API Docs — Free Crypto Sentiment API for Developers" />
+  <meta property="og:description" content="Free crypto sentiment API. Live BTC and ETH sentiment, Fear and Greed Index, RSI, trending coins and Altcoin Season Index. No signup required." />
+  <meta property="og:url" content="https://coingyaan.com/api-docs.html" />
+  <meta property="og:image" content="https://coingyaan.com/assets/images/social/universal-share.png" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@coin_gyaan" />
+  <meta name="twitter:title" content="CoinGyaan API Docs — Free Crypto Sentiment API" />
+  <meta name="twitter:description" content="Free crypto sentiment API. Live BTC and ETH sentiment, Fear and Greed Index, RSI and trending coins. No signup required." />
+  <meta name="twitter:image" content="https://coingyaan.com/assets/images/social/universal-share.png" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon/coingyaan-favicon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon/coingyaan-favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="48x48" href="/assets/images/favicon/coingyaan-favicon-48x48.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon/coingyaan-apple-touch-icon-180x180.png" />
+  <link rel="icon" sizes="192x192" href="/assets/images/favicon/coingyaan-android-icon-192x192.png" />
+  <link rel="icon" sizes="512x512" href="/assets/images/favicon/coingyaan-android-icon-512x512.png" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/assets/css/main.css" />
+  <link rel="stylesheet" href="/assets/css/components.css" />
+  <link rel="stylesheet" href="/assets/css/blog.css" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "CoinGyaan API Docs",
+    "description": "Free crypto sentiment API for developers. Live BTC and ETH sentiment, Fear and Greed Index, RSI, trending coins and Altcoin Season Index.",
+    "url": "https://coingyaan.com/api-docs.html",
+    "publisher": {
+      "@type": "Organization",
+      "name": "CoinGyaan",
+      "url": "https://coingyaan.com",
+      "logo": "https://coingyaan.com/assets/images/logo/coingyaan-logo-transparent.png"
+    }
+  }
+  </script>
+
+  <style>
+    .article-wrap { max-width: 780px; }
+    .article-wrap p { font-size: 15px; line-height: 1.8; color: #d1d5db; margin-bottom: 20px; }
+    .article-wrap h2 { font-size: 20px; font-weight: 700; color: #e2e8f0; margin-top: 44px; margin-bottom: 14px; }
+    .article-wrap h3 { font-size: 15px; font-weight: 700; color: #f59e0b; margin-top: 28px; margin-bottom: 10px; }
+    .back-link { display: inline-block; font-size: 13px; color: #64748b; text-decoration: none; margin-bottom: 24px; }
+    .back-link:hover { color: #f59e0b; }
+    .article-tag { display: inline-block; background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); border-radius: 20px; padding: 3px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; }
+    .base-url {
+      background: #0d1526;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-family: monospace;
+      font-size: 15px;
+      color: #f59e0b;
+      letter-spacing: 0.02em;
+    }
+    .endpoint-block {
+      background: #0d1526;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+    .endpoint-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      border-bottom: 1px solid #1e293b;
+    }
+    .method-badge {
+      background: rgba(34,197,94,0.1);
+      color: #22c55e;
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: monospace;
+    }
+    .endpoint-path {
+      font-family: monospace;
+      font-size: 14px;
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+    .endpoint-desc {
+      font-size: 13px;
+      color: #64748b;
+      margin-left: auto;
+    }
+    @media (max-width: 600px) { .endpoint-desc { display: none; } }
+    .endpoint-body { padding: 16px 20px; }
+    .endpoint-body p { font-size: 14px; color: #94a3b8; margin-bottom: 12px; }
+    .code-block {
+      background: #060d1a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-family: monospace;
+      font-size: 13px;
+      color: #a5f3fc;
+      overflow-x: auto;
+      white-space: pre;
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+    .response-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+      margin-top: 14px;
+    }
+    .tier-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+    .tier-table th { background: #0d1526; color: #f59e0b; padding: 12px 16px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid #1e293b; }
+    .tier-table td { padding: 12px 16px; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
+    .tier-table tr:last-child td { border-bottom: none; }
+    .yes { color: #22c55e; font-weight: 700; }
+    .no  { color: #ef4444; font-weight: 700; }
+    .highlight-box { background: rgba(245,158,11,0.06); border-left: 3px solid #f59e0b; border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 20px 0; }
+    .highlight-box p { margin-bottom: 0; font-size: 14px; color: #cbd5e1; }
+    .cta-box { background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.03)); border: 1px solid rgba(245,158,11,0.2); border-radius: 12px; padding: 24px; margin: 40px 0; text-align: center; }
+    .cta-box h3 { color: #f59e0b; margin-top: 0; font-size: 18px; }
+    .cta-box p { color: #94a3b8; margin-bottom: 16px; }
+    .cta-btn { display: inline-block; background: #f59e0b; color: #0a0f1e; font-weight: 700; font-size: 14px; padding: 10px 24px; border-radius: 8px; text-decoration: none; }
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; }
+    @media (max-width: 500px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+    .stat-box { background: #0d1526; border: 1px solid #1e293b; border-radius: 10px; padding: 14px; text-align: center; }
+    .stat-label { font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .stat-value { font-size: 20px; font-weight: 800; color: #f59e0b; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-bar">
+      <a href="/" class="brand">
+        <img src="/assets/images/logo/coingyaan-logo-transparent.png" alt="CoinGyaan" loading="eager" />
+        <div class="brand-text"><strong>CoinGyaan</strong></div>
+      </a>
+      <nav class="header-nav">
+        <a href="/guides.html">Guides</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+      <img src="/assets/images/logo/owl-mascot.png" alt="CoinGyaan Mascot" class="owl-mascot" title="CoinGyaan Owl 🦉" loading="eager" />
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <a href="/" class="back-link">← Back to Home</a>
+
+  <div class="article-wrap">
+
+    <span class="article-tag">Developer Docs</span>
+    <h1 class="page-title">CoinGyaan API — Free Crypto Sentiment API for Developers</h1>
+    <p class="article-meta">Version 1.0.0 &middot; Launched March 2026 &middot; Free to use</p>
+
+    <div class="article-content">
+
+      <p>
+        The CoinGyaan API gives developers free access to live crypto sentiment data — the same data powering coingyaan.com. No signup. No API key needed for the free tier. Just call the endpoint and get clean JSON back.
+      </p>
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-label">Free Requests</div>
+          <div class="stat-value">100/day</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Cache Refresh</div>
+          <div class="stat-value">15 min</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Uptime</div>
+          <div class="stat-value">24/7</div>
+        </div>
+      </div>
+
+      <h2>Base URL</h2>
+      <div class="base-url">https://api.coingyaan.com</div>
+
+      <div class="highlight-box">
+        <p>All endpoints return JSON. CORS is enabled — you can call this API directly from any browser or app. Free tier requires no API key.</p>
+      </div>
+
+      <!-- ENDPOINT 1 -->
+      <h2>Endpoints</h2>
+
+      <div class="endpoint-block">
+        <div class="endpoint-header">
+          <span class="method-badge">GET</span>
+          <span class="endpoint-path">/sentiment?coin=bitcoin</span>
+          <span class="endpoint-desc">Sentiment score for any coin</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Returns the CoinGyaan sentiment verdict for any coin — BULLISH, BEARISH or NEUTRAL — based on three signals: price momentum, Fear and Greed Index and RSI(14). BTC and ETH are served from cache. Other coins are fetched live.</p>
+          <div class="response-label">Parameters</div>
+          <div class="code-block">coin  (string, required) — coin name or symbol e.g. bitcoin, ethereum, solana, btc, eth</div>
+          <div class="response-label">Example Request</div>
+          <div class="code-block">GET https://api.coingyaan.com/sentiment?coin=bitcoin</div>
+          <div class="response-label">Example Response</div>
+          <div class="code-block">{
+  "coin": "bitcoin",
+  "symbol": "BTC",
+  "price": 71542,
+  "change24h": 1.28,
+  "sentiment": "neutral",
+  "rsi": 49,
+  "feargreed": {
+    "value": 15,
+    "label": "Extreme Fear"
+  },
+  "signals": {
+    "price": "neutral",
+    "feargreed": "bearish",
+    "rsi": "neutral"
+  },
+  "updatedAt": "2026-03-15T16:16:36.200Z"
+}</div>
+        </div>
+      </div>
+
+      <!-- ENDPOINT 2 -->
+      <div class="endpoint-block">
+        <div class="endpoint-header">
+          <span class="method-badge">GET</span>
+          <span class="endpoint-path">/prices</span>
+          <span class="endpoint-desc">Live prices for top 5 coins</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Returns live USD prices and 24h change for Bitcoin, Ethereum, Solana, BNB and XRP. Refreshed every 15 minutes.</p>
+          <div class="response-label">Example Request</div>
+          <div class="code-block">GET https://api.coingyaan.com/prices</div>
+          <div class="response-label">Example Response</div>
+          <div class="code-block">{
+  "data": {
+    "bitcoin":  { "usd": 71542, "change24h": 1.28, "marketCap": 1431798349509 },
+    "ethereum": { "usd": 2097,  "change24h": 1.11, "marketCap": 253175467872 },
+    "solana":   { "usd": 87.99, "change24h": 1.41 },
+    "bnb":      { "usd": 660,   "change24h": 1.13 },
+    "xrp":      { "usd": 1.42,  "change24h": 1.97 }
+  },
+  "updatedAt": "2026-03-15T16:16:36.200Z"
+}</div>
+        </div>
+      </div>
+
+      <!-- ENDPOINT 3 -->
+      <div class="endpoint-block">
+        <div class="endpoint-header">
+          <span class="method-badge">GET</span>
+          <span class="endpoint-path">/feargreed</span>
+          <span class="endpoint-desc">Crypto Fear and Greed Index</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Returns the current Crypto Fear and Greed Index value and label. Score ranges from 0 (Extreme Fear) to 100 (Extreme Greed).</p>
+          <div class="response-label">Example Request</div>
+          <div class="code-block">GET https://api.coingyaan.com/feargreed</div>
+          <div class="response-label">Example Response</div>
+          <div class="code-block">{
+  "data": {
+    "value": 15,
+    "label": "Extreme Fear"
+  },
+  "updatedAt": "2026-03-15T16:16:36.200Z"
+}</div>
+        </div>
+      </div>
+
+      <!-- ENDPOINT 4 -->
+      <div class="endpoint-block">
+        <div class="endpoint-header">
+          <span class="method-badge">GET</span>
+          <span class="endpoint-path">/trending</span>
+          <span class="endpoint-desc">Top 5 trending coins right now</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Returns the top 5 trending coins on CoinGecko right now with live price and 24h change.</p>
+          <div class="response-label">Example Request</div>
+          <div class="code-block">GET https://api.coingyaan.com/trending</div>
+          <div class="response-label">Example Response</div>
+          <div class="code-block">{
+  "data": [
+    { "id": "bittensor", "name": "Bittensor", "symbol": "TAO", "price": 275.68, "change24h": 17.82 },
+    { "id": "bitcoin",   "name": "Bitcoin",   "symbol": "BTC", "price": 71490,  "change24h": 1.34 },
+    { "id": "solana",    "name": "Solana",     "symbol": "SOL", "price": 87.91,  "change24h": 1.35 }
+  ],
+  "updatedAt": "2026-03-15T16:16:36.200Z"
+}</div>
+        </div>
+      </div>
+
+      <!-- ENDPOINT 5 -->
+      <div class="endpoint-block">
+        <div class="endpoint-header">
+          <span class="method-badge">GET</span>
+          <span class="endpoint-path">/altseason</span>
+          <span class="endpoint-desc">Altcoin Season Index</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Returns the CoinGyaan Altcoin Season Index score and phase. Score is based on how many of the top 50 altcoins are outperforming Bitcoin.</p>
+          <div class="response-label">Example Request</div>
+          <div class="code-block">GET https://api.coingyaan.com/altseason</div>
+          <div class="response-label">Example Response</div>
+          <div class="code-block">{
+  "data": {
+    "score": 33,
+    "phase": "mixed",
+    "outperforming": 16,
+    "totalAlts": 49,
+    "avgAltChange24h": 0.89,
+    "btcChange24h": 1.29
+  },
+  "updatedAt": "2026-03-15T16:16:36.200Z"
+}</div>
+        </div>
+      </div>
+
+      <!-- CODE EXAMPLES -->
+      <h2>Code Examples</h2>
+
+      <h3>JavaScript / Fetch</h3>
+      <div class="code-block">fetch('https://api.coingyaan.com/sentiment?coin=bitcoin')
+  .then(res => res.json())
+  .then(data => {
+    console.log(data.sentiment); // "bullish" | "bearish" | "neutral"
+    console.log(data.price);     // 71542
+    console.log(data.rsi);       // 49
+  });</div>
+
+      <h3>Python</h3>
+      <div class="code-block">import requests
+
+res  = requests.get('https://api.coingyaan.com/sentiment?coin=ethereum')
+data = res.json()
+print(data['sentiment'])  # bullish | bearish | neutral
+print(data['price'])      # current price</div>
+
+      <h3>Node.js</h3>
+      <div class="code-block">const res  = await fetch('https://api.coingyaan.com/feargreed');
+const data = await res.json();
+console.log(data.data.value);  // 15
+console.log(data.data.label);  // "Extreme Fear"</div>
+
+      <!-- TIERS -->
+      <h2>Free vs Pro</h2>
+
+      <table class="tier-table">
+        <tr>
+          <th>Feature</th>
+          <th>Free</th>
+          <th>Pro</th>
+        </tr>
+        <tr>
+          <td>API Key required</td>
+          <td class="yes">No</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>Requests per day</td>
+          <td>100</td>
+          <td>5000</td>
+        </tr>
+        <tr>
+          <td>Sentiment endpoint</td>
+          <td class="yes">Yes</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Prices endpoint</td>
+          <td class="yes">Yes</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Fear and Greed endpoint</td>
+          <td class="yes">Yes</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Trending endpoint</td>
+          <td class="yes">Yes</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Altseason endpoint</td>
+          <td class="yes">Yes</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>All 50+ coins sentiment</td>
+          <td class="no">No</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Historical sentiment data</td>
+          <td class="no">No</td>
+          <td class="yes">30 days</td>
+        </tr>
+        <tr>
+          <td>Priority response</td>
+          <td class="no">No</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Price</td>
+          <td>Free</td>
+          <td>Coming Soon</td>
+        </tr>
+      </table>
+
+      <!-- RATE LIMITS -->
+      <h2>Rate Limits</h2>
+      <p>
+        The free tier allows 100 requests per day per IP address. If you exceed this limit you will receive a 429 response. Cache is refreshed every 15 minutes so there is no need to call more frequently than that for price and sentiment data.
+      </p>
+
+      <div class="code-block">// 429 Rate limit response
+{
+  "error": "Rate limit exceeded. Free tier allows 100 requests per day. Upgrade to Pro at coingyaan.com"
+}</div>
+
+      <!-- ERRORS -->
+      <h2>Error Responses</h2>
+      <table class="tier-table">
+        <tr>
+          <th>Code</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td>200</td>
+          <td>Success</td>
+        </tr>
+        <tr>
+          <td>404</td>
+          <td>Coin not found</td>
+        </tr>
+        <tr>
+          <td>429</td>
+          <td>Rate limit exceeded</td>
+        </tr>
+        <tr>
+          <td>503</td>
+          <td>Cache warming up — try again in 30 seconds</td>
+        </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal server error</td>
+        </tr>
+      </table>
+
+      <div class="cta-box">
+        <h3>Start Building</h3>
+        <p>No signup. No API key. Just call the endpoint and go.</p>
+        <a href="https://api.coingyaan.com" class="cta-btn" target="_blank" rel="noopener">Try the API →</a>
+      </div>
+
+      <p>
+        Built something using the CoinGyaan API? Tag us on X at <a href="https://x.com/coin_gyaan" style="color:#f59e0b;" target="_blank" rel="noopener">@coin_gyaan</a> — we would love to see it.
+      </p>
+
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-promo">
+      <p>Know the market mood before you make a move.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/guides.html">Guides</a>
+      <a href="/api-docs.html">API</a>
+      <a href="/disclaimer.html">Disclaimer</a>
+    </div>
+    <p class="footer-copy">
+      &copy; <span id="year"></span> CoinGyaan.com &nbsp;·&nbsp; Educational only. Not financial advice.
+    </p>
+  </div>
+</footer>
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+<script src="/assets/js/main.js" defer></script>
+<script src="/assets/js/guides-data.js"></script>
+
+</body>
+</html>
