@@ -3,7 +3,8 @@
 // Trending Coins + Altcoin Season Index + Telegram Alerts
 // ============================================
 
-const CG = 'https://api.coingecko.com/api/v3';
+const CG = 'https://api.coingecko.com/api/v3'; // kept for sentiment fallback
+const CGAPI = 'https://api.coingyaan.com';
 
 // ── Helpers ───────────────────────────────────────────────────
 function fmtPrice(p) {
@@ -35,9 +36,9 @@ async function loadTrending() {
 
   try {
     // Single call — trending response already includes price and 24h change inside data.coins[n].item
-    const res  = await fetch(`${CG}/search/trending`);
+    const res  = await fetch(`${CGAPI}/trending`);
     const data = await res.json();
-    const coins = (data.coins || []).slice(0, 5).map(c => c.item);
+    const coins = (data.data || []).slice(0, 5);
 
     if (!coins.length) {
       grid.innerHTML = '<div class="trending-loading">No trending data available.</div>';
@@ -46,10 +47,8 @@ async function loadTrending() {
 
     // CoinGecko trending endpoint includes: price_btc, data.price, data.price_change_percentage_24h.usd
     grid.innerHTML = coins.map((coin, i) => {
-      const priceUsd = coin.data && coin.data.price          ? parseFloat(coin.data.price) : null;
-      const change   = coin.data && coin.data.price_change_percentage_24h
-                       ? coin.data.price_change_percentage_24h.usd
-                       : null;
+      const priceUsd = coin.price !== null && coin.price !== undefined ? parseFloat(coin.price) : null;
+      const change   = coin.change24h !== null && coin.change24h !== undefined ? coin.change24h : null;
       const isUp     = change === null ? true : change >= 0;
       return `
         <div class="trending-coin">
@@ -100,55 +99,22 @@ async function loadAltcoinSeason() {
 
   try {
     // Step 1: Get top 51 coins current prices (free endpoint)
-    await delay(1200);
-    const marketsRes = await fetch(
-      `${CG}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=51&page=1&sparkline=false`
-    );
-    const markets = await marketsRes.json();
-    if (!markets || !markets.length) throw new Error('No market data');
-
-    // Step 2: Get BTC 90-day price history (free endpoint)
-    await delay(700);
-    const btcChartRes = await fetch(
-      `${CG}/coins/bitcoin/market_chart?vs_currency=usd&days=90&interval=daily`
-    );
-    const btcChart = await btcChartRes.json();
-
-    // Calculate BTC 90d change from chart
-    const btcPrices  = btcChart.prices || [];
-    const btcStart   = btcPrices.length > 0 ? btcPrices[0][1] : null;
-    const btcCurrent = markets.find(c => c.id === 'bitcoin');
-    const btcNow     = btcCurrent ? btcCurrent.current_price : null;
-    const btcChg90   = btcStart && btcNow ? ((btcNow - btcStart) / btcStart) * 100 : null;
-
-    // Step 3: Use 24h change as proxy signal for top 50 alts
-    // (90d per-coin free calls would need 50 requests — too many)
-    // Instead use price_change_percentage_24h weighted signal
-    const alts = markets.filter(c => c.id !== 'bitcoin').slice(0, 50);
-
-    let outperforming = 0;
-    let totalAltChg   = 0;
-    let validAlts     = 0;
-    const btc24h      = btcCurrent ? btcCurrent.price_change_percentage_24h : 0;
-
-    alts.forEach(alt => {
-      const chg = alt.price_change_percentage_24h;
-      if (chg !== null && chg !== undefined) {
-        totalAltChg += chg;
-        validAlts++;
-        if (chg > btc24h) outperforming++;
-      }
-    });
-
-    const avgAltChg = validAlts > 0 ? totalAltChg / validAlts : 0;
-    const score     = validAlts > 0 ? Math.round((outperforming / validAlts) * 100) : 50;
+    await delay(500);
+    const altRes  = await fetch(`${CGAPI}/altseason`);
+    const altData = await altRes.json();
+    const alt     = altData.data || {};
+    const score         = alt.score || 50;
+    const outperforming = alt.outperforming || 0;
+    const validAlts     = alt.totalAlts || 50;
+    const avgAltChg     = alt.avgAltChange24h || 0;
+    const btcChg90      = alt.btcChange24h || null;
 
     // Season label
     let season, badgeClass, desc;
     if (score >= 75) {
       season     = 'Altcoin Season 🚀';
       badgeClass = 'alt';
-      desc       = `<strong>${outperforming} of ${validAlts}</strong> top altcoins are outperforming Bitcoin over the last 24 hours. Capital is flowing into alts — historically a time of high volatility and big moves in smaller coins.`;
+      desc       = `<strong>${outperforming} of ${validAlts}</strong> top altcoins are outperforming Bitcoin right now. Capital is flowing into alts historically a time of high volatility and big moves in smaller coins.`;
     } else if (score <= 25) {
       season     = 'Bitcoin Season ₿';
       badgeClass = 'btc';
@@ -156,7 +122,7 @@ async function loadAltcoinSeason() {
     } else {
       season     = 'Mixed Market';
       badgeClass = 'neutral';
-      desc       = `<strong>${outperforming} of ${validAlts}</strong> top altcoins are outperforming Bitcoin. The market is mixed — no clear dominance from BTC or alts yet.`;
+      desc       = `<strong>${outperforming} of ${validAlts}</strong> top altcoins are outperforming Bitcoin. The market is mixed with no clear dominance from BTC or alts yet.`;
     }
 
     // Update UI
