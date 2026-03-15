@@ -9,11 +9,19 @@
 // ============================================
 var GUIDES_DATA = [
   {
+    url:      "/guides/crypto-guide-2026-bitcoin-sentiment-altcoin-season.html",
+    tag:      "Crypto 2026",
+    readTime: "12 min read",
+    title:    "The Crypto Questions Everyone Is Googling in 2026: Answered",
+    desc:     "Everything happening in crypto right now in one guide. Bitcoin price prediction, Fear and Greed Index, Altcoin Season, BTC RSI, stablecoins, real world assets and AI agents explained simply.",
+    date:     "March 2026"
+  },
+  {
     url:      "/guides/ai-agents-changing-web3-crypto-2026.html",
     tag:      "AI + Crypto",
     readTime: "7 min read",
     title:    "AI Agents and Crypto: How AI Is Changing Web3 in 2026",
-    desc:     "AI agents are quietly reshaping crypto. They trade, manage funds, hire other agents and settle payments — all without human involvement. Here is what is happening and why it matters.",
+    desc:     "AI agents are quietly reshaping crypto. They trade, manage funds, hire other agents and settle payments without human involvement. Here is what is happening and why it matters.",
     date:     "March 2026"
   },
   {
