@@ -3,9 +3,10 @@
 // Upgrades: 7-day sparkline, RSI, volume, news headlines
 // ============================================
 
-const SENTIMENT_COINGECKO_API = 'https://api.coingecko.com/api/v3';
+const SENTIMENT_COINGECKO_API = 'https://api.coingecko.com/api/v3'; // kept for coin search and OHLC
+const SENTIMENT_CGAPI         = 'https://api.coingyaan.com';
 const SENTIMENT_NEWS_API      = 'https://min-api.cryptocompare.com/data/v2/news/';
-const SENTIMENT_FNG_API       = 'https://api.alternative.me/fng/';
+const SENTIMENT_FNG_API       = 'https://api.coingyaan.com/feargreed';
 
 async function getCryptoId(coinName) {
   try {
@@ -63,7 +64,8 @@ async function getSentimentFearGreed() {
   try {
     const res  = await fetch(SENTIMENT_FNG_API);
     const data = await res.json();
-    return data?.data?.[0] ? parseInt(data.data[0].value) : 50;
+    // CoinGyaan API format: { data: { value, label } }
+    return data?.data?.value !== undefined ? parseInt(data.data.value) : 50;
   } catch (e) {
     const fgScore = document.getElementById('fgScore');
     if (fgScore && fgScore.textContent !== '--') {
