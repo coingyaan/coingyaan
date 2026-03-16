@@ -18,11 +18,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Primary SEO -->
-  <title>CoinGyaan – Crypto Sentiment, Fear & Greed Index and AI Guides</title>
+  <title>CoinGyaan – Free Crypto Sentiment Checker: Is Bitcoin Bullish or Bearish Today?</title>
 
-  <meta name="description" content="CoinGyaan helps you track crypto market sentiment, Bitcoin & altcoin trends, and the Fear and Greed Index to make smarter crypto decisions." />
+  <meta name="description" content="Check if Bitcoin, Ethereum or any crypto is bullish or bearish right now. Free crypto sentiment checker combining RSI, Fear and Greed Index and price signals. Updated live." />
 
-  <meta name="keywords" content="crypto sentiment, fear and greed index, bitcoin sentiment, crypto market mood, altcoin sentiment, AI crypto guides, crypto research prompts, ChatGPT crypto, Claude crypto, AI crypto research, crypto analysis AI, CoinGyaan" />
+  <meta name="keywords" content="crypto sentiment checker, bitcoin sentiment today, is bitcoin bullish or bearish, crypto market sentiment 2026, ethereum sentiment checker, bitcoin RSI today, altcoin season index, crypto fear and greed index, crypto market mood today, free crypto sentiment tool, is now a good time to buy bitcoin, crypto sentiment analysis free, CoinGyaan" />
 
   <meta name="author" content="CoinGyaan" />
   <meta name="robots" content="index, follow" />
@@ -43,16 +43,16 @@
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="CoinGyaan – Crypto Sentiment, Fear & Greed Index and AI Guides" />
-  <meta property="og:description" content="Track crypto market sentiment and the Fear & Greed Index for Bitcoin and altcoins." />
+  <meta property="og:title" content="CoinGyaan – Free Crypto Sentiment Checker: Is Bitcoin Bullish or Bearish Today?" />
+  <meta property="og:description" content="Check if Bitcoin, Ethereum or any crypto is bullish or bearish right now. Free sentiment checker with RSI, Fear and Greed Index and live price signals." />
   <meta property="og:url" content="https://coingyaan.com/" />
   <meta property="og:image" content="https://coingyaan.com/assets/images/social/universal-share.png" />
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@coin_gyaan" />
-  <meta name="twitter:title" content="CoinGyaan – Crypto Sentiment, Fear & Greed Index and AI Guides" />
-  <meta name="twitter:description" content="Understand crypto sentiment and Fear & Greed Index before trading." />
+  <meta name="twitter:title" content="CoinGyaan – Free Crypto Sentiment Checker: Is Bitcoin Bullish or Bearish Today?" />
+  <meta name="twitter:description" content="Check if Bitcoin or any crypto is bullish or bearish right now. Free sentiment checker with RSI, Fear and Greed and live price signals." />
   <meta name="twitter:image" content="https://coingyaan.com/assets/images/social/universal-share.png" />
 
   <!-- Styles -->
@@ -972,7 +972,7 @@
 <footer>
   <div class="container">
     <div class="footer-promo">
-      <p>Free crypto sentiment tools and AI guides to help you trade smarter.</p>
+      <p>Built for crypto curious minds. Free tools, real data and no noise.</p>
     </div>
     <div class="footer-links">
       <a href="/about.html" target="_blank" rel="noopener">About</a>
@@ -989,15 +989,13 @@
 
 <script>
   function fetchPrices() {
-    fetch('https://api.coingyaan.com/prices')
+    fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true')
       .then(function(r){ return r.json(); })
-      .then(function(res) {
-        var data = res.data || {};
-        var btcPrice = data.bitcoin ? data.bitcoin.usd : null;
-        var btcChange = data.bitcoin ? data.bitcoin.change24h.toFixed(2) : null;
-        var ethPrice = data.ethereum ? data.ethereum.usd : null;
-        var ethChange = data.ethereum ? data.ethereum.change24h.toFixed(2) : null;
-        if (!btcPrice || !ethPrice) return;
+      .then(function(data) {
+        var btcPrice = data.bitcoin.usd;
+        var btcChange = data.bitcoin.usd_24h_change.toFixed(2);
+        var ethPrice = data.ethereum.usd;
+        var ethChange = data.ethereum.usd_24h_change.toFixed(2);
 
         document.getElementById('btcPrice').textContent = '$' + btcPrice.toLocaleString();
         document.getElementById('ethPrice').textContent = '$' + ethPrice.toLocaleString();
