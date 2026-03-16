@@ -3,10 +3,9 @@
 // Upgrades: 7-day sparkline, RSI, volume, news headlines
 // ============================================
 
-const SENTIMENT_COINGECKO_API = 'https://api.coingecko.com/api/v3'; // kept for coin search and OHLC
-const SENTIMENT_CGAPI         = 'https://api.coingyaan.com';
-const SENTIMENT_NEWS_API      = 'https://api.coingyaan.com/news';
-const SENTIMENT_FNG_API       = 'https://api.coingyaan.com/feargreed';
+const SENTIMENT_COINGECKO_API = 'https://api.coingecko.com/api/v3';
+const SENTIMENT_NEWS_API      = 'https://min-api.cryptocompare.com/data/v2/news/';
+const SENTIMENT_FNG_API       = 'https://api.alternative.me/fng/';
 
 async function getCryptoId(coinName) {
   try {
@@ -45,11 +44,16 @@ async function getOHLC(cryptoId) {
 
 async function getCryptoNews(coinName, limit = 20) {
   try {
-    const res  = await fetch(SENTIMENT_NEWS_API);
+    const res  = await fetch(`${SENTIMENT_NEWS_API}?lang=EN&sortOrder=latest`);
     const data = await res.json();
-    // CoinGyaan API format: { data: [...] }
-    if (data && data.data && data.data.length) {
-      return data.data.slice(0, limit);
+    if (data && data.Data) {
+      return data.Data.slice(0, limit).map(item => ({
+        title:       item.title,
+        body:        item.body,
+        url:         item.url,
+        publishedOn: item.published_on,
+        source:      item.source
+      }));
     }
     return [];
   } catch (e) { return []; }
@@ -59,8 +63,7 @@ async function getSentimentFearGreed() {
   try {
     const res  = await fetch(SENTIMENT_FNG_API);
     const data = await res.json();
-    // CoinGyaan API format: { data: { value, label } }
-    return data?.data?.value !== undefined ? parseInt(data.data.value) : 50;
+    return data?.data?.[0] ? parseInt(data.data[0].value) : 50;
   } catch (e) {
     const fgScore = document.getElementById('fgScore');
     if (fgScore && fgScore.textContent !== '--') {
