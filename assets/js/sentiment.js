@@ -4,7 +4,7 @@
 // ============================================
 
 const SENTIMENT_COINGECKO_API = 'https://api.coingecko.com/api/v3';
-const SENTIMENT_NEWS_API      = 'https://min-api.cryptocompare.com/data/v2/news/';
+const SENTIMENT_NEWS_API      = 'https://api.coingecko.com/api/v3/news';
 const SENTIMENT_FNG_API       = 'https://api.alternative.me/fng/';
 
 async function getCryptoId(coinName) {
@@ -44,15 +44,16 @@ async function getOHLC(cryptoId) {
 
 async function getCryptoNews(coinName, limit = 20) {
   try {
-    const res  = await fetch(`${SENTIMENT_NEWS_API}?lang=EN&sortOrder=latest`);
+    const res  = await fetch(`${SENTIMENT_NEWS_API}?page=1`);
     const data = await res.json();
-    if (data && data.Data) {
-      return data.Data.slice(0, limit).map(item => ({
+    // CoinGecko news format: { data: [...] }
+    if (data && data.data && data.data.length) {
+      return data.data.slice(0, limit).map(item => ({
         title:       item.title,
-        body:        item.body,
-        url:         item.url,
-        publishedOn: item.published_on,
-        source:      item.source
+        body:        item.description || '',
+        url:         item.url || '',
+        publishedOn: item.updated_at || Math.floor(Date.now() / 1000),
+        source:      item.author || 'CoinGecko'
       }));
     }
     return [];
