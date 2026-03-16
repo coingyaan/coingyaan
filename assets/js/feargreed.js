@@ -2,7 +2,7 @@
 // COINGYAAN - FEAR & GREED INDEX
 // ============================================
 
-const FEARGREED_API_URL = 'https://api.coingyaan.com/feargreed';
+const FEARGREED_API_URL = 'https://api.alternative.me/fng/';
 
 async function getFearGreedIndex() {
     try {
@@ -15,12 +15,12 @@ async function getFearGreedIndex() {
         const data = await response.json();
         console.log('📊 F&G API Response:', data);
 
-        // CoinGyaan API format: { data: { value, label } }
-        if (data && data.data && data.data.value !== undefined) {
+        if (data && data.data && data.data[0]) {
+            const fngData = data.data[0];
             const result = {
-                value: parseInt(data.data.value),
-                classification: data.data.label,
-                timestamp: Math.floor(Date.now() / 1000)
+                value: parseInt(fngData.value),
+                classification: fngData.value_classification,
+                timestamp: fngData.timestamp
             };
             console.log('✅ Successfully parsed F&G data:', result);
             return result;
