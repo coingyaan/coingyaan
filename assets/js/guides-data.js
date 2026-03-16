@@ -9,6 +9,22 @@
 // ============================================
 var GUIDES_DATA = [
   {
+    url:      "/guides/best-ai-tools-crypto-research-2026.html",
+    tag:      "AI + Crypto",
+    readTime: "10 min read",
+    title:    "Best AI Tools for Crypto Research in 2026: Claude ChatGPT and More",
+    desc:     "The best AI tools for crypto research in 2026 compared. Learn how to use Claude ChatGPT Gemini Perplexity and Grok for Bitcoin analysis altcoin research and smarter trading decisions.",
+    date:     "March 2026"
+  },
+  {
+    url:      "/guides/bitcoin-etf-explained-everyday-investors-2026.html",
+    tag:      "Bitcoin",
+    readTime: "11 min read",
+    title:    "Bitcoin ETF Explained: What It Means for Everyday Investors in 2026",
+    desc:     "Bitcoin ETF explained simply. What it is how it works which ones are best in 2026 and whether you should buy one. Complete beginner guide covering BlackRock IBIT Fidelity FBTC and more.",
+    date:     "March 2026"
+  },
+  {
     url:      "/guides/crypto-guide-2026-bitcoin-sentiment-altcoin-season.html",
     tag:      "Crypto 2026",
     readTime: "12 min read",
