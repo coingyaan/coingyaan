@@ -90,8 +90,8 @@
     .code-block-header {
       display: flex;
       justify-content: flex-end;
-      padding: 8px 10px;
-      background: #0f1821;
+      padding: 6px 10px;
+      background: #0d1526;
       border-bottom: 1px solid #1f2937;
     }
     .code-block-body {
@@ -140,7 +140,7 @@
     /* Checklist */
     .checklist { list-style: none; padding: 0; margin: 0 0 20px 0; }
     .checklist li { padding: 8px 0 8px 28px; position: relative; color: #d1d5db; font-size: 15px; line-height: 1.6; }
-    .checklist li:before { content: "¹3"; position: absolute; left: 0; color: #10b981; font-weight: bold; }
+    .checklist li:before { content: "✓"; position: absolute; left: 0; color: #10b981; font-weight: bold; }
 
     /* Ordered list */
     .article-wrap ol { margin: 0 0 20px 20px; color: #d1d5db; font-size: 15px; line-height: 1.8; }
@@ -297,8 +297,12 @@ main();</code></pre>
       <div class="info-box">
         <p><strong>Mac and Linux users:</strong> You can skip the Notepad steps above. Instead just run this command directly in your terminal:</p>
         <div class="code-block" style="margin-top: 12px;">
-          <button class="copy-button" onclick="copyCode(this)">Copy</button>
-          <pre><code>node manualLinkHumanToAgent.js --challenge '{"name":"My Agent","description":"My personal AI agent"}'</code></pre>
+          <div class="code-block-header">
+            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+          </div>
+          <div class="code-block-body">
+            <pre><code>node manualLinkHumanToAgent.js --challenge '{"name":"My Agent","description":"My personal AI agent"}'</code></pre>
+          </div>
         </div>
       </div>
 
@@ -314,7 +318,12 @@ main();</code></pre>
       </div>
       <p>You will see a link appear in your terminal that looks like this:</p>
       <div class="code-block">
-        <pre><code>https://wallet.billions.network#request_uri=https://identity-dashboard.billions.network/shortener/xxxxx</code></pre>
+        <div class="code-block-header">
+          <button class="copy-button" onclick="copyCode(this)">Copy</button>
+        </div>
+        <div class="code-block-body">
+          <pre><code>https://wallet.billions.network#request_uri=https://identity-dashboard.billions.network/shortener/xxxxx</code></pre>
+        </div>
       </div>
 
       <h2>Step 7: Sign and Complete</h2>
