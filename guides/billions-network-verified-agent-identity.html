@@ -78,9 +78,10 @@
     .article-tag { display: inline-block; background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); border-radius: 20px; padding: 3px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; }
     .back-link { display: inline-block; font-size: 13px; color: #64748b; text-decoration: none; margin-bottom: 24px; }
     .back-link:hover { color: #f59e0b; }
-    .code-block { position: relative; background: #0f1821; border: 1px solid #1f2937; border-radius: 8px; padding: 16px; margin: 16px 0; overflow-x: auto; }
-    .code-block pre { margin: 0; padding: 0; background: none; border: none; }
-    .code-block code { color: #7fb3d5; font-family: 'Courier New', monospace; font-size: 14px; background: none; padding: 0; }
+    .code-block { position: relative; background: #0f1821 !important; border: 1px solid #1f2937 !important; border-radius: 8px !important; padding: 16px !important; margin: 16px 0 !important; overflow-x: auto !important; display: block !important; }
+    .code-block pre { margin: 0 !important; padding: 0 !important; background: none !important; border: none !important; display: block !important; white-space: pre !important; }
+    .code-block code { color: #7fb3d5 !important; font-family: 'Courier New', monospace !important; font-size: 14px !important; background: none !important; padding: 0 !important; display: block !important; white-space: pre !important; visibility: visible !important; opacity: 1 !important; }
+    .code-block pre code { display: block !important; color: #7fb3d5 !important; visibility: visible !important; }
     .copy-button { position: absolute; top: 8px; right: 8px; background: #1f2937; border: 1px solid #374151; color: #9ca3af; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: all 0.2s; }
     .copy-button:hover { background: #374151; color: #e5e7eb; border-color: #7fb3d5; }
     .copy-button.copied { background: #10b981; color: white; border-color: #10b981; }
