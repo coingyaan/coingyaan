@@ -85,18 +85,12 @@
       border: 1px solid #1f2937;
       border-radius: 8px;
       margin: 16px 0;
-      overflow: hidden;
+      position: relative;
     }
-    .code-block-header {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      padding: 6px 10px;
-      background: #0d1526;
-      border-bottom: 1px solid #1f2937;
-    }
+    .code-block-header { display: none; }
     .code-block-body {
       padding: 14px 16px;
+      padding-right: 70px;
       overflow-x: auto;
     }
     .code-block pre {
@@ -118,16 +112,18 @@
       line-height: 1.7;
     }
     .copy-button {
+      position: absolute;
+      top: 8px;
+      right: 10px;
       background: #1f2937;
       border: 1px solid #374151;
       color: #9ca3af;
-      padding: 4px 12px;
+      padding: 3px 10px;
       border-radius: 5px;
       font-size: 11px;
       cursor: pointer;
       transition: all 0.2s;
       width: fit-content;
-      flex-shrink: 0;
     }
     .copy-button:hover { background: #374151; color: #e5e7eb; border-color: #7fb3d5; }
     .copy-button.copied { background: #10b981; color: white; border-color: #10b981; }
@@ -386,8 +382,9 @@ main();</code></pre>
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
   function copyCode(button) {
-    const body = button.closest('.code-block').querySelector('.code-block-body');
-    const code = body ? body.textContent.trim() : '';
+    const block = button.closest('.code-block');
+    const body = block.querySelector('.code-block-body') || block;
+    const code = body.querySelector('code') ? body.querySelector('code').textContent.trim() : body.textContent.trim();
     navigator.clipboard.writeText(code).then(() => {
       button.textContent = "Copied!";
       button.classList.add("copied");
