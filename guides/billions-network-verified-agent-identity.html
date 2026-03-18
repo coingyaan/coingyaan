@@ -91,11 +91,18 @@
       padding: 12px 14px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
     .code-block-header { display: none; }
-    .code-block-body { flex: 1; overflow-x: auto; }
-    .code-block pre { margin: 0; padding: 0; background: transparent; border: none; }
+    .code-block-body { display: none; }
+    .code-block pre {
+      flex: 1;
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      border: none;
+      overflow-x: auto;
+    }
     .code-block pre code,
     .code-block code {
       font-family: 'Courier New', Courier, monospace;
@@ -187,12 +194,7 @@
         <li>Node.js installed on your PC (<a href="https://nodejs.org" target="_blank" rel="noopener" style="color:#f59e0b;text-decoration:none;">download here</a>)</li>
       </ul>
       <p>If you are on Android you will need Termux app. Install it then run this command first:</p>
-      <div class="code-block">
-        <div class="code-block-body">
-          <pre><code>pkg install nodejs</code></pre>
-        </div>
-        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-      </div>
+      <div class="code-block"><pre><code>pkg install nodejs</code></pre><button class="copy-button" onclick="copyCode(this)">Copy</button></div>
 
       <h2>Step 1: Open Terminal</h2>
       <p><strong>Windows:</strong> Press Win + X then click PowerShell</p>
@@ -201,38 +203,18 @@
 
       <h2>Step 2: Install the Tool</h2>
       <p>Copy and paste this command into your terminal:</p>
-      <div class="code-block">
-        <div class="code-block-body">
-          <pre><code>npx clawhub@latest install verified-agent-identity</code></pre>
-        </div>
-        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-      </div>
+      <div class="code-block"><pre><code>npx clawhub@latest install verified-agent-identity</code></pre><button class="copy-button" onclick="copyCode(this)">Copy</button></div>
       <p>Wait for it to finish installing. This might take 1 to 2 minutes.</p>
 
       <h2>Step 3: Navigate to Scripts Folder</h2>
       <p>Run this command to move into the scripts folder:</p>
-      <div class="code-block">
-        <div class="code-block-body">
-          <pre><code>cd skills/verified-agent-identity/scripts</code></pre>
-        </div>
-        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-      </div>
+      <div class="code-block"><pre><code>cd skills/verified-agent-identity/scripts</code></pre><button class="copy-button" onclick="copyCode(this)">Copy</button></div>
       <p>Then install the required dependencies:</p>
-      <div class="code-block">
-        <div class="code-block-body">
-          <pre><code>npm install</code></pre>
-        </div>
-        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-      </div>
+      <div class="code-block"><pre><code>npm install</code></pre><button class="copy-button" onclick="copyCode(this)">Copy</button></div>
 
       <h2>Step 4: Create Your Agent's Ethereum Identity</h2>
       <p>This creates your agent's blockchain wallet:</p>
-      <div class="code-block">
-        <div class="code-block-body">
-          <pre><code>node createNewEthereumIdentity.js</code></pre>
-        </div>
-        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-      </div>
+      <div class="code-block"><pre><code>node createNewEthereumIdentity.js</code></pre><button class="copy-button" onclick="copyCode(this)">Copy</button></div>
       <div class="warning-box">
         <p>⚠️ <strong>Important:</strong> This generates your agent's private key and public key and wallet address. Save these somewhere safe. Never share your private key with anyone.</p>
       </div>
@@ -240,16 +222,9 @@
       <h2>Step 5: Generate Verification Link (Windows)</h2>
       <p>If you are on Windows follow these steps. Mac and Linux users can skip to the next section.</p>
       <p>First open the script file in Notepad:</p>
-      <div class="code-block">
-        <div class="code-block-body">
-          <pre><code>notepad manualLinkHumanToAgent.js</code></pre>
-        </div>
-        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-      </div>
+      <div class="code-block"><pre><code>notepad manualLinkHumanToAgent.js</code></pre><button class="copy-button" onclick="copyCode(this)">Copy</button></div>
       <p>Press <strong>Ctrl+A</strong> to select all the text then delete it. Now copy this entire code block and paste it into Notepad:</p>
-      <div class="code-block">
-        <div class="code-block-body">
-          <pre><code>const { createPairing } = require("./linkHumanToAgent");
+      <div class="code-block"><pre><code>const { createPairing } = require("./linkHumanToAgent");
 const { formatError } = require("./shared/utils");
 
 async function main() {
@@ -264,37 +239,19 @@ async function main() {
   }
 }
 
-main();</code></pre>
-        </div>
-        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-      </div>
+main();</code></pre><button class="copy-button" onclick="copyCode(this)">Copy</button></div>
       <p>Press <strong>Ctrl+S</strong> to save then close Notepad.</p>
 
       <div class="info-box">
         <p><strong>Mac and Linux users:</strong> You can skip the Notepad steps above. Instead just run this command directly in your terminal:</p>
-        <div class="code-block" style="margin-top: 12px;">
-          <div class="code-block-body">
-            <pre><code>node manualLinkHumanToAgent.js --challenge '{"name":"My Agent","description":"My personal AI agent"}'</code></pre>
-          </div>
-          <button class="copy-button" onclick="copyCode(this)">Copy</button>
-        </div>
+        <div class="code-block" style=" style="margin-top: 12px;""><pre><code>node manualLinkHumanToAgent.js --challenge '{"name":"My Agent","description":"My personal AI agent"}'</code></pre><button class="copy-button" onclick="copyCode(this)">Copy</button></div>
       </div>
 
       <h2>Step 6: Run the Script</h2>
       <p>Now run the modified script:</p>
-      <div class="code-block">
-        <div class="code-block-body">
-          <pre><code>node manualLinkHumanToAgent.js</code></pre>
-        </div>
-        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-      </div>
+      <div class="code-block"><pre><code>node manualLinkHumanToAgent.js</code></pre><button class="copy-button" onclick="copyCode(this)">Copy</button></div>
       <p>You will see a link appear in your terminal that looks like this:</p>
-      <div class="code-block">
-        <div class="code-block-body">
-          <pre><code>https://wallet.billions.network#request_uri=https://identity-dashboard.billions.network/shortener/xxxxx</code></pre>
-        </div>
-        <button class="copy-button" onclick="copyCode(this)">Copy</button>
-      </div>
+      <div class="code-block"><pre><code>https://wallet.billions.network#request_uri=https://identity-dashboard.billions.network/shortener/xxxxx</code></pre><button class="copy-button" onclick="copyCode(this)">Copy</button></div>
 
       <h2>Step 7: Sign and Complete</h2>
       <p>Almost done! Follow these final steps:</p>
@@ -353,8 +310,7 @@ main();</code></pre>
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
   function copyCode(button) {
-    const block = button.closest('.code-block');
-    const code = block.querySelector('code').textContent.trim();
+    const code = button.closest('.code-block').querySelector('code').textContent.trim();
     navigator.clipboard.writeText(code).then(() => {
       button.textContent = "Copied!";
       button.classList.add("copied");
