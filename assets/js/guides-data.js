@@ -9,6 +9,14 @@
 // ============================================
 var GUIDES_DATA = [
   {
+    url:      "/guides/billions-network-verified-agent-identity.html",
+    tag:      "AI + Web3",
+    readTime: "5 min read",
+    title:    "How to Create a Verified AI Agent Identity on Billions Network",
+    desc:     "Get +2000 Power Points by creating a verified AI agent DID passport on Billions Network. Link your agent to human identity with zero-knowledge proofs in under 5 minutes.",
+    date:     "March 2026"
+  },
+  {
     url:      "/guides/best-ai-tools-crypto-research-2026.html",
     tag:      "AI + Crypto",
     readTime: "10 min read",
