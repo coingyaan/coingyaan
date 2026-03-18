@@ -161,7 +161,7 @@
   background: #0f1821;
   border: 1px solid #1f2937;
   border-radius: 8px;
-  padding: 16px;
+  padding: 40px 16px 16px 16px; /* top padding reserves space for copy button */
   margin: 16px 0;
   overflow-x: auto;
   display: block;
@@ -177,13 +177,15 @@
 .code-block code {
   color: #7fb3d5;
   font-family: 'Courier New', monospace;
-  font-size: 14px;
-  background: none;
+  font-size: 13px;
+  background: transparent;
   padding: 0;
   display: block;
-  white-space: pre;
+  white-space: pre-wrap;
+  word-break: break-all;
   visibility: visible;
   opacity: 1;
+  line-height: 1.6;
 }
 
 /* ── CTA section ── */
