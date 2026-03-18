@@ -157,22 +157,22 @@
 
 /* ── Code blocks ── */
 .code-block {
-  position: relative;
   background: #0f1821;
   border: 1px solid #1f2937;
   border-radius: 8px;
-  padding: 40px 16px 16px 16px; /* top padding reserves space for copy button */
   margin: 16px 0;
-  overflow-x: auto;
-  display: block;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 .code-block pre {
+  flex: 1;
   margin: 0;
   padding: 0;
-  background: none;
+  background: transparent;
   border: none;
-  display: block;
-  white-space: pre;
+  overflow-x: auto;
 }
 .code-block code {
   color: #7fb3d5;
@@ -182,11 +182,25 @@
   padding: 0;
   display: block;
   white-space: pre-wrap;
-  word-break: break-all;
-  visibility: visible;
-  opacity: 1;
+  word-break: break-word;
   line-height: 1.6;
 }
+.copy-button {
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #9ca3af;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+  width: auto !important;
+  margin-top: 0 !important;
+}
+.copy-button:hover { background: #374151; color: #e5e7eb; border-color: #7fb3d5; }
+.copy-button.copied { background: #10b981; color: white; border-color: #10b981; }
 
 /* ── CTA section ── */
 .cta-section {
@@ -217,6 +231,8 @@
   border-radius: 6px;
   text-decoration: none;
   transition: background 0.2s;
+  width: auto !important;
+  margin-top: 0 !important;
 }
 .cta-button:hover { background: #d97706; }
 
