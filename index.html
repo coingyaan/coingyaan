@@ -1028,7 +1028,9 @@
   var current = 0;
   var timer;
 
-  GUIDES_DATA.forEach(function(g, i) {
+  var TICKER_GUIDES = GUIDES_DATA.slice(0, 5);
+
+  TICKER_GUIDES.forEach(function(g, i) {
     var a = document.createElement('a');
     a.href = g.url;
     a.className = 'guide-ticker-item' + (i === 0 ? ' active' : '');
@@ -1051,18 +1053,18 @@
     current = index;
     items[current].classList.add('active');
     dots[current].classList.add('active');
-    tagEl.textContent = GUIDES_DATA[current].tag;
+    tagEl.textContent = TICKER_GUIDES[current].tag;
     clearInterval(timer);
     startTimer();
   }
 
   function startTimer() {
     timer = setInterval(function() {
-      showGuide((current + 1) % GUIDES_DATA.length);
+      showGuide((current + 1) % TICKER_GUIDES.length);
     }, 4000);
   }
 
-  tagEl.textContent = GUIDES_DATA[0].tag;
+  tagEl.textContent = TICKER_GUIDES[0].tag;
   startTimer();
 </script>
 
