@@ -78,43 +78,80 @@
     .article-tag { display: inline-block; background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); border-radius: 20px; padding: 3px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; }
     .back-link { display: inline-block; font-size: 13px; color: #64748b; text-decoration: none; margin-bottom: 24px; }
     .back-link:hover { color: #f59e0b; }
-    .code-block { position: relative; background: #0f1821 !important; border: 1px solid #1f2937 !important; border-radius: 8px !important; padding: 16px !important; margin: 16px 0 !important; overflow-x: auto !important; display: block !important; }
-    .code-block pre { margin: 0 !important; padding: 0 !important; background: none !important; border: none !important; display: block !important; white-space: pre !important; }
-    .code-block code { color: #7fb3d5 !important; font-family: 'Courier New', monospace !important; font-size: 14px !important; background: none !important; padding: 0 !important; display: block !important; white-space: pre !important; visibility: visible !important; opacity: 1 !important; }
-    .code-block pre code { display: block !important; color: #7fb3d5 !important; visibility: visible !important; }
-    .copy-button { position: absolute; top: 8px; right: 8px; background: #1f2937; border: 1px solid #374151; color: #9ca3af; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+
+    /* Code blocks */
+    .code-block {
+      position: relative;
+      background: #0f1821;
+      border: 1px solid #1f2937;
+      border-radius: 8px;
+      padding: 40px 16px 16px 16px;
+      margin: 16px 0;
+      overflow-x: auto;
+    }
+    .code-block pre {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      border: none;
+      overflow: visible;
+    }
+    .code-block pre code,
+    .code-block code {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13px;
+      color: #7fb3d5;
+      background: transparent;
+      padding: 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+      display: block;
+      line-height: 1.6;
+    }
+    .copy-button {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #1f2937;
+      border: 1px solid #374151;
+      color: #9ca3af;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 2;
+    }
     .copy-button:hover { background: #374151; color: #e5e7eb; border-color: #7fb3d5; }
     .copy-button.copied { background: #10b981; color: white; border-color: #10b981; }
-    .warning-box { background: rgba(245,158,11,0.1); border-left: 4px solid #f59e0b; padding: 16px; margin: 20px 0; border-radius: 4px; }
-    .warning-box p { margin: 0; color: #fbbf24; }
-    .success-box { background: rgba(16,185,129,0.1); border-left: 4px solid #10b981; padding: 16px; margin: 20px 0; border-radius: 4px; }
-    .success-box p { margin: 0; color: #34d399; }
-    .info-box { background: rgba(127,179,213,0.1); border-left: 4px solid #7fb3d5; padding: 16px; margin: 20px 0; border-radius: 4px; }
-    .checklist { list-style: none; padding: 0; }
-    .checklist li { padding: 8px 0; padding-left: 28px; position: relative; color: #d1d5db; font-size: 15px; }
-    .checklist li:before { content: "✓"; position: absolute; left: 0; color: #10b981; font-weight: bold; }
+
+    /* Info boxes */
+    .warning-box { background: rgba(245,158,11,0.08); border-left: 4px solid #f59e0b; padding: 14px 16px; margin: 20px 0; border-radius: 4px; }
+    .warning-box p { margin: 0; color: #fbbf24; font-size: 14px; line-height: 1.6; }
+    .success-box { background: rgba(16,185,129,0.08); border-left: 4px solid #10b981; padding: 14px 16px; margin: 20px 0; border-radius: 4px; }
+    .success-box p { margin: 0; color: #34d399; font-size: 14px; line-height: 1.6; }
+    .info-box { background: rgba(127,179,213,0.08); border-left: 4px solid #7fb3d5; padding: 14px 16px; margin: 20px 0; border-radius: 4px; }
+    .info-box p { margin: 0; color: #93c5fd; font-size: 14px; line-height: 1.6; }
+
+    /* Checklist */
+    .checklist { list-style: none; padding: 0; margin: 0 0 20px 0; }
+    .checklist li { padding: 8px 0 8px 28px; position: relative; color: #d1d5db; font-size: 15px; line-height: 1.6; }
+    .checklist li:before { content: "¹3"; position: absolute; left: 0; color: #10b981; font-weight: bold; }
+
+    /* Ordered list */
     .article-wrap ol { margin: 0 0 20px 20px; color: #d1d5db; font-size: 15px; line-height: 1.8; }
     .article-wrap ol li { margin-bottom: 8px; }
+
+    /* Share CTA */
     .share-cta { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 8px; padding: 16px 20px; margin-top: 28px; font-size: 14px; color: #94a3b8; line-height: 1.6; }
     .share-cta strong { color: #f59e0b; }
 
-    /* Nuclear override for code visibility */
-    div.code-block { display: block !important; }
-    div.code-block pre { display: block !important; overflow: visible !important; }
-    div.code-block pre code,
-    div.code-block code {
-      display: block !important;
-      color: #7fb3d5 !important;
-      font-family: 'Courier New', Courier, monospace !important;
-      font-size: 14px !important;
-      line-height: 1.6 !important;
-      background: transparent !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      white-space: pre-wrap !important;
-      word-break: break-word !important;
-      -webkit-text-fill-color: #7fb3d5 !important;
-    }
+    /* CTA section */
+    .cta-section { background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.15); border-radius: 12px; padding: 28px 32px; margin-top: 48px; }
+    .cta-section h2 { font-size: 18px; font-weight: 700; color: #e2e8f0; margin-bottom: 10px; }
+    .cta-section p { font-size: 14px; color: #94a3b8; margin-bottom: 20px; }
+    .cta-button { display: inline-block; background: #f59e0b; color: #0a0f1e; font-size: 14px; font-weight: 700; padding: 10px 24px; border-radius: 6px; text-decoration: none; }
+    .cta-button:hover { background: #d97706; }
   </style>
 </head>
 <body>
