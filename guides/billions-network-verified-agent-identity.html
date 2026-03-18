@@ -90,6 +90,7 @@
     .code-block-header {
       display: flex;
       justify-content: flex-end;
+      align-items: center;
       padding: 6px 10px;
       background: #0d1526;
       border-bottom: 1px solid #1f2937;
@@ -125,6 +126,8 @@
       font-size: 11px;
       cursor: pointer;
       transition: all 0.2s;
+      width: fit-content;
+      flex-shrink: 0;
     }
     .copy-button:hover { background: #374151; color: #e5e7eb; border-color: #7fb3d5; }
     .copy-button.copied { background: #10b981; color: white; border-color: #10b981; }
