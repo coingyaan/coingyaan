@@ -97,6 +97,24 @@
     .article-wrap ol li { margin-bottom: 8px; }
     .share-cta { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 8px; padding: 16px 20px; margin-top: 28px; font-size: 14px; color: #94a3b8; line-height: 1.6; }
     .share-cta strong { color: #f59e0b; }
+
+    /* Nuclear override for code visibility */
+    div.code-block { display: block !important; }
+    div.code-block pre { display: block !important; overflow: visible !important; }
+    div.code-block pre code,
+    div.code-block code {
+      display: block !important;
+      color: #7fb3d5 !important;
+      font-family: 'Courier New', Courier, monospace !important;
+      font-size: 14px !important;
+      line-height: 1.6 !important;
+      background: transparent !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      white-space: pre-wrap !important;
+      word-break: break-word !important;
+      -webkit-text-fill-color: #7fb3d5 !important;
+    }
   </style>
 </head>
 <body>
