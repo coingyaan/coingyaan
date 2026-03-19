@@ -14,16 +14,12 @@
 
   <!-- AdSense ownership -->
   <meta name="google-adsense-account" content="ca-pub-9704432095241296" />
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Primary SEO -->
   <title>CoinGyaan – Free Crypto Sentiment Checker: Is Bitcoin Bullish or Bearish Today?</title>
-
   <meta name="description" content="Check if Bitcoin, Ethereum or any crypto is bullish or bearish right now. Free crypto sentiment checker combining RSI, Fear and Greed Index and price signals. Updated live." />
-
   <meta name="keywords" content="crypto sentiment checker, bitcoin sentiment today, is bitcoin bullish or bearish, crypto market sentiment 2026, ethereum sentiment checker, bitcoin RSI today, altcoin season index, crypto fear and greed index, crypto market mood today, free crypto sentiment tool, is now a good time to buy bitcoin, crypto sentiment analysis free, CoinGyaan" />
-
   <meta name="author" content="CoinGyaan" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://coingyaan.com/" />
@@ -35,8 +31,6 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon/coingyaan-apple-touch-icon-180x180.png" />
   <link rel="icon" sizes="192x192" href="/assets/images/favicon/coingyaan-android-icon-192x192.png" />
   <link rel="icon" sizes="512x512" href="/assets/images/favicon/coingyaan-android-icon-512x512.png" />
-
-  <!-- Apple / Android -->
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/coingyaan-apple-touch-icon-180x180.png" />
   <link rel="icon" sizes="192x192" href="/assets/images/logo/coingyaan-android-icon-192x192.png" />
   <link rel="icon" sizes="512x512" href="/assets/images/logo/coingyaan-android-icon-512x512.png" />
@@ -61,130 +55,31 @@
   <link rel="stylesheet" href="/assets/css/responsive.css" />
 
   <style>
-    .fg-main-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
+    /* Fear & Greed gauge */
+    .fg-main-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .fg-left { flex: 1; }
-    .fg-right {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-width: 140px;
-    }
+    .fg-right { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 140px; }
     #fgGauge { filter: drop-shadow(0 0 6px rgba(255,255,255,0.1)); }
-    #fgGaugeLabel {
-      text-align: center;
-      font-size: 0.7rem;
-      color: #94a3b8;
-      margin-top: 2px;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-    }
+    #fgGaugeLabel { text-align: center; font-size: 0.7rem; color: #94a3b8; margin-top: 2px; font-weight: 600; letter-spacing: 0.03em; }
 
-    /* ── Guide Ticker ── */
-    .guide-ticker {
-      display: flex;
-      align-items: center;
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-left: 3px solid #f59e0b;
-      border-radius: 10px;
-      padding: 14px 20px;
-      margin: 32px 0;
-      gap: 12px;
-      overflow: hidden;
-      min-height: 52px;
-    }
-    .guide-ticker-tag {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #f59e0b;
-      background: rgba(245,158,11,0.1);
-      border: 1px solid rgba(245,158,11,0.25);
-      border-radius: 4px;
-      padding: 3px 8px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .guide-ticker-wrap {
-      flex: 1;
-      overflow: hidden;
-      position: relative;
-      height: 24px;
-    }
-    .guide-ticker-item {
-      position: absolute;
-      width: 100%;
-      font-size: 14px;
-      font-weight: 500;
-      color: #e2e8f0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      text-decoration: none;
-      display: block;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      line-height: 24px;
-    }
+    /* Guide Ticker */
+    .guide-ticker { display: flex; align-items: center; background: #1e293b; border: 1px solid #334155; border-left: 3px solid #f59e0b; border-radius: 10px; padding: 14px 20px; margin: 32px 0; gap: 12px; overflow: hidden; min-height: 52px; }
+    .guide-ticker-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #f59e0b; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25); border-radius: 4px; padding: 3px 8px; white-space: nowrap; flex-shrink: 0; }
+    .guide-ticker-wrap { flex: 1; overflow: hidden; position: relative; height: 24px; }
+    .guide-ticker-item { position: absolute; width: 100%; font-size: 14px; font-weight: 500; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-decoration: none; display: block; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; line-height: 24px; }
     .guide-ticker-item.active { opacity: 1; transform: translateY(0); }
     .guide-ticker-item:hover { color: #f59e0b; }
     .guide-ticker-arrow { font-size: 16px; color: #f59e0b; flex-shrink: 0; }
     .guide-ticker-dots { display: flex; gap: 5px; flex-shrink: 0; }
-    .guide-ticker-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #334155;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
+    .guide-ticker-dot { width: 6px; height: 6px; border-radius: 50%; background: #334155; cursor: pointer; transition: background 0.3s; }
     .guide-ticker-dot.active { background: #f59e0b; }
 
-    /* ── Price Bar ── */
-    .page-title-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 6px;
-    }
-    .page-title-row .page-title { margin-bottom: 0; }
-    .price-bar {
-      display: flex;
-      gap: 10px;
-      flex-shrink: 0;
-    }
-    .price-pill {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 7px 14px;
-      transition: border-color 0.2s;
-    }
+    /* Price Bar */
+    .page-title-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 6px; }
+    .price-bar { display: flex; gap: 10px; flex-shrink: 0; }
+    .price-pill { display: flex; align-items: center; gap: 8px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 7px 14px; transition: border-color 0.2s; }
     .price-pill:hover { border-color: #f59e0b; }
-    .price-pill-icon {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 800;
-      flex-shrink: 0;
-    }
+    .price-pill-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; }
     .btc-icon { background: rgba(247,147,26,0.15); color: #f7931a; }
     .eth-icon { background: rgba(98,126,234,0.15); color: #627eea; }
     .price-pill-info { display: flex; flex-direction: column; }
@@ -193,424 +88,101 @@
     .price-pill-change { font-size: 10px; font-weight: 700; }
     .price-up { color: #22c55e; }
     .price-down { color: #ef4444; }
-    @media (max-width: 600px) {
-      .price-bar { width: 100%; }
-      .price-pill { flex: 1; }
-    }
+    @media (max-width: 600px) { .price-bar { width: 100%; } .price-pill { flex: 1; } }
 
-    /* ── Sentiment V2 Upgrade ── */
-    .sentiment-stats-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin: 14px 0;
-    }
-    .sentiment-stat {
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      border-radius: 8px;
-      padding: 10px 12px;
-      text-align: center;
-    }
-    .sentiment-stat-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 4px;
-    }
-    .sentiment-stat-value {
-      font-size: 15px;
-      font-weight: 700;
-      color: #e2e8f0;
-    }
+    /* Signal Rows V4 */
+    .signal-rows { margin: 12px 0 16px; display: flex; flex-direction: column; gap: 8px; }
+    .signal-row { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+    .signal-label { color: #64748b; font-weight: 600; min-width: 120px; flex-shrink: 0; }
+    .signal-value { color: #94a3b8; font-size: 12px; margin-left: auto; }
+
+    /* Sentiment Stats */
+    .sentiment-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0; }
+    .sentiment-stat { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 10px 12px; text-align: center; }
+    .sentiment-stat-label { font-size: 10px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .sentiment-stat-value { font-size: 15px; font-weight: 700; color: #e2e8f0; }
     .sentiment-stat-value.up { color: #22c55e; }
     .sentiment-stat-value.down { color: #ef4444; }
 
-    /* Sparkline chart */
-    .sentiment-chart-wrap {
-      margin: 14px 0;
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      border-radius: 8px;
-      padding: 12px;
-    }
-    .sentiment-chart-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 8px;
-    }
+    /* Sparkline */
+    .sentiment-chart-wrap { margin: 14px 0; background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; }
+    .sentiment-chart-label { font-size: 10px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
     #sentimentSparkline { width: 100%; height: 60px; display: block; }
 
-    /* RSI bar */
-    .rsi-wrap {
-      margin: 14px 0;
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      border-radius: 8px;
-      padding: 12px;
-    }
-    .rsi-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-    .rsi-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-    .rsi-value { font-size: 14px; font-weight: 700; color: #e2e8f0; }
-    .rsi-track {
-      height: 6px;
-      background: #1e293b;
-      border-radius: 4px;
-      position: relative;
-      margin-bottom: 4px;
-    }
-    .rsi-fill {
-      height: 100%;
-      border-radius: 4px;
-      transition: width 0.6s ease;
-    }
-    .rsi-zones {
-      display: flex;
-      justify-content: space-between;
-      font-size: 10px;
-      color: #334155;
-    }
-    .rsi-signal {
-      font-size: 11px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 4px;
-    }
+    /* RSI */
+    .rsi-wrap { margin: 14px 0; background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; }
+    .rsi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .rsi-label { font-size: 10px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; }
+    .rsi-track { height: 6px; background: #1e293b; border-radius: 4px; position: relative; margin-bottom: 4px; }
+    .rsi-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+    .rsi-zones { display: flex; justify-content: space-between; font-size: 10px; color: #334155; }
+    .rsi-signal { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
     .rsi-oversold { background: rgba(34,197,94,0.1); color: #22c55e; }
     .rsi-overbought { background: rgba(239,68,68,0.1); color: #ef4444; }
     .rsi-neutral { background: rgba(148,163,184,0.1); color: #94a3b8; }
 
-    /* News headlines */
-    .sentiment-news-wrap {
-      margin: 14px 0;
-    }
-    .sentiment-news-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 8px;
-    }
-    .sentiment-news-item {
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      border-left: 2px solid #334155;
-      border-radius: 6px;
-      padding: 10px 12px;
-      margin-bottom: 6px;
-      text-decoration: none;
-      display: block;
-      transition: border-left-color 0.2s;
-    }
-    .sentiment-news-item:hover { border-left-color: #f59e0b; }
-    .sentiment-news-title {
-      font-size: 12px;
-      color: #cbd5e1;
-      line-height: 1.5;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .sentiment-news-time {
-      font-size: 10px;
-      color: #334155;
-      margin-top: 4px;
-    }
-    .sentiment-loading {
-      font-size: 12px;
-      color: #475569;
-      text-align: center;
-      padding: 8px;
-    }
-
-    /* ── Trending Coins ── */
-    .trending-section {
-      margin: 8px 0 0;
-    }
-    .page-subtitle {
-      margin: 20px 0 16px;
-      font-size: 14px;
-      color: #64748b;
-      line-height: 1.6;
-    }
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-    .section-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    .section-refresh {
-      font-size: 11px;
-      color: #334155;
-    }
-    .trending-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-    }
-    @media (max-width: 700px) {
-      .trending-grid { grid-template-columns: repeat(2, 1fr); }
-      .trending-grid .trending-coin:last-child { display: none; }
-    }
-    .trending-coin {
-      background: #0d1526;
-      border: 1px solid #1e293b;
-      border-radius: 10px;
-      padding: 12px 14px;
-      transition: border-color 0.2s;
-    }
+    /* Trending */
+    .trending-section { margin: 8px 0 0; }
+    .page-subtitle { margin: 20px 0 16px; font-size: 14px; color: #64748b; line-height: 1.6; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .section-title { font-size: 13px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.08em; }
+    .section-refresh { font-size: 11px; color: #334155; }
+    .trending-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    @media (max-width: 700px) { .trending-grid { grid-template-columns: repeat(2, 1fr); } .trending-grid .trending-coin:last-child { display: none; } }
+    .trending-coin { background: #0d1526; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; transition: border-color 0.2s; }
     .trending-coin:hover { border-color: #334155; }
-    .trending-rank {
-      font-size: 10px;
-      font-weight: 700;
-      color: #334155;
-      margin-bottom: 6px;
-    }
-    .trending-name {
-      font-size: 13px;
-      font-weight: 700;
-      color: #e2e8f0;
-      margin-bottom: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .trending-symbol {
-      font-size: 11px;
-      color: #475569;
-      margin-bottom: 8px;
-    }
-    .trending-price {
-      font-size: 13px;
-      font-weight: 700;
-      color: #cbd5e1;
-      margin-bottom: 4px;
-    }
-    .trending-change {
-      font-size: 12px;
-      font-weight: 700;
-    }
-    .trending-change.up   { color: #22c55e; }
+    .trending-rank { font-size: 10px; font-weight: 700; color: #334155; margin-bottom: 6px; }
+    .trending-name { font-size: 13px; font-weight: 700; color: #e2e8f0; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .trending-symbol { font-size: 11px; color: #475569; margin-bottom: 8px; }
+    .trending-price { font-size: 13px; font-weight: 700; color: #cbd5e1; margin-bottom: 4px; }
+    .trending-change { font-size: 12px; font-weight: 700; }
+    .trending-change.up { color: #22c55e; }
     .trending-change.down { color: #ef4444; }
-    .trending-loading {
-      grid-column: 1 / -1;
-      text-align: center;
-      font-size: 13px;
-      color: #334155;
-      padding: 20px;
-    }
+    .trending-loading { grid-column: 1 / -1; text-align: center; font-size: 13px; color: #334155; padding: 20px; }
 
-    /* ── Altcoin Season Index ── */
-    .altseason-section {
-      margin: 28px 0 0;
-    }
-    .altseason-card {
-      background: #0d1526;
-      border: 1px solid #1e293b;
-      border-radius: 12px;
-      padding: 22px 24px;
-    }
-    .altseason-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 18px;
-      gap: 16px;
-    }
-    @media (max-width: 600px) {
-      .altseason-top { flex-direction: column; }
-    }
+    /* Altcoin Season */
+    .altseason-section { margin: 28px 0 0; }
+    .altseason-card { background: #0d1526; border: 1px solid #1e293b; border-radius: 12px; padding: 22px 24px; }
+    .altseason-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px; gap: 16px; }
+    @media (max-width: 600px) { .altseason-top { flex-direction: column; } }
     .altseason-score-wrap { text-align: center; }
-    .altseason-score {
-      font-size: 56px;
-      font-weight: 700;
-      line-height: 1;
-      color: #e2e8f0;
-    }
-    .altseason-score-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-top: 4px;
-    }
-    .altseason-badge {
-      display: inline-block;
-      font-size: 13px;
-      font-weight: 700;
-      padding: 5px 14px;
-      border-radius: 20px;
-      margin-top: 10px;
-    }
-    .altseason-badge.alt  { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.2); }
-    .altseason-badge.btc  { background: rgba(245,158,11,0.12);  color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
+    .altseason-score { font-size: 56px; font-weight: 700; line-height: 1; color: #e2e8f0; }
+    .altseason-score-label { font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+    .altseason-badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 5px 14px; border-radius: 20px; margin-top: 10px; }
+    .altseason-badge.alt { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.2); }
+    .altseason-badge.btc { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
     .altseason-badge.neutral { background: rgba(148,163,184,0.1); color: #94a3b8; border: 1px solid rgba(148,163,184,0.15); }
     .altseason-gauge-wrap { flex: 1; }
-    .altseason-gauge-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      color: #334155;
-      margin-bottom: 6px;
-    }
-    .altseason-track {
-      height: 10px;
-      border-radius: 5px;
-      background: linear-gradient(to right, #f59e0b, #94a3b8, #a78bfa);
-      position: relative;
-      margin-bottom: 8px;
-    }
-    .altseason-needle {
-      position: absolute;
-      top: -5px;
-      width: 4px;
-      height: 20px;
-      background: #fff;
-      border-radius: 2px;
-      transform: translateX(-50%);
-      transition: left 1s ease;
-      box-shadow: 0 0 6px rgba(255,255,255,0.4);
-    }
-    .altseason-desc {
-      font-size: 13px;
-      color: #64748b;
-      line-height: 1.6;
-      margin-top: 12px;
-    }
+    .altseason-gauge-labels { display: flex; justify-content: space-between; font-size: 11px; color: #334155; margin-bottom: 6px; }
+    .altseason-track { height: 10px; border-radius: 5px; background: linear-gradient(to right, #f59e0b, #94a3b8, #a78bfa); position: relative; margin-bottom: 8px; }
+    .altseason-needle { position: absolute; top: -5px; width: 4px; height: 20px; background: #fff; border-radius: 2px; transform: translateX(-50%); transition: left 1s ease; box-shadow: 0 0 6px rgba(255,255,255,0.4); }
+    .altseason-desc { font-size: 13px; color: #64748b; line-height: 1.6; margin-top: 12px; }
     .altseason-desc strong { color: #94a3b8; }
-    .altseason-stat-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 16px;
-    }
-    .altseason-stat {
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      border-radius: 8px;
-      padding: 10px 12px;
-      text-align: center;
-    }
+    .altseason-stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+    .altseason-stat { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 10px 12px; text-align: center; }
     .altseason-stat-label { font-size: 10px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
     .altseason-stat-value { font-size: 15px; font-weight: 700; color: #e2e8f0; }
 
-    /* ── Telegram Alert ── */
-    .alert-section {
-      margin: 28px 0 0;
-    }
-    .alert-card {
-      background: #0d1526;
-      border: 1px solid #1e293b;
-      border-radius: 12px;
-      padding: 16px 20px;
-    }
-    .alert-card-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 6px;
-    }
-    .alert-tg-icon {
-      width: 32px;
-      height: 32px;
-      background: rgba(37,197,234,0.1);
-      border: 1px solid rgba(37,197,234,0.2);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-    }
+    /* Telegram Alerts */
+    .alert-section { margin: 28px 0 0; }
+    .alert-card { background: #0d1526; border: 1px solid #1e293b; border-radius: 12px; padding: 16px 20px; }
+    .alert-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .alert-tg-icon { width: 32px; height: 32px; background: rgba(37,197,234,0.1); border: 1px solid rgba(37,197,234,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
     .alert-title { font-size: 15px; font-weight: 700; color: #e2e8f0; }
-    .alert-subtitle { font-size: 13px; color: #475569; margin-bottom: 12px; }
-    .alert-form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr auto;
-      gap: 8px;
-      align-items: end;
-    }
-    @media (max-width: 640px) {
-      .alert-form-row { grid-template-columns: 1fr 1fr; }
-      .alert-form-row .alert-btn { grid-column: 1 / -1; }
-    }
-    .alert-field label {
-      display: block;
-      font-size: 10px;
-      font-weight: 700;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 4px;
-    }
-    .alert-field input,
-    .alert-field select {
-      width: 100%;
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      border-radius: 6px;
-      padding: 6px 10px;
-      font-size: 12px;
-      color: #e2e8f0;
-      outline: none;
-      box-sizing: border-box;
-    }
-    .alert-field input:focus,
-    .alert-field select:focus { border-color: #334155; }
+    .alert-form-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; align-items: end; }
+    @media (max-width: 640px) { .alert-form-row { grid-template-columns: 1fr 1fr; } .alert-form-row .alert-btn { grid-column: 1 / -1; } }
+    .alert-field label { display: block; font-size: 10px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .alert-field input, .alert-field select { width: 100%; background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; padding: 6px 10px; font-size: 12px; color: #e2e8f0; outline: none; box-sizing: border-box; }
+    .alert-field input:focus, .alert-field select:focus { border-color: #334155; }
     .alert-field select option { background: #0f172a; }
-    .alert-btn {
-      background: #229ed9;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 700;
-      border: none;
-      border-radius: 6px;
-      padding: 7px 14px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.2s;
-    }
+    .alert-btn { background: #229ed9; color: #fff; font-size: 12px; font-weight: 700; border: none; border-radius: 6px; padding: 7px 14px; cursor: pointer; white-space: nowrap; transition: background 0.2s; width: auto !important; margin-top: 0 !important; }
     .alert-btn:hover { background: #1a8abf; }
     .alert-btn:disabled { background: #1e293b; color: #475569; cursor: not-allowed; }
-    .alert-status {
-      margin-top: 12px;
-      font-size: 13px;
-      min-height: 20px;
-    }
+    .alert-status { margin-top: 12px; font-size: 13px; min-height: 20px; }
     .alert-status.success { color: #22c55e; }
-    .alert-status.error   { color: #ef4444; }
-    .alert-status.info    { color: #94a3b8; }
-    .alert-note {
-      font-size: 11px;
-      color: #334155;
-      margin-top: 10px;
-      line-height: 1.6;
-    }
+    .alert-status.error { color: #ef4444; }
+    .alert-status.info { color: #94a3b8; }
+    .alert-note { font-size: 11px; color: #334155; margin-top: 10px; line-height: 1.6; }
     .alert-note a { color: #229ed9; text-decoration: none; }
   </style>
 </head>
@@ -622,26 +194,14 @@
   <div class="container">
     <div class="header-bar">
       <a href="/" class="brand">
-        <img
-          src="/assets/images/logo/coingyaan-logo-transparent.png"
-          alt="CoinGyaan – Crypto Sentiment Checker and Fear & Greed Index"
-          loading="eager"
-        />
-        <div class="brand-text">
-          <strong>CoinGyaan</strong>
-        </div>
+        <img src="/assets/images/logo/coingyaan-logo-transparent.png" alt="CoinGyaan – Crypto Sentiment Checker and Fear & Greed Index" loading="eager" />
+        <div class="brand-text"><strong>CoinGyaan</strong></div>
       </a>
       <nav class="header-nav">
         <a href="/guides.html">Guides</a>
         <a href="/contact.html">Contact</a>
       </nav>
-      <img
-        src="/assets/images/logo/owl-mascot.png"
-        alt="CoinGyaan Mascot"
-        class="owl-mascot"
-        title="Meet our crypto owl mascot! 🦉"
-        loading="eager"
-      />
+      <img src="/assets/images/logo/owl-mascot.png" alt="CoinGyaan Mascot" class="owl-mascot" title="Meet our crypto owl mascot! 🦉" loading="eager" />
     </div>
   </div>
 </header>
@@ -655,20 +215,21 @@
         <div class="price-pill-icon btc-icon">₿</div>
         <div class="price-pill-info">
           <span class="price-pill-name">Bitcoin</span>
-          <span class="price-pill-value" id="btcPrice">$--</span>
-          <span class="price-pill-change" id="btcChange">--</span>
+          <span class="price-pill-value" id="btcPrice">N/A</span>
+          <span class="price-pill-change" id="btcChange">N/A</span>
         </div>
       </div>
       <div class="price-pill">
         <div class="price-pill-icon eth-icon">Ξ</div>
         <div class="price-pill-info">
           <span class="price-pill-name">Ethereum</span>
-          <span class="price-pill-value" id="ethPrice">$--</span>
-          <span class="price-pill-change" id="ethChange">--</span>
+          <span class="price-pill-value" id="ethPrice">N/A</span>
+          <span class="price-pill-change" id="ethChange">N/A</span>
         </div>
       </div>
     </div>
   </div>
+
   <!-- TRENDING COINS -->
   <section class="trending-section">
     <div class="section-header">
@@ -681,7 +242,7 @@
   </section>
 
   <p class="page-subtitle">
-    Check market sentiment for any coin, track the Fear &amp; Greed Index and monitor the Altcoin Season Index — all free, all in one place.
+    Check market sentiment for any coin, track the Fear &amp; Greed Index and monitor the Altcoin Season Index. All free, all in one place.
   </p>
 
   <!-- TOOL GRID -->
@@ -692,73 +253,53 @@
       <h2>Market Sentiment Checker</h2>
       <p class="subtext">Check if the market is bullish or bearish.</p>
 
-      <input
-        type="text"
-        id="assetInput"
-        placeholder="Bitcoin, Ethereum, Solana..."
-        autocomplete="off"
-      />
-
+      <input type="text" id="assetInput" placeholder="Bitcoin, Ethereum, Solana..." autocomplete="off" />
       <button id="checkSentimentBtn">Check Sentiment</button>
 
-      <!-- Sentiment Result V2 -->
+      <!-- Sentiment Result V4 -->
       <div id="sentimentResult" class="result hidden">
         <h3 id="assetTitle">Bitcoin</h3>
 
-        <p class="overall">
-          Overall Sentiment:
-          <span id="overallSentiment" class="badge neutral">Neutral</span>
-        </p>
+        <!-- Signal rows -->
+        <div id="signalRows" class="signal-rows"></div>
 
-        <div class="signals">
-          <div><span id="newsSignalLabel">News Bias</span>: <span id="newsSignal" class="badge neutral">Neutral</span></div>
-          <div>Price Context: <span id="priceSignal" class="badge neutral">Neutral</span></div>
-          <div>Community Mood: <span id="moodSignal" class="badge neutral">Neutral</span></div>
-        </div>
-
-        <!-- V2: Live Price Stats -->
+        <!-- Price Stats -->
         <div class="sentiment-stats-row">
           <div class="sentiment-stat">
             <div class="sentiment-stat-label">Price</div>
-            <div class="sentiment-stat-value" id="v2Price">--</div>
+            <div class="sentiment-stat-value" id="v2Price">N/A</div>
           </div>
           <div class="sentiment-stat">
             <div class="sentiment-stat-label">24h Change</div>
-            <div class="sentiment-stat-value" id="v2Change">--</div>
+            <div class="sentiment-stat-value" id="v2Change">N/A</div>
           </div>
           <div class="sentiment-stat">
             <div class="sentiment-stat-label">24h Volume</div>
-            <div class="sentiment-stat-value" id="v2Volume">--</div>
+            <div class="sentiment-stat-value" id="v2Volume">N/A</div>
           </div>
         </div>
 
-        <!-- V2: Sparkline Chart -->
+        <!-- 7 Day Sparkline -->
         <div class="sentiment-chart-wrap">
           <div class="sentiment-chart-label">7 Day Price Chart</div>
           <canvas id="sentimentSparkline"></canvas>
         </div>
 
-        <!-- V2: RSI -->
+        <!-- RSI Bar -->
         <div class="rsi-wrap">
           <div class="rsi-header">
             <span class="rsi-label">RSI (14)</span>
-            <span class="rsi-signal rsi-neutral" id="rsiSignal">Loading</span>
+            <span class="rsi-signal rsi-neutral" id="rsiSignal">N/A</span>
           </div>
           <div class="rsi-track">
             <div class="rsi-fill" id="rsiFill" style="width:50%; background:#94a3b8;"></div>
           </div>
           <div class="rsi-zones">
             <span>Oversold &lt;30</span>
-            <span id="rsiValue">--</span>
+            <span id="rsiValue">N/A</span>
             <span>Overbought &gt;70</span>
           </div>
         </div>
-
-        <strong>Why this sentiment?</strong>
-        <ul id="sentimentReasons"></ul>
-
-        <!-- V2: News Headlines -->
-
 
         <p class="disclaimer">Educational only. Not financial advice.</p>
       </div>
@@ -766,75 +307,50 @@
 
     <!-- RIGHT: FEAR & GREED -->
     <div class="card">
-      <h2>Fear & Greed Index</h2>
+      <h2>Fear &amp; Greed Index</h2>
       <p class="subtext">Overall crypto market emotion.</p>
-
       <div class="fear-greed">
         <div class="fg-main-row">
-
-          <!-- Left: score + label + bar -->
           <div class="fg-left">
-            <div id="fgScore" class="fg-score">--</div>
+            <div id="fgScore" class="fg-score">N/A</div>
             <div id="fgLabel" class="fg-label">Loading</div>
-
             <div class="progress">
               <div id="fgBar" class="progress-bar"></div>
             </div>
-
             <p class="updated">Updated today</p>
           </div>
-
-          <!-- Right: SVG Gauge -->
           <div class="fg-right">
             <svg id="fgGauge" viewBox="0 0 120 70" width="140" height="85">
               <defs>
-                <linearGradient id="seg1" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#ef4444"/>
-                  <stop offset="100%" stop-color="#f97316"/>
-                </linearGradient>
-                <linearGradient id="seg2" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#f97316"/>
-                  <stop offset="100%" stop-color="#eab308"/>
-                </linearGradient>
-                <linearGradient id="seg3" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#eab308"/>
-                  <stop offset="100%" stop-color="#84cc16"/>
-                </linearGradient>
-                <linearGradient id="seg4" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#84cc16"/>
-                  <stop offset="100%" stop-color="#22c55e"/>
-                </linearGradient>
+                <linearGradient id="seg1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ef4444"/><stop offset="100%" stop-color="#f97316"/></linearGradient>
+                <linearGradient id="seg2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#eab308"/></linearGradient>
+                <linearGradient id="seg3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#eab308"/><stop offset="100%" stop-color="#84cc16"/></linearGradient>
+                <linearGradient id="seg4" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#84cc16"/><stop offset="100%" stop-color="#22c55e"/></linearGradient>
               </defs>
-
               <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="#1e293b" stroke-width="10" stroke-linecap="round"/>
               <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="url(#seg1)" stroke-width="10" stroke-linecap="butt" stroke-dasharray="39 157" stroke-dashoffset="0"/>
               <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="url(#seg2)" stroke-width="10" stroke-linecap="butt" stroke-dasharray="39 157" stroke-dashoffset="-39"/>
               <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="url(#seg3)" stroke-width="10" stroke-linecap="butt" stroke-dasharray="39 157" stroke-dashoffset="-78"/>
               <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="url(#seg4)" stroke-width="10" stroke-linecap="butt" stroke-dasharray="40 157" stroke-dashoffset="-117"/>
-
               <line id="fgNeedle" x1="60" y1="65" x2="60" y2="22" stroke="white" stroke-width="2.5" stroke-linecap="round" style="transform-origin: 60px 65px; transform: rotate(-90deg); transition: transform 1.2s ease;"/>
               <circle cx="60" cy="65" r="4.5" fill="white" opacity="0.9"/>
               <circle cx="60" cy="65" r="2" fill="#0f172a"/>
             </svg>
-
-            <div id="fgGaugeLabel">--</div>
+            <div id="fgGaugeLabel">N/A</div>
           </div>
-
         </div>
       </div>
-
     </div>
 
   </section>
 
-  <!-- GUIDE TICKER — auto powered by /assets/js/guides-data.js -->
+  <!-- GUIDE TICKER -->
   <div class="guide-ticker">
     <span class="guide-ticker-tag" id="tickerTag">Guides</span>
     <div class="guide-ticker-wrap" id="tickerWrap"></div>
     <div class="guide-ticker-dots" id="tickerDots"></div>
     <span class="guide-ticker-arrow">→</span>
   </div>
-
 
   <!-- ALTCOIN SEASON INDEX -->
   <section class="altseason-section">
@@ -845,7 +361,7 @@
     <div class="altseason-card">
       <div class="altseason-top">
         <div class="altseason-score-wrap">
-          <div class="altseason-score" id="altseasonScore">--</div>
+          <div class="altseason-score" id="altseasonScore">N/A</div>
           <div class="altseason-score-label">out of 100</div>
           <div class="altseason-badge neutral" id="altseasonBadge">Loading...</div>
         </div>
@@ -863,15 +379,15 @@
       <div class="altseason-stat-row">
         <div class="altseason-stat">
           <div class="altseason-stat-label">Alts Outperforming BTC</div>
-          <div class="altseason-stat-value" id="altseasonOutperforming">--</div>
+          <div class="altseason-stat-value" id="altseasonOutperforming">N/A</div>
         </div>
         <div class="altseason-stat">
           <div class="altseason-stat-label">BTC 90d Change</div>
-          <div class="altseason-stat-value" id="altseasonBtcChange">--</div>
+          <div class="altseason-stat-value" id="altseasonBtcChange">N/A</div>
         </div>
         <div class="altseason-stat">
           <div class="altseason-stat-label">Avg Alt 90d Change</div>
-          <div class="altseason-stat-value" id="altseasonAvgAlt">--</div>
+          <div class="altseason-stat-value" id="altseasonAvgAlt">N/A</div>
         </div>
       </div>
     </div>
@@ -915,50 +431,34 @@
 
   <!-- INFO / SEO -->
   <section class="info-section">
-    <h2>How Crypto Market Sentiment Works?</h2>
+    <h2>How Crypto Market Sentiment Works</h2>
     <p>
-      Crypto markets are driven by emotions as much as data.
-      <br><br>
-      Prices often react to fear excitement confidence and uncertainty.
-      <br><br>
-      Understanding sentiment helps you see how traders and investors are feeling.
+      Crypto markets are driven by emotions as much as data. Prices often react to fear, excitement, confidence and uncertainty. Understanding sentiment helps you see how traders and investors are feeling right now.
     </p>
     <p>
-      Bullish sentiment reflects optimism and confidence.
-      <br><br>
-      Bearish sentiment signals caution or fear.
-      <br><br>
-      Neutral sentiment usually means the market is waiting for direction.
+      Bullish sentiment reflects optimism and confidence. Bearish sentiment signals caution or fear. Neutral sentiment usually means the market is waiting for a clear direction before making a move.
     </p>
     <p>
-      CoinGyaan simplifies this by combining sentiment signals into a clear and easy to understand view of market mood.
+      CoinGyaan combines four signals into a clear view of market mood: ETF flows, price context, Fear and Greed Index and RSI. Each signal tells a different part of the story.
     </p>
 
-    <h2>What Is the Crypto Fear and Greed Index?</h2>
+    <h2>What Is the Crypto Fear and Greed Index</h2>
     <p>
-      The Crypto Fear and Greed Index measures market emotions on a scale from zero to one hundred.
-      <br><br>
-      It shows whether fear or greed is dominating the market.
+      The Crypto Fear and Greed Index measures market emotions on a scale from zero to one hundred. It shows whether fear or greed is dominating the market at any given moment.
     </p>
     <p>
-      Extreme fear can appear during downturns when confidence is low.
-      <br><br>
-      Extreme greed often shows up when prices rise quickly and excitement peaks.
+      Extreme fear can appear during downturns when confidence is low. Extreme greed often shows up when prices rise quickly and excitement peaks. Neither extreme lasts forever.
     </p>
     <p>
-      CoinGyaan displays this index alongside sentiment analysis so you can understand market emotions at a glance.
+      CoinGyaan displays this index alongside sentiment analysis so you can understand market emotions at a glance without digging through multiple sources.
     </p>
 
     <h2>Using Sentiment Responsibly</h2>
     <p>
-      Market sentiment is a guide not a prediction.
-      <br><br>
-      It helps you understand crowd behavior but does not guarantee outcomes.
+      Market sentiment is a guide not a prediction. It helps you understand crowd behavior but does not guarantee any outcome. Always combine sentiment insights with your own research and risk management.
     </p>
     <p>
-      Always combine sentiment insights with your own research and risk management.
-      <br><br>
-      CoinGyaan is built for education and awareness not financial advice.
+      CoinGyaan is built for education and awareness not financial advice. The signals we show are data points to help you think — not instructions on what to buy or sell.
     </p>
   </section>
 
@@ -988,9 +488,9 @@
     fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true')
       .then(function(r){ return r.json(); })
       .then(function(data) {
-        var btcPrice = data.bitcoin.usd;
+        var btcPrice  = data.bitcoin.usd;
         var btcChange = data.bitcoin.usd_24h_change.toFixed(2);
-        var ethPrice = data.ethereum.usd;
+        var ethPrice  = data.ethereum.usd;
         var ethChange = data.ethereum.usd_24h_change.toFixed(2);
 
         document.getElementById('btcPrice').textContent = '$' + btcPrice.toLocaleString();
@@ -1015,7 +515,6 @@
 <script src="/assets/js/sentiment.js" defer></script>
 <script src="/assets/js/feargreed.js" defer></script>
 
-<!-- Load shared guides data then build ticker -->
 <script src="/assets/js/guides-data.js"></script>
 <script>
   var wrap    = document.getElementById('tickerWrap');
