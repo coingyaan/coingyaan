@@ -528,7 +528,7 @@
       background: #0d1526;
       border: 1px solid #1e293b;
       border-radius: 12px;
-      padding: 22px 24px;
+      padding: 16px 20px;
     }
     .alert-card-header {
       display: flex;
@@ -547,12 +547,12 @@
       justify-content: center;
       font-size: 16px;
     }
-    .alert-title { font-size: 16px; font-weight: 700; color: #e2e8f0; }
-    .alert-subtitle { font-size: 13px; color: #475569; margin-bottom: 18px; }
+    .alert-title { font-size: 15px; font-weight: 700; color: #e2e8f0; }
+    .alert-subtitle { font-size: 13px; color: #475569; margin-bottom: 12px; }
     .alert-form-row {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr auto;
-      gap: 10px;
+      gap: 8px;
       align-items: end;
     }
     @media (max-width: 640px) {
@@ -561,21 +561,21 @@
     }
     .alert-field label {
       display: block;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       color: #475569;
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .alert-field input,
     .alert-field select {
       width: 100%;
       background: #0f172a;
       border: 1px solid #1e293b;
-      border-radius: 7px;
-      padding: 9px 12px;
-      font-size: 13px;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 12px;
       color: #e2e8f0;
       outline: none;
       box-sizing: border-box;
@@ -586,11 +586,11 @@
     .alert-btn {
       background: #229ed9;
       color: #fff;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       border: none;
-      border-radius: 7px;
-      padding: 10px 20px;
+      border-radius: 6px;
+      padding: 7px 14px;
       cursor: pointer;
       white-space: nowrap;
       transition: background 0.2s;
@@ -711,7 +711,7 @@
         </p>
 
         <div class="signals">
-          <div>News Bias: <span id="newsSignal" class="badge neutral">Neutral</span></div>
+          <div><span id="newsSignalLabel">News Bias</span>: <span id="newsSignal" class="badge neutral">Neutral</span></div>
           <div>Price Context: <span id="priceSignal" class="badge neutral">Neutral</span></div>
           <div>Community Mood: <span id="moodSignal" class="badge neutral">Neutral</span></div>
         </div>
@@ -758,10 +758,7 @@
         <ul id="sentimentReasons"></ul>
 
         <!-- V2: News Headlines -->
-        <div class="sentiment-news-wrap">
-          <div class="sentiment-news-label">Latest News</div>
-          <div id="sentimentNewsItems"><div class="sentiment-loading">Loading news...</div></div>
-        </div>
+
 
         <p class="disclaimer">Educational only. Not financial advice.</p>
       </div>
@@ -890,7 +887,6 @@
         <div class="alert-tg-icon">📩</div>
         <div class="alert-title">Get Telegram Alerts</div>
       </div>
-      <div class="alert-subtitle">We will message you on Telegram when your coin's sentiment changes.</div>
       <div class="alert-form-row">
         <div class="alert-field">
           <label>Telegram Username</label>
@@ -912,7 +908,7 @@
       </div>
       <div class="alert-status" id="alertStatus"></div>
       <div class="alert-note">
-        To receive alerts, start a chat with <a href="https://t.me/CoinGyaanBot" target="_blank" rel="noopener">@CoinGyaanBot</a> on Telegram first. &nbsp;·&nbsp; Educational only. Not financial advice.
+        Start a chat with <a href="https://t.me/CoinGyaanBot" target="_blank" rel="noopener">@CoinGyaanBot</a> first to receive alerts.
       </div>
     </div>
   </section>
