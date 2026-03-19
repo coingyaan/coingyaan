@@ -1,21 +1,23 @@
 // ============================================
-// COINGYAAN — SENTIMENT ANALYZER V2
-// Upgrades: 7-day sparkline, RSI, volume, news headlines
+// COINGYAAN — SENTIMENT ANALYZER V3
+// Signals: ETF Flow (BTC) / BTC Dominance (alts)
+//          Price 24h, Fear and Greed, RSI
 // ============================================
 
 const SENTIMENT_COINGECKO_API = 'https://api.coingecko.com/api/v3';
-const SENTIMENT_NEWS_API      = 'https://api.coingecko.com/api/v3/news';
 const SENTIMENT_FNG_API       = 'https://api.alternative.me/fng/';
 
+// ── Coin lookup ───────────────────────────────
 async function getCryptoId(coinName) {
   try {
     const res  = await fetch(`${SENTIMENT_COINGECKO_API}/search?query=${encodeURIComponent(coinName)}`);
     const data = await res.json();
     if (data.coins && data.coins.length > 0) return data.coins[0].id;
     return coinName.toLowerCase();
-  } catch (e) { return coinName.toLowerCase(); }
+  } catch(e) { return coinName.toLowerCase(); }
 }
 
+// ── Price data ────────────────────────────────
 async function getCryptoPrices(cryptoId) {
   try {
     const res  = await fetch(
@@ -30,42 +32,26 @@ async function getCryptoPrices(cryptoId) {
       };
     }
     return null;
-  } catch (e) { return null; }
+  } catch(e) { return null; }
 }
 
+// ── OHLC for RSI ──────────────────────────────
 async function getOHLC(cryptoId) {
   try {
     const res  = await fetch(`${SENTIMENT_COINGECKO_API}/coins/${cryptoId}/ohlc?vs_currency=usd&days=14`);
     const data = await res.json();
     if (Array.isArray(data) && data.length > 0) return data;
     return [];
-  } catch (e) { return []; }
+  } catch(e) { return []; }
 }
 
-async function getCryptoNews(coinName, limit = 20) {
-  try {
-    const res  = await fetch(`${SENTIMENT_NEWS_API}?page=1`);
-    const data = await res.json();
-    // CoinGecko news format: { data: [...] }
-    if (data && data.data && data.data.length) {
-      return data.data.slice(0, limit).map(item => ({
-        title:       item.title,
-        body:        item.description || '',
-        url:         item.url || '',
-        publishedOn: item.updated_at || Math.floor(Date.now() / 1000),
-        source:      item.author || 'CoinGecko'
-      }));
-    }
-    return [];
-  } catch (e) { return []; }
-}
-
+// ── Fear and Greed ────────────────────────────
 async function getSentimentFearGreed() {
   try {
     const res  = await fetch(SENTIMENT_FNG_API);
     const data = await res.json();
     return data?.data?.[0] ? parseInt(data.data[0].value) : 50;
-  } catch (e) {
+  } catch(e) {
     const fgScore = document.getElementById('fgScore');
     if (fgScore && fgScore.textContent !== '--') {
       const v = parseInt(fgScore.textContent);
@@ -75,6 +61,48 @@ async function getSentimentFearGreed() {
   }
 }
 
+// ── BTC ETF Flow (farside.co.uk) ──────────────
+async function getEtfFlow() {
+  try {
+    // Use a CORS proxy to fetch farside data
+    const res  = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://farside.co.uk/bitcoin-etf/'));
+    const data = await res.json();
+    const html = data.contents || '';
+
+    // Find the last table row with ETF total flow data
+    const rows = html.match(/<tr[^>]*>[\s\S]*?<\/tr>/gi) || [];
+    let totalFlow = null;
+
+    for (let i = rows.length - 1; i >= 0; i--) {
+      const cells = rows[i].match(/<td[^>]*>([\s\S]*?)<\/td>/gi) || [];
+      if (cells.length >= 10) {
+        const lastCell = cells[cells.length - 1].replace(/<[^>]+>/g, '').trim();
+        const val = parseFloat(lastCell.replace(/,/g, ''));
+        if (!isNaN(val)) {
+          totalFlow = val;
+          break;
+        }
+      }
+    }
+
+    console.log('ETF Flow fetched:', totalFlow);
+    return totalFlow;
+  } catch(e) {
+    console.log('ETF flow fetch failed:', e.message);
+    return null;
+  }
+}
+
+// ── BTC Dominance ─────────────────────────────
+async function getBtcDominance() {
+  try {
+    const res  = await fetch(`${SENTIMENT_COINGECKO_API}/global`);
+    const data = await res.json();
+    return data?.data?.market_cap_percentage?.btc || null;
+  } catch(e) { return null; }
+}
+
+// ── RSI calculation ───────────────────────────
 function calculateRSI(ohlcData, period = 14) {
   if (!ohlcData || ohlcData.length < period + 1) return null;
   const closes = ohlcData.map(c => c[4]);
@@ -95,6 +123,7 @@ function calculateRSI(ohlcData, period = 14) {
   return Math.round(100 - (100 / (1 + avgGain / avgLoss)));
 }
 
+// ── Sparkline ─────────────────────────────────
 function drawSparkline(ohlcData, overallSentiment) {
   const canvas = document.getElementById('sentimentSparkline');
   if (!canvas || !ohlcData || ohlcData.length === 0) return;
@@ -129,26 +158,18 @@ function drawSparkline(ohlcData, overallSentiment) {
   ctx.strokeStyle = lineColor; ctx.lineWidth = 2; ctx.stroke();
 }
 
-function analyzeNewsBias(news, cryptoName) {
-  const pos = ['surge','rally','bullish','gains','up','rise','soar','adoption','partnership','upgrade','milestone','breakthrough','institutional','approval','record','high','moon','pump','positive','growth'];
-  const neg = ['crash','plunge','bearish','falls','down','drop','dump','hack','scam','sec','regulation','ban','lawsuit','fraud','concerns','warning','risk','selloff','decline','slump'];
-  let posScore = 0, negScore = 0;
-  news.forEach(article => {
-    const text = (article.title + ' ' + article.body).toLowerCase();
-    if (text.includes(cryptoName.toLowerCase())) {
-      pos.forEach(w => { if (text.includes(w)) posScore++; });
-      neg.forEach(w => { if (text.includes(w)) negScore++; });
-    }
-  });
-  if (posScore === 0 && negScore === 0) {
-    news.slice(0, 10).forEach(article => {
-      const text = (article.title + ' ' + article.body).toLowerCase();
-      pos.forEach(w => { if (text.includes(w)) posScore += 0.5; });
-      neg.forEach(w => { if (text.includes(w)) negScore += 0.5; });
-    });
-  }
-  if (posScore > negScore + 2) return 'bullish';
-  if (negScore > posScore + 2) return 'bearish';
+// ── Signal analyzers ──────────────────────────
+function analyzeEtfFlow(flow) {
+  if (flow === null) return 'neutral';
+  if (flow > 0)  return 'bullish';
+  if (flow < 0)  return 'bearish';
+  return 'neutral';
+}
+
+function analyzeBtcDominance(dominance) {
+  if (dominance === null) return 'neutral';
+  if (dominance < 52)  return 'bullish';  // BTC losing dominance = good for alts
+  if (dominance > 58)  return 'bearish';  // BTC gaining dominance = bad for alts
   return 'neutral';
 }
 
@@ -160,8 +181,8 @@ function analyzePriceContext(priceData) {
 }
 
 function analyzeCommunityMood(fng) {
-  if (fng >= 60) return 'bullish';
-  if (fng <= 40) return 'bearish';
+  if (fng >= 55) return 'bullish';
+  if (fng <= 45) return 'bearish';
   return 'neutral';
 }
 
@@ -172,6 +193,7 @@ function analyzeRSI(rsi) {
   return 'neutral';
 }
 
+// ── Helpers ───────────────────────────────────
 function formatPrice(p) {
   if (!p) return '--';
   if (p >= 1000) return '$' + p.toLocaleString('en-US', { maximumFractionDigits: 0 });
@@ -186,76 +208,94 @@ function formatVolume(v) {
   return '$' + v.toLocaleString();
 }
 
-function timeAgo(timestamp) {
-  const diff = Math.floor((Date.now() / 1000) - timestamp);
-  if (diff < 3600)  return Math.floor(diff / 60) + 'm ago';
-  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
-  return Math.floor(diff / 86400) + 'd ago';
-}
-
-function filterNewsForCoin(news, coinName) {
-  const name     = coinName.toLowerCase();
-  const relevant = news.filter(n => (n.title + ' ' + n.body).toLowerCase().includes(name));
-  return relevant.length >= 2 ? relevant.slice(0, 3) : news.slice(0, 3);
-}
-
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+function isBitcoin(cryptoId) {
+  return cryptoId === 'bitcoin' || cryptoId === 'btc';
+}
+
+// ── Main sentiment calculation ────────────────
 async function calculateSentiment(cryptoName) {
   const cryptoId = await getCryptoId(cryptoName.toLowerCase().trim());
+  const isBTC    = isBitcoin(cryptoId);
 
-  // Sequence CoinGecko calls with small delays to avoid mobile rate limiting
   const priceData = await getCryptoPrices(cryptoId);
   await delay(600);
   const ohlcData  = await getOHLC(cryptoId);
   await delay(400);
 
-  // News and FNG can fire together — different APIs
-  const [news, fngValue] = await Promise.all([
-    getCryptoNews(cryptoName, 20),
-    getSentimentFearGreed()
+  const [fngValue, signal1Data] = await Promise.all([
+    getSentimentFearGreed(),
+    isBTC ? getEtfFlow() : getBtcDominance()
   ]);
-  const rsiValue      = calculateRSI(ohlcData);
-  const newsBias      = analyzeNewsBias(news, cryptoName);
-  const priceContext  = analyzePriceContext(priceData);
-  const communityMood = analyzeCommunityMood(fngValue);
-  const rsiSignal     = analyzeRSI(rsiValue);
-  const signals       = [newsBias, priceContext, communityMood, rsiSignal];
-  const bullishCount  = signals.filter(s => s === 'bullish').length;
-  const bearishCount  = signals.filter(s => s === 'bearish').length;
+
+  const rsiValue        = calculateRSI(ohlcData);
+  const priceContext    = analyzePriceContext(priceData);
+  const communityMood   = analyzeCommunityMood(fngValue);
+  const rsiSignal       = analyzeRSI(rsiValue);
+
+  let signal1, signal1Label, signal1Value;
+  if (isBTC) {
+    signal1       = analyzeEtfFlow(signal1Data);
+    signal1Label  = 'ETF Flow';
+    signal1Value  = signal1Data !== null
+      ? (signal1Data > 0 ? '+$' + signal1Data.toFixed(0) + 'M' : '-$' + Math.abs(signal1Data).toFixed(0) + 'M')
+      : 'No data';
+  } else {
+    signal1       = analyzeBtcDominance(signal1Data);
+    signal1Label  = 'BTC Dominance';
+    signal1Value  = signal1Data !== null ? signal1Data.toFixed(1) + '%' : 'No data';
+  }
+
+  const signals      = [signal1, priceContext, communityMood, rsiSignal];
+  const bullishCount = signals.filter(s => s === 'bullish').length;
+  const bearishCount = signals.filter(s => s === 'bearish').length;
   let overall = 'neutral';
   if (bullishCount >= 2) overall = 'bullish';
   if (bearishCount >= 2) overall = 'bearish';
+
+  // Explanations
   const explanations = [];
-  if (newsBias === 'bullish') explanations.push(`Recent news shows positive momentum for ${cryptoName}`);
-  else if (newsBias === 'bearish') explanations.push(`News indicates concerns around ${cryptoName}`);
-  else explanations.push(`News coverage for ${cryptoName} is balanced`);
+  if (isBTC) {
+    if (signal1 === 'bullish')      explanations.push(`Bitcoin ETF recorded net inflows of ${signal1Value} — institutional buying`);
+    else if (signal1 === 'bearish') explanations.push(`Bitcoin ETF recorded net outflows of ${signal1Value} — institutional selling`);
+    else                            explanations.push(`Bitcoin ETF flow data unavailable or neutral today`);
+  } else {
+    if (signal1 === 'bullish')      explanations.push(`BTC dominance at ${signal1Value} — capital rotating into altcoins`);
+    else if (signal1 === 'bearish') explanations.push(`BTC dominance at ${signal1Value} — capital moving toward Bitcoin`);
+    else                            explanations.push(`BTC dominance at ${signal1Value} — market is balanced between BTC and alts`);
+  }
+
   if (priceData) {
-    const ch = priceData.change24h.toFixed(2);
+    const ch   = priceData.change24h.toFixed(2);
     const sign = ch >= 0 ? '+' : '';
-    if (priceContext === 'bullish') explanations.push(`Strong 24h price gain of ${sign}${ch}%`);
+    if (priceContext === 'bullish')      explanations.push(`Strong 24h price gain of ${sign}${ch}%`);
     else if (priceContext === 'bearish') explanations.push(`Price dropped ${ch}% in the last 24 hours`);
-    else explanations.push(`Price is stable at ${sign}${ch}% over 24 hours`);
+    else                                explanations.push(`Price is stable at ${sign}${ch}% over 24 hours`);
   }
-  if (communityMood === 'bullish') explanations.push(`Fear and Greed Index (${fngValue}) shows market optimism`);
+
+  if (communityMood === 'bullish')      explanations.push(`Fear and Greed Index (${fngValue}) shows market optimism`);
   else if (communityMood === 'bearish') explanations.push(`Fear and Greed Index (${fngValue}) shows market fear`);
-  else explanations.push(`Market sentiment (F&G: ${fngValue}) is neutral`);
+  else                                  explanations.push(`Market sentiment (F&G: ${fngValue}) is neutral`);
+
   if (rsiValue !== null) {
-    if (rsiSignal === 'bullish') explanations.push(`RSI at ${rsiValue} — coin may be oversold and due for a bounce`);
+    if (rsiSignal === 'bullish')      explanations.push(`RSI at ${rsiValue} — coin may be oversold and due for a bounce`);
     else if (rsiSignal === 'bearish') explanations.push(`RSI at ${rsiValue} — coin may be overbought, caution advised`);
-    else explanations.push(`RSI at ${rsiValue} — no extreme momentum signal`);
+    else                              explanations.push(`RSI at ${rsiValue} — no extreme momentum signal`);
   }
+
   return {
-    crypto: cryptoName, cryptoId, overall,
-    signals: { news: newsBias, price: priceContext, mood: communityMood, rsi: rsiSignal },
+    crypto: cryptoName, cryptoId, overall, isBTC,
+    signal1Label, signal1Value,
+    signals: { news: signal1, price: priceContext, mood: communityMood, rsi: rsiSignal },
     explanations,
     data: { price: priceData?.price, change24h: priceData?.change24h, volume24h: priceData?.volume24h, fng: fngValue, rsi: rsiValue },
     ohlcData,
-    news: filterNewsForCoin(news, cryptoName),
     timestamp: new Date()
   };
 }
 
+// ── Display ───────────────────────────────────
 function displaySentiment(data) {
   const assetTitle = document.getElementById('assetTitle');
   if (assetTitle) assetTitle.textContent = data.crypto;
@@ -265,6 +305,10 @@ function displaySentiment(data) {
     overallEl.textContent = data.overall.charAt(0).toUpperCase() + data.overall.slice(1);
     overallEl.className   = 'badge ' + data.overall;
   }
+
+  // Update dynamic signal label
+  const newsLabelEl = document.getElementById('newsSignalLabel');
+  if (newsLabelEl) newsLabelEl.textContent = data.signal1Label;
 
   [['newsSignal', data.signals.news], ['priceSignal', data.signals.price], ['moodSignal', data.signals.mood]].forEach(([id, val]) => {
     const el = document.getElementById(id);
@@ -289,7 +333,7 @@ function displaySentiment(data) {
   const rsiSignal = document.getElementById('rsiSignal');
   if (data.data.rsi !== null && data.data.rsi !== undefined) {
     if (rsiValue) rsiValue.textContent = data.data.rsi;
-    if (rsiFill)  {
+    if (rsiFill) {
       rsiFill.style.width      = data.data.rsi + '%';
       rsiFill.style.background = data.data.rsi <= 30 ? '#22c55e' : data.data.rsi >= 70 ? '#ef4444' : '#f59e0b';
     }
@@ -306,23 +350,11 @@ function displaySentiment(data) {
   const reasonsList = document.getElementById('sentimentReasons');
   if (reasonsList) reasonsList.innerHTML = data.explanations.map(e => `<li>${e}</li>`).join('');
 
-  const newsWrap = document.getElementById('sentimentNewsItems');
-  if (newsWrap) {
-    if (data.news && data.news.length > 0) {
-      newsWrap.innerHTML = data.news.map(n => `
-        <a href="${n.url}" class="sentiment-news-item" target="_blank" rel="noopener noreferrer">
-          <div class="sentiment-news-title">${n.title}</div>
-          <div class="sentiment-news-time">${n.source ? n.source + ' · ' : ''}${timeAgo(n.publishedOn)}</div>
-        </a>`).join('');
-    } else {
-      newsWrap.innerHTML = '<div class="sentiment-loading">No recent news found.</div>';
-    }
-  }
-
   const resultCard = document.getElementById('sentimentResult');
   if (resultCard) resultCard.classList.remove('hidden');
 }
 
+// ── Check button ──────────────────────────────
 async function checkSentiment() {
   const input      = document.getElementById('assetInput');
   const cryptoName = input ? input.value.trim() : '';
@@ -334,9 +366,6 @@ async function checkSentiment() {
 
   const resultCard = document.getElementById('sentimentResult');
   if (resultCard) resultCard.classList.add('hidden');
-
-  const newsWrap = document.getElementById('sentimentNewsItems');
-  if (newsWrap) newsWrap.innerHTML = '<div class="sentiment-loading">Loading news...</div>';
 
   try {
     const sentiment = await calculateSentiment(cryptoName);
@@ -359,4 +388,4 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 window.checkSentiment = checkSentiment;
-console.log('CoinGyaan Sentiment V2 loaded');
+console.log('CoinGyaan Sentiment V3 loaded');
