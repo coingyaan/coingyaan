@@ -75,32 +75,45 @@ async function getSentimentFearGreed() {
 }
 
 // ── BTC ETF Flow ──────────────────────────────
+// Farside table structure: columns are ETF names, last col is daily Total
+// We want the LAST DATA ROW's Total column (not the cumulative Total row)
 async function getEtfFlow() {
   try {
     const res  = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://farside.co.uk/bitcoin-etf/'));
     const data = await res.json();
     const html = data.contents || '';
-    const totalPattern = /Total[\s\S]*?<td[^>]*>([\s\S]*?)<\/td>/gi;
-    let match, lastTotal = null;
-    while ((match = totalPattern.exec(html)) !== null) {
-      const raw = match[1].replace(/<[^>]+>/g, '').trim().replace(/,/g, '');
-      const val = parseFloat(raw);
-      if (!isNaN(val)) lastTotal = val;
-    }
-    if (lastTotal === null) {
-      const rows = html.match(/<tr[^>]*>[\s\S]*?<\/tr>/gi) || [];
-      for (let i = Math.max(0, rows.length - 5); i < rows.length; i++) {
-        const cells = rows[i].match(/<td[^>]*>([\s\S]*?)<\/td>/gi) || [];
-        for (let j = cells.length - 1; j >= 0; j--) {
-          const raw = cells[j].replace(/<[^>]+>/g, '').trim().replace(/,/g, '');
-          const val = parseFloat(raw);
-          if (!isNaN(val) && Math.abs(val) < 5000) { lastTotal = val; break; }
-        }
-        if (lastTotal !== null) break;
+
+    // Get all table rows
+    const rows = html.match(/<tr[^>]*>[\s\S]*?<\/tr>/gi) || [];
+    if (rows.length === 0) return null;
+
+    // Work backwards from the end — skip "Total" summary rows
+    // Look for rows that have a date pattern (DD/MM or MM/DD) in first cell
+    for (let i = rows.length - 1; i >= Math.max(0, rows.length - 15); i--) {
+      const row = rows[i];
+
+      // Skip rows containing "Total" text
+      if (/total/i.test(row.replace(/<[^>]+>/g, ''))) continue;
+
+      const cells = row.match(/<td[^>]*>([\s\S]*?)<\/td>/gi) || [];
+      if (cells.length < 5) continue;
+
+      // First cell should look like a date
+      const firstCell = cells[0].replace(/<[^>]+>/g, '').trim();
+      if (!/\d{2}/.test(firstCell)) continue;
+
+      // Last cell is the daily total — must be a reasonable ETF daily flow ($M)
+      // Daily flows range roughly -$1000M to +$1500M
+      const lastCell = cells[cells.length - 1].replace(/<[^>]+>/g, '').trim().replace(/,/g, '');
+      const val = parseFloat(lastCell);
+      if (!isNaN(val) && Math.abs(val) < 2000) {
+        console.log('ETF daily flow:', val, 'from row:', firstCell);
+        return val;
       }
     }
-    console.log('ETF Flow:', lastTotal);
-    return lastTotal;
+
+    console.log('ETF flow: no valid daily row found');
+    return null;
   } catch(e) {
     console.log('ETF flow failed:', e.message);
     return null;
@@ -247,18 +260,29 @@ async function calculateSentiment(cryptoName) {
   const cryptoId = await getCryptoId(cryptoName.toLowerCase().trim());
   const isBTC    = isBitcoin(cryptoId);
 
+  // Sequential calls with delays to avoid CoinGecko rate limiting
   const priceData = await getCryptoPrices(cryptoId);
+  await delay(600);
+
+  const ohlcData = await getOHLC(cryptoId);
+  await delay(600);
+
+  // Fear & Greed uses different API (alternative.me) — safe to run anytime
+  const fngValue = await getSentimentFearGreed();
   await delay(400);
-  const ohlcData  = await getOHLC(cryptoId);
-  await delay(300);
 
-  const [fngValue, signal1Raw] = await Promise.all([
-    getSentimentFearGreed(),
-    isBTC ? getEtfFlow() : getBtcDominance()
-  ]);
+  // ETF/Dominance — ETF uses allorigins proxy (different server), Dominance uses CoinGecko
+  let signal1Raw = null;
+  if (isBTC) {
+    signal1Raw = await getEtfFlow(); // uses allorigins proxy, no delay needed after
+  } else {
+    signal1Raw = await getBtcDominance(); // CoinGecko call
+  }
 
+  // BTC fallback if ETF unavailable
   let etfFallback = null;
   if (isBTC && signal1Raw === null) {
+    await delay(400);
     etfFallback = await getBtcPerformance();
   }
 
