@@ -100,14 +100,14 @@ async function loadAltcoinSeason() {
 
   try {
     // Step 1: Get top 51 coins current prices (free endpoint)
-    await delay(1200);
+    await delay(2500);
     const marketsRes = await fetch(
       `${CG}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=51&page=1&sparkline=false`
     );
     const markets = await marketsRes.json();
     if (!markets || !markets.length) throw new Error('No market data');
 
-    await delay(700);
+    await delay(1200);
     const btcChartRes = await fetch(
       `${CG}/coins/bitcoin/market_chart?vs_currency=usd&days=90&interval=daily`
     );
@@ -166,9 +166,11 @@ async function loadAltcoinSeason() {
     if (refreshEl) refreshEl.textContent = 'Updated ' + timeNow();
 
   } catch (e) {
-    console.error('Altcoin season error:', e);
+    console.error('Altcoin season error:', e.message || e);
     if (descEl) descEl.textContent = 'Unable to load data. Please refresh the page.';
     if (scoreEl) scoreEl.textContent = '--';
+    if (badgeEl) { badgeEl.textContent = 'Error'; badgeEl.className = 'altseason-badge neutral'; }
+    if (refreshEl) refreshEl.textContent = 'Failed to load';
   }
 }
 
@@ -251,7 +253,7 @@ async function loadStablecoinDominance() {
   if (!combinedEl) return;
 
   try {
-    await delay(800);
+    await delay(4500);
     const res  = await fetch('https://api.coingecko.com/api/v3/global');
     const data = await res.json();
     const pct  = data.data.market_cap_percentage || {};
@@ -304,8 +306,10 @@ async function loadStablecoinDominance() {
     if (refreshEl)    refreshEl.textContent    = 'Updated ' + timeNow();
 
   } catch (e) {
-    console.error('Stablecoin dominance error:', e);
+    console.error('Stablecoin dominance error:', e.message || e);
     if (combinedEl) combinedEl.textContent = '--';
+    if (signalEl) signalEl.textContent = 'Error';
+    if (refreshEl) refreshEl.textContent = 'Failed to load';
   }
 }
 
