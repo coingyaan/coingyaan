@@ -107,30 +107,21 @@ async function loadAltcoinSeason() {
     const markets = await marketsRes.json();
     if (!markets || !markets.length) throw new Error('No market data');
 
-    // Step 2: Get BTC 90-day price history (free endpoint)
     await delay(700);
     const btcChartRes = await fetch(
       `${CG}/coins/bitcoin/market_chart?vs_currency=usd&days=90&interval=daily`
     );
     const btcChart = await btcChartRes.json();
 
-    // Calculate BTC 90d change from chart
     const btcPrices  = btcChart.prices || [];
     const btcStart   = btcPrices.length > 0 ? btcPrices[0][1] : null;
     const btcCurrent = markets.find(c => c.id === 'bitcoin');
     const btcNow     = btcCurrent ? btcCurrent.current_price : null;
     const btcChg90   = btcStart && btcNow ? ((btcNow - btcStart) / btcStart) * 100 : null;
 
-    // Step 3: Use 24h change as proxy signal for top 50 alts
-    // (90d per-coin free calls would need 50 requests — too many)
-    // Instead use price_change_percentage_24h weighted signal
     const alts = markets.filter(c => c.id !== 'bitcoin').slice(0, 50);
-
-    let outperforming = 0;
-    let totalAltChg   = 0;
-    let validAlts     = 0;
-    const btc24h      = btcCurrent ? btcCurrent.price_change_percentage_24h : 0;
-
+    let outperforming = 0, totalAltChg = 0, validAlts = 0;
+    const btc24h = btcCurrent ? btcCurrent.price_change_percentage_24h : 0;
     alts.forEach(alt => {
       const chg = alt.price_change_percentage_24h;
       if (chg !== null && chg !== undefined) {
@@ -139,7 +130,6 @@ async function loadAltcoinSeason() {
         if (chg > btc24h) outperforming++;
       }
     });
-
     const avgAltChg = validAlts > 0 ? totalAltChg / validAlts : 0;
     const score     = validAlts > 0 ? Math.round((outperforming / validAlts) * 100) : 50;
 
@@ -148,7 +138,7 @@ async function loadAltcoinSeason() {
     if (score >= 75) {
       season     = 'Altcoin Season 🚀';
       badgeClass = 'alt';
-      desc       = `<strong>${outperforming} of ${validAlts}</strong> top altcoins are outperforming Bitcoin over the last 24 hours. Capital is flowing into alts — historically a time of high volatility and big moves in smaller coins.`;
+      desc       = `<strong>${outperforming} of ${validAlts}</strong> top altcoins are outperforming Bitcoin right now. Capital is flowing into alts historically a time of high volatility and big moves in smaller coins.`;
     } else if (score <= 25) {
       season     = 'Bitcoin Season ₿';
       badgeClass = 'btc';
@@ -156,7 +146,7 @@ async function loadAltcoinSeason() {
     } else {
       season     = 'Mixed Market';
       badgeClass = 'neutral';
-      desc       = `<strong>${outperforming} of ${validAlts}</strong> top altcoins are outperforming Bitcoin. The market is mixed — no clear dominance from BTC or alts yet.`;
+      desc       = `<strong>${outperforming} of ${validAlts}</strong> top altcoins are outperforming Bitcoin. The market is mixed with no clear dominance from BTC or alts yet.`;
     }
 
     // Update UI
@@ -244,11 +234,87 @@ async function submitAlert() {
   }
 }
 
+// ═══════════════════════════════════════════
+// FEATURE 8 — STABLECOIN DOMINANCE
+// Uses /global endpoint — free no key needed
+// ═══════════════════════════════════════════
+async function loadStablecoinDominance() {
+  const usdtEl      = document.getElementById('stableUsdtPct');
+  const usdcEl      = document.getElementById('stableUsdcPct');
+  const combinedEl  = document.getElementById('stableCombinedPct');
+  const mcapEl      = document.getElementById('stableMcap');
+  const signalEl    = document.getElementById('stableSignal');
+  const signalDescEl= document.getElementById('stableSignalDesc');
+  const barFillEl   = document.getElementById('stableBarFill');
+  const barPctEl    = document.getElementById('stableBarPct');
+  const refreshEl   = document.getElementById('stableRefreshTime');
+  if (!combinedEl) return;
+
+  try {
+    await delay(800);
+    const res  = await fetch('https://api.coingecko.com/api/v3/global');
+    const data = await res.json();
+    const pct  = data.data.market_cap_percentage || {};
+
+    const usdtPct     = pct.usdt  || 0;
+    const usdcPct     = pct.usdc  || 0;
+    const combined    = usdtPct + usdcPct;
+    const totalMcapUsd = data.data.total_market_cap.usd || 0;
+    const stableMcap  = (combined / 100) * totalMcapUsd;
+
+    // Format market cap
+    function fmtMcap(v) {
+      if (v >= 1e12) return '$' + (v / 1e12).toFixed(2) + 'T';
+      if (v >= 1e9)  return '$' + (v / 1e9).toFixed(1) + 'B';
+      return '$' + (v / 1e6).toFixed(0) + 'M';
+    }
+
+    // Signal logic
+    let signal, signalClass, signalDesc;
+    if (combined > 9) {
+      signal      = 'Extreme Fear';
+      signalClass = 'stable-signal-fear';
+      signalDesc  = 'Stablecoin dominance is very high. Traders are heavily positioned in cash waiting for better entry points.';
+    } else if (combined > 7) {
+      signal      = 'Fear';
+      signalClass = 'stable-signal-fear';
+      signalDesc  = 'Rising stablecoin dominance signals risk-off sentiment. Capital is moving to safety.';
+    } else if (combined > 5) {
+      signal      = 'Neutral';
+      signalClass = 'stable-signal-neutral';
+      signalDesc  = 'Stablecoin dominance is in the normal range. Market is balanced between cash and crypto.';
+    } else {
+      signal      = 'Greed';
+      signalClass = 'stable-signal-greed';
+      signalDesc  = 'Low stablecoin dominance means capital is deployed in crypto. Risk appetite is high.';
+    }
+
+    // Update UI
+    if (usdtEl)       usdtEl.textContent      = usdtPct.toFixed(1) + '%';
+    if (usdcEl)       usdcEl.textContent      = usdcPct.toFixed(1) + '%';
+    if (combinedEl)   combinedEl.textContent  = combined.toFixed(1) + '%';
+    if (mcapEl)       mcapEl.textContent      = fmtMcap(stableMcap);
+    if (signalEl) {
+      signalEl.textContent = signal;
+      signalEl.className   = 'stable-signal-badge ' + signalClass;
+    }
+    if (signalDescEl) signalDescEl.textContent = signalDesc;
+    if (barFillEl)    barFillEl.style.width    = Math.min(combined * 5, 100) + '%';
+    if (barPctEl)     barPctEl.textContent     = combined.toFixed(1) + '%';
+    if (refreshEl)    refreshEl.textContent    = 'Updated ' + timeNow();
+
+  } catch (e) {
+    console.error('Stablecoin dominance error:', e);
+    if (combinedEl) combinedEl.textContent = '--';
+  }
+}
+
 // ── Init ───────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function () {
   loadTrending();
   loadAltcoinSeason();
+  loadStablecoinDominance();
 });
 
 window.submitAlert = submitAlert;
-console.log('CoinGyaan Features loaded — Trending + Altseason + Alerts');
+console.log('CoinGyaan Features loaded — Trending + Altseason + Alerts + Stablecoin');
