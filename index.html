@@ -729,64 +729,50 @@
 
       <button id="checkSentimentBtn">Check Sentiment</button>
 
-      <!-- Sentiment Result V2 -->
+      <!-- Sentiment Result V4 -->
       <div id="sentimentResult" class="result hidden">
         <h3 id="assetTitle">Bitcoin</h3>
 
-        <p class="overall">
-          Overall Sentiment:
-          <span id="overallSentiment" class="badge neutral">Neutral</span>
-        </p>
+        <!-- Signal rows — populated by sentiment.js -->
+        <div id="signalRows" class="signal-rows"></div>
 
-        <div class="signals">
-          <div><span id="newsSignalLabel">News Bias</span>: <span id="newsSignal" class="badge neutral">Neutral</span></div>
-          <div>Price Context: <span id="priceSignal" class="badge neutral">Neutral</span></div>
-          <div>Community Mood: <span id="moodSignal" class="badge neutral">Neutral</span></div>
-        </div>
-
-        <!-- V2: Live Price Stats -->
+        <!-- Price Stats -->
         <div class="sentiment-stats-row">
           <div class="sentiment-stat">
             <div class="sentiment-stat-label">Price</div>
-            <div class="sentiment-stat-value" id="v2Price">--</div>
+            <div class="sentiment-stat-value" id="v2Price">N/A</div>
           </div>
           <div class="sentiment-stat">
             <div class="sentiment-stat-label">24h Change</div>
-            <div class="sentiment-stat-value" id="v2Change">--</div>
+            <div class="sentiment-stat-value" id="v2Change">N/A</div>
           </div>
           <div class="sentiment-stat">
             <div class="sentiment-stat-label">24h Volume</div>
-            <div class="sentiment-stat-value" id="v2Volume">--</div>
+            <div class="sentiment-stat-value" id="v2Volume">N/A</div>
           </div>
         </div>
 
-        <!-- V2: Sparkline Chart -->
+        <!-- 7 Day Sparkline -->
         <div class="sentiment-chart-wrap">
           <div class="sentiment-chart-label">7 Day Price Chart</div>
           <canvas id="sentimentSparkline"></canvas>
         </div>
 
-        <!-- V2: RSI -->
+        <!-- RSI Bar -->
         <div class="rsi-wrap">
           <div class="rsi-header">
             <span class="rsi-label">RSI (14)</span>
-            <span class="rsi-signal rsi-neutral" id="rsiSignal">Loading</span>
+            <span class="rsi-signal rsi-neutral" id="rsiSignal">N/A</span>
           </div>
           <div class="rsi-track">
             <div class="rsi-fill" id="rsiFill" style="width:50%; background:#94a3b8;"></div>
           </div>
           <div class="rsi-zones">
             <span>Oversold &lt;30</span>
-            <span id="rsiValue">--</span>
+            <span id="rsiValue">N/A</span>
             <span>Overbought &gt;70</span>
           </div>
         </div>
-
-        <strong>Why this sentiment?</strong>
-        <ul id="sentimentReasons"></ul>
-
-        <!-- V2: News Headlines -->
-
 
         <p class="disclaimer">Educational only. Not financial advice.</p>
       </div>
