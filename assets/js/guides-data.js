@@ -9,6 +9,30 @@
 // ============================================
 var GUIDES_DATA = [
   {
+    url:      "/guides/what-is-defi-complete-beginner-guide-2026.html",
+    tag:      "DeFi",
+    readTime: "13 min read",
+    title:    "What Is DeFi? A Complete Beginner Guide to Decentralised Finance in 2026",
+    desc:     "What is DeFi, how it works, key protocols and how to get started safely. Covers lending, yield farming, DEX trading, risks and the biggest DeFi projects in 2026.",
+    date:     "March 2026"
+  },
+  {
+    url:      "/guides/how-to-read-crypto-rsi-beginner-guide.html",
+    tag:      "Technical Analysis",
+    readTime: "11 min read",
+    title:    "How to Read Crypto RSI: A Beginner Guide to RSI in Crypto Trading",
+    desc:     "What is RSI in crypto, how to read it and how to use the RSI indicator to identify overbought and oversold conditions in Bitcoin and altcoins.",
+    date:     "March 2026"
+  },
+  {
+    url:      "/guides/altcoin-season-explained-how-to-know-when-alts-will-pump.html",
+    tag:      "Crypto Strategy",
+    readTime: "12 min read",
+    title:    "Altcoin Season Explained: How to Know When Alts Will Pump",
+    desc:     "What is altcoin season, how to spot it before it starts and which signals to watch. Covers BTC dominance, the altcoin season index, Fear and Greed and portfolio strategy.",
+    date:     "March 2026"
+  },
+  {
     url:      "/guides/billions-network-verified-agent-identity.html",
     tag:      "AI + Web3",
     readTime: "5 min read",
