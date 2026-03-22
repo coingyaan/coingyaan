@@ -10,5 +10,6 @@ Disallow: /tag/
 Disallow: /category/
 Disallow: /author/
 Disallow: /page/
+Disallow: /cgi-sys/
 
 Sitemap: https://coingyaan.com/sitemap.xml
