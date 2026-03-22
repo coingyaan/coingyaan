@@ -463,30 +463,24 @@ async function loadSentimentHistory(days) {
   chartEl.innerHTML = '<div class="history-loading">Loading...</div>';
 
   try {
-    // Fetch BTC OHLC and Fear and Greed for the period
-    var ohlcRes = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/ohlc?vs_currency=usd&days=' + days);
-    var ohlcData = await ohlcRes.json();
+    // Use market_chart endpoint — works on free tier for all periods
+    var res  = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=' + days + '&interval=daily');
+    var data = await res.json();
 
-    if (!Array.isArray(ohlcData) || ohlcData.length === 0) throw new Error('No OHLC data');
+    if (!data || !data.prices || data.prices.length < 2) throw new Error('No price data');
 
-    // Group by day and calculate RSI per day and price change
-    // Each OHLC entry: [timestamp, open, high, low, close]
-    var grouped = {};
-    ohlcData.forEach(function(c) {
-      var date = new Date(c[0]).toISOString().split('T')[0];
-      if (!grouped[date]) grouped[date] = [];
-      grouped[date].push(c[4]); // close prices
-    });
+    // data.prices = [[timestamp, price], ...]
+    var prices = data.prices;
 
-    var dates = Object.keys(grouped).sort();
-    var closes = dates.map(function(d) { return grouped[d][grouped[d].length - 1]; });
-
-    // Calculate daily sentiment based on price change
+    // Calculate daily sentiment based on day over day price change
     var results = [];
-    for (var i = 1; i < closes.length; i++) {
-      var chg = ((closes[i] - closes[i-1]) / closes[i-1]) * 100;
+    for (var i = 1; i < prices.length; i++) {
+      var prev = prices[i - 1][1];
+      var curr = prices[i][1];
+      var chg  = ((curr - prev) / prev) * 100;
+      var date = new Date(prices[i][0]).toISOString().split('T')[0];
       var sentiment = chg > 1 ? 'bullish' : chg < -1 ? 'bearish' : 'neutral';
-      results.push({ date: dates[i], chg: chg, sentiment: sentiment });
+      results.push({ date: date, chg: chg, sentiment: sentiment });
     }
 
     // Limit to requested days
