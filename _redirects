@@ -10,6 +10,5 @@
 /*.js      200!
 /*.json    200!
 /*.ico     200!
-
-# SPA fallback
-/*  /index.html  200
+/*.html    200!
+/*.xml     200!
