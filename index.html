@@ -12,18 +12,16 @@
     gtag("config", "G-DXY9ZZ543X");
   </script>
 
-  <!-- AdSense ownership -->
+  <!-- AdSense -->
   <meta name="google-adsense-account" content="ca-pub-9704432095241296" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9704432095241296" crossorigin="anonymous"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Primary SEO -->
-  <title>CoinGyaan – Free Crypto Sentiment Checker: Is Bitcoin Bullish or Bearish Today?</title>
-
-  <meta name="description" content="Check if Bitcoin, Ethereum or any crypto is bullish or bearish right now. Free crypto sentiment checker combining RSI, Fear and Greed Index and price signals. Updated live." />
-
-  <meta name="keywords" content="crypto sentiment checker, bitcoin sentiment today, is bitcoin bullish or bearish, crypto market sentiment 2026, ethereum sentiment checker, bitcoin RSI today, altcoin season index, crypto fear and greed index, crypto market mood today, free crypto sentiment tool, is now a good time to buy bitcoin, crypto sentiment analysis free, stablecoin dominance, USDT dominance, USDC dominance, stablecoin market cap, crypto fear signal, CoinGyaan" />
-
+  <title>Crypto Sentiment Checker Today | Bitcoin Sentiment Today and Fear Greed Index | CoinGyaan</title>
+  <meta name="description" content="Check crypto sentiment today instantly. Track bitcoin sentiment today and live fear and greed index. Free crypto sentiment checker with real time insights on CoinGyaan." />
+  <meta name="keywords" content="crypto sentiment today, bitcoin sentiment today, fear and greed index today, crypto sentiment checker, bitcoin sentiment checker, crypto market sentiment today, btc sentiment today, is bitcoin bullish or bearish today, stablecoin dominance, crypto fear and greed index, altcoin season index, CoinGyaan" />
   <meta name="author" content="CoinGyaan" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://coingyaan.com/" />
@@ -35,24 +33,22 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon/coingyaan-apple-touch-icon-180x180.png" />
   <link rel="icon" sizes="192x192" href="/assets/images/favicon/coingyaan-android-icon-192x192.png" />
   <link rel="icon" sizes="512x512" href="/assets/images/favicon/coingyaan-android-icon-512x512.png" />
-
-  <!-- Apple / Android -->
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/coingyaan-apple-touch-icon-180x180.png" />
   <link rel="icon" sizes="192x192" href="/assets/images/logo/coingyaan-android-icon-192x192.png" />
   <link rel="icon" sizes="512x512" href="/assets/images/logo/coingyaan-android-icon-512x512.png" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="CoinGyaan – Free Crypto Sentiment Checker: Is Bitcoin Bullish or Bearish Today?" />
-  <meta property="og:description" content="Check if Bitcoin, Ethereum or any crypto is bullish or bearish right now. Free sentiment checker with RSI, Fear and Greed Index and live price signals." />
+  <meta property="og:title" content="Crypto Sentiment Checker Today | Bitcoin Sentiment Today and Fear Greed Index | CoinGyaan" />
+  <meta property="og:description" content="Check crypto sentiment today instantly. Track bitcoin sentiment today and live fear and greed index. Free crypto sentiment checker on CoinGyaan." />
   <meta property="og:url" content="https://coingyaan.com/" />
   <meta property="og:image" content="https://coingyaan.com/assets/images/social/universal-share.png" />
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@coin_gyaan" />
-  <meta name="twitter:title" content="CoinGyaan – Free Crypto Sentiment Checker: Is Bitcoin Bullish or Bearish Today?" />
-  <meta name="twitter:description" content="Check if Bitcoin or any crypto is bullish or bearish right now. Free sentiment checker with RSI, Fear and Greed and live price signals." />
+  <meta name="twitter:title" content="Crypto Sentiment Checker Today | Bitcoin Sentiment Today and Fear Greed Index | CoinGyaan" />
+  <meta name="twitter:description" content="Check crypto sentiment today instantly. Free crypto sentiment checker with live fear and greed index on CoinGyaan." />
   <meta name="twitter:image" content="https://coingyaan.com/assets/images/social/universal-share.png" />
 
   <!-- Styles -->
@@ -85,7 +81,7 @@
       letter-spacing: 0.03em;
     }
 
-    /* ── Guide Ticker ── */
+    /* Guide Ticker */
     .guide-ticker {
       display: flex;
       align-items: center;
@@ -148,7 +144,7 @@
     }
     .guide-ticker-dot.active { background: #f59e0b; }
 
-    /* ── Price Bar ── */
+    /* Price Bar */
     .page-title-row {
       display: flex;
       align-items: center;
@@ -198,7 +194,13 @@
       .price-pill { flex: 1; }
     }
 
-    /* ── Sentiment V2 Upgrade ── */
+    /* Signal Rows V4 */
+    .signal-rows { margin: 12px 0 16px; display: flex; flex-direction: column; gap: 8px; }
+    .signal-row { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+    .signal-label { color: #64748b; font-weight: 600; min-width: 120px; flex-shrink: 0; }
+    .signal-value { color: #94a3b8; font-size: 12px; margin-left: auto; }
+
+    /* Sentiment V2 */
     .sentiment-stats-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -228,7 +230,7 @@
     .sentiment-stat-value.up { color: #22c55e; }
     .sentiment-stat-value.down { color: #ef4444; }
 
-    /* Sparkline chart */
+    /* Sparkline */
     .sentiment-chart-wrap {
       margin: 14px 0;
       background: #0f172a;
@@ -246,7 +248,7 @@
     }
     #sentimentSparkline { width: 100%; height: 60px; display: block; }
 
-    /* RSI bar */
+    /* RSI */
     .rsi-wrap {
       margin: 14px 0;
       background: #0f172a;
@@ -297,320 +299,80 @@
     .rsi-neutral { background: rgba(148,163,184,0.1); color: #94a3b8; }
 
     /* News headlines */
-    .sentiment-news-wrap {
-      margin: 14px 0;
-    }
-    .sentiment-news-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 8px;
-    }
-    .sentiment-news-item {
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      border-left: 2px solid #334155;
-      border-radius: 6px;
-      padding: 10px 12px;
-      margin-bottom: 6px;
-      text-decoration: none;
-      display: block;
-      transition: border-left-color 0.2s;
-    }
+    .sentiment-news-wrap { margin: 14px 0; }
+    .sentiment-news-label { font-size: 10px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    .sentiment-news-item { background: #0f172a; border: 1px solid #1e293b; border-left: 2px solid #334155; border-radius: 6px; padding: 10px 12px; margin-bottom: 6px; text-decoration: none; display: block; transition: border-left-color 0.2s; }
     .sentiment-news-item:hover { border-left-color: #f59e0b; }
-    .sentiment-news-title {
-      font-size: 12px;
-      color: #cbd5e1;
-      line-height: 1.5;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .sentiment-news-time {
-      font-size: 10px;
-      color: #334155;
-      margin-top: 4px;
-    }
-    .sentiment-loading {
-      font-size: 12px;
-      color: #475569;
-      text-align: center;
-      padding: 8px;
-    }
+    .sentiment-news-title { font-size: 12px; color: #cbd5e1; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .sentiment-news-time { font-size: 10px; color: #334155; margin-top: 4px; }
+    .sentiment-loading { font-size: 12px; color: #475569; text-align: center; padding: 8px; }
 
-    /* ── Trending Coins ── */
-    .trending-section {
-      margin: 8px 0 0;
-    }
-    .page-subtitle {
-      margin: 20px 0 16px;
-      font-size: 14px;
-      color: #64748b;
-      line-height: 1.6;
-    }
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-    .section-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    .section-refresh {
-      font-size: 11px;
-      color: #334155;
-    }
-    .trending-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-    }
+    /* Trending */
+    .trending-section { margin: 8px 0 0; }
+    .page-subtitle { margin: 20px 0 16px; font-size: 14px; color: #64748b; line-height: 1.6; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .section-title { font-size: 13px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.08em; }
+    .section-refresh { font-size: 11px; color: #334155; }
+    .trending-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
     @media (max-width: 700px) {
       .trending-grid { grid-template-columns: repeat(2, 1fr); }
       .trending-grid .trending-coin:last-child { display: none; }
     }
-    .trending-coin {
-      background: #0d1526;
-      border: 1px solid #1e293b;
-      border-radius: 10px;
-      padding: 12px 14px;
-      transition: border-color 0.2s;
-    }
+    .trending-coin { background: #0d1526; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; transition: border-color 0.2s; }
     .trending-coin:hover { border-color: #334155; }
-    .trending-rank {
-      font-size: 10px;
-      font-weight: 700;
-      color: #334155;
-      margin-bottom: 6px;
-    }
-    .trending-name {
-      font-size: 13px;
-      font-weight: 700;
-      color: #e2e8f0;
-      margin-bottom: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .trending-symbol {
-      font-size: 11px;
-      color: #475569;
-      margin-bottom: 8px;
-    }
-    .trending-price {
-      font-size: 13px;
-      font-weight: 700;
-      color: #cbd5e1;
-      margin-bottom: 4px;
-    }
-    .trending-change {
-      font-size: 12px;
-      font-weight: 700;
-    }
-    .trending-change.up   { color: #22c55e; }
+    .trending-rank { font-size: 10px; font-weight: 700; color: #334155; margin-bottom: 6px; }
+    .trending-name { font-size: 13px; font-weight: 700; color: #e2e8f0; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .trending-symbol { font-size: 11px; color: #475569; margin-bottom: 8px; }
+    .trending-price { font-size: 13px; font-weight: 700; color: #cbd5e1; margin-bottom: 4px; }
+    .trending-change { font-size: 12px; font-weight: 700; }
+    .trending-change.up { color: #22c55e; }
     .trending-change.down { color: #ef4444; }
-    .trending-loading {
-      grid-column: 1 / -1;
-      text-align: center;
-      font-size: 13px;
-      color: #334155;
-      padding: 20px;
-    }
+    .trending-loading { grid-column: 1 / -1; text-align: center; font-size: 13px; color: #334155; padding: 20px; }
 
-    /* ── Altcoin Season Index ── */
-    .altseason-section {
-      margin: 28px 0 0;
-    }
-    .altseason-card {
-      background: #0d1526;
-      border: 1px solid #1e293b;
-      border-radius: 12px;
-      padding: 22px 24px;
-    }
-    .altseason-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 18px;
-      gap: 16px;
-    }
-    @media (max-width: 600px) {
-      .altseason-top { flex-direction: column; }
-    }
+    /* Altcoin Season */
+    .altseason-section { margin: 28px 0 0; }
+    .altseason-card { background: #0d1526; border: 1px solid #1e293b; border-radius: 12px; padding: 22px 24px; }
+    .altseason-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px; gap: 16px; }
+    @media (max-width: 600px) { .altseason-top { flex-direction: column; } }
     .altseason-score-wrap { text-align: center; }
-    .altseason-score {
-      font-size: 56px;
-      font-weight: 700;
-      line-height: 1;
-      color: #e2e8f0;
-    }
-    .altseason-score-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-top: 4px;
-    }
-    .altseason-badge {
-      display: inline-block;
-      font-size: 13px;
-      font-weight: 700;
-      padding: 5px 14px;
-      border-radius: 20px;
-      margin-top: 10px;
-    }
-    .altseason-badge.alt  { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.2); }
-    .altseason-badge.btc  { background: rgba(245,158,11,0.12);  color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
+    .altseason-score { font-size: 56px; font-weight: 700; line-height: 1; color: #e2e8f0; }
+    .altseason-score-label { font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+    .altseason-badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 5px 14px; border-radius: 20px; margin-top: 10px; }
+    .altseason-badge.alt { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.2); }
+    .altseason-badge.btc { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
     .altseason-badge.neutral { background: rgba(148,163,184,0.1); color: #94a3b8; border: 1px solid rgba(148,163,184,0.15); }
     .altseason-gauge-wrap { flex: 1; }
-    .altseason-gauge-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      color: #334155;
-      margin-bottom: 6px;
-    }
-    .altseason-track {
-      height: 10px;
-      border-radius: 5px;
-      background: linear-gradient(to right, #f59e0b, #94a3b8, #a78bfa);
-      position: relative;
-      margin-bottom: 8px;
-    }
-    .altseason-needle {
-      position: absolute;
-      top: -5px;
-      width: 4px;
-      height: 20px;
-      background: #fff;
-      border-radius: 2px;
-      transform: translateX(-50%);
-      transition: left 1s ease;
-      box-shadow: 0 0 6px rgba(255,255,255,0.4);
-    }
-    .altseason-desc {
-      font-size: 13px;
-      color: #64748b;
-      line-height: 1.6;
-      margin-top: 12px;
-    }
+    .altseason-gauge-labels { display: flex; justify-content: space-between; font-size: 11px; color: #334155; margin-bottom: 6px; }
+    .altseason-track { height: 10px; border-radius: 5px; background: linear-gradient(to right, #f59e0b, #94a3b8, #a78bfa); position: relative; margin-bottom: 8px; }
+    .altseason-needle { position: absolute; top: -5px; width: 4px; height: 20px; background: #fff; border-radius: 2px; transform: translateX(-50%); transition: left 1s ease; box-shadow: 0 0 6px rgba(255,255,255,0.4); }
+    .altseason-desc { font-size: 13px; color: #64748b; line-height: 1.6; margin-top: 12px; }
     .altseason-desc strong { color: #94a3b8; }
-    .altseason-stat-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 16px;
-    }
-    .altseason-stat {
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      border-radius: 8px;
-      padding: 10px 12px;
-      text-align: center;
-    }
+    .altseason-stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+    .altseason-stat { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 10px 12px; text-align: center; }
     .altseason-stat-label { font-size: 10px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
     .altseason-stat-value { font-size: 15px; font-weight: 700; color: #e2e8f0; }
 
-    /* ── Telegram Alert ── */
-    .alert-section {
-      margin: 28px 0 0;
-    }
-    .alert-card {
-      background: #0d1526;
-      border: 1px solid #1e293b;
-      border-radius: 12px;
-      padding: 16px 20px;
-    }
-    .alert-card-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 6px;
-    }
-    .alert-tg-icon {
-      width: 32px;
-      height: 32px;
-      background: rgba(37,197,234,0.1);
-      border: 1px solid rgba(37,197,234,0.2);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-    }
+    /* Telegram Alert */
+    .alert-section { margin: 28px 0 0; }
+    .alert-card { background: #0d1526; border: 1px solid #1e293b; border-radius: 12px; padding: 16px 20px; }
+    .alert-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .alert-tg-icon { width: 32px; height: 32px; background: rgba(37,197,234,0.1); border: 1px solid rgba(37,197,234,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
     .alert-title { font-size: 15px; font-weight: 700; color: #e2e8f0; }
     .alert-subtitle { font-size: 13px; color: #475569; margin-bottom: 12px; }
-    .alert-form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr auto;
-      gap: 8px;
-      align-items: end;
-    }
-    @media (max-width: 640px) {
-      .alert-form-row { grid-template-columns: 1fr 1fr; }
-      .alert-form-row .alert-btn { grid-column: 1 / -1; }
-    }
-    .alert-field label {
-      display: block;
-      font-size: 10px;
-      font-weight: 700;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 4px;
-    }
-    .alert-field input,
-    .alert-field select {
-      width: 100%;
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      border-radius: 6px;
-      padding: 6px 10px;
-      font-size: 12px;
-      color: #e2e8f0;
-      outline: none;
-      box-sizing: border-box;
-    }
-    .alert-field input:focus,
-    .alert-field select:focus { border-color: #334155; }
+    .alert-form-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; align-items: end; }
+    @media (max-width: 640px) { .alert-form-row { grid-template-columns: 1fr 1fr; } .alert-form-row .alert-btn { grid-column: 1 / -1; } }
+    .alert-field label { display: block; font-size: 10px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .alert-field input, .alert-field select { width: 100%; background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; padding: 6px 10px; font-size: 12px; color: #e2e8f0; outline: none; box-sizing: border-box; }
+    .alert-field input:focus, .alert-field select:focus { border-color: #334155; }
     .alert-field select option { background: #0f172a; }
-    .alert-btn {
-      background: #229ed9;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 700;
-      border: none;
-      border-radius: 6px;
-      padding: 7px 14px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.2s;
-    }
+    .alert-btn { background: #229ed9; color: #fff; font-size: 12px; font-weight: 700; border: none; border-radius: 6px; padding: 7px 14px; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
     .alert-btn:hover { background: #1a8abf; }
     .alert-btn:disabled { background: #1e293b; color: #475569; cursor: not-allowed; }
-    .alert-status {
-      margin-top: 12px;
-      font-size: 13px;
-      min-height: 20px;
-    }
+    .alert-status { margin-top: 12px; font-size: 13px; min-height: 20px; }
     .alert-status.success { color: #22c55e; }
-    .alert-status.error   { color: #ef4444; }
-    .alert-status.info    { color: #94a3b8; }
-    .alert-note {
-      font-size: 11px;
-      color: #334155;
-      margin-top: 10px;
-      line-height: 1.6;
-    }
+    .alert-status.error { color: #ef4444; }
+    .alert-status.info { color: #94a3b8; }
+    .alert-note { font-size: 11px; color: #334155; margin-top: 10px; line-height: 1.6; }
     .alert-note a { color: #229ed9; text-decoration: none; }
 
     /* Stablecoin Dominance */
@@ -632,11 +394,8 @@
     .stable-signal-neutral { background: rgba(148,163,184,0.1); color: #94a3b8; border: 1px solid rgba(148,163,184,0.15); }
     .stable-signal-greed { background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.2); }
     .stable-signal-text { font-size: 12px; color: #64748b; line-height: 1.6; }
-  
-    @media (max-width: 480px) {
-      .header-nav { gap: 10px; margin-left: 12px; }
-      .header-nav a { font-size: 12px; }
-    }
+
+    @media (max-width: 480px) { .header-nav { gap: 10px; margin-left: 12px; } .header-nav a { font-size: 12px; } }
     html { scroll-behavior: smooth; }
 
     /* Hero section */
@@ -675,27 +434,15 @@
   <div class="container">
     <div class="header-bar">
       <a href="/" class="brand">
-        <img
-          src="/assets/images/logo/coingyaan-logo-transparent.png"
-          alt="CoinGyaan – Crypto Sentiment Checker and Fear & Greed Index"
-          loading="eager"
-        />
-        <div class="brand-text">
-          <strong>CoinGyaan</strong>
-        </div>
+        <img src="/assets/images/logo/coingyaan-logo-transparent.png" alt="CoinGyaan – Crypto Sentiment Checker and Fear & Greed Index" loading="eager" />
+        <div class="brand-text"><strong>CoinGyaan</strong></div>
       </a>
       <nav class="header-nav">
         <a href="/bitcoin.html" style="color:#f59e0b;">Bitcoin</a>
         <a href="/guides.html">Guides</a>
         <a href="/contact.html">Contact</a>
       </nav>
-      <img
-        src="/assets/images/logo/owl-mascot.png"
-        alt="CoinGyaan Mascot"
-        class="owl-mascot"
-        title="Meet our crypto owl mascot! 🦉"
-        loading="eager"
-      />
+      <img src="/assets/images/logo/owl-mascot.png" alt="CoinGyaan Mascot" class="owl-mascot" title="Meet our crypto owl mascot! 🦉" loading="eager" />
     </div>
   </div>
 </header>
@@ -741,26 +488,15 @@
     </div>
   </section>
 
-  <!-- WHY COINGYAAN -->
-  <section class="why-section">
-    <h2>Why Use CoinGyaan</h2>
-    <div class="why-grid">
-      <div class="why-item"><span class="why-icon">✅</span><span>Free crypto sentiment analysis for Bitcoin and any altcoin using live data</span></div>
-      <div class="why-item"><span class="why-icon">✅</span><span>No login required. Open the site and get your answer in seconds</span></div>
-      <div class="why-item"><span class="why-icon">✅</span><span>Beginner friendly tools with plain English explanations and free guides</span></div>
-      <div class="why-item"><span class="why-icon">✅</span><span>Built for education and awareness. Real data with no noise or paid promotions</span></div>
-    </div>
-  </section>
+
 
   <div class="page-title-row" style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:6px;">
-    <!-- Guide Ticker left -->
     <div class="guide-ticker" style="flex:1; margin:0;">
       <span class="guide-ticker-tag" id="tickerTag">Guides</span>
       <div class="guide-ticker-wrap" id="tickerWrap"></div>
       <div class="guide-ticker-dots" id="tickerDots"></div>
       <span class="guide-ticker-arrow">→</span>
     </div>
-    <!-- Price Bar right -->
     <div class="price-bar" style="flex-shrink:0;">
       <div class="price-pill">
         <div class="price-pill-icon btc-icon">₿</div>
@@ -780,6 +516,7 @@
       </div>
     </div>
   </div>
+
   <!-- TRENDING COINS -->
   <section class="trending-section">
     <div class="section-header">
@@ -803,20 +540,14 @@
       <h2>Market Sentiment Checker</h2>
       <p class="subtext">Check if the market is bullish or bearish.</p>
 
-      <input
-        type="text"
-        id="assetInput"
-        placeholder="Bitcoin, Ethereum, Solana..."
-        autocomplete="off"
-      />
-
+      <input type="text" id="assetInput" placeholder="Bitcoin, Ethereum, Solana..." autocomplete="off" />
       <button id="checkSentimentBtn">Check Sentiment</button>
 
       <!-- Sentiment Result V4 -->
       <div id="sentimentResult" class="result hidden">
         <h3 id="assetTitle">Bitcoin</h3>
 
-        <!-- Signal rows — populated by sentiment.js -->
+        <!-- Signal rows populated by sentiment.js -->
         <div id="signalRows" class="signal-rows"></div>
 
         <!-- Price Stats -->
@@ -863,25 +594,19 @@
 
     <!-- RIGHT: FEAR & GREED -->
     <div class="card">
-      <h2>Fear & Greed Index</h2>
+      <h2>Fear &amp; Greed Index</h2>
       <p class="subtext">Overall crypto market emotion.</p>
 
       <div class="fear-greed">
         <div class="fg-main-row">
-
-          <!-- Left: score + label + bar -->
           <div class="fg-left">
-            <div id="fgScore" class="fg-score">--</div>
+            <div id="fgScore" class="fg-score">N/A</div>
             <div id="fgLabel" class="fg-label">Loading</div>
-
             <div class="progress">
               <div id="fgBar" class="progress-bar"></div>
             </div>
-
             <p class="updated">Updated today</p>
           </div>
-
-          <!-- Right: SVG Gauge -->
           <div class="fg-right">
             <svg id="fgGauge" viewBox="0 0 120 70" width="140" height="85">
               <defs>
@@ -902,30 +627,25 @@
                   <stop offset="100%" stop-color="#22c55e"/>
                 </linearGradient>
               </defs>
-
               <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="#1e293b" stroke-width="10" stroke-linecap="round"/>
               <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="url(#seg1)" stroke-width="10" stroke-linecap="butt" stroke-dasharray="39 157" stroke-dashoffset="0"/>
               <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="url(#seg2)" stroke-width="10" stroke-linecap="butt" stroke-dasharray="39 157" stroke-dashoffset="-39"/>
               <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="url(#seg3)" stroke-width="10" stroke-linecap="butt" stroke-dasharray="39 157" stroke-dashoffset="-78"/>
               <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="url(#seg4)" stroke-width="10" stroke-linecap="butt" stroke-dasharray="40 157" stroke-dashoffset="-117"/>
-
               <line id="fgNeedle" x1="60" y1="65" x2="60" y2="22" stroke="white" stroke-width="2.5" stroke-linecap="round" style="transform-origin: 60px 65px; transform: rotate(-90deg); transition: transform 1.2s ease;"/>
               <circle cx="60" cy="65" r="4.5" fill="white" opacity="0.9"/>
               <circle cx="60" cy="65" r="2" fill="#0f172a"/>
             </svg>
-
-            <div id="fgGaugeLabel">--</div>
+            <div id="fgGaugeLabel">N/A</div>
           </div>
-
         </div>
       </div>
-
     </div>
 
   </section>
 
   <!-- ALTCOIN SEASON INDEX -->
-  <section class="altseason-section">
+  <section class="altseason-section" id="altseason-section">
     <div class="section-header">
       <span class="section-title">⚡ Altcoin Season Index</span>
       <span class="section-refresh" id="altseasonRefreshTime"></span>
@@ -933,7 +653,7 @@
     <div class="altseason-card">
       <div class="altseason-top">
         <div class="altseason-score-wrap">
-          <div class="altseason-score" id="altseasonScore">--</div>
+          <div class="altseason-score" id="altseasonScore">N/A</div>
           <div class="altseason-score-label">out of 100</div>
           <div class="altseason-badge neutral" id="altseasonBadge">Loading...</div>
         </div>
@@ -951,15 +671,15 @@
       <div class="altseason-stat-row">
         <div class="altseason-stat">
           <div class="altseason-stat-label">Alts Outperforming BTC</div>
-          <div class="altseason-stat-value" id="altseasonOutperforming">--</div>
+          <div class="altseason-stat-value" id="altseasonOutperforming">N/A</div>
         </div>
         <div class="altseason-stat">
           <div class="altseason-stat-label">BTC 90d Change</div>
-          <div class="altseason-stat-value" id="altseasonBtcChange">--</div>
+          <div class="altseason-stat-value" id="altseasonBtcChange">N/A</div>
         </div>
         <div class="altseason-stat">
           <div class="altseason-stat-label">Avg Alt 90d Change</div>
-          <div class="altseason-stat-value" id="altseasonAvgAlt">--</div>
+          <div class="altseason-stat-value" id="altseasonAvgAlt">N/A</div>
         </div>
       </div>
     </div>
@@ -975,25 +695,25 @@
       <div class="stable-stat-row">
         <div class="stable-stat">
           <div class="stable-stat-label">USDT Dominance</div>
-          <div class="stable-stat-value" id="stableUsdtPct">--</div>
+          <div class="stable-stat-value" id="stableUsdtPct">N/A</div>
         </div>
         <div class="stable-stat">
           <div class="stable-stat-label">USDC Dominance</div>
-          <div class="stable-stat-value" id="stableUsdcPct">--</div>
+          <div class="stable-stat-value" id="stableUsdcPct">N/A</div>
         </div>
         <div class="stable-stat">
           <div class="stable-stat-label">Combined Dom.</div>
-          <div class="stable-stat-value" id="stableCombinedPct">--</div>
+          <div class="stable-stat-value" id="stableCombinedPct">N/A</div>
         </div>
         <div class="stable-stat">
           <div class="stable-stat-label">Total Stablecoin MCap</div>
-          <div class="stable-stat-value" id="stableMcap">--</div>
+          <div class="stable-stat-value" id="stableMcap">N/A</div>
         </div>
       </div>
       <div class="stable-bar-wrap">
         <div class="stable-bar-hdr">
           <span>Stablecoin % of total crypto market cap</span>
-          <span id="stableBarPct">--</span>
+          <span id="stableBarPct">N/A</span>
         </div>
         <div class="stable-bar-track">
           <div class="stable-bar-fill" id="stableBarFill" style="width:0%;"></div>
@@ -1047,53 +767,60 @@
     </div>
   </section>
 
-  <!-- INFO / SEO -->
+  <!-- INFO / SEO SECTION -->
   <section class="info-section">
-    <h2>How Crypto Market Sentiment Works?</h2>
+
+    <h2>Crypto Market Sentiment Today</h2>
     <p>
-      Crypto markets are driven by emotions as much as data.
-      <br><br>
-      Prices often react to fear excitement confidence and uncertainty.
-      <br><br>
-      Understanding sentiment helps you see how traders and investors are feeling.
+      Crypto market sentiment today shows how traders and investors are feeling about the market right now. Prices are not driven by data alone. Emotions like fear, confidence, excitement and uncertainty play a major role in every market movement.
     </p>
     <p>
-      Bullish sentiment reflects optimism and confidence.
-      <br><br>
-      Bearish sentiment signals caution or fear.
-      <br><br>
-      Neutral sentiment usually means the market is waiting for direction.
+      CoinGyaan helps you check crypto sentiment today instantly using four real signals: ETF flow, price momentum, Fear and Greed Index and RSI. Instead of analyzing multiple sources you get one clear picture in seconds. No noise, no guesswork, just data.
     </p>
     <p>
-      CoinGyaan simplifies this by combining sentiment signals into a clear and easy to understand view of market mood.
+      Want a deeper look at Bitcoin specifically? <a href="/bitcoin-sentiment-today.html" style="color:#f59e0b;text-decoration:none;">Check Bitcoin sentiment today</a> with live signals, RSI analysis and halving cycle context.
     </p>
 
-    <h2>What Is the Crypto Fear and Greed Index?</h2>
+    <h2>What Is the Fear and Greed Index Today</h2>
     <p>
-      The Crypto Fear and Greed Index measures market emotions on a scale from zero to one hundred.
-      <br><br>
-      It shows whether fear or greed is dominating the market.
+      The crypto fear and greed index today measures market emotions on a scale from zero to one hundred. It shows whether fear or greed is dominating the market right now at any given moment.
     </p>
     <p>
-      Extreme fear can appear during downturns when confidence is low.
-      <br><br>
-      Extreme greed often shows up when prices rise quickly and excitement peaks.
+      Extreme fear often appears during market downturns when confidence is low and traders are selling in panic. Extreme greed usually shows up when prices rise quickly and investors become overly optimistic. Neither extreme lasts forever and both create opportunities for prepared traders.
     </p>
     <p>
-      CoinGyaan displays this index alongside sentiment analysis so you can understand market emotions at a glance.
+      Tracking the fear and greed index today helps you avoid emotional decisions and understand market cycles more clearly before making any move. Explore a detailed breakdown on our <a href="/fear-greed-index-today.html" style="color:#f59e0b;text-decoration:none;">Fear and Greed Index today page</a>.
+    </p>
+
+    <h2>Bitcoin Sentiment Today Explained</h2>
+    <p>
+      Bitcoin sentiment today reflects whether the market is currently bullish, bearish or neutral on BTC. It combines multiple signals including price movement, ETF institutional flows, market momentum and investor behavior into one clear reading.
+    </p>
+    <p>
+      Understanding bitcoin sentiment today helps traders identify trends early without relying only on price charts. View the live breakdown on our <a href="/bitcoin-sentiment-today.html" style="color:#f59e0b;text-decoration:none;">Bitcoin sentiment today page</a> with real time signals updated continuously.
     </p>
 
     <h2>Using Sentiment Responsibly</h2>
     <p>
-      Market sentiment is a guide not a prediction.
-      <br><br>
-      It helps you understand crowd behavior but does not guarantee outcomes.
+      Crypto market sentiment today is a guide not a prediction. It helps you understand crowd behavior but does not guarantee any outcome. Always combine sentiment insights with your own research and risk management before making any decision.
     </p>
     <p>
-      Always combine sentiment insights with your own research and risk management.
-      <br><br>
-      CoinGyaan is built for education and awareness not financial advice.
+      CoinGyaan is built for education and awareness not financial advice. The signals we show are data points to help you think, not instructions on what to buy or sell.
     </p>
+
+    <div class="why-section" style="margin:24px 0 0;">
+      <h2>Why Use CoinGyaan</h2>
+      <div class="why-grid">
+        <div class="why-item"><span class="why-icon">✅</span><span>Check crypto sentiment today instantly for any coin using live data</span></div>
+        <div class="why-item"><span class="why-icon">✅</span><span>Track bitcoin sentiment today with ETF flow and RSI signals</span></div>
+        <div class="why-item"><span class="why-icon">✅</span><span>Monitor fear and greed index today in real time</span></div>
+        <div class="why-item"><span class="why-icon">✅</span><span>Follow the Altcoin Season Index to spot capital rotation</span></div>
+      </div>
+      <p style="margin-top:14px;font-size:13px;color:#64748b;">
+        Explore all our free resources on the <a href="/guides.html" style="color:#f59e0b;text-decoration:none;">Crypto Guides page</a>.
+      </p>
+    </div>
+
   </section>
 
 </main>
@@ -1149,7 +876,6 @@
 <script src="/assets/js/sentiment.js" defer></script>
 <script src="/assets/js/feargreed.js" defer></script>
 
-<!-- Load shared guides data then build ticker -->
 <script src="/assets/js/guides-data.js"></script>
 <script>
   var wrap    = document.getElementById('tickerWrap');
