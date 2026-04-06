@@ -9,6 +9,14 @@
 // ============================================
 var GUIDES_DATA = [
   {
+    url:      "/guides/bitcoin-sentiment-today-guide.html",
+    tag:      "Bitcoin Sentiment",
+    readTime: "8 min read",
+    title:    "Bitcoin Sentiment Today Explained: How to Read Bullish and Bearish Signals",
+    desc:     "Learn how to read bitcoin sentiment today. Understand bullish and bearish signals, market psychology and how traders use sentiment to make better crypto decisions.",
+    date:     "April 2026"
+  },
+  {
     url:      "/guides/what-is-defi-complete-beginner-guide-2026.html",
     tag:      "DeFi",
     readTime: "13 min read",
