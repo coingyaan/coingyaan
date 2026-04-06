@@ -12,8 +12,10 @@
     gtag("config", "G-DXY9ZZ543X");
   </script>
 
-  <!-- AdSense ownership -->
+  <!-- AdSense -->
   <meta name="google-adsense-account" content="ca-pub-9704432095241296" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9704432095241296" crossorigin="anonymous"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Primary SEO -->
@@ -72,23 +74,19 @@
   <link rel="stylesheet" href="/assets/css/responsive.css" />
 
   <style>
-    /* ── Page layout ── */
     .page-body { max-width: 900px; }
     .bitcoin-page-title { font-size: 28px; font-weight: 800; color: #e2e8f0; margin: 28px 0 6px; line-height: 1.3; }
     .bitcoin-page-sub { font-size: 14px; color: #64748b; margin-bottom: 28px; line-height: 1.6; }
 
-    /* ── Section headers ── */
     .btc-section { margin: 28px 0 0; }
     .btc-section-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
     .btc-section-title { font-size: 13px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.08em; }
     .btc-section-refresh { font-size: 11px; color: #334155; }
 
-    /* ── Cards ── */
     .btc-card { background: #0d1526; border: 1px solid #1e293b; border-radius: 14px; padding: 22px 24px; }
 
-    /* ── Sentiment History ── */
     .history-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
-    .history-tab { padding: 5px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; border: 1px solid #1e293b; color: #475569; background: #0f172a; transition: all 0.2s; }
+    .history-tab { padding: 5px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; border: 1px solid #1e293b; color: #475569; background: #0f172a; transition: all 0.2s; width: auto !important; margin-top: 0 !important; }
     .history-tab.active { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.3); color: #f59e0b; }
     .history-chart { height: 90px; background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; display: flex; align-items: flex-end; padding: 10px 12px; gap: 4px; margin-bottom: 12px; overflow: hidden; }
     .h-bar { flex: 1; border-radius: 3px 3px 0 0; opacity: 0.85; transition: opacity 0.2s; min-width: 0; }
@@ -102,20 +100,14 @@
     .hs-val { font-size: 22px; font-weight: 700; }
     .history-loading { text-align: center; font-size: 13px; color: #334155; padding: 20px; }
 
-    /* ── Halving Cycle ── */
     .halving-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
     @media (max-width: 600px) { .halving-stats { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 480px) {
-      .header-nav { gap: 14px; }
-      .header-nav a { font-size: 12px; }
-    }
     .halving-stat { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 12px 14px; text-align: center; }
     .halving-stat-lbl { font-size: 10px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
     .halving-stat-val { font-size: 16px; font-weight: 700; color: #e2e8f0; line-height: 1.2; }
     .halving-stat-val.positive { color: #22c55e; }
     .halving-timer { font-size: 11px; color: #f59e0b; font-family: 'Courier New', monospace; margin-top: 4px; }
 
-    /* Cycle progress bar */
     .cycle-progress-wrap { margin-bottom: 18px; }
     .cycle-progress-hdr { display: flex; justify-content: space-between; font-size: 12px; color: #64748b; margin-bottom: 8px; }
     .cycle-track { height: 12px; background: #1e293b; border-radius: 6px; position: relative; overflow: hidden; }
@@ -123,7 +115,6 @@
     .cycle-marker { position: absolute; top: -4px; height: 20px; width: 2px; background: #fff; opacity: 0.4; }
     .cycle-phases { display: flex; justify-content: space-between; font-size: 10px; color: #334155; margin-top: 6px; }
 
-    /* Historical comparison table */
     .cycle-compare { background: #0f172a; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 18px; margin-top: 4px; }
     .cycle-compare-title { font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
     .cycle-table { width: 100%; border-collapse: collapse; }
@@ -133,19 +124,20 @@
     .cycle-bar-mini { height: 4px; background: #1e293b; border-radius: 2px; min-width: 60px; }
     .cycle-bar-fill-mini { height: 100%; border-radius: 2px; }
 
-    /* ── SEO Info section ── */
+    /* Cross-link banner */
+    .cross-link-banner { background: #0d1526; border: 1px solid #1e293b; border-left: 3px solid #f59e0b; border-radius: 8px; padding: 14px 20px; margin: 24px 0; }
+    .cross-link-banner p { font-size: 13px; color: #94a3b8; margin: 0; }
+    .cross-link-banner a { color: #f59e0b; text-decoration: none; font-weight: 700; }
+    .cross-link-banner a:hover { text-decoration: underline; }
+
     .btc-info-section { margin: 32px 0 0; max-width: 700px; }
     .btc-info-heading { font-size: 18px; font-weight: 700; color: #e2e8f0; margin-bottom: 12px; margin-top: 32px; }
     .btc-info-heading:first-child { margin-top: 0; }
     .btc-info-text { font-size: 14px; color: #94a3b8; line-height: 1.8; margin-bottom: 14px; }
 
-    /* ── Disclaimer ── */
     .btc-disclaimer { font-size: 12px; color: #334155; margin-top: 28px; padding-top: 16px; border-top: 1px solid #1e293b; }
-  
-    @media (max-width: 480px) {
-      .header-nav { gap: 10px; margin-left: 12px; }
-      .header-nav a { font-size: 12px; }
-    }
+
+    @media (max-width: 480px) { .header-nav { gap: 10px; margin-left: 12px; } .header-nav a { font-size: 12px; } }
   </style>
 </head>
 
@@ -161,6 +153,8 @@
       </a>
       <nav class="header-nav">
         <a href="/bitcoin.html" style="color:#f59e0b;">Bitcoin</a>
+        <a href="/bitcoin-sentiment-today.html">Sentiment</a>
+        <a href="/fear-greed-index-today.html">Fear &amp; Greed</a>
         <a href="/guides.html">Guides</a>
         <a href="/contact.html">Contact</a>
       </nav>
@@ -175,6 +169,11 @@
 
     <h1 class="bitcoin-page-title">Bitcoin Sentiment Today – BTC Halving Countdown and Cycle Tracker</h1>
     <p class="bitcoin-page-sub">Live BTC sentiment signals combining ETF flow, price momentum, Fear and Greed and RSI. Track the Bitcoin halving countdown to 2028, compare current cycle performance to 2020 and 2016 halvings and understand what Bitcoin is. All free, updated live.</p>
+
+    <!-- CROSS-LINK TO SENTIMENT PAGE -->
+    <div class="cross-link-banner">
+      <p>Want live ETF flow, RSI and Fear and Greed signals for Bitcoin right now? <a href="/bitcoin-sentiment-today.html">Check Bitcoin sentiment today</a> on our dedicated sentiment checker page.</p>
+    </div>
 
     <!-- SENTIMENT HISTORY -->
     <section class="btc-section">
@@ -199,15 +198,15 @@
         <div class="history-summary">
           <div class="hs-box">
             <div class="hs-lbl">Bullish Days</div>
-            <div class="hs-val" id="historyBullish" style="color:#22c55e;">--</div>
+            <div class="hs-val" id="historyBullish" style="color:#22c55e;">N/A</div>
           </div>
           <div class="hs-box">
             <div class="hs-lbl">Neutral Days</div>
-            <div class="hs-val" id="historyNeutral" style="color:#f59e0b;">--</div>
+            <div class="hs-val" id="historyNeutral" style="color:#f59e0b;">N/A</div>
           </div>
           <div class="hs-box">
             <div class="hs-lbl">Bearish Days</div>
-            <div class="hs-val" id="historyBearish" style="color:#ef4444;">--</div>
+            <div class="hs-val" id="historyBearish" style="color:#ef4444;">N/A</div>
           </div>
         </div>
       </div>
@@ -220,7 +219,6 @@
       </div>
       <div class="btc-card">
 
-        <!-- Stats row -->
         <div class="halving-stats">
           <div class="halving-stat">
             <div class="halving-stat-lbl">Last Halving</div>
@@ -228,11 +226,11 @@
           </div>
           <div class="halving-stat">
             <div class="halving-stat-lbl">Days Since Halving</div>
-            <div class="halving-stat-val" id="halvingDaysSince">--</div>
+            <div class="halving-stat-val" id="halvingDaysSince">N/A</div>
           </div>
           <div class="halving-stat">
             <div class="halving-stat-lbl">Return Since Halving</div>
-            <div class="halving-stat-val positive" id="halvingReturn">--</div>
+            <div class="halving-stat-val positive" id="halvingReturn">N/A</div>
           </div>
           <div class="halving-stat">
             <div class="halving-stat-lbl">Next Halving Est.</div>
@@ -241,11 +239,10 @@
           </div>
         </div>
 
-        <!-- Cycle progress bar -->
         <div class="cycle-progress-wrap">
           <div class="cycle-progress-hdr">
-            <span>Cycle Progress: <span id="halvingProgressLabel">Day -- of ~1458</span></span>
-            <span style="color:#f59e0b;" id="halvingProgressPct">--%</span>
+            <span>Cycle Progress: <span id="halvingProgressLabel">Day N/A of ~1458</span></span>
+            <span style="color:#f59e0b;" id="halvingProgressPct">N/A</span>
           </div>
           <div class="cycle-track">
             <div class="cycle-fill" id="halvingProgressFill" style="width:0%;"></div>
@@ -261,7 +258,6 @@
           </div>
         </div>
 
-        <!-- Historical comparison -->
         <div class="cycle-compare">
           <div class="cycle-compare-title">Historical Performance at Same Cycle Point</div>
           <table class="cycle-table">
@@ -269,7 +265,7 @@
               <tr>
                 <th>Cycle</th>
                 <th>Halving Price</th>
-                <th>Return at Day <span id="cycleTableDay">--</span></th>
+                <th>Return at Day <span id="cycleTableDay">N/A</span></th>
                 <th style="min-width:80px;">vs Halving</th>
               </tr>
             </thead>
@@ -277,25 +273,25 @@
               <tr class="current">
                 <td>2024 (Now)</td>
                 <td>$63,800</td>
-                <td id="cycle2024Return">--</td>
+                <td id="cycle2024Return">N/A</td>
                 <td><div class="cycle-bar-mini"><div class="cycle-bar-fill-mini" id="cycle2024Bar" style="width:0%;background:#22c55e;"></div></div></td>
               </tr>
               <tr>
                 <td>2020 Cycle</td>
                 <td>$8,600</td>
-                <td id="cycle2020Return">--</td>
+                <td id="cycle2020Return">N/A</td>
                 <td><div class="cycle-bar-mini"><div class="cycle-bar-fill-mini" id="cycle2020Bar" style="width:0%;background:#22c55e;"></div></div></td>
               </tr>
               <tr>
                 <td>2016 Cycle</td>
                 <td>$650</td>
-                <td id="cycle2016Return">--</td>
+                <td id="cycle2016Return">N/A</td>
                 <td><div class="cycle-bar-mini"><div class="cycle-bar-fill-mini" id="cycle2016Bar" style="width:0%;background:#f59e0b;"></div></div></td>
               </tr>
               <tr>
                 <td>2012 Cycle</td>
                 <td>$12</td>
-                <td id="cycle2012Return">--</td>
+                <td id="cycle2012Return">N/A</td>
                 <td><div class="cycle-bar-mini"><div class="cycle-bar-fill-mini" id="cycle2012Bar" style="width:0%;background:#f59e0b;"></div></div></td>
               </tr>
             </tbody>
@@ -332,15 +328,15 @@
       <p class="btc-info-text">These ETFs have attracted billions of dollars in inflows and fundamentally changed how institutions participate in the Bitcoin market. Daily ETF flow data (which CoinGyaan tracks as part of the Bitcoin sentiment checker) has become one of the most important indicators of short term Bitcoin price direction. Large inflows signal institutional buying while outflows signal selling pressure.</p>
 
       <div class="btc-info-heading">What Is Bitcoin Sentiment</div>
-      <p class="btc-info-text">Bitcoin sentiment is a measure of how bullish or bearish the market is feeling about BTC at any given moment. CoinGyaan combines four key signals to calculate Bitcoin sentiment: ETF flow data from farside.co.uk, 24 hour price momentum, the Crypto Fear and Greed Index and the 14 day RSI.</p>
-      <p class="btc-info-text">Bullish sentiment means at least two of the four signals are positive: institutional money is flowing in, price is trending up, the market is feeling confident and RSI is not overbought. Bearish sentiment means the reverse. Neutral sentiment means the signals are mixed with no clear directional bias.</p>
+      <p class="btc-info-text">Bitcoin sentiment is a measure of how bullish or bearish the market is feeling about BTC at any given moment. CoinGyaan combines four key signals to calculate Bitcoin sentiment: ETF flow data, 24 hour price momentum, the Crypto Fear and Greed Index and the 14 day RSI.</p>
+      <p class="btc-info-text">Bullish sentiment means at least two of the four signals are positive. Bearish sentiment means the reverse. Neutral sentiment means the signals are mixed with no clear directional bias. <a href="/bitcoin-sentiment-today.html" style="color:#f59e0b;text-decoration:none;">Check Bitcoin sentiment today</a> for the live reading updated in real time.</p>
 
       <div class="btc-info-heading">What Is the Bitcoin Halving Cycle Tracker</div>
       <p class="btc-info-text">The halving cycle tracker above shows exactly where Bitcoin is in the current four year cycle that started with the April 2024 halving. It shows the number of days since the last halving, the percentage of the cycle completed, the current return since the halving price and how this compares to where Bitcoin was at the same point in the 2020 and 2016 cycles.</p>
       <p class="btc-info-text">This context is valuable because Bitcoin's price behaviour tends to follow a loose but recognisable pattern across halving cycles. Comparing the current cycle to historical cycles at the same point in time gives a sense of whether Bitcoin is ahead of or behind its historical pace.</p>
 
       <div class="btc-info-heading">How to Use Bitcoin Sentiment History</div>
-      <p class="btc-info-text">The sentiment history chart shows how Bitcoin's combined signals (ETF flow, price momentum, Fear and Greed and RSI) have trended over 7, 30 or 90 days. Green bars indicate the majority of signals were bullish on that day. Red bars indicate mostly bearish signals. Yellow bars indicate the market was mixed with no clear direction.</p>
+      <p class="btc-info-text">The sentiment history chart shows how Bitcoin's combined signals have trended over 7, 30 or 90 days. Green bars indicate the majority of signals were bullish on that day. Red bars indicate mostly bearish signals. Yellow bars indicate the market was mixed with no clear direction.</p>
       <p class="btc-info-text">When bearish days cluster together for a week or more it has historically preceded accumulation opportunities as fear drives prices to local lows. When bullish days dominate for extended periods caution may be warranted as the market could be running ahead of fundamentals.</p>
       <p class="btc-info-text">This information is educational only and not financial advice. Always combine sentiment data with your own research and risk management before making any investment decisions.</p>
 
@@ -375,7 +371,6 @@
 <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
 
 <script>
-// ── Halving Countdown Timer ────────────────────────────────────
 function updateHalvingTimer() {
   var nextHalving = new Date('2028-03-28T00:00:00Z');
   var now = new Date();
@@ -394,37 +389,34 @@ function updateHalvingTimer() {
 updateHalvingTimer();
 setInterval(updateHalvingTimer, 1000);
 
-// ── Halving Cycle Stats ────────────────────────────────────────
 function updateHalvingCycle(btcPrice) {
-  var halvingDate   = new Date('2024-04-19T00:00:00Z');
-  var halvingPrice  = 63800;
-  var cycleLength   = 1458; // ~4 years in days
-  var now           = new Date();
-  var daysSince     = Math.floor((now - halvingDate) / (1000 * 60 * 60 * 24));
-  var pct           = Math.min(Math.round((daysSince / cycleLength) * 100), 100);
-  var returnSince   = btcPrice ? (((btcPrice - halvingPrice) / halvingPrice) * 100).toFixed(1) : null;
+  var halvingDate  = new Date('2024-04-19T00:00:00Z');
+  var halvingPrice = 63800;
+  var cycleLength  = 1458;
+  var now          = new Date();
+  var daysSince    = Math.floor((now - halvingDate) / (1000 * 60 * 60 * 24));
+  var pct          = Math.min(Math.round((daysSince / cycleLength) * 100), 100);
+  var returnSince  = btcPrice ? (((btcPrice - halvingPrice) / halvingPrice) * 100).toFixed(1) : null;
 
-  var daysSinceEl   = document.getElementById('halvingDaysSince');
-  var returnEl      = document.getElementById('halvingReturn');
-  var fillEl        = document.getElementById('halvingProgressFill');
-  var pctEl         = document.getElementById('halvingProgressPct');
-  var labelEl       = document.getElementById('halvingProgressLabel');
-  var tableDayEl    = document.getElementById('cycleTableDay');
+  var daysSinceEl  = document.getElementById('halvingDaysSince');
+  var returnEl     = document.getElementById('halvingReturn');
+  var fillEl       = document.getElementById('halvingProgressFill');
+  var pctEl        = document.getElementById('halvingProgressPct');
+  var labelEl      = document.getElementById('halvingProgressLabel');
+  var tableDayEl   = document.getElementById('cycleTableDay');
 
-  if (daysSinceEl)  daysSinceEl.textContent  = daysSince;
-  if (labelEl)      labelEl.textContent      = 'Day ' + daysSince + ' of ~' + cycleLength;
-  if (fillEl)       fillEl.style.width       = pct + '%';
-  if (pctEl)        pctEl.textContent        = pct + '%';
-  if (tableDayEl)   tableDayEl.textContent   = daysSince;
+  if (daysSinceEl) daysSinceEl.textContent = daysSince;
+  if (labelEl)     labelEl.textContent     = 'Day ' + daysSince + ' of ~' + cycleLength;
+  if (fillEl)      fillEl.style.width      = pct + '%';
+  if (pctEl)       pctEl.textContent       = pct + '%';
+  if (tableDayEl)  tableDayEl.textContent  = daysSince;
 
   if (returnEl && returnSince !== null) {
     returnEl.textContent = (returnSince >= 0 ? '+' : '') + returnSince + '%';
     returnEl.style.color = returnSince >= 0 ? '#22c55e' : '#ef4444';
   }
 
-  // Historical returns at same day in cycle (approximate from past data)
   var histData = {
-    2024: { ret: returnSince, color: returnSince >= 0 ? '#22c55e' : '#ef4444' },
     2020: { ret: '+312%',  color: '#22c55e', bar: 85 },
     2016: { ret: '+184%',  color: '#22c55e', bar: 60 },
     2012: { ret: '+8200%', color: '#f59e0b', bar: 100 }
@@ -433,12 +425,12 @@ function updateHalvingCycle(btcPrice) {
   var r2024 = document.getElementById('cycle2024Return');
   var b2024 = document.getElementById('cycle2024Bar');
   if (r2024 && returnSince !== null) {
-    r2024.textContent   = (returnSince >= 0 ? '+' : '') + returnSince + '%';
-    r2024.style.color   = histData[2024].color;
+    r2024.textContent      = (returnSince >= 0 ? '+' : '') + returnSince + '%';
+    r2024.style.color      = returnSince >= 0 ? '#22c55e' : '#ef4444';
   }
   if (b2024 && returnSince !== null) {
-    b2024.style.width   = Math.min(Math.abs(parseFloat(returnSince)), 100) + '%';
-    b2024.style.background = histData[2024].color;
+    b2024.style.width      = Math.min(Math.abs(parseFloat(returnSince)), 100) + '%';
+    b2024.style.background = returnSince >= 0 ? '#22c55e' : '#ef4444';
   }
 
   ['2020','2016','2012'].forEach(function(yr) {
@@ -449,7 +441,6 @@ function updateHalvingCycle(btcPrice) {
   });
 }
 
-// ── Sentiment History ──────────────────────────────────────────
 var currentDays = 7;
 var cachedData  = {};
 
@@ -468,39 +459,26 @@ async function loadSentimentHistory(days) {
   var chartEl   = document.getElementById('historyChart');
   var refreshEl = document.getElementById('historyRefreshTime');
   if (!chartEl) return;
-
   chartEl.innerHTML = '<div class="history-loading">Loading...</div>';
-
   try {
-    // Use market_chart endpoint — works on free tier for all periods
     var res  = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=' + days + '&interval=daily');
     var data = await res.json();
-
     if (!data || !data.prices || data.prices.length < 2) throw new Error('No price data');
-
-    // data.prices = [[timestamp, price], ...]
-    var prices = data.prices;
-
-    // Calculate daily sentiment based on day over day price change
+    var prices  = data.prices;
     var results = [];
     for (var i = 1; i < prices.length; i++) {
-      var prev = prices[i - 1][1];
-      var curr = prices[i][1];
-      var chg  = ((curr - prev) / prev) * 100;
-      var date = new Date(prices[i][0]).toISOString().split('T')[0];
+      var prev      = prices[i - 1][1];
+      var curr      = prices[i][1];
+      var chg       = ((curr - prev) / prev) * 100;
+      var date      = new Date(prices[i][0]).toISOString().split('T')[0];
       var sentiment = chg > 1 ? 'bullish' : chg < -1 ? 'bearish' : 'neutral';
       results.push({ date: date, chg: chg, sentiment: sentiment });
     }
-
-    // Limit to requested days
     results = results.slice(-days);
     cachedData[days] = results;
     renderHistory(results);
-
     if (refreshEl) refreshEl.textContent = 'Updated ' + new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-
   } catch(e) {
-    console.error('Sentiment history error:', e.message);
     if (chartEl) chartEl.innerHTML = '<div class="history-loading">Unable to load data. Please refresh the page.</div>';
   }
 }
@@ -510,15 +488,12 @@ function renderHistory(results) {
   var bullishEl = document.getElementById('historyBullish');
   var neutralEl = document.getElementById('historyNeutral');
   var bearishEl = document.getElementById('historyBearish');
-
-  var bullish = results.filter(function(r) { return r.sentiment === 'bullish'; }).length;
-  var neutral = results.filter(function(r) { return r.sentiment === 'neutral'; }).length;
-  var bearish = results.filter(function(r) { return r.sentiment === 'bearish'; }).length;
-
+  var bullish   = results.filter(function(r) { return r.sentiment === 'bullish'; }).length;
+  var neutral   = results.filter(function(r) { return r.sentiment === 'neutral'; }).length;
+  var bearish   = results.filter(function(r) { return r.sentiment === 'bearish'; }).length;
   if (bullishEl) bullishEl.textContent = bullish;
   if (neutralEl) neutralEl.textContent = neutral;
   if (bearishEl) bearishEl.textContent = bearish;
-
   if (!chartEl) return;
   var maxHeight = 70;
   chartEl.innerHTML = results.map(function(r) {
@@ -529,17 +504,15 @@ function renderHistory(results) {
   }).join('');
 }
 
-// ── Fetch BTC price and init ───────────────────────────────────
 async function init() {
   try {
-    var res  = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-    var data = await res.json();
+    var res   = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+    var data  = await res.json();
     var price = data.bitcoin ? data.bitcoin.usd : null;
     updateHalvingCycle(price);
   } catch(e) {
     updateHalvingCycle(null);
   }
-
   await new Promise(function(r) { setTimeout(r, 800); });
   loadSentimentHistory(7);
 }
