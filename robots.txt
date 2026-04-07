@@ -1,13 +1,12 @@
 User-agent: *
 Allow: /
+
 Disallow: /wp-admin/
 Disallow: /wp-content/
 Disallow: /wp-includes/
 Disallow: /wp-login.php
 Disallow: /feed/
 Disallow: /?p=
-Disallow: /tag/
-Disallow: /category/
 Disallow: /author/
 Disallow: /page/
 Disallow: /cgi-sys/
