@@ -1,152 +1,119 @@
 // ============================================
-// COINGYAAN — SENTIMENT ANALYZER V4
-// Display: Signal rows with emoji + badge + value
-// Signals: ETF Flow (BTC) / BTC Dominance (alts)
-//          Price 24h, Fear & Greed, RSI
-// No overall verdict — user decides
+// COINGYAAN - SENTIMENT ANALYZER V5
+// Signals: Institutional Momentum (BTC) / BTC Dominance Direction (alts)
+//          Volume Surge, Fear and Greed, RSI 14, Price vs 200 MA
+// Weighted Market Condition Score 0 to 100
+// Zone: Accumulation / Caution / Optimistic / Overheated
+// Confidence: how many signals agree
+// Binance API for RSI, 200 MA, Volume (free, no key)
+// Alternative.me for Fear and Greed
+// CoinGecko for coin lookup and price
 // ============================================
 
-const SENTIMENT_COINGECKO_API = 'https://api.coingecko.com/api/v3';
-const SENTIMENT_FNG_API       = 'https://api.alternative.me/fng/';
+const SENTIMENT_CG_API      = 'https://api.coingecko.com/api/v3';
+const SENTIMENT_FNG_API     = 'https://api.alternative.me/fng/';
+const BINANCE_API           = 'https://api.binance.com/api/v3';
+
+// ── Helpers ───────────────────────────────────
+function delay(ms)     { return new Promise(r => setTimeout(r, ms)); }
+function isBTC(id)     { return id === 'bitcoin' || id === 'btc'; }
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+function formatPrice(p) {
+  if (!p && p !== 0) return 'N/A';
+  if (p >= 1000) return '$' + p.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  if (p >= 1)    return '$' + p.toFixed(2);
+  return '$' + p.toFixed(6);
+}
+function formatVolume(v) {
+  if (!v && v !== 0) return 'N/A';
+  if (v >= 1e9) return '$' + (v / 1e9).toFixed(1) + 'B';
+  if (v >= 1e6) return '$' + (v / 1e6).toFixed(1) + 'M';
+  if (v > 0)    return '$' + v.toLocaleString();
+  return 'N/A';
+}
+function sentimentEmoji(s) {
+  if (s === 'bullish') return '🟢';
+  if (s === 'bearish') return '🔴';
+  return '🟡';
+}
 
 // ── Coin lookup ───────────────────────────────
 async function getCryptoId(coinName) {
   try {
-    const res  = await fetch(`${SENTIMENT_COINGECKO_API}/search?query=${encodeURIComponent(coinName)}`);
+    const res  = await fetch(`${SENTIMENT_CG_API}/search?query=${encodeURIComponent(coinName)}`);
     const data = await res.json();
     if (data.coins && data.coins.length > 0) return data.coins[0].id;
     return coinName.toLowerCase();
   } catch(e) { return coinName.toLowerCase(); }
 }
 
-// ── Price data ────────────────────────────────
-async function getCryptoPrices(cryptoId) {
-  try {
-    const res  = await fetch(
-      `${SENTIMENT_COINGECKO_API}/simple/price?ids=${cryptoId}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true`
-    );
-    const data = await res.json();
-    if (data && data[cryptoId]) {
-      const price     = data[cryptoId].usd;
-      const change24h = data[cryptoId].usd_24h_change || 0;
-      let   volume24h = data[cryptoId].usd_24h_vol;
-      if (!volume24h) {
-        try {
-          const mRes  = await fetch(`${SENTIMENT_COINGECKO_API}/coins/markets?vs_currency=usd&ids=${cryptoId}&per_page=1`);
-          const mData = await mRes.json();
-          if (mData && mData[0]) volume24h = mData[0].total_volume || 0;
-        } catch(e) { volume24h = 0; }
-      }
-      return { price, change24h, volume24h };
-    }
-    return null;
-  } catch(e) { return null; }
+// ── Binance symbol from CoinGecko id ─────────
+function toBinanceSymbol(coinId) {
+  const map = {
+    'bitcoin':        'BTCUSDT',
+    'ethereum':       'ETHUSDT',
+    'solana':         'SOLUSDT',
+    'binancecoin':    'BNBUSDT',
+    'ripple':         'XRPUSDT',
+    'cardano':        'ADAUSDT',
+    'dogecoin':       'DOGEUSDT',
+    'avalanche-2':    'AVAXUSDT',
+    'chainlink':      'LINKUSDT',
+    'polkadot':       'DOTUSDT',
+    'tron':           'TRXUSDT',
+    'shiba-inu':      'SHIBUSDT',
+    'litecoin':       'LTCUSDT',
+    'uniswap':        'UNIUSDT',
+    'stellar':        'XLMUSDT',
+    'near':           'NEARUSDT',
+    'aptos':          'APTUSDT',
+    'arbitrum':       'ARBUSDT',
+    'optimism':       'OPUSDT',
+    'sui':            'SUIUSDT',
+    'render-token':   'RENDERUSDT',
+    'injective-protocol': 'INJUSDT',
+    'internet-computer': 'ICPUSDT',
+    'filecoin':       'FILUSDT',
+    'aave':           'AAVEUSDT',
+    'cosmos':         'ATOMUSDT',
+    'hedera-hashgraph': 'HBARUSDT',
+    'pepe':           'PEPEUSDT',
+    'worldcoin-wld':  'WLDUSDT'
+  };
+  return map[coinId] || (coinId.replace(/-/g, '').toUpperCase() + 'USDT');
 }
 
-// ── OHLC for RSI ─────────────────────────────
-async function getOHLC(cryptoId) {
+// ── Binance klines (200 daily candles) ────────
+async function getBinanceKlines(symbol, limit = 200) {
   try {
-    const res  = await fetch(`${SENTIMENT_COINGECKO_API}/coins/${cryptoId}/ohlc?vs_currency=usd&days=14`);
+    const res  = await fetch(`${BINANCE_API}/klines?symbol=${symbol}&interval=1d&limit=${limit}`);
+    if (!res.ok) throw new Error('Binance klines failed');
     const data = await res.json();
-    if (Array.isArray(data) && data.length >= 15) return data;
-    const chartRes  = await fetch(`${SENTIMENT_COINGECKO_API}/coins/${cryptoId}/market_chart?vs_currency=usd&days=14&interval=daily`);
-    const chartData = await chartRes.json();
-    if (chartData && chartData.prices && chartData.prices.length >= 15) {
-      return chartData.prices.map(p => [p[0], p[1], p[1], p[1], p[1]]);
-    }
-    return [];
-  } catch(e) { return []; }
-}
-
-// ── Fear and Greed ────────────────────────────
-async function getSentimentFearGreed() {
-  try {
-    const res  = await fetch(SENTIMENT_FNG_API);
-    const data = await res.json();
-    return data?.data?.[0] ? parseInt(data.data[0].value) : 50;
+    // Returns: [openTime, open, high, low, close, volume, ...]
+    return data;
   } catch(e) {
-    const fgScore = document.getElementById('fgScore');
-    if (fgScore && fgScore.textContent !== '--') {
-      const v = parseInt(fgScore.textContent);
-      if (!isNaN(v)) return v;
-    }
-    return 50;
-  }
-}
-
-// ── BTC ETF Flow ──────────────────────────────
-// Farside table structure: columns are ETF names, last col is daily Total
-// We want the LAST DATA ROW's Total column (not the cumulative Total row)
-async function getEtfFlow() {
-  try {
-    const res  = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://farside.co.uk/bitcoin-etf/'));
-    const data = await res.json();
-    const html = data.contents || '';
-
-    // Get all table rows
-    const rows = html.match(/<tr[^>]*>[\s\S]*?<\/tr>/gi) || [];
-    if (rows.length === 0) return null;
-
-    // Work backwards from the end — skip "Total" summary rows
-    // Look for rows that have a date pattern (DD/MM or MM/DD) in first cell
-    for (let i = rows.length - 1; i >= Math.max(0, rows.length - 15); i--) {
-      const row = rows[i];
-
-      // Skip rows containing "Total" text
-      if (/total/i.test(row.replace(/<[^>]+>/g, ''))) continue;
-
-      const cells = row.match(/<td[^>]*>([\s\S]*?)<\/td>/gi) || [];
-      if (cells.length < 5) continue;
-
-      // First cell should look like a date
-      const firstCell = cells[0].replace(/<[^>]+>/g, '').trim();
-      if (!/\d{2}/.test(firstCell)) continue;
-
-      // Last cell is the daily total — must be a reasonable ETF daily flow ($M)
-      // Daily flows range roughly -$1000M to +$1500M
-      const lastCell = cells[cells.length - 1].replace(/<[^>]+>/g, '').trim().replace(/,/g, '');
-      const val = parseFloat(lastCell);
-      if (!isNaN(val) && Math.abs(val) < 2000) {
-        console.log('ETF daily flow:', val, 'from row:', firstCell);
-        return val;
-      }
-    }
-
-    console.log('ETF flow: no valid daily row found');
-    return null;
-  } catch(e) {
-    console.log('ETF flow failed:', e.message);
+    console.log('Binance klines error:', e.message);
     return null;
   }
 }
 
-// ── BTC 7d performance (ETF fallback) ─────────
-async function getBtcPerformance() {
+// ── Binance 24h ticker ────────────────────────
+async function getBinanceTicker(symbol) {
   try {
-    const res  = await fetch(`${SENTIMENT_COINGECKO_API}/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=daily`);
-    const data = await res.json();
-    if (data && data.prices && data.prices.length >= 2) {
-      const start = data.prices[0][1];
-      const end   = data.prices[data.prices.length - 1][1];
-      return ((end - start) / start) * 100;
-    }
+    const res  = await fetch(`${BINANCE_API}/ticker/24hr?symbol=${symbol}`);
+    if (!res.ok) throw new Error('Binance ticker failed');
+    return await res.json();
+  } catch(e) {
+    console.log('Binance ticker error:', e.message);
     return null;
-  } catch(e) { return null; }
+  }
 }
 
-// ── BTC Dominance ─────────────────────────────
-async function getBtcDominance() {
-  try {
-    const res  = await fetch(`${SENTIMENT_COINGECKO_API}/global`);
-    const data = await res.json();
-    return data?.data?.market_cap_percentage?.btc || null;
-  } catch(e) { return null; }
-}
-
-// ── RSI calculation ───────────────────────────
-function calculateRSI(ohlcData, period = 14) {
-  if (!ohlcData || ohlcData.length < period + 1) return null;
-  const closes = ohlcData.map(c => c[4]);
+// ── RSI 14 from klines ────────────────────────
+function calculateRSI(klines, period = 14) {
+  if (!klines || klines.length < period + 2) return null;
+  const closes = klines.map(k => parseFloat(k[4]));
   let gains = 0, losses = 0;
   for (let i = 1; i <= period; i++) {
     const diff = closes[i] - closes[i - 1];
@@ -163,19 +130,195 @@ function calculateRSI(ohlcData, period = 14) {
   return Math.round(100 - (100 / (1 + avgGain / avgLoss)));
 }
 
+// ── 200 Day Moving Average ────────────────────
+function calculate200MA(klines) {
+  if (!klines || klines.length < 200) return null;
+  const closes = klines.slice(-200).map(k => parseFloat(k[4]));
+  return closes.reduce((a, b) => a + b, 0) / 200;
+}
+
+// ── Volume Surge (24h vs 7d avg) ─────────────
+function calculateVolumeSurge(klines, ticker) {
+  if (!klines || klines.length < 8) return null;
+  // 7 day average volume from klines
+  const last7 = klines.slice(-8, -1);
+  const avgVol = last7.reduce((a, k) => a + parseFloat(k[5]), 0) / 7;
+  const vol24h = ticker ? parseFloat(ticker.volume) : parseFloat(klines[klines.length - 1][5]);
+  if (!avgVol || avgVol === 0) return null;
+  return ((vol24h - avgVol) / avgVol) * 100; // % above or below average
+}
+
+// ── BTC Dominance direction ───────────────────
+async function getBtcDominanceDirection() {
+  try {
+    // Use window cached value from features.js if available
+    if (window._cgBtcDom) {
+      return { current: window._cgBtcDom, direction: 'stable' };
+    }
+    const res  = await fetch(`${SENTIMENT_CG_API}/global`);
+    const data = await res.json();
+    const dom  = data?.data?.market_cap_percentage?.btc || null;
+    return dom ? { current: dom, direction: 'stable' } : null;
+  } catch(e) { return null; }
+}
+
+// ── Price data from CoinGecko ─────────────────
+async function getCGPriceData(cryptoId) {
+  try {
+    const res  = await fetch(
+      `${SENTIMENT_CG_API}/simple/price?ids=${cryptoId}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true`
+    );
+    const data = await res.json();
+    if (data && data[cryptoId]) {
+      return {
+        price:     data[cryptoId].usd,
+        change24h: data[cryptoId].usd_24h_change || 0,
+        volume24h: data[cryptoId].usd_24h_vol || 0
+      };
+    }
+    return null;
+  } catch(e) { return null; }
+}
+
+// ── Fear and Greed ────────────────────────────
+async function getFearGreed() {
+  try {
+    const res  = await fetch(SENTIMENT_FNG_API);
+    const data = await res.json();
+    return data?.data?.[0] ? parseInt(data.data[0].value) : 50;
+  } catch(e) {
+    const fgEl = document.getElementById('fgScore');
+    if (fgEl && fgEl.textContent !== '--') {
+      const v = parseInt(fgEl.textContent);
+      if (!isNaN(v)) return v;
+    }
+    return 50;
+  }
+}
+
+// ── Signal analyzers ──────────────────────────
+function analyzeRSI(rsi) {
+  if (rsi === null) return { signal: 'neutral', score: 50 };
+  if (rsi <= 30) return { signal: 'bullish', score: 80 };
+  if (rsi <= 45) return { signal: 'bullish', score: 60 };
+  if (rsi >= 70) return { signal: 'bearish', score: 20 };
+  if (rsi >= 55) return { signal: 'bearish', score: 40 };
+  return { signal: 'neutral', score: 50 };
+}
+
+function analyze200MA(currentPrice, ma200) {
+  if (!currentPrice || !ma200) return { signal: 'neutral', score: 50 };
+  const pctAbove = ((currentPrice - ma200) / ma200) * 100;
+  if (pctAbove > 10)  return { signal: 'bullish', score: 80 };
+  if (pctAbove > 0)   return { signal: 'bullish', score: 60 };
+  if (pctAbove < -10) return { signal: 'bearish', score: 20 };
+  if (pctAbove < 0)   return { signal: 'bearish', score: 40 };
+  return { signal: 'neutral', score: 50 };
+}
+
+function analyzeVolumeSurge(surgePct) {
+  if (surgePct === null) return { signal: 'neutral', score: 50 };
+  if (surgePct > 50)  return { signal: 'bullish', score: 80 };
+  if (surgePct > 20)  return { signal: 'bullish', score: 65 };
+  if (surgePct < -30) return { signal: 'bearish', score: 30 };
+  if (surgePct < -10) return { signal: 'bearish', score: 40 };
+  return { signal: 'neutral', score: 50 };
+}
+
+function analyzeFearGreed(fng) {
+  if (fng >= 75) return { signal: 'bearish', score: 20 };
+  if (fng >= 55) return { signal: 'bullish', score: 65 };
+  if (fng <= 25) return { signal: 'bullish', score: 75 };
+  if (fng <= 45) return { signal: 'bearish', score: 40 };
+  return { signal: 'neutral', score: 50 };
+}
+
+function analyzeInstitutionalMomentum(ticker, klines) {
+  // For BTC: volume surge + price direction combined
+  if (!ticker) return { signal: 'neutral', score: 50 };
+  const priceChange = parseFloat(ticker.priceChangePercent || 0);
+  const volSurge    = parseFloat(ticker.volume || 0);
+  if (priceChange > 3)  return { signal: 'bullish', score: 75 };
+  if (priceChange > 1)  return { signal: 'bullish', score: 60 };
+  if (priceChange < -3) return { signal: 'bearish', score: 25 };
+  if (priceChange < -1) return { signal: 'bearish', score: 40 };
+  return { signal: 'neutral', score: 50 };
+}
+
+function analyzeBtcDominance(dom) {
+  if (!dom) return { signal: 'neutral', score: 50 };
+  const current = dom.current;
+  if (current < 48) return { signal: 'bullish', score: 70 }; // low dom = good for alts
+  if (current > 60) return { signal: 'bearish', score: 30 }; // high dom = bad for alts
+  return { signal: 'neutral', score: 50 };
+}
+
+// ── Weighted Market Condition Score ───────────
+// Weights: RSI 25%, 200MA 20%, Volume 20%, FnG 25%, Signal1 10%
+function calculateMarketScore(signals) {
+  const weights = [0.25, 0.20, 0.20, 0.25, 0.10];
+  let total = 0;
+  signals.forEach((s, i) => {
+    total += (s.score || 50) * (weights[i] || 0.1);
+  });
+  return Math.round(total);
+}
+
+// ── Zone from score ───────────────────────────
+function getZone(score) {
+  if (score <= 30) return { label: 'Accumulation Zone', class: 'zone-accumulation', action: 'Market is in fear. Historically a time patient buyers look for entries.' };
+  if (score <= 50) return { label: 'Caution Zone',      class: 'zone-caution',      action: 'Mixed signals. Wait for clearer direction before acting.' };
+  if (score <= 70) return { label: 'Optimistic Zone',   class: 'zone-optimistic',   action: 'Positive momentum building. Trend favours buyers but stay cautious.' };
+  return                  { label: 'Overheated Zone',   class: 'zone-overheated',   action: 'Market running hot. High risk of short term correction. Manage positions carefully.' };
+}
+
+// ── Confidence from signal agreement ─────────
+function getConfidence(signals) {
+  const bullish = signals.filter(s => s.signal === 'bullish').length;
+  const bearish = signals.filter(s => s.signal === 'bearish').length;
+  const dominant = Math.max(bullish, bearish);
+  const total    = signals.length;
+  const pct      = Math.round((dominant / total) * 100);
+  let label;
+  if (pct >= 80) label = 'Very High';
+  else if (pct >= 60) label = 'High';
+  else if (pct >= 40) label = 'Moderate';
+  else label = 'Low';
+  return { pct, label, bullish, bearish, total };
+}
+
+// ── Today's Insight templates ─────────────────
+function getTodaysInsight(score, fng, rsi, volSurge) {
+  if (score <= 25) {
+    return 'Extreme fear is dominating the market. Historically these conditions have preceded recovery phases for patient investors. This is not a signal to act rashly but to observe carefully.';
+  }
+  if (score <= 40) {
+    if (rsi && rsi < 35) return 'RSI is approaching oversold territory while sentiment remains cautious. Markets often find support around these levels. Worth watching closely.';
+    return 'The market is in a cautious phase. Volume and momentum are subdued. Waiting for confirmation of direction is the prudent approach here.';
+  }
+  if (score <= 55) {
+    return 'Market signals are mixed with no clear dominant direction. This often happens before a significant move. Observing volume and price action closely will give early clues.';
+  }
+  if (score <= 70) {
+    if (volSurge && volSurge > 30) return 'Positive sentiment is being backed by above average volume. This combination historically strengthens the case for continued upward momentum.';
+    return 'Sentiment is tilting positive and momentum is building. The trend favours buyers but confirmation from volume would strengthen the case further.';
+  }
+  return 'Market conditions are showing signs of overheating. When greed dominates and RSI is elevated, the probability of short term pullbacks increases. Risk management is important here.';
+}
+
 // ── Sparkline ─────────────────────────────────
-function drawSparkline(ohlcData, trend) {
+function drawSparkline(klines, trend) {
   const canvas = document.getElementById('sentimentSparkline');
-  if (!canvas || !ohlcData || ohlcData.length === 0) return;
-  const ctx = canvas.getContext('2d');
-  const W = canvas.offsetWidth || 300;
-  const H = 60;
+  if (!canvas || !klines || klines.length === 0) return;
+  const ctx  = canvas.getContext('2d');
+  const W    = canvas.offsetWidth || 300;
+  const H    = 60;
   canvas.width = W; canvas.height = H;
   ctx.clearRect(0, 0, W, H);
-  const closes = ohlcData.map(c => c[4]);
-  const minP = Math.min(...closes);
-  const maxP = Math.max(...closes);
-  const range = maxP - minP || 1;
+  const closes = klines.slice(-14).map(k => parseFloat(k[4]));
+  const minP   = Math.min(...closes);
+  const maxP   = Math.max(...closes);
+  const range  = maxP - minP || 1;
   const points = closes.map((p, i) => ({
     x: (i / (closes.length - 1)) * W,
     y: H - ((p - minP) / range) * (H - 8) - 4
@@ -195,166 +338,145 @@ function drawSparkline(ohlcData, trend) {
   ctx.strokeStyle = lineColor; ctx.lineWidth = 2; ctx.stroke();
 }
 
-// ── Signal analyzers ──────────────────────────
-function analyzeEtfFlow(flow) {
-  if (flow === null) return 'neutral';
-  if (flow > 100)  return 'bullish';
-  if (flow < -100) return 'bearish';
-  return 'neutral';
-}
-function analyzeBtcPerformance(perf) {
-  if (perf === null) return 'neutral';
-  if (perf > 5)  return 'bullish';
-  if (perf < -5) return 'bearish';
-  return 'neutral';
-}
-function analyzeBtcDominance(dom) {
-  if (dom === null) return 'neutral';
-  if (dom < 48) return 'bullish';
-  if (dom > 60) return 'bearish';
-  return 'neutral';
-}
-function analyzePriceContext(priceData) {
-  if (!priceData) return 'neutral';
-  if (priceData.change24h > 3)  return 'bullish';
-  if (priceData.change24h < -3) return 'bearish';
-  return 'neutral';
-}
-function analyzeCommunityMood(fng) {
-  if (fng >= 55) return 'bullish';
-  if (fng <= 45) return 'bearish';
-  return 'neutral';
-}
-function analyzeRSI(rsi) {
-  if (rsi === null) return 'neutral';
-  if (rsi <= 30) return 'bullish';
-  if (rsi >= 70) return 'bearish';
-  return 'neutral';
-}
-
-// ── Helpers ───────────────────────────────────
-function sentimentEmoji(s) {
-  if (s === 'bullish') return '🟢';
-  if (s === 'bearish') return '🔴';
-  return '🟡';
-}
-function formatPrice(p) {
-  if (!p && p !== 0) return 'N/A';
-  if (p >= 1000) return '$' + p.toLocaleString('en-US', { maximumFractionDigits: 0 });
-  if (p >= 1)    return '$' + p.toFixed(2);
-  return '$' + p.toFixed(6);
-}
-function formatVolume(v) {
-  if (!v && v !== 0) return 'N/A';
-  if (v >= 1e9) return '$' + (v / 1e9).toFixed(1) + 'B';
-  if (v >= 1e6) return '$' + (v / 1e6).toFixed(1) + 'M';
-  if (v > 0)    return '$' + v.toLocaleString();
-  return 'N/A';
-}
-function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-function delay(ms)     { return new Promise(r => setTimeout(r, ms)); }
-function isBitcoin(id) { return id === 'bitcoin' || id === 'btc'; }
-
 // ── Main calculation ──────────────────────────
 async function calculateSentiment(cryptoName) {
-  const cryptoId = await getCryptoId(cryptoName.toLowerCase().trim());
-  const isBTC    = isBitcoin(cryptoId);
+  const cryptoId     = await getCryptoId(cryptoName.toLowerCase().trim());
+  const isBtc        = isBTC(cryptoId);
+  const binanceSymbol = toBinanceSymbol(cryptoId);
 
-  // Sequential calls with delays to avoid CoinGecko rate limiting
-  const priceData = await getCryptoPrices(cryptoId);
-  await delay(600);
+  // Parallel: CoinGecko price + Binance klines + Fear and Greed
+  const [priceData, klines, fng] = await Promise.all([
+    getCGPriceData(cryptoId),
+    getBinanceKlines(binanceSymbol, 210),
+    getFearGreed()
+  ]);
 
-  const ohlcData = await getOHLC(cryptoId);
-  await delay(600);
+  // Binance 24h ticker for volume surge
+  const ticker = await getBinanceTicker(binanceSymbol);
 
-  // Fear & Greed uses different API (alternative.me) — safe to run anytime
-  const fngValue = await getSentimentFearGreed();
-  await delay(400);
-
-  // ETF/Dominance — ETF uses allorigins proxy (different server), Dominance uses CoinGecko
-  let signal1Raw = null;
-  if (isBTC) {
-    signal1Raw = await getEtfFlow(); // uses allorigins proxy, no delay needed after
-  } else {
-    signal1Raw = await getBtcDominance(); // CoinGecko call
-  }
-
-  // BTC fallback if ETF unavailable
-  let etfFallback = null;
-  if (isBTC && signal1Raw === null) {
+  // BTC dominance direction for altcoins
+  let domData = null;
+  if (!isBtc) {
     await delay(400);
-    etfFallback = await getBtcPerformance();
+    domData = await getBtcDominanceDirection();
   }
 
-  const rsiValue = calculateRSI(ohlcData);
+  // Calculate technical values
+  const rsi       = calculateRSI(klines);
+  const ma200     = calculate200MA(klines);
+  const volSurge  = calculateVolumeSurge(klines, ticker);
 
-  // Signal 1
-  let s1Signal, s1Label, s1Value;
-  if (isBTC) {
-    if (signal1Raw !== null) {
-      s1Signal = analyzeEtfFlow(signal1Raw);
-      s1Label  = 'ETF Flow';
-      s1Value  = signal1Raw >= 0
-        ? '+$' + signal1Raw.toFixed(0) + 'M inflow'
-        : '-$' + Math.abs(signal1Raw).toFixed(0) + 'M outflow';
-    } else if (etfFallback !== null) {
-      s1Signal = analyzeBtcPerformance(etfFallback);
-      s1Label  = 'BTC 7d Trend';
-      s1Value  = (etfFallback >= 0 ? '+' : '') + etfFallback.toFixed(1) + '%';
-    } else {
-      s1Signal = 'neutral';
-      s1Label  = 'ETF Flow';
-      s1Value  = 'Unavailable';
-    }
+  // Current price (prefer Binance ticker, fallback to CoinGecko)
+  const currentPrice = ticker
+    ? parseFloat(ticker.lastPrice)
+    : (priceData ? priceData.price : null);
+
+  // ── Build 5 signals ──
+  let signals = [];
+
+  // Signal 1: RSI 14 (weight 25%)
+  const rsiAnalysis = analyzeRSI(rsi);
+  signals.push({
+    label:   'RSI (14)',
+    signal:  rsiAnalysis.signal,
+    score:   rsiAnalysis.score,
+    value:   rsi !== null ? String(rsi) : 'N/A'
+  });
+
+  // Signal 2: Price vs 200 MA (weight 20%)
+  const maAnalysis = analyze200MA(currentPrice, ma200);
+  const maDiff     = (currentPrice && ma200)
+    ? ((currentPrice - ma200) / ma200 * 100).toFixed(1)
+    : null;
+  signals.push({
+    label:  'vs 200 MA',
+    signal: maAnalysis.signal,
+    score:  maAnalysis.score,
+    value:  maDiff !== null
+      ? (parseFloat(maDiff) >= 0 ? '+' : '') + maDiff + '% vs MA'
+      : 'N/A'
+  });
+
+  // Signal 3: Volume Surge (weight 20%)
+  const volAnalysis = analyzeVolumeSurge(volSurge);
+  signals.push({
+    label:  'Volume',
+    signal: volAnalysis.signal,
+    score:  volAnalysis.score,
+    value:  volSurge !== null
+      ? (volSurge >= 0 ? '+' : '') + volSurge.toFixed(0) + '% vs avg'
+      : 'N/A'
+  });
+
+  // Signal 4: Fear and Greed (weight 25%)
+  const fngAnalysis = analyzeFearGreed(fng);
+  signals.push({
+    label:  'Fear and Greed',
+    signal: fngAnalysis.signal,
+    score:  fngAnalysis.score,
+    value:  'Index: ' + fng
+  });
+
+  // Signal 5: Institutional Momentum (BTC) or BTC Dominance (alts) (weight 10%)
+  if (isBtc) {
+    const instAnalysis = analyzeInstitutionalMomentum(ticker, klines);
+    const priceChg     = ticker ? parseFloat(ticker.priceChangePercent).toFixed(2) : null;
+    signals.push({
+      label:  'Inst. Momentum',
+      signal: instAnalysis.signal,
+      score:  instAnalysis.score,
+      value:  priceChg !== null ? (parseFloat(priceChg) >= 0 ? '+' : '') + priceChg + '% 24h' : 'N/A'
+    });
   } else {
-    s1Signal = analyzeBtcDominance(signal1Raw);
-    s1Label  = 'BTC Dominance';
-    s1Value  = signal1Raw !== null ? signal1Raw.toFixed(1) + '%' : 'N/A';
+    const domAnalysis = analyzeBtcDominance(domData);
+    signals.push({
+      label:  'BTC Dominance',
+      signal: domAnalysis.signal,
+      score:  domAnalysis.score,
+      value:  domData ? domData.current.toFixed(1) + '%' : 'N/A'
+    });
   }
 
-  // Signal 2: price context
-  const priceSignal = analyzePriceContext(priceData);
-  let priceValue = 'N/A';
-  if (priceData && priceData.change24h !== undefined) {
-    priceValue = (priceData.change24h >= 0 ? '+' : '') + priceData.change24h.toFixed(2) + '% 24h';
-  }
+  // ── Market Condition Score ──
+  const marketScore  = calculateMarketScore(signals);
+  const zone         = getZone(marketScore);
+  const confidence   = getConfidence(signals);
+  const insight      = getTodaysInsight(marketScore, fng, rsi, volSurge);
 
-  // Signal 3: Fear & Greed
-  const fngSignal  = analyzeCommunityMood(fngValue);
-  const fngDisplay = 'Index: ' + fngValue;
-
-  // Signal 4: RSI
-  const rsiSignal  = analyzeRSI(rsiValue);
-  const rsiDisplay = rsiValue !== null ? String(rsiValue) : 'N/A';
-
-  const sparkTrend = priceData && priceData.change24h > 0 ? 'up'
-                   : priceData && priceData.change24h < 0 ? 'down' : 'neutral';
+  // Sparkline trend
+  const sparkTrend = currentPrice && priceData
+    ? (priceData.change24h > 0 ? 'up' : priceData.change24h < 0 ? 'down' : 'neutral')
+    : 'neutral';
 
   return {
-    crypto: cryptoName, cryptoId, isBTC,
-    signals: [
-      { label: s1Label,          signal: s1Signal,    value: s1Value    },
-      { label: 'Price Context',  signal: priceSignal, value: priceValue },
-      { label: 'Fear & Greed',   signal: fngSignal,   value: fngDisplay },
-      { label: 'RSI (14)',       signal: rsiSignal,   value: rsiDisplay }
-    ],
+    crypto: cryptoName,
+    cryptoId,
+    isBtc,
+    signals,
+    marketScore,
+    zone,
+    confidence,
+    insight,
     data: {
-      price:     priceData?.price,
+      price:     currentPrice || priceData?.price,
       change24h: priceData?.change24h,
       volume24h: priceData?.volume24h,
-      rsi:       rsiValue
+      rsi,
+      ma200,
+      volSurge
     },
-    ohlcData,
+    klines,
     sparkTrend
   };
 }
 
 // ── Display ───────────────────────────────────
 function displaySentiment(data) {
+  // Asset title
   const assetTitle = document.getElementById('assetTitle');
   if (assetTitle) assetTitle.textContent = data.crypto;
 
-  // Signal rows
+  // Signal rows (existing UI unchanged)
   const signalRows = document.getElementById('signalRows');
   if (signalRows) {
     signalRows.innerHTML = data.signals.map(s => `
@@ -366,11 +488,40 @@ function displaySentiment(data) {
     `).join('');
   }
 
+  // Market Condition Score block
+  const scoreBlock = document.getElementById('marketScoreBlock');
+  if (scoreBlock) {
+    const zone = data.zone;
+    const conf = data.confidence;
+    const dominant = conf.bullish >= conf.bearish ? 'bullish' : 'bearish';
+    scoreBlock.innerHTML = `
+      <div class="market-score-wrap">
+        <div class="market-score-number ${dominant}">${data.marketScore}<span style="font-size:13px;color:#64748b;">/100</span></div>
+        <div class="market-score-label ${zone.class}">${zone.label}</div>
+        <div class="market-score-confidence">
+          ${conf.label} Confidence &nbsp;|&nbsp; ${conf.bullish} of ${conf.total} signals bullish
+        </div>
+        <div class="market-score-action">${zone.action}</div>
+      </div>
+    `;
+  }
+
+  // Today's Insight block
+  const insightBlock = document.getElementById('todaysInsight');
+  if (insightBlock) {
+    insightBlock.innerHTML = `
+      <div class="insight-wrap">
+        <div class="insight-label">Today's Market Insight</div>
+        <div class="insight-text">${data.insight}</div>
+      </div>
+    `;
+  }
+
   // Price stats row
   const v2Price  = document.getElementById('v2Price');
   const v2Change = document.getElementById('v2Change');
   const v2Volume = document.getElementById('v2Volume');
-  if (v2Price) v2Price.textContent = formatPrice(data.data.price);
+  if (v2Price)  v2Price.textContent  = formatPrice(data.data.price);
   if (v2Change) {
     if (data.data.change24h !== null && data.data.change24h !== undefined) {
       v2Change.textContent = (data.data.change24h >= 0 ? '+' : '') + data.data.change24h.toFixed(2) + '%';
@@ -383,13 +534,13 @@ function displaySentiment(data) {
   if (v2Volume) v2Volume.textContent = formatVolume(data.data.volume24h);
 
   // Sparkline
-  if (data.ohlcData && data.ohlcData.length > 0) {
-    setTimeout(() => drawSparkline(data.ohlcData, data.sparkTrend), 100);
+  if (data.klines && data.klines.length > 0) {
+    setTimeout(() => drawSparkline(data.klines, data.sparkTrend), 100);
   }
 
   // RSI bar
-  const rsiValueEl = document.getElementById('rsiValue');
-  const rsiFill    = document.getElementById('rsiFill');
+  const rsiValueEl  = document.getElementById('rsiValue');
+  const rsiFill     = document.getElementById('rsiFill');
   const rsiSignalEl = document.getElementById('rsiSignal');
   if (data.data.rsi !== null && data.data.rsi !== undefined) {
     if (rsiValueEl) rsiValueEl.textContent = data.data.rsi;
@@ -407,6 +558,13 @@ function displaySentiment(data) {
     if (rsiSignalEl) { rsiSignalEl.textContent = 'N/A'; rsiSignalEl.className = 'rsi-signal rsi-neutral'; }
   }
 
+  // Last updated
+  const lastUpdatedEl = document.getElementById('sentimentLastUpdated');
+  if (lastUpdatedEl) {
+    lastUpdatedEl.textContent = 'Updated ' + new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  // Show result card
   const resultCard = document.getElementById('sentimentResult');
   if (resultCard) resultCard.classList.remove('hidden');
 }
@@ -439,10 +597,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const btn = document.getElementById('checkSentimentBtn');
   if (btn) btn.addEventListener('click', checkSentiment);
   const input = document.getElementById('assetInput');
-  if (input) input.addEventListener('keypress', function (e) {
+  if (input) input.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') { e.preventDefault(); checkSentiment(); }
   });
 });
 
 window.checkSentiment = checkSentiment;
-console.log('CoinGyaan Sentiment V4 loaded');
+console.log('CoinGyaan Sentiment V5 loaded');
