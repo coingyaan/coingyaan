@@ -9,6 +9,22 @@
 // ============================================
 var GUIDES_DATA = [
   {
+    url:      "/guides/crypto-sentiment-trading-guide.html",
+    tag:      "Crypto Strategy",
+    readTime: "7 min read",
+    title:    "How to Use Crypto Sentiment in Trading: A Complete Beginner Guide",
+    desc:     "Learn how to use crypto sentiment in trading. Understand market psychology, bullish and bearish signals and improve your trading strategy with real time data.",
+    date:     "April 2026"
+  },
+  {
+    url:      "/guides/fear-greed-index-explained.html",
+    tag:      "Sentiment",
+    readTime: "7 min read",
+    title:    "Crypto Fear and Greed Index Explained: How to Use It for Better Trading Decisions",
+    desc:     "Understand crypto fear and greed index in simple terms. Learn how market emotions impact price and how traders use this index effectively.",
+    date:     "April 2026"
+  },
+  {
     url:      "/guides/bitcoin-sentiment-today-guide.html",
     tag:      "Bitcoin Sentiment",
     readTime: "8 min read",
