@@ -992,140 +992,122 @@
 
 <script>
 // ── TOP MARKET BAR ──────────────────────────────────────────
-// Reads from existing DOM elements - zero extra API calls
+// Single /global fetch for Market Cap and BTC Dom
+// Reads Fear and Greed, Stablecoin Dom and Alt Season from DOM after they load
 
-function getBarColor(label) {
-  if (!label) return '';
-  const l = label.toLowerCase();
-  if (l.includes('extreme fear') || l.includes('fear')) return 'fear';
-  if (l.includes('extreme greed') || l.includes('greed')) return 'greed';
-  return 'neutral';
-}
+(function() {
 
-function buildBarItem(label, value, valueClass) {
-  return '<div class="top-bar-item"><span class="top-bar-label">' + label + '</span><span class="top-bar-value ' + (valueClass || '') + '">' + value + '</span></div>';
-}
+  var barData = {
+    mcap:      null,
+    btcDom:    null,
+    stableDom: null,
+    fgScore:   null,
+    fgLabel:   null,
+    altScore:  null,
+    altLabel:  null
+  };
 
-function updateTopBar() {
-  var track     = document.getElementById('topBarTrack');
-  var updatedEl = document.getElementById('topBarUpdated');
-  if (!track) return;
-
-  // Read from existing elements
-  var mcap        = document.getElementById('stableMcap')       ? document.getElementById('stableMcap').textContent.trim()       : 'N/A';
-  var btcDom      = '--';
-  var stableDom   = document.getElementById('stableCombinedPct') ? document.getElementById('stableCombinedPct').textContent.trim() : 'N/A';
-  var fgScore     = document.getElementById('fgScore')           ? document.getElementById('fgScore').textContent.trim()           : 'N/A';
-  var fgLabel     = document.getElementById('fgLabel')           ? document.getElementById('fgLabel').textContent.trim()           : '';
-  var altScore    = document.getElementById('altseasonScore')    ? document.getElementById('altseasonScore').textContent.trim()    : 'N/A';
-  var altBadge    = document.getElementById('altseasonBadge')    ? document.getElementById('altseasonBadge').textContent.trim()    : '';
-
-  // BTC dominance comes from stableUsdtPct context - read from global fetch stored in features.js
-  // Use stableBarPct as proxy or read from window if available
-  var btcDomEl = document.getElementById('altseasonBtcChange');
-  // Better: read BTC dom from the global data if exposed, else fetch once
-  if (window._cgBtcDom) {
-    btcDom = window._cgBtcDom.toFixed(1) + '%';
+  function fmtMcap(v) {
+    if (v >= 1e12) return '$' + (v / 1e12).toFixed(2) + 'T';
+    if (v >= 1e9)  return '$' + (v / 1e9).toFixed(1) + 'B';
+    return '$' + (v / 1e6).toFixed(0) + 'M';
   }
 
-  // Fear and Greed color class
-  var fgClass = getBarColor(fgLabel);
-
-  // Altcoin season label - strip emoji
-  var altLabel = altBadge.replace(/[^\x00-\x7F]/g, '').trim() || altScore;
-
-  // Build items
-  var items = '';
-  if (mcap && mcap !== 'N/A')      items += buildBarItem('Market Cap', mcap, '');
-  if (btcDom !== '--')             items += buildBarItem('BTC Dom', btcDom, '');
-  if (stableDom && stableDom !== 'N/A') items += buildBarItem('Stablecoin Dom', stableDom, '');
-  if (fgScore && fgScore !== 'N/A')     items += buildBarItem('Fear and Greed', fgScore + ' ' + fgLabel, fgClass);
-  if (altScore && altScore !== 'N/A')   items += buildBarItem('Alt Season', altScore + '/100 ' + altLabel, '');
-
-  // Skip if no data yet
-  if (!items) return;
-
-  // On mobile duplicate items for seamless ticker loop
-  var isMobile = window.innerWidth <= 768;
-  track.innerHTML = isMobile ? items + items : items;
-
-  if (updatedEl) {
-    var now = new Date();
-    updatedEl.textContent = 'Updated ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  function fgClass(label) {
+    if (!label) return '';
+    var l = label.toLowerCase();
+    if (l.indexOf('fear') !== -1) return 'fear';
+    if (l.indexOf('greed') !== -1) return 'greed';
+    return 'neutral';
   }
-}
 
-// Fetch BTC dominance once from /global - same endpoint features.js uses
-// Store in window._cgBtcDom so bar can read it
-(function fetchBtcDom() {
+  function item(label, value, cls) {
+    return '<div class="top-bar-item"><span class="top-bar-label">' + label + '</span><span class="top-bar-value ' + (cls || '') + '">' + value + '</span></div>';
+  }
+
+  function renderBar() {
+    var track = document.getElementById('topBarTrack');
+    if (!track) return;
+
+    var html = '';
+    if (barData.mcap)                                        html += item('Market Cap', barData.mcap, '');
+    if (barData.btcDom)                                      html += item('BTC Dom', barData.btcDom, '');
+    if (barData.stableDom)                                   html += item('Stablecoin Dom', barData.stableDom, '');
+    if (barData.fgScore && barData.fgLabel)                  html += item('Fear and Greed', barData.fgScore + ' ' + barData.fgLabel, fgClass(barData.fgLabel));
+    if (barData.altScore && barData.altLabel)                 html += item('Alt Season', barData.altScore + '/100 ' + barData.altLabel, '');
+
+    if (!html) return;
+
+    var isMobile = window.innerWidth <= 768;
+    track.innerHTML = isMobile ? html + html : html;
+
+    var updatedEl = document.getElementById('topBarUpdated');
+    if (updatedEl) {
+      updatedEl.textContent = 'Updated ' + new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    }
+  }
+
+  function readDomValues() {
+    // Fear and Greed
+    var fgScoreEl = document.getElementById('fgScore');
+    var fgLabelEl = document.getElementById('fgLabel');
+    if (fgScoreEl && fgScoreEl.textContent.trim() !== '--' && fgScoreEl.textContent.trim() !== 'N/A' && fgScoreEl.textContent.trim() !== '') {
+      barData.fgScore = fgScoreEl.textContent.trim();
+      barData.fgLabel = fgLabelEl ? fgLabelEl.textContent.trim() : '';
+    }
+
+    // Stablecoin Dom
+    var stEl = document.getElementById('stableCombinedPct');
+    if (stEl && stEl.textContent.trim() !== '--' && stEl.textContent.trim() !== 'N/A' && stEl.textContent.trim() !== '') {
+      barData.stableDom = stEl.textContent.trim();
+    }
+
+    // Alt Season
+    var altScoreEl = document.getElementById('altseasonScore');
+    var altBadgeEl = document.getElementById('altseasonBadge');
+    if (altScoreEl && altScoreEl.textContent.trim() !== '--' && altScoreEl.textContent.trim() !== 'N/A' && altScoreEl.textContent.trim() !== '') {
+      barData.altScore = altScoreEl.textContent.trim();
+      if (altBadgeEl) {
+        var badge = altBadgeEl.textContent.trim();
+        badge = badge.replace(/[\u{1F300}-\u{1FFFF}]/gu, '').replace('Season', '').trim();
+        barData.altLabel = badge || '';
+      }
+    }
+
+    renderBar();
+  }
+
+  // Step 1 - fetch /global for Market Cap and BTC Dom
   fetch('https://api.coingecko.com/api/v3/global')
     .then(function(r) { return r.json(); })
     .then(function(data) {
-      var pct = data && data.data && data.data.market_cap_percentage;
-      if (pct && pct.btc) {
-        window._cgBtcDom = pct.btc;
+      if (data && data.data) {
+        var pct  = data.data.market_cap_percentage || {};
+        var mcap = data.data.total_market_cap ? data.data.total_market_cap.usd : null;
+        if (mcap)     barData.mcap   = fmtMcap(mcap);
+        if (pct.btc)  barData.btcDom = pct.btc.toFixed(1) + '%';
       }
-      // Also store total market cap formatted
-      if (data && data.data && data.data.total_market_cap && data.data.total_market_cap.usd) {
-        var mcap = data.data.total_market_cap.usd;
-        window._cgTotalMcap = mcap >= 1e12
-          ? '$' + (mcap / 1e12).toFixed(2) + 'T'
-          : '$' + (mcap / 1e9).toFixed(0) + 'B';
-      }
-      updateTopBar();
+      readDomValues();
     })
-    .catch(function() { updateTopBar(); });
+    .catch(function() { readDomValues(); });
+
+  // Step 2 - MutationObserver to catch DOM values as they load
+  var observer = new MutationObserver(function() { readDomValues(); });
+
+  window.addEventListener('load', function() {
+    var els = ['fgScore', 'stableCombinedPct', 'altseasonScore'];
+    els.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) observer.observe(el, { childList: true, characterData: true, subtree: true });
+    });
+    // Also do an immediate read in case data already loaded
+    readDomValues();
+  });
+
+  // Step 3 - poll every 20 seconds as safety net
+  setInterval(readDomValues, 20000);
+
 })();
-
-// Also override mcap display if we have better data
-var _origUpdateBar = updateTopBar;
-updateTopBar = function() {
-  var track = document.getElementById('topBarTrack');
-  var updatedEl = document.getElementById('topBarUpdated');
-  if (!track) return;
-
-  var mcap      = window._cgTotalMcap || (document.getElementById('stableMcap') ? document.getElementById('stableMcap').textContent.trim() : 'N/A');
-  var btcDom    = window._cgBtcDom ? window._cgBtcDom.toFixed(1) + '%' : '--';
-  var stableDom = document.getElementById('stableCombinedPct') ? document.getElementById('stableCombinedPct').textContent.trim() : 'N/A';
-  var fgScore   = document.getElementById('fgScore')           ? document.getElementById('fgScore').textContent.trim()           : 'N/A';
-  var fgLabel   = document.getElementById('fgLabel')           ? document.getElementById('fgLabel').textContent.trim()           : '';
-  var altScore  = document.getElementById('altseasonScore')    ? document.getElementById('altseasonScore').textContent.trim()    : 'N/A';
-  var altBadge  = document.getElementById('altseasonBadge')    ? document.getElementById('altseasonBadge').textContent.trim()    : '';
-
-  var fgClass  = getBarColor(fgLabel);
-  var altLabel = altBadge.replace(/[^\x00-\x7F]/g, '').replace('Season', '').trim();
-
-  var items = '';
-  if (mcap && mcap !== 'N/A' && mcap !== '--')           items += buildBarItem('Market Cap', mcap, '');
-  if (btcDom !== '--')                                    items += buildBarItem('BTC Dom', btcDom, '');
-  if (stableDom && stableDom !== 'N/A' && stableDom !== '--') items += buildBarItem('Stablecoin Dom', stableDom, '');
-  if (fgScore && fgScore !== 'N/A' && fgLabel && fgLabel !== 'Loading') items += buildBarItem('Fear and Greed', fgScore + ' ' + fgLabel, fgClass);
-  if (altScore && altScore !== 'N/A' && altScore !== '--') items += buildBarItem('Alt Season', altScore + '/100 ' + altLabel, '');
-
-  if (!items) return;
-
-  var isMobile = window.innerWidth <= 768;
-  track.innerHTML = isMobile ? items + items : items;
-
-  if (updatedEl) {
-    var now = new Date();
-    updatedEl.textContent = 'Updated ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-  }
-};
-
-// Poll every 15 seconds to catch data as it loads
-setInterval(updateTopBar, 15000);
-
-// Also update when Fear and Greed loads - observe fgScore changes
-var fgObserver = new MutationObserver(function() { updateTopBar(); });
-document.addEventListener('DOMContentLoaded', function() {
-  var fgEl = document.getElementById('fgScore');
-  var altEl = document.getElementById('altseasonScore');
-  var stEl  = document.getElementById('stableCombinedPct');
-  if (fgEl)  fgObserver.observe(fgEl,  { childList: true, subtree: true, characterData: true });
-  if (altEl) fgObserver.observe(altEl, { childList: true, subtree: true, characterData: true });
-  if (stEl)  fgObserver.observe(stEl,  { childList: true, subtree: true, characterData: true });
-});
 </script>
 
 </body>
