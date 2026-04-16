@@ -352,28 +352,28 @@
     .altseason-stat-label { font-size: 10px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
     .altseason-stat-value { font-size: 15px; font-weight: 700; color: #e2e8f0; }
 
-    /* Telegram Alert */
-    .alert-section { margin: 28px 0 0; }
-    .alert-card { background: #0d1526; border: 1px solid #1e293b; border-radius: 12px; padding: 16px 20px; }
-    .alert-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-    .alert-tg-icon { width: 32px; height: 32px; background: rgba(37,197,234,0.1); border: 1px solid rgba(37,197,234,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-    .alert-title { font-size: 15px; font-weight: 700; color: #e2e8f0; }
-    .alert-subtitle { font-size: 13px; color: #475569; margin-bottom: 12px; }
-    .alert-form-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; align-items: end; }
-    @media (max-width: 640px) { .alert-form-row { grid-template-columns: 1fr 1fr; } .alert-form-row .alert-btn { grid-column: 1 / -1; } }
-    .alert-field label { display: block; font-size: 10px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
-    .alert-field input, .alert-field select { width: 100%; background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; padding: 6px 10px; font-size: 12px; color: #e2e8f0; outline: none; box-sizing: border-box; }
-    .alert-field input:focus, .alert-field select:focus { border-color: #334155; }
-    .alert-field select option { background: #0f172a; }
-    .alert-btn { background: #229ed9; color: #fff; font-size: 12px; font-weight: 700; border: none; border-radius: 6px; padding: 7px 14px; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
-    .alert-btn:hover { background: #1a8abf; }
-    .alert-btn:disabled { background: #1e293b; color: #475569; cursor: not-allowed; }
-    .alert-status { margin-top: 12px; font-size: 13px; min-height: 20px; }
-    .alert-status.success { color: #22c55e; }
-    .alert-status.error { color: #ef4444; }
-    .alert-status.info { color: #94a3b8; }
-    .alert-note { font-size: 11px; color: #334155; margin-top: 10px; line-height: 1.6; }
-    .alert-note a { color: #229ed9; text-decoration: none; }
+    /* Market Pulse */
+    .market-pulse-section { margin: 28px 0 0; }
+    .pulse-card { background: #0d1526; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; }
+    .pulse-date { font-size: 11px; color: #334155; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 16px; }
+    .pulse-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    @media (max-width: 640px) { .pulse-grid { grid-template-columns: repeat(2, 1fr); } }
+    .pulse-item { background: #0f172a; border: 1px solid #1e293b; border-radius: 10px; padding: 14px 12px; text-align: center; }
+    .pulse-item-label { font-size: 10px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    .pulse-item-value { font-size: 22px; font-weight: 800; color: #e2e8f0; margin-bottom: 4px; line-height: 1; }
+    .pulse-item-sub { font-size: 10px; color: #475569; }
+    .pulse-item-value.fear { color: #ef4444; }
+    .pulse-item-value.greed { color: #22c55e; }
+    .pulse-item-value.neutral { color: #eab308; }
+    .pulse-verdict { background: #060d18; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 18px; }
+    .pulse-verdict-label { font-size: 10px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    .pulse-verdict-badge { display: inline-block; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 6px; margin-bottom: 10px; }
+    .pulse-badge-riskoff { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .pulse-badge-caution { background: rgba(234,179,8,0.15); color: #eab308; }
+    .pulse-badge-mixed { background: rgba(148,163,184,0.15); color: #94a3b8; }
+    .pulse-badge-riskon { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .pulse-badge-bull { background: rgba(96,165,250,0.15); color: #60a5fa; }
+    .pulse-verdict-text { font-size: 13px; color: #64748b; line-height: 1.7; }
 
     /* Stablecoin Dominance */
     .stable-section { margin: 28px 0 0; }
@@ -828,38 +828,40 @@
     </div>
   </section>
 
-  <!-- TELEGRAM ALERTS -->
-  <section class="alert-section">
+  <!-- MARKET PULSE -->
+  <section class="market-pulse-section">
     <div class="section-header">
-      <span class="section-title">🔔 Sentiment Alerts</span>
+      <span class="section-title">📡 Today's Market Pulse</span>
+      <span class="section-refresh" id="pulseRefreshTime"></span>
     </div>
-    <div class="alert-card">
-      <div class="alert-card-header">
-        <div class="alert-tg-icon">📩</div>
-        <div class="alert-title">Get Telegram Alerts</div>
+    <div class="pulse-card">
+      <div class="pulse-date" id="pulseDate"></div>
+      <div class="pulse-grid">
+        <div class="pulse-item">
+          <div class="pulse-item-label">Fear and Greed</div>
+          <div class="pulse-item-value" id="pulseFng">--</div>
+          <div class="pulse-item-sub" id="pulseFngLabel"></div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-item-label">Alt Season</div>
+          <div class="pulse-item-value" id="pulseAlt">--</div>
+          <div class="pulse-item-sub" id="pulseAltLabel"></div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-item-label">Stablecoin Dom</div>
+          <div class="pulse-item-value" id="pulseStable">--</div>
+          <div class="pulse-item-sub" id="pulseStableLabel"></div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-item-label">BTC Dominance</div>
+          <div class="pulse-item-value" id="pulseBtcDom">--</div>
+          <div class="pulse-item-sub" id="pulseBtcDomLabel"></div>
+        </div>
       </div>
-      <div class="alert-form-row">
-        <div class="alert-field">
-          <label>Telegram Username</label>
-          <input type="text" id="alertUsername" placeholder="@yourhandle" />
-        </div>
-        <div class="alert-field">
-          <label>Coin</label>
-          <input type="text" id="alertCoin" placeholder="Bitcoin, ETH..." />
-        </div>
-        <div class="alert-field">
-          <label>Alert When</label>
-          <select id="alertTrigger">
-            <option value="bullish">Turns Bullish</option>
-            <option value="bearish">Turns Bearish</option>
-            <option value="any">Any Change</option>
-          </select>
-        </div>
-        <button class="alert-btn" id="alertSubmitBtn" onclick="submitAlert()">Set Alert</button>
-      </div>
-      <div class="alert-status" id="alertStatus"></div>
-      <div class="alert-note">
-        Start a chat with <a href="https://t.me/CoinGyaanBot" target="_blank" rel="noopener">@CoinGyaanBot</a> first to receive alerts.
+      <div class="pulse-verdict">
+        <div class="pulse-verdict-label">Overall Condition</div>
+        <div class="pulse-verdict-badge" id="pulseVerdictBadge">Loading</div>
+        <div class="pulse-verdict-text" id="pulseVerdictText"></div>
       </div>
     </div>
   </section>
@@ -1137,6 +1139,132 @@
 
   // Step 3 - poll every 20 seconds as safety net
   setInterval(readDomValues, 20000);
+
+})();
+</script>
+
+<script>
+// MARKET PULSE
+// Reads from existing DOM elements. Zero extra API calls.
+(function() {
+
+  function fgColorClass(label) {
+    if (!label) return '';
+    var l = label.toLowerCase();
+    if (l.indexOf('fear') !== -1) return 'fear';
+    if (l.indexOf('greed') !== -1) return 'greed';
+    return 'neutral';
+  }
+
+  function getPulseVerdict(fng, alt, stable) {
+    var bearishCount = 0;
+    var bullishCount = 0;
+    if (fng <= 25) bullishCount++;
+    else if (fng <= 45) bearishCount++;
+    else if (fng >= 75) bearishCount++;
+    else if (fng >= 55) bullishCount++;
+    if (alt >= 60) bullishCount++;
+    else if (alt <= 30) bearishCount++;
+    if (stable >= 9) bearishCount++;
+    else if (stable <= 5) bullishCount++;
+
+    if (bearishCount >= 2 && fng <= 25) {
+      return { badge: 'Risk Off', badgeClass: 'pulse-badge-riskoff', text: 'Market is defensive. Capital sitting in stablecoins with fear dominating. Bitcoin absorbing most flows. Patient accumulation phase historically for long term buyers.' };
+    }
+    if (bearishCount >= 2) {
+      return { badge: 'Caution', badgeClass: 'pulse-badge-caution', text: 'Mixed signals leaning cautious. Stablecoin dominance is elevated and sentiment is weak. No clear catalyst for a broad market move yet. Patience is the right approach.' };
+    }
+    if (bullishCount >= 2 && alt >= 60) {
+      return { badge: 'Bull Market Conditions', badgeClass: 'pulse-badge-bull', text: 'Strong conditions across multiple signals. Capital rotating into altcoins, sentiment positive and stablecoin dominance low. Historically one of the strongest environments for crypto.' };
+    }
+    if (bullishCount >= 2) {
+      return { badge: 'Risk On', badgeClass: 'pulse-badge-riskon', text: 'Conditions are broadly favourable. Sentiment is positive, capital is moving into crypto and altcoins are gaining relative to Bitcoin. Momentum favours buyers but stay alert.' };
+    }
+    return { badge: 'Mixed Market', badgeClass: 'pulse-badge-mixed', text: 'No strong dominant signal across the market right now. Fear and Greed, altcoin activity and stablecoin flows are all in neutral territory. Markets are waiting for a catalyst.' };
+  }
+
+  function updatePulse() {
+    var fgScoreEl  = document.getElementById('fgScore');
+    var fgLabelEl  = document.getElementById('fgLabel');
+    var altScoreEl = document.getElementById('altseasonScore');
+    var altBadgeEl = document.getElementById('altseasonBadge');
+    var stableEl   = document.getElementById('stableCombinedPct');
+
+    var fng    = fgScoreEl  ? parseInt(fgScoreEl.textContent)  : null;
+    var fngLbl = fgLabelEl  ? fgLabelEl.textContent.trim()     : '';
+    var alt    = altScoreEl ? parseInt(altScoreEl.textContent) : null;
+    var altLbl = altBadgeEl ? altBadgeEl.textContent.replace(/[^\x00-\x7F]/g, '').trim() : '';
+    var stableRaw = stableEl ? stableEl.textContent.trim() : null;
+    var stable = stableRaw ? parseFloat(stableRaw) : null;
+    var btcDom = window._cgBtcDom ? window._cgBtcDom.toFixed(1) + '%' : null;
+
+    if (!fng || isNaN(fng)) return;
+
+    // Date
+    var dateEl = document.getElementById('pulseDate');
+    if (dateEl) {
+      dateEl.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    // Fear and Greed
+    var pulseFng = document.getElementById('pulseFng');
+    var pulseFngLabel = document.getElementById('pulseFngLabel');
+    if (pulseFng) { pulseFng.textContent = fng; pulseFng.className = 'pulse-item-value ' + fgColorClass(fngLbl); }
+    if (pulseFngLabel) pulseFngLabel.textContent = fngLbl;
+
+    // Alt Season
+    var pulseAlt = document.getElementById('pulseAlt');
+    var pulseAltLabel = document.getElementById('pulseAltLabel');
+    if (pulseAlt) {
+      pulseAlt.textContent = (alt && !isNaN(alt)) ? alt : '--';
+      pulseAlt.className = 'pulse-item-value ' + (alt >= 60 ? 'greed' : alt <= 30 ? 'fear' : 'neutral');
+    }
+    if (pulseAltLabel) pulseAltLabel.textContent = altLbl || '';
+
+    // Stablecoin Dom
+    var pulseStable = document.getElementById('pulseStable');
+    var pulseStableLabel = document.getElementById('pulseStableLabel');
+    if (pulseStable) {
+      pulseStable.textContent = stable ? stable.toFixed(1) + '%' : '--';
+      pulseStable.className = 'pulse-item-value ' + (stable >= 9 ? 'fear' : stable <= 5 ? 'greed' : 'neutral');
+    }
+    if (pulseStableLabel) pulseStableLabel.textContent = stable >= 9 ? 'Extreme Fear' : stable >= 7 ? 'Fear' : stable <= 5 ? 'Greed' : 'Neutral';
+
+    // BTC Dominance
+    var pulseBtcDom = document.getElementById('pulseBtcDom');
+    var pulseBtcDomLabel = document.getElementById('pulseBtcDomLabel');
+    if (pulseBtcDom) {
+      pulseBtcDom.textContent = btcDom || '--';
+      var dom = window._cgBtcDom;
+      pulseBtcDom.className = 'pulse-item-value ' + (dom > 58 ? 'fear' : dom < 48 ? 'greed' : 'neutral');
+    }
+    if (pulseBtcDomLabel && window._cgBtcDom) {
+      pulseBtcDomLabel.textContent = window._cgBtcDom > 58 ? 'BTC Dominant' : window._cgBtcDom < 48 ? 'Alts Leading' : 'Balanced';
+    }
+
+    // Overall Verdict
+    var verdict = getPulseVerdict(fng, alt || 50, stable || 7);
+    var badgeEl = document.getElementById('pulseVerdictBadge');
+    var textEl  = document.getElementById('pulseVerdictText');
+    if (badgeEl) { badgeEl.textContent = verdict.badge; badgeEl.className = 'pulse-verdict-badge ' + verdict.badgeClass; }
+    if (textEl)  textEl.textContent = verdict.text;
+
+    var refreshEl = document.getElementById('pulseRefreshTime');
+    if (refreshEl) refreshEl.textContent = 'Updated ' + new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  window.addEventListener('load', function() { setTimeout(updatePulse, 3000); });
+  setInterval(updatePulse, 5 * 60 * 1000);
+
+  var pulseObserver = new MutationObserver(function() { setTimeout(updatePulse, 500); });
+  document.addEventListener('DOMContentLoaded', function() {
+    var fgEl  = document.getElementById('fgScore');
+    var altEl = document.getElementById('altseasonScore');
+    var stEl  = document.getElementById('stableCombinedPct');
+    if (fgEl)  pulseObserver.observe(fgEl,  { childList: true, characterData: true, subtree: true });
+    if (altEl) pulseObserver.observe(altEl, { childList: true, characterData: true, subtree: true });
+    if (stEl)  pulseObserver.observe(stEl,  { childList: true, characterData: true, subtree: true });
+  });
 
 })();
 </script>
