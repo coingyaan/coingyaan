@@ -1161,22 +1161,25 @@
     }
 
     // BTC/ETH price from hidden DOM elements (populated by fetchPrices)
-    var btcEl = document.getElementById('btcPrice');
+    var btcEl    = document.getElementById('btcPrice');
     var btcChgEl = document.getElementById('btcChange');
-    var ethEl = document.getElementById('ethPrice');
+    var ethEl    = document.getElementById('ethPrice');
     var ethChgEl = document.getElementById('ethChange');
     if (btcEl && btcEl.textContent && btcEl.textContent !== 'N/A' && btcEl.textContent !== '$--') {
       barData.btcPrice = btcEl.textContent.trim();
       if (btcChgEl) {
-        var chgTxt = btcChgEl.textContent.trim();
-        barData.btcChange = parseFloat(chgTxt) || 0;
+        // btcChange text is like "▲ 0.54%" or "▼ 0.23%" - detect direction from class
+        var btcUp = btcChgEl.className.indexOf('price-up') !== -1;
+        var btcDown = btcChgEl.className.indexOf('price-down') !== -1;
+        barData.btcChange = btcUp ? 1 : btcDown ? -1 : 0;
       }
     }
     if (ethEl && ethEl.textContent && ethEl.textContent !== 'N/A' && ethEl.textContent !== '$--') {
       barData.ethPrice = ethEl.textContent.trim();
       if (ethChgEl) {
-        var echgTxt = ethChgEl.textContent.trim();
-        barData.ethChange = parseFloat(echgTxt) || 0;
+        var ethUp = ethChgEl.className.indexOf('price-up') !== -1;
+        var ethDown = ethChgEl.className.indexOf('price-down') !== -1;
+        barData.ethChange = ethUp ? 1 : ethDown ? -1 : 0;
       }
     }
 
