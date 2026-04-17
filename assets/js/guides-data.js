@@ -9,6 +9,14 @@
 // ============================================
 var GUIDES_DATA = [
   {
+    url:      "/guides/concrete-defi-yield-guide.html",
+    tag:      "DeFi",
+    readTime: "8 min read",
+    title:    "Concrete Review 2026: DeFi Yield Infrastructure, Social Points Campaign and Bags Airdrop Guide",
+    desc:     "Complete guide to Concrete. How to earn Bags in the Social Points Campaign, understand institutional DeFi yield vaults and why Concrete is backed by Polychain and YZi Labs.",
+    date:     "April 2026"
+  },
+  {
     url:      "/guides/crypto-sentiment-trading-guide.html",
     tag:      "Crypto Strategy",
     readTime: "7 min read",
