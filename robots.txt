@@ -1,14 +1,13 @@
 User-agent: *
 Allow: /
 
+# Block only useless system files
 Disallow: /wp-admin/
 Disallow: /wp-content/
 Disallow: /wp-includes/
 Disallow: /wp-login.php
 Disallow: /feed/
 Disallow: /?p=
-Disallow: /author/
-Disallow: /page/
 Disallow: /cgi-sys/
 
 Sitemap: https://coingyaan.com/sitemap.xml
