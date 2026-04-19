@@ -163,7 +163,7 @@
       margin-top: 2px;
     }
 
-    .step-body { flex: 1; }
+    .step-body { flex: 1; min-width: 0; overflow: hidden; }
 
     .step-label {
       font-size: 12px;
@@ -354,6 +354,9 @@
       border-radius: 10px;
       padding: 18px;
       display: none;
+      width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
     }
     .rescue-preview.show { display: block; }
 
@@ -372,10 +375,19 @@
       align-items: center;
       padding: 8px 0;
       font-size: 13px;
+      gap: 12px;
     }
     .preview-row:not(:last-child) { border-bottom: 1px solid #0f172a; }
-    .preview-row .pr-label { color: #475569; }
-    .preview-row .pr-val { font-weight: 700; color: #e2e8f0; font-family: monospace; font-size: 13px; }
+    .preview-row .pr-label { color: #475569; flex-shrink: 0; }
+    .preview-row .pr-val {
+      font-weight: 700;
+      color: #e2e8f0;
+      font-family: monospace;
+      font-size: 12px;
+      text-align: right;
+      word-break: break-all;
+      max-width: 60%;
+    }
     .preview-row .pr-val.green { color: #22c55e; }
     .preview-row .pr-val.amber { color: #f59e0b; }
 
@@ -856,7 +868,23 @@
 //  Update CONTRACT_ADDRESS after Sepolia deploy
 // ─────────────────────────────────────────
 
-var RESCUE_VAULT_ABI = [
+var EXPLORER_URLS = {
+  "11155111": "https://sepolia.etherscan.io",
+  "1":        "https://etherscan.io",
+  "8453":     "https://basescan.org",
+  "42161":    "https://arbiscan.io",
+  "56":       "https://bscscan.com",
+  "1672":     "https://www.pharosscan.xyz"
+};
+
+var EXPLORER_NAMES = {
+  "11155111": "Etherscan",
+  "1":        "Etherscan",
+  "8453":     "Basescan",
+  "42161":    "Arbiscan",
+  "56":       "BscScan",
+  "1672":     "PharosScan"
+};
   "function rescueToken(address token, address safeWallet) external",
   "function rescueMultipleTokens(address[] calldata tokens, address safeWallet) external",
   "function previewRescue(uint256 grossAmount) external view returns (uint256 netAmount, uint256 feeAmount)",
@@ -1149,33 +1177,50 @@ async function executeRescue() {
     return;
   }
 
-  showStatus("⏳ Waiting for wallet signature from your safe wallet...", "pending");
+  var explorer = EXPLORER_URLS[state.selectedChainId] || "https://sepolia.etherscan.io";
+  var explorerName = EXPLORER_NAMES[state.selectedChainId] || "Etherscan";
+
   document.getElementById('rescueBtn').disabled = true;
 
   try {
-    // Switch signer to safe wallet? In v1, same wallet signs.
-    // Safe wallet = sponsor. User signs from safe wallet via MetaMask.
     var contract = new ethers.Contract(contractAddress, RESCUE_VAULT_ABI, state.signer);
 
-    var tx;
-    if (state.selectedTokens.length === 1) {
-      tx = await contract.rescueToken(state.selectedTokens[0].address, state.safeWalletAddress);
-    } else {
-      var addrs = state.selectedTokens.map(function(t) { return t.address; });
-      tx = await contract.rescueMultipleTokens(addrs, state.safeWalletAddress);
+    // Step 1: Transfer tokens FROM compromised wallet TO RescueVault contract
+    showStatus("⏳ Step 1 of 2: Transferring tokens to RescueVault contract. Approve in your wallet...", "pending");
+
+    var token = state.selectedTokens[0];
+    var erc20 = new ethers.Contract(token.address, [
+      "function transfer(address to, uint256 amount) external returns (bool)",
+      "function balanceOf(address owner) external view returns (uint256)"
+    ], state.signer);
+
+    var balance = await erc20.balanceOf(state.connectedAddress);
+    if (balance.eq(0)) {
+      showStatus("❌ No tokens found in this wallet. Make sure you connected the correct compromised wallet.", "error");
+      document.getElementById('rescueBtn').disabled = false;
+      return;
     }
 
-    showStatus("⏳ Transaction submitted. Waiting for confirmation...<br><a class='tx-link' href='https://sepolia.etherscan.io/tx/" + tx.hash + "' target='_blank'>" + tx.hash.slice(0,20) + "...</a>", "pending");
+    var transferTx = await erc20.transfer(contractAddress, balance);
+    showStatus("⏳ Step 1 of 2: Transfer submitted, waiting for confirmation...<br><a class='tx-link' href='" + explorer + "/tx/" + transferTx.hash + "' target='_blank'>" + transferTx.hash.slice(0,20) + "...</a>", "pending");
+    await transferTx.wait();
+
+    // Step 2: Call rescueToken to sweep from contract to safe wallet (with fee split)
+    showStatus("⏳ Step 2 of 2: Rescuing tokens to your safe wallet. Approve in your wallet...", "pending");
+
+    var tx = await contract.rescueToken(token.address, state.safeWalletAddress);
+    showStatus("⏳ Step 2 of 2: Rescue submitted, waiting for confirmation...<br><a class='tx-link' href='" + explorer + "/tx/" + tx.hash + "' target='_blank'>" + tx.hash.slice(0,20) + "...</a>", "pending");
 
     var receipt = await tx.wait();
 
     showStatus(
-      "✅ Rescue successful! Your tokens have been sent to your safe wallet.<br><a class='tx-link' href='https://sepolia.etherscan.io/tx/" + receipt.transactionHash + "' target='_blank'>View on Etherscan →</a>",
+      "✅ Rescue successful! 90% of your tokens have been sent to your safe wallet. 10% recovery fee applied.<br><a class='tx-link' href='" + explorer + "/tx/" + receipt.transactionHash + "' target='_blank'>View on " + explorerName + " →</a>",
       "success"
     );
 
   } catch(e) {
-    showStatus("❌ Rescue failed: " + (e.reason || e.message || "Unknown error"), "error");
+    var msg = e.reason || e.data?.message || e.message || "Unknown error";
+    showStatus("❌ Rescue failed: " + msg, "error");
     document.getElementById('rescueBtn').disabled = false;
   }
 }
