@@ -610,7 +610,7 @@
   <!-- HERO -->
   <section class="rescue-hero">
     <h1>Crypto Wallet Rescue Tool</h1>
-    <p>Recover airdrop tokens stuck in a compromised or hacked wallet. Our smart contract sweeps your tokens to a safe wallet before drainer bots can act. Only 10% recovery fee, 2× lower than industry standard.</p>
+    <p>Recover airdrop tokens stuck in a compromised or hacked wallet. Our smart contract sweeps your tokens to a safe wallet before drainer bots can act. Only 10% recovery fee.</p>
   </section>
 
   <!-- WARNING BANNER -->
@@ -624,7 +624,6 @@
     <div class="fee-badge">
       <span class="badge-label">Recovery Fee</span>
       <span class="badge-value amber">10%</span>
-      <span class="badge-value strike">20% industry standard</span>
     </div>
     <div class="fee-badge">
       <span class="badge-label">You Keep</span>
@@ -940,30 +939,95 @@ var state = {
 };
 
 // ─────────────────────────────────────────
+//  NETWORK CONFIGS FOR AUTO SWITCH
+// ─────────────────────────────────────────
+var NETWORK_CONFIGS = {
+  "11155111": {
+    chainId: "0xaa36a7",
+    chainName: "Sepolia Testnet",
+    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+    rpcUrls: ["https://rpc.sepolia.org"],
+    blockExplorerUrls: ["https://sepolia.etherscan.io"]
+  },
+  "1": {
+    chainId: "0x1",
+    chainName: "Ethereum Mainnet",
+    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+    rpcUrls: ["https://eth.llamarpc.com"],
+    blockExplorerUrls: ["https://etherscan.io"]
+  },
+  "8453": {
+    chainId: "0x2105",
+    chainName: "Base",
+    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+    rpcUrls: ["https://mainnet.base.org"],
+    blockExplorerUrls: ["https://basescan.org"]
+  },
+  "42161": {
+    chainId: "0xa4b1",
+    chainName: "Arbitrum One",
+    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+    rpcUrls: ["https://arb1.arbitrum.io/rpc"],
+    blockExplorerUrls: ["https://arbiscan.io"]
+  },
+  "56": {
+    chainId: "0x38",
+    chainName: "BNB Smart Chain",
+    nativeCurrency: { name: "BNB", symbol: "BNB", decimals: 18 },
+    rpcUrls: ["https://bsc-dataseed.binance.org"],
+    blockExplorerUrls: ["https://bscscan.com"]
+  },
+  "1672": {
+    chainId: "0x688",
+    chainName: "Pharos Mainnet",
+    nativeCurrency: { name: "PROS", symbol: "PROS", decimals: 18 },
+    rpcUrls: ["https://mainnet.pharosnetwork.xyz"],
+    blockExplorerUrls: ["https://www.pharosscan.xyz"]
+  }
+};
+
+// ─────────────────────────────────────────
 //  NETWORK SELECT
 // ─────────────────────────────────────────
-// ─────────────────────────────────────────
-//  NETWORK SELECT
-// ─────────────────────────────────────────
-function selectNetworkDropdown(select) {
+async function selectNetworkDropdown(select) {
   state.selectedChainId = select.value;
   var name = select.options[select.selectedIndex].getAttribute('data-name');
-  document.getElementById('networkHelper').textContent =
-    state.selectedChainId === "11155111"
-      ? "Currently testing on Sepolia. Switch your wallet to Sepolia Testnet before connecting."
-      : "Make sure your wallet is connected to " + name + " network.";
-  resetTokenList();
-}
+  var helper = document.getElementById('networkHelper');
 
-function selectNetwork(btn) {
-  document.querySelectorAll('.net-select-btn').forEach(function(b) { b.classList.remove('active'); });
-  btn.classList.add('active');
-  state.selectedChainId = btn.getAttribute('data-chain');
-  var name = btn.getAttribute('data-name');
-  document.getElementById('networkHelper').textContent =
-    state.selectedChainId === "11155111"
-      ? "Currently testing on Sepolia. Switch your wallet to Sepolia Testnet before connecting."
+  // If wallet is connected, auto switch network
+  if (window.ethereum) {
+    var config = NETWORK_CONFIGS[state.selectedChainId];
+    helper.textContent = "Switching network in your wallet...";
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: config.chainId }]
+      });
+      helper.textContent = "✅ Switched to " + name + ". You can now connect your wallet.";
+    } catch(switchErr) {
+      // Network not added in wallet yet — add it automatically
+      if (switchErr.code === 4902) {
+        try {
+          await window.ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [config]
+          });
+          helper.textContent = "✅ " + name + " added and switched. You can now connect your wallet.";
+        } catch(addErr) {
+          helper.textContent = "Could not add network automatically. Please add " + name + " manually in your wallet.";
+        }
+      } else if (switchErr.code === 4001) {
+        helper.textContent = "Network switch cancelled. Please switch to " + name + " manually in your wallet.";
+      } else {
+        helper.textContent = "Make sure your wallet is on " + name + " before connecting.";
+      }
+    }
+  } else {
+    helper.textContent = state.selectedChainId === "11155111"
+      ? "Switch your wallet to Sepolia Testnet before connecting."
       : "Make sure your wallet is connected to " + name + " network.";
+  }
+
   resetTokenList();
 }
 
@@ -992,16 +1056,37 @@ async function connectWallet() {
     await provider.send("eth_requestAccounts", []);
     var network = await provider.getNetwork();
 
-    // Check chain matches selection
+    // Check chain matches selection — auto switch if wrong
     if (String(network.chainId) !== state.selectedChainId) {
-      title.textContent = "Wrong Network";
-      sub.textContent = "Switch wallet to selected network and try again";
-      sub.className = "wallet-connect-sub";
-      btn.style.opacity = "1";
-      btn.style.cursor = "pointer";
-      btn.classList.remove('connecting');
-      showStatus("❌ Wrong network detected. Please switch your wallet to the selected network and try again.", "error");
-      return;
+      var config = NETWORK_CONFIGS[state.selectedChainId];
+      title.textContent = "Switching Network...";
+      sub.textContent = "Approve network switch in your wallet";
+      try {
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: config.chainId }]
+        });
+        // Re-init provider after switch
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        network = await provider.getNetwork();
+      } catch(switchErr) {
+        if (switchErr.code === 4902) {
+          await window.ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [config]
+          });
+          provider = new ethers.providers.Web3Provider(window.ethereum);
+        } else {
+          title.textContent = "Wrong Network";
+          sub.textContent = "Switch wallet to selected network and try again";
+          sub.className = "wallet-connect-sub";
+          btn.style.opacity = "1";
+          btn.style.cursor = "pointer";
+          btn.classList.remove('connecting');
+          showStatus("❌ Please switch your wallet to the selected network and try again.", "error");
+          return;
+        }
+      }
     }
 
     state.provider = provider;
