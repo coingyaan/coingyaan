@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXY9ZZ543X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-DXY9ZZ543X");
+  </script>
+
+  <!-- AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-9704432095241296" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9704432095241296" crossorigin="anonymous"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Crypto Wallet Recovery Tool | Rescue Airdrop Tokens from Hacked Wallet | CoinGyaan</title>
+  <meta name="description" content="Recover airdrop tokens stuck in a compromised or hacked crypto wallet. CoinGyaan crypto wallet recovery tool uses smart contract technology to rescue your tokens safely. Only 10% fee." />
+  <meta name="keywords" content="crypto wallet recovery, recover airdrop tokens, hacked wallet recovery, rescue tokens from compromised wallet, wallet drainer recovery, crypto rescue tool, recover crypto from hacked wallet, airdrop token rescue, compromised wallet rescue, CoinGyaan" />
+  <meta name="author" content="CoinGyaan" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://coingyaan.com/crypto-wallet-recovery.html" />
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon/coingyaan-favicon-32x32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon/coingyaan-apple-touch-icon-180x180.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Crypto Wallet Recovery Tool | Rescue Airdrop Tokens from Hacked Wallet | CoinGyaan" />
+  <meta property="og:description" content="Recover airdrop tokens stuck in a compromised or hacked crypto wallet. CoinGyaan crypto wallet recovery tool uses smart contract technology to rescue your tokens safely. Only 10% fee." />
+  <meta property="og:url" content="https://coingyaan.com/crypto-wallet-recovery.html" />
+  <meta property="og:image" content="https://coingyaan.com/assets/images/social/universal-share.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@coin_gyaan" />
+  <meta name="twitter:title" content="Crypto Wallet Recovery Tool | Rescue Airdrop Tokens from Hacked Wallet | CoinGyaan" />
+  <meta name="twitter:description" content="Recover airdrop tokens stuck in a compromised or hacked crypto wallet. CoinGyaan crypto wallet recovery tool uses smart contract technology to rescue your tokens safely. Only 10% fee." />
+  <meta name="twitter:image" content="https://coingyaan.com/assets/images/social/universal-share.png" />
+
+  <!-- WalletConnect / Web3 -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
+  <!-- Site CSS -->
+  <link rel="stylesheet" href="/assets/css/main.css" />
+  <link rel="stylesheet" href="/assets/css/components.css" />
+  <link rel="stylesheet" href="/assets/css/responsive.css" />
+
+  <style>
+    /* ── PAGE LAYOUT ── */
+    .rescue-page { padding: 28px 0 60px; }
+
+    /* ── HERO ── */
+    .rescue-hero { margin-bottom: 28px; }
+    .rescue-hero h1 {
+      font-size: 26px;
+      font-weight: 800;
+      color: #e2e8f0;
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+    .rescue-hero p {
+      font-size: 15px;
+      color: #94a3b8;
+      line-height: 1.8;
+      max-width: 680px;
+    }
+    @media (max-width: 600px) { .rescue-hero h1 { font-size: 20px; } }
+
+    /* ── ALERT BANNER ── */
+    .rescue-alert {
+      background: rgba(239,68,68,0.07);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-left: 3px solid #ef4444;
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 13px;
+      color: #fca5a5;
+      line-height: 1.6;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .rescue-alert .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── FEE BADGE ── */
+    .fee-badge-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .fee-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #0d1526;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 13px;
+    }
+    .fee-badge .badge-label { color: #475569; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    .fee-badge .badge-value { color: #e2e8f0; font-weight: 700; }
+    .fee-badge .badge-value.amber { color: #f59e0b; }
+    .fee-badge .badge-value.green { color: #22c55e; }
+    .fee-badge .badge-value.strike { color: #ef4444; text-decoration: line-through; font-size: 11px; margin-left: 4px; }
+
+    /* ── MAIN TOOL CARD ── */
+    .rescue-tool-card {
+      background: #0d1526;
+      border: 1px solid #1e293b;
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .rescue-tool-card h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 6px;
+    }
+
+    .rescue-tool-card .subtext {
+      font-size: 13px;
+      color: #475569;
+      margin-bottom: 24px;
+    }
+
+    /* ── STEPS ── */
+    .rescue-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .rescue-step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .step-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.3);
+      color: #f59e0b;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-body { flex: 1; min-width: 0; overflow: hidden; }
+
+    .step-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    /* ── WALLET CONNECT BUTTON ── */
+    .wallet-connect-btn {
+      width: 100%;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #e2e8f0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .wallet-connect-btn:hover { border-color: #f59e0b; background: #0f172a; }
+    .wallet-connect-btn.connected {
+      border-color: rgba(34,197,94,0.4);
+      background: rgba(34,197,94,0.05);
+    }
+
+    .wallet-connect-icons { display: flex; gap: 8px; align-items: center; }
+    .wallet-icon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+    }
+    .wallet-connect-label { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+    .wallet-connect-title { font-size: 14px; font-weight: 600; color: #e2e8f0; }
+    .wallet-connect-sub { font-size: 11px; color: #475569; }
+    .wallet-connect-sub.connected-sub { color: #22c55e; }
+
+    .wallet-status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #334155;
+    }
+    .wallet-status-dot.active {
+      background: #22c55e;
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.15);
+    }
+
+    /* ── INPUT ── */
+    .rescue-input-wrap {
+      position: relative;
+    }
+    .rescue-input {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 14px 16px;
+      color: #e2e8f0;
+      font-size: 13px;
+      font-family: 'Courier New', monospace;
+      outline: none;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+    .rescue-input:focus { border-color: #f59e0b; }
+    .rescue-input::placeholder { color: #334155; }
+    .rescue-input.valid { border-color: rgba(34,197,94,0.4); }
+    .rescue-input.invalid { border-color: rgba(239,68,68,0.4); }
+
+    .input-helper {
+      font-size: 11px;
+      color: #334155;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    /* ── TOKEN DETECTION ── */
+    .token-detection-wrap {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .token-detection-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .token-detect-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .token-detect-btn {
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.2);
+      color: #f59e0b;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .token-detect-btn:hover { background: rgba(245,158,11,0.2); }
+
+    .token-list { padding: 8px; }
+    .token-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 8px;
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+    .token-item:hover { background: #1e293b; }
+    .token-item.selected { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.15); }
+
+    .token-item-left { display: flex; align-items: center; gap: 10px; }
+    .token-symbol-badge {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: #94a3b8;
+    }
+    .token-name { font-size: 13px; font-weight: 600; color: #e2e8f0; }
+    .token-addr { font-size: 10px; color: #334155; font-family: monospace; }
+    .token-balance { font-size: 13px; font-weight: 700; color: #94a3b8; }
+    .token-check { color: #f59e0b; font-size: 14px; opacity: 0; transition: opacity 0.15s; }
+    .token-item.selected .token-check { opacity: 1; }
+
+    .token-empty {
+      text-align: center;
+      padding: 24px;
+      font-size: 13px;
+      color: #334155;
+    }
+
+    .token-loading {
+      text-align: center;
+      padding: 24px;
+      font-size: 13px;
+      color: #475569;
+    }
+
+    /* Manual token input toggle */
+    .manual-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .manual-toggle input[type=checkbox] { accent-color: #f59e0b; cursor: pointer; }
+    .manual-toggle label { font-size: 12px; color: #475569; cursor: pointer; }
+
+    .manual-input-wrap { margin-top: 10px; display: none; }
+    .manual-input-wrap.show { display: block; }
+
+    /* ── PREVIEW CARD ── */
+    .rescue-preview {
+      background: #060d18;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 18px;
+      display: none;
+      width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .rescue-preview.show { display: block; }
+
+    .preview-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 14px;
+    }
+
+    .preview-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 13px;
+      gap: 12px;
+    }
+    .preview-row:not(:last-child) { border-bottom: 1px solid #0f172a; }
+    .preview-row .pr-label { color: #475569; flex-shrink: 0; }
+    .preview-row .pr-val {
+      font-weight: 700;
+      color: #e2e8f0;
+      font-family: monospace;
+      font-size: 12px;
+      text-align: right;
+      word-break: break-all;
+      max-width: 60%;
+    }
+    .preview-row .pr-val.green { color: #22c55e; }
+    .preview-row .pr-val.amber { color: #f59e0b; }
+
+    /* ── RESCUE BUTTON ── */
+    .rescue-btn {
+      width: 100%;
+      background: #f59e0b;
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: 0.02em;
+    }
+    .rescue-btn:hover:not(:disabled) { background: #fbbf24; transform: translateY(-1px); }
+    .rescue-btn:active:not(:disabled) { transform: translateY(0); }
+    .rescue-btn:disabled {
+      background: #1e293b;
+      color: #334155;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── STATUS BOX ── */
+    .rescue-status {
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.6;
+      display: none;
+    }
+    .rescue-status.show { display: block; }
+    .rescue-status.pending {
+      background: rgba(245,158,11,0.06);
+      border: 1px solid rgba(245,158,11,0.2);
+      color: #fcd34d;
+    }
+    .rescue-status.success {
+      background: rgba(34,197,94,0.06);
+      border: 1px solid rgba(34,197,94,0.2);
+      color: #86efac;
+    }
+    .rescue-status.error {
+      background: rgba(239,68,68,0.06);
+      border: 1px solid rgba(239,68,68,0.2);
+      color: #fca5a5;
+    }
+
+    .tx-link { color: #f59e0b; text-decoration: none; font-family: monospace; font-size: 12px; }
+    .tx-link:hover { text-decoration: underline; }
+
+    /* ── DIVIDER ── */
+    .rescue-divider {
+      height: 1px;
+      background: #1e293b;
+      margin: 28px 0;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-section { margin-bottom: 28px; }
+    .how-section h2 { font-size: 16px; font-weight: 700; color: #e2e8f0; margin-bottom: 16px; }
+
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 600px) { .how-steps { grid-template-columns: 1fr; } }
+
+    .how-step-card {
+      background: #0d1526;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .how-step-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: #f59e0b;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .how-step-title { font-size: 13px; font-weight: 700; color: #e2e8f0; margin-bottom: 6px; }
+    .how-step-desc { font-size: 12px; color: #64748b; line-height: 1.6; }
+
+    /* ── NETWORK PILLS ── */
+    .network-section { margin-bottom: 28px; }
+    .network-section h3 {
+      font-size: 12px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+    .network-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .net-pill {
+      background: #0d1526;
+      border: 1px solid #1e293b;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .net-pill .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+    }
+    .net-pill.pharos {
+      border-color: rgba(245,158,11,0.3);
+      background: rgba(245,158,11,0.04);
+      color: #f59e0b;
+    }
+    .net-pill.pharos .dot { background: #f59e0b; }
+    .net-pill.testnet {
+      border-color: rgba(148,163,184,0.2);
+      color: #475569;
+    }
+    .net-pill.testnet .dot { background: #475569; }
+
+    /* ── DISCLAIMER ── */
+    .rescue-disclaimer {
+      background: #0d1526;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 16px 18px;
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.7;
+    }
+    .rescue-disclaimer strong { color: #64748b; }
+
+    /* ── SECTION TITLE matching site ── */
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── NETWORK SELECTOR ── */
+    .network-selector {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .net-select-btn {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .net-select-btn:hover { border-color: #334155; color: #94a3b8; }
+    .net-select-btn.active {
+      background: rgba(245,158,11,0.1);
+      border-color: rgba(245,158,11,0.3);
+      color: #f59e0b;
+      font-weight: 700;
+    }
+
+    @media (max-width: 480px) {
+      .rescue-tool-card { padding: 20px 16px; }
+      .fee-badge-row { gap: 8px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- HEADER — exact match to coingyaan.com -->
+<header>
+  <div class="container">
+    <div class="header-bar">
+      <a href="/" class="brand">
+        <img src="/assets/images/logo/coingyaan-logo-transparent.png" alt="CoinGyaan" loading="eager" />
+        <div class="brand-text"><strong>CoinGyaan</strong></div>
+      </a>
+      <nav class="header-nav">
+        <a href="/bitcoin.html" style="color:#f59e0b;">Bitcoin</a>
+        <a href="/bitcoin-sentiment-today.html">Sentiment</a>
+        <a href="/fear-greed-index-today.html">Fear &amp; Greed</a>
+        <a href="/guides.html">Guides</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+      <img src="/assets/images/logo/owl-mascot.png" alt="CoinGyaan Mascot" class="owl-mascot" loading="eager" />
+    </div>
+  </div>
+</header>
+
+<main class="container">
+<div class="rescue-page">
+
+  <!-- HERO -->
+  <section class="rescue-hero">
+    <h1>Crypto Wallet Rescue Tool</h1>
+    <p>Recover airdrop tokens stuck in a compromised or hacked wallet. Our smart contract sweeps your tokens to a safe wallet before drainer bots can act. Only 10% recovery fee, 2× lower than industry standard.</p>
+  </section>
+
+  <!-- WARNING BANNER -->
+  <div class="rescue-alert">
+    <span class="alert-icon">⚠️</span>
+    <span>This tool is intended <strong>only for recovering your own assets from your own compromised wallet.</strong> Never use it on a wallet you do not own. Your private key is stored locally in your browser only and is never sent to any server.</span>
+  </div>
+
+  <!-- FEE BADGES -->
+  <div class="fee-badge-row">
+    <div class="fee-badge">
+      <span class="badge-label">Recovery Fee</span>
+      <span class="badge-value amber">10%</span>
+      <span class="badge-value strike">20% industry standard</span>
+    </div>
+    <div class="fee-badge">
+      <span class="badge-label">You Keep</span>
+      <span class="badge-value green">90% of rescued tokens</span>
+    </div>
+    <div class="fee-badge">
+      <span class="badge-label">Gas Paid By</span>
+      <span class="badge-value">Your safe wallet</span>
+    </div>
+  </div>
+
+  <!-- MAIN TOOL -->
+  <div class="rescue-tool-card">
+    <h2>🛡️ RescueVault</h2>
+    <p class="subtext">Connect your compromised wallet, enter a safe wallet address and rescue your tokens in one transaction.</p>
+
+    <div class="rescue-steps">
+
+      <!-- STEP 1: NETWORK -->
+      <div class="rescue-step">
+        <div class="step-number">1</div>
+        <div class="step-body">
+          <div class="step-label">Select Network</div>
+          <select id="networkDropdown" onchange="selectNetworkDropdown(this)" style="
+            width:100%;
+            background:#0f172a;
+            border:1px solid #1e293b;
+            border-radius:10px;
+            padding:13px 16px;
+            color:#e2e8f0;
+            font-size:14px;
+            font-weight:600;
+            outline:none;
+            cursor:pointer;
+            appearance:none;
+            -webkit-appearance:none;
+            background-image:url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'8\' viewBox=\'0 0 12 8\'><path fill=\'%2364748b\' d=\'M1 1l5 5 5-5\'/></svg>');
+            background-repeat:no-repeat;
+            background-position:right 16px center;
+          ">
+            <option value="11155111" data-name="Sepolia Testnet">🧪 Sepolia Testnet (Testing)</option>
+            <option value="1" data-name="Ethereum">🔷 Ethereum Mainnet</option>
+            <option value="8453" data-name="Base">🔵 Base</option>
+            <option value="42161" data-name="Arbitrum">🔵 Arbitrum</option>
+            <option value="56" data-name="BSC">🟡 BSC</option>
+            <option value="1672" data-name="Pharos">⚡ Pharos (Airdrop Soon)</option>
+          </select>
+          <div class="input-helper" id="networkHelper">Currently testing on Sepolia. Switch your wallet to Sepolia Testnet before connecting.</div>
+        </div>
+      </div>
+
+      <!-- STEP 2: CONNECT COMPROMISED WALLET -->
+      <div class="rescue-step">
+        <div class="step-number">2</div>
+        <div class="step-body">
+          <div class="step-label">Connect Compromised Wallet</div>
+          <button class="wallet-connect-btn" id="connectBtn" onclick="connectWallet()">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="wallet-connect-icons">
+                <div class="wallet-icon">🦊</div>
+                <div class="wallet-icon">🐰</div>
+                <div class="wallet-icon" style="font-size:12px;font-weight:800;color:#64748b;">OKX</div>
+              </div>
+              <div class="wallet-connect-label">
+                <span class="wallet-connect-title" id="connectTitle">Connect Wallet</span>
+                <span class="wallet-connect-sub" id="connectSub">MetaMask, Rabby, OKX and more</span>
+              </div>
+            </div>
+            <div class="wallet-status-dot" id="walletDot"></div>
+          </button>
+          <div class="input-helper">⚠️ This is your <strong style="color:#fca5a5;">compromised wallet</strong>, the one with tokens stuck in it or the wallet you used to connect to the airdrop claim site.</div>
+        </div>
+      </div>
+
+      <!-- STEP 3: SAFE WALLET -->
+      <div class="rescue-step">
+        <div class="step-number">3</div>
+        <div class="step-body">
+          <div class="step-label">Your Safe Wallet Address</div>
+          <div class="rescue-input-wrap">
+            <input
+              type="text"
+              class="rescue-input"
+              id="safeWalletInput"
+              placeholder="0x... your new clean wallet address"
+              oninput="validateSafeWallet(this.value)"
+            />
+          </div>
+          <div class="input-helper">This wallet <strong>pays the gas</strong> and <strong>receives your rescued tokens</strong>. Use a brand new wallet with no prior connection to the compromised wallet.</div>
+        </div>
+      </div>
+
+      <!-- STEP 4: SELECT TOKENS -->
+      <div class="rescue-step">
+        <div class="step-number">4</div>
+        <div class="step-body">
+          <div class="step-label">Select Tokens to Rescue</div>
+
+          <div class="token-detection-wrap">
+            <div class="token-detection-header">
+              <span class="token-detect-label">Detected Tokens</span>
+              <button class="token-detect-btn" id="detectBtn" onclick="detectTokens()">🔍 Auto Detect</button>
+            </div>
+            <div class="token-list" id="tokenList">
+              <div class="token-empty">Connect your compromised wallet first, then click Auto Detect.</div>
+            </div>
+          </div>
+
+          <!-- Manual token input -->
+          <div class="manual-toggle">
+            <input type="checkbox" id="manualToggle" onchange="toggleManual(this.checked)" />
+            <label for="manualToggle">Token not detected? Enter contract address manually</label>
+          </div>
+          <div class="manual-input-wrap" id="manualInputWrap">
+            <input
+              type="text"
+              class="rescue-input"
+              id="manualTokenInput"
+              placeholder="0x... token contract address"
+              oninput="addManualToken(this.value)"
+            />
+            <div class="input-helper">Paste the token contract address from Etherscan or the airdrop project's official site.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5: PREVIEW + RESCUE -->
+      <div class="rescue-step">
+        <div class="step-number">5</div>
+        <div class="step-body">
+          <div class="step-label">Preview and Rescue</div>
+
+          <!-- Preview -->
+          <div class="rescue-preview" id="rescuePreview">
+            <div class="preview-label">Rescue Summary</div>
+            <div class="preview-row">
+              <span class="pr-label">Token</span>
+              <span class="pr-val" id="previewToken"></span>
+            </div>
+            <div class="preview-row">
+              <span class="pr-label">Total Balance</span>
+              <span class="pr-val" id="previewGross"></span>
+            </div>
+            <div class="preview-row">
+              <span class="pr-label">Recovery Fee (10%)</span>
+              <span class="pr-val amber" id="previewFee"></span>
+            </div>
+            <div class="preview-row">
+              <span class="pr-label">You Receive</span>
+              <span class="pr-val green" id="previewNet"></span>
+            </div>
+            <div class="preview-row">
+              <span class="pr-label">Sending To</span>
+              <span class="pr-val" id="previewSafe" style="font-size:11px;"></span>
+            </div>
+            <div class="preview-row">
+              <span class="pr-label">Gas Paid By</span>
+              <span class="pr-val" id="previewSponsor" style="font-size:11px;"></span>
+            </div>
+          </div>
+
+          <button class="rescue-btn" id="rescueBtn" disabled onclick="executeRescue()">
+            🛡️ Rescue Tokens Now
+          </button>
+
+          <!-- Status -->
+          <div class="rescue-status" id="rescueStatus"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="rescue-divider"></div>
+  <section class="how-section">
+    <div class="section-header">
+      <span class="section-title">⚙️ How RescueVault Works</span>
+    </div>
+    <div class="how-steps" style="margin-top:16px;">
+      <div class="how-step-card">
+        <div class="how-step-num">STEP 01</div>
+        <div class="how-step-title">Connect Compromised Wallet</div>
+        <div class="how-step-desc">Connect the hacked wallet that has tokens stuck in it. This wallet needs zero ETH. Your safe wallet covers gas.</div>
+      </div>
+      <div class="how-step-card">
+        <div class="how-step-num">STEP 02</div>
+        <div class="how-step-title">Set Your Safe Wallet</div>
+        <div class="how-step-desc">Create a fresh wallet with no prior connection to the compromised one. Add a small amount of ETH for gas. This wallet receives your rescued tokens.</div>
+      </div>
+      <div class="how-step-card">
+        <div class="how-step-num">STEP 03</div>
+        <div class="how-step-title">Select Tokens</div>
+        <div class="how-step-desc">Auto detect all tokens in the compromised wallet or manually enter a token contract address if auto detection misses it.</div>
+      </div>
+      <div class="how-step-card">
+        <div class="how-step-num">STEP 04</div>
+        <div class="how-step-title">Rescue in One Transaction</div>
+        <div class="how-step-desc">The RescueVault smart contract sweeps tokens instantly. 90% goes to your safe wallet. 10% is the recovery fee. No manual splitting needed.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUPPORTED NETWORKS -->
+  <section class="network-section">
+    <h3>🌐 Supported Networks</h3>
+    <div class="network-pills">
+      <div class="net-pill"><span class="dot"></span>Ethereum</div>
+      <div class="net-pill"><span class="dot"></span>Base</div>
+      <div class="net-pill"><span class="dot"></span>Arbitrum</div>
+      <div class="net-pill"><span class="dot"></span>BSC</div>
+      <div class="net-pill pharos"><span class="dot"></span>Pharos <span style="font-size:9px;margin-left:2px;font-family:monospace;">AIRDROP SOON</span></div>
+      <div class="net-pill testnet"><span class="dot"></span>Sepolia Testnet</div>
+    </div>
+  </section>
+
+  <!-- DISCLAIMER -->
+  <div class="rescue-disclaimer">
+    <strong>Disclaimer:</strong> CoinGyaan RescueVault is a tool for recovering your own assets from wallets you own and control. It is not intended for any other use. Always verify contract addresses independently on Etherscan before signing any transaction. This tool does not guarantee recovery in all scenarios. Crypto transactions are irreversible. Use at your own risk. This is not financial advice.
+    <br /><br />
+    <strong>Privacy:</strong> Your private key or wallet credentials are never transmitted to CoinGyaan servers. All signing happens locally in your browser via your connected wallet extension.
+  </div>
+
+</div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-promo">
+      <p>Built for crypto curious minds. Free crypto sentiment checker, real data and no noise.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/disclaimer.html">Disclaimer</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/advertise.html">Advertise</a>
+    </div>
+    <p class="footer-note">© <span id="year"></span> CoinGyaan.com</p>
+  </div>
+</footer>
+
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+
+<script>
+// ─────────────────────────────────────────
+//  RESCUE VAULT CONFIG
+//  Update CONTRACT_ADDRESS after Sepolia deploy
+// ─────────────────────────────────────────
+
+var EXPLORER_URLS = {
+  "11155111": "https://sepolia.etherscan.io",
+  "1":        "https://etherscan.io",
+  "8453":     "https://basescan.org",
+  "42161":    "https://arbiscan.io",
+  "56":       "https://bscscan.com",
+  "1672":     "https://www.pharosscan.xyz"
+};
+
+var EXPLORER_NAMES = {
+  "11155111": "Etherscan",
+  "1":        "Etherscan",
+  "8453":     "Basescan",
+  "42161":    "Arbiscan",
+  "56":       "BscScan",
+  "1672":     "PharosScan"
+};
+  "function rescueToken(address token, address safeWallet) external",
+  "function rescueMultipleTokens(address[] calldata tokens, address safeWallet) external",
+  "function previewRescue(uint256 grossAmount) external view returns (uint256 netAmount, uint256 feeAmount)",
+  "function feeBps() external view returns (uint256)",
+  "function feeRecipient() external view returns (address)"
+];
+
+var ERC20_ABI = [
+  "function balanceOf(address owner) external view returns (uint256)",
+  "function decimals() external view returns (uint8)",
+  "function symbol() external view returns (string)",
+  "function name() external view returns (string)",
+  "function transfer(address to, uint256 amount) external returns (bool)"
+];
+
+// IMPORTANT: Replace with your deployed contract address after Sepolia deploy
+var CONTRACT_ADDRESSES = {
+  "11155111": "0x0964BEa0B8fd8dC117a5e4fE55966c05b08b3957",  // Sepolia testnet
+  "1":        "0xYOUR_MAINNET_CONTRACT_ADDRESS",               // Ethereum mainnet
+  "8453":     "0xYOUR_BASE_CONTRACT_ADDRESS",                  // Base
+  "42161":    "0xYOUR_ARB_CONTRACT_ADDRESS",                   // Arbitrum
+  "56":       "0xYOUR_BSC_CONTRACT_ADDRESS",                   // BSC
+  "1672":     "0xYOUR_PHAROS_CONTRACT_ADDRESS"                 // Pharos
+};
+
+// Known common tokens per network for auto-detection hints
+var KNOWN_TOKENS = {
+  "11155111": [
+    { address: "0xD6CDe3b5f9Bf445a50b8A41c3cf4b3763Cba4b90", symbol: "CGT", name: "CoinGyaan Test" }
+  ]
+};
+
+// ─────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────
+var state = {
+  provider:         null,
+  signer:           null,
+  connectedAddress: null,
+  selectedChainId:  "11155111",
+  selectedTokens:   [],
+  safeWalletAddress: null
+};
+
+// ─────────────────────────────────────────
+//  NETWORK SELECT
+// ─────────────────────────────────────────
+// ─────────────────────────────────────────
+//  NETWORK SELECT
+// ─────────────────────────────────────────
+function selectNetworkDropdown(select) {
+  state.selectedChainId = select.value;
+  var name = select.options[select.selectedIndex].getAttribute('data-name');
+  document.getElementById('networkHelper').textContent =
+    state.selectedChainId === "11155111"
+      ? "Currently testing on Sepolia. Switch your wallet to Sepolia Testnet before connecting."
+      : "Make sure your wallet is connected to " + name + " network.";
+  resetTokenList();
+}
+
+function selectNetwork(btn) {
+  document.querySelectorAll('.net-select-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  state.selectedChainId = btn.getAttribute('data-chain');
+  var name = btn.getAttribute('data-name');
+  document.getElementById('networkHelper').textContent =
+    state.selectedChainId === "11155111"
+      ? "Currently testing on Sepolia. Switch your wallet to Sepolia Testnet before connecting."
+      : "Make sure your wallet is connected to " + name + " network.";
+  resetTokenList();
+}
+
+// ─────────────────────────────────────────
+//  WALLET CONNECT
+// ─────────────────────────────────────────
+async function connectWallet() {
+  if (!window.ethereum) {
+    showStatus("No wallet detected. Please install MetaMask, Rabby or OKX wallet.", "error");
+    return;
+  }
+  try {
+    var provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    var network = await provider.getNetwork();
+
+    // Check chain matches selection
+    if (String(network.chainId) !== state.selectedChainId) {
+      showStatus("Wrong network. Please switch your wallet to the selected network and try again.", "error");
+      return;
+    }
+
+    state.provider = provider;
+    state.signer = provider.getSigner();
+    state.connectedAddress = await state.signer.getAddress();
+
+    // Update UI
+    var short = state.connectedAddress.slice(0,6) + "..." + state.connectedAddress.slice(-4);
+    document.getElementById('connectTitle').textContent = short;
+    document.getElementById('connectSub').textContent = "Connected, compromised wallet";
+    document.getElementById('connectSub').className = "wallet-connect-sub connected-sub";
+    document.getElementById('walletDot').classList.add('active');
+    document.getElementById('connectBtn').classList.add('connected');
+
+    showStatus("Wallet connected. Now auto detect your tokens or enter a contract address manually.", "pending");
+  } catch(e) {
+    showStatus("Connection failed: " + (e.message || e), "error");
+  }
+}
+
+// ─────────────────────────────────────────
+//  SAFE WALLET VALIDATION
+// ─────────────────────────────────────────
+function validateSafeWallet(val) {
+  var input = document.getElementById('safeWalletInput');
+  if (ethers.utils.isAddress(val)) {
+    input.classList.remove('invalid');
+    input.classList.add('valid');
+    state.safeWalletAddress = val;
+    updatePreview();
+  } else {
+    input.classList.remove('valid');
+    if (val.length > 3) input.classList.add('invalid');
+    state.safeWalletAddress = null;
+    document.getElementById('rescueBtn').disabled = true;
+  }
+}
+
+// ─────────────────────────────────────────
+//  TOKEN DETECTION
+// ─────────────────────────────────────────
+async function detectTokens() {
+  if (!state.connectedAddress) {
+    showStatus("Connect your compromised wallet first.", "error");
+    return;
+  }
+
+  var tokenList = document.getElementById('tokenList');
+  tokenList.innerHTML = '<div class="token-loading">🔍 Scanning for tokens...</div>';
+
+  var found = [];
+
+  // Check known tokens for this network
+  var knownList = KNOWN_TOKENS[state.selectedChainId] || [];
+
+  for (var i = 0; i < knownList.length; i++) {
+    try {
+      var tokenContract = new ethers.Contract(knownList[i].address, ERC20_ABI, state.provider);
+      var balance = await tokenContract.balanceOf(state.connectedAddress);
+      var decimals = await tokenContract.decimals();
+      var symbol = knownList[i].symbol || await tokenContract.symbol();
+      var name = knownList[i].name || await tokenContract.name();
+
+      if (balance.gt(0)) {
+        found.push({
+          address: knownList[i].address,
+          symbol: symbol,
+          name: name,
+          balance: balance,
+          decimals: decimals,
+          formatted: ethers.utils.formatUnits(balance, decimals)
+        });
+      }
+    } catch(e) { /* skip failed reads */ }
+  }
+
+  renderTokenList(found);
+}
+
+function renderTokenList(tokens) {
+  var tokenList = document.getElementById('tokenList');
+
+  if (tokens.length === 0) {
+    tokenList.innerHTML = '<div class="token-empty">No tokens detected automatically. Use the manual input below to enter a token contract address.</div>';
+    return;
+  }
+
+  var html = '';
+  tokens.forEach(function(t, idx) {
+    html += '<div class="token-item" id="token-'+idx+'" onclick="selectToken('+idx+')" data-idx="'+idx+'">';
+    html += '<div class="token-item-left">';
+    html += '<div class="token-symbol-badge">' + t.symbol.slice(0,3) + '</div>';
+    html += '<div><div class="token-name">' + t.name + '</div><div class="token-addr">' + t.address.slice(0,10) + '...' + t.address.slice(-6) + '</div></div>';
+    html += '</div>';
+    html += '<div style="display:flex;align-items:center;gap:10px;">';
+    html += '<span class="token-balance">' + parseFloat(t.formatted).toLocaleString() + ' ' + t.symbol + '</span>';
+    html += '<span class="token-check">✓</span>';
+    html += '</div>';
+    html += '</div>';
+  });
+
+  tokenList.innerHTML = html;
+  tokenList._tokens = tokens;
+}
+
+function selectToken(idx) {
+  var el = document.getElementById('token-'+idx);
+  var tokens = document.getElementById('tokenList')._tokens || [];
+  var token = tokens[idx];
+  if (!token) return;
+
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    state.selectedTokens = state.selectedTokens.filter(function(t) { return t.address !== token.address; });
+  } else {
+    el.classList.add('selected');
+    state.selectedTokens.push(token);
+  }
+  updatePreview();
+}
+
+// ─────────────────────────────────────────
+//  MANUAL TOKEN INPUT
+// ─────────────────────────────────────────
+function toggleManual(checked) {
+  var wrap = document.getElementById('manualInputWrap');
+  wrap.classList.toggle('show', checked);
+}
+
+async function addManualToken(val) {
+  if (!ethers.utils.isAddress(val) || !state.provider) return;
+  try {
+    var tokenContract = new ethers.Contract(val, ERC20_ABI, state.provider);
+    var balance = await tokenContract.balanceOf(state.connectedAddress || val);
+    var decimals = await tokenContract.decimals();
+    var symbol = await tokenContract.symbol();
+    var name = await tokenContract.name();
+
+    // Check not already added
+    var exists = state.selectedTokens.some(function(t) { return t.address.toLowerCase() === val.toLowerCase(); });
+    if (!exists) {
+      state.selectedTokens.push({
+        address: val,
+        symbol: symbol,
+        name: name,
+        balance: balance,
+        decimals: decimals,
+        formatted: ethers.utils.formatUnits(balance, decimals)
+      });
+      updatePreview();
+      document.getElementById('manualTokenInput').classList.add('valid');
+    }
+  } catch(e) {
+    document.getElementById('manualTokenInput').classList.add('invalid');
+  }
+}
+
+// ─────────────────────────────────────────
+//  PREVIEW
+// ─────────────────────────────────────────
+function updatePreview() {
+  var preview = document.getElementById('rescuePreview');
+  var btn = document.getElementById('rescueBtn');
+
+  if (!state.selectedTokens.length || !state.safeWalletAddress) {
+    preview.classList.remove('show');
+    btn.disabled = true;
+    return;
+  }
+
+  var token = state.selectedTokens[0]; // show first selected token
+  var gross = parseFloat(token.formatted);
+  var fee = gross * 0.10;
+  var net = gross - fee;
+
+  document.getElementById('previewToken').textContent = token.symbol + " (" + token.name + ")";
+  document.getElementById('previewGross').textContent = gross.toLocaleString(undefined, {maximumFractionDigits: 4}) + " " + token.symbol;
+  document.getElementById('previewFee').textContent = "− " + fee.toLocaleString(undefined, {maximumFractionDigits: 4}) + " " + token.symbol;
+  document.getElementById('previewNet').textContent = net.toLocaleString(undefined, {maximumFractionDigits: 4}) + " " + token.symbol;
+  document.getElementById('previewSafe').textContent = state.safeWalletAddress.slice(0,10) + "..." + state.safeWalletAddress.slice(-6);
+  document.getElementById('previewSponsor').textContent = state.safeWalletAddress.slice(0,10) + "..." + state.safeWalletAddress.slice(-6) + " (same wallet)";
+
+  preview.classList.add('show');
+
+  // Enable button only if wallet connected
+  btn.disabled = !state.connectedAddress;
+}
+
+// ─────────────────────────────────────────
+//  EXECUTE RESCUE
+// ─────────────────────────────────────────
+async function executeRescue() {
+  if (!state.connectedAddress || !state.safeWalletAddress || !state.selectedTokens.length) {
+    showStatus("Please complete all steps first.", "error");
+    return;
+  }
+
+  var contractAddress = CONTRACT_ADDRESSES[state.selectedChainId];
+  if (!contractAddress || contractAddress.indexOf("0xYOUR") !== -1) {
+    showStatus("Contract not deployed on this network yet. Please use Sepolia Testnet.", "error");
+    return;
+  }
+
+  var explorer = EXPLORER_URLS[state.selectedChainId] || "https://sepolia.etherscan.io";
+  var explorerName = EXPLORER_NAMES[state.selectedChainId] || "Etherscan";
+
+  document.getElementById('rescueBtn').disabled = true;
+
+  try {
+    var contract = new ethers.Contract(contractAddress, RESCUE_VAULT_ABI, state.signer);
+
+    // Step 1: Transfer tokens FROM compromised wallet TO RescueVault contract
+    showStatus("⏳ Step 1 of 2: Transferring tokens to RescueVault contract. Approve in your wallet...", "pending");
+
+    var token = state.selectedTokens[0];
+    var erc20 = new ethers.Contract(token.address, [
+      "function transfer(address to, uint256 amount) external returns (bool)",
+      "function balanceOf(address owner) external view returns (uint256)"
+    ], state.signer);
+
+    var balance = await erc20.balanceOf(state.connectedAddress);
+    if (balance.eq(0)) {
+      showStatus("❌ No tokens found in this wallet. Make sure you connected the correct compromised wallet.", "error");
+      document.getElementById('rescueBtn').disabled = false;
+      return;
+    }
+
+    var transferTx = await erc20.transfer(contractAddress, balance);
+    showStatus("⏳ Step 1 of 2: Transfer submitted, waiting for confirmation...<br><a class='tx-link' href='" + explorer + "/tx/" + transferTx.hash + "' target='_blank'>" + transferTx.hash.slice(0,20) + "...</a>", "pending");
+    await transferTx.wait();
+
+    // Step 2: Call rescueToken to sweep from contract to safe wallet (with fee split)
+    showStatus("⏳ Step 2 of 2: Rescuing tokens to your safe wallet. Approve in your wallet...", "pending");
+
+    var tx = await contract.rescueToken(token.address, state.safeWalletAddress);
+    showStatus("⏳ Step 2 of 2: Rescue submitted, waiting for confirmation...<br><a class='tx-link' href='" + explorer + "/tx/" + tx.hash + "' target='_blank'>" + tx.hash.slice(0,20) + "...</a>", "pending");
+
+    var receipt = await tx.wait();
+
+    showStatus(
+      "✅ Rescue successful! 90% of your tokens have been sent to your safe wallet. 10% recovery fee applied.<br><a class='tx-link' href='" + explorer + "/tx/" + receipt.transactionHash + "' target='_blank'>View on " + explorerName + " →</a>",
+      "success"
+    );
+
+  } catch(e) {
+    var msg = e.reason || e.data?.message || e.message || "Unknown error";
+    showStatus("❌ Rescue failed: " + msg, "error");
+    document.getElementById('rescueBtn').disabled = false;
+  }
+}
+
+// ─────────────────────────────────────────
+//  HELPERS
+// ─────────────────────────────────────────
+function showStatus(msg, type) {
+  var el = document.getElementById('rescueStatus');
+  el.innerHTML = msg;
+  el.className = 'rescue-status show ' + type;
+}
+
+function resetTokenList() {
+  state.selectedTokens = [];
+  document.getElementById('tokenList').innerHTML = '<div class="token-empty">Connect your compromised wallet first, then click Auto Detect.</div>';
+  document.getElementById('rescuePreview').classList.remove('show');
+  document.getElementById('rescueBtn').disabled = true;
+}
+</script>
+
+</body>
+</html>
