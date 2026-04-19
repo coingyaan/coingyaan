@@ -340,9 +340,11 @@
       gap: 8px;
       margin-top: 10px;
       cursor: pointer;
+      flex-direction: row;
+      flex-wrap: nowrap;
     }
-    .manual-toggle input[type=checkbox] { accent-color: #f59e0b; cursor: pointer; }
-    .manual-toggle label { font-size: 12px; color: #475569; cursor: pointer; }
+    .manual-toggle input[type=checkbox] { accent-color: #f59e0b; cursor: pointer; flex-shrink: 0; width: 14px; height: 14px; }
+    .manual-toggle label { font-size: 12px; color: #475569; cursor: pointer; white-space: nowrap; }
 
     .manual-input-wrap { margin-top: 10px; display: none; }
     .manual-input-wrap.show { display: block; }
