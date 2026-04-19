@@ -391,6 +391,14 @@
     .preview-row .pr-val.green { color: #22c55e; }
     .preview-row .pr-val.amber { color: #f59e0b; }
 
+    .wallet-connect-btn.connecting {
+      animation: connectPulse 1.2s ease-in-out infinite;
+    }
+    @keyframes connectPulse {
+      0%, 100% { border-color: #334155; }
+      50% { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,0.1); }
+    }
+
     /* ── RESCUE BUTTON ── */
     .rescue-btn {
       width: 100%;
@@ -962,9 +970,21 @@ function selectNetwork(btn) {
 // ─────────────────────────────────────────
 async function connectWallet() {
   if (!window.ethereum) {
-    showStatus("No wallet detected. Please install MetaMask, Rabby or OKX wallet.", "error");
+    showStatus("No wallet detected. Please install MetaMask, Rabby or OKX wallet extension first.", "error");
     return;
   }
+
+  // Show loading state on button
+  var btn = document.getElementById('connectBtn');
+  var title = document.getElementById('connectTitle');
+  var sub = document.getElementById('connectSub');
+  title.textContent = "Connecting...";
+  sub.textContent = "Check your wallet extension for a popup";
+  sub.className = "wallet-connect-sub";
+  btn.style.opacity = "0.7";
+  btn.style.cursor = "wait";
+  btn.classList.add('connecting');
+
   try {
     var provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
@@ -972,7 +992,13 @@ async function connectWallet() {
 
     // Check chain matches selection
     if (String(network.chainId) !== state.selectedChainId) {
-      showStatus("Wrong network. Please switch your wallet to the selected network and try again.", "error");
+      title.textContent = "Wrong Network";
+      sub.textContent = "Switch wallet to selected network and try again";
+      sub.className = "wallet-connect-sub";
+      btn.style.opacity = "1";
+      btn.style.cursor = "pointer";
+      btn.classList.remove('connecting');
+      showStatus("❌ Wrong network detected. Please switch your wallet to the selected network and try again.", "error");
       return;
     }
 
@@ -980,17 +1006,32 @@ async function connectWallet() {
     state.signer = provider.getSigner();
     state.connectedAddress = await state.signer.getAddress();
 
-    // Update UI
+    // Update UI to connected state
     var short = state.connectedAddress.slice(0,6) + "..." + state.connectedAddress.slice(-4);
-    document.getElementById('connectTitle').textContent = short;
-    document.getElementById('connectSub').textContent = "Connected, compromised wallet";
-    document.getElementById('connectSub').className = "wallet-connect-sub connected-sub";
+    title.textContent = short;
+    sub.textContent = "Connected, compromised wallet";
+    sub.className = "wallet-connect-sub connected-sub";
     document.getElementById('walletDot').classList.add('active');
-    document.getElementById('connectBtn').classList.add('connected');
+    btn.classList.add('connected');
+    btn.classList.remove('connecting');
+    btn.style.opacity = "1";
+    btn.style.cursor = "pointer";
 
-    showStatus("Wallet connected. Now auto detect your tokens or enter a contract address manually.", "pending");
+    showStatus("✅ Wallet connected. Now click Auto Detect to find your tokens.", "success");
   } catch(e) {
-    showStatus("Connection failed: " + (e.message || e), "error");
+    // Reset button on error
+    title.textContent = "Connect Wallet";
+    sub.textContent = "MetaMask, Rabby, OKX and more";
+    sub.className = "wallet-connect-sub";
+    btn.style.opacity = "1";
+    btn.style.cursor = "pointer";
+    btn.classList.remove('connecting');
+
+    if (e.code === 4001) {
+      showStatus("Connection cancelled. Click Connect Wallet and approve in your wallet extension.", "error");
+    } else {
+      showStatus("Connection failed: " + (e.message || "Unknown error. Make sure your wallet extension is unlocked."), "error");
+    }
   }
 }
 
