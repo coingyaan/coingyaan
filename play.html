@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CoinGyaan Play — Predict BTC &amp; ETH Daily, Win USDC Every Sunday</title>
+<meta name="description" content="Predict BTC and ETH price direction daily on Base chain. Say GM to build your streak. Top 10 weekly winners share a USDC prize pool. Free to play on testnet."/>
+<meta name="keywords" content="crypto prediction game, predict BTC price, predict ETH price, Base chain game, earn USDC, daily GM crypto, on-chain prediction, CoinGyaan"/>
+<link rel="canonical" href="https://coingyaan.com/play"/>
+<meta property="og:title" content="CoinGyaan Play — Predict BTC &amp; ETH Daily, Win USDC Every Sunday"/>
+<meta property="og:description" content="Predict BTC and ETH price direction daily on Base chain. Say GM to build your streak. Top 10 weekly winners share a USDC prize pool."/>
+<meta property="og:url" content="https://coingyaan.com/play"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --base:#0052FF;--base-l:#4D8EFF;--base-glow:rgba(0,82,255,0.3);
+  --green:#00D68F;--red:#FF4D6A;--gold:#FFB800;--purple:#7B2FFF;
+  --bg:#03050F;--surface:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.07);
+  --text:rgba(255,255,255,0.85);--muted:rgba(255,255,255,0.35);
+}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:#fff;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,82,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,82,255,0.04) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0}
+
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pulse-ring{0%,100%{transform:scale(0.96);opacity:0.7}50%{transform:scale(1.04);opacity:0.3}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes gmBounce{0%{transform:scale(1)}35%{transform:scale(0.88)}70%{transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes burst{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+@keyframes countPulse{0%,100%{opacity:1}50%{opacity:0.6}}
+@keyframes correctFlash{0%,100%{background:rgba(0,214,143,0.08)}50%{background:rgba(0,214,143,0.18)}}
+
+.app{max-width:1160px;margin:0 auto;padding:0 24px 60px;position:relative;z-index:1}
+
+/* HEADER */
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0 20px;border-bottom:1px solid var(--border);margin-bottom:0}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--base),#00D4FF);border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px var(--base-glow)}
+.logo-text{font-size:1.05rem;font-weight:800;letter-spacing:0.03em}
+.logo-text span{color:var(--base-l)}
+.logo-sub{font-size:0.6rem;color:var(--muted);letter-spacing:0.12em;margin-top:1px}
+.nav-right{display:flex;align-items:center;gap:10px}
+.faucet-btn{font-size:0.72rem;color:var(--base-l);background:rgba(0,82,255,0.08);border:1px solid rgba(0,82,255,0.2);padding:5px 12px;border-radius:20px;cursor:pointer;text-decoration:none;transition:all 0.2s}
+.faucet-btn:hover{background:rgba(0,82,255,0.18)}
+.wallet-pill{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:rgba(255,255,255,0.6);padding:6px 14px;border-radius:20px;font-size:0.7rem;font-family:'JetBrains Mono',monospace;display:flex;align-items:center;gap:6px;cursor:pointer}
+.w-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green)}
+.connect-btn{background:var(--base);border:none;color:#fff;padding:8px 20px;border-radius:20px;font-family:'Outfit',sans-serif;font-size:0.8rem;font-weight:600;cursor:pointer;box-shadow:0 0 16px var(--base-glow);transition:opacity 0.2s}
+.connect-btn:hover{opacity:0.85}
+
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:28px;margin-top:0;padding-top:4px}
+.tab{padding:14px 24px;font-size:0.82rem;font-weight:600;cursor:pointer;color:var(--muted);border:none;background:transparent;border-bottom:2px solid transparent;transition:all 0.2s;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:7px}
+.tab.active{color:#fff;border-bottom-color:var(--base);background:rgba(0,82,255,0.06)}
+.tab-badge{background:var(--base);color:#fff;font-size:0.58rem;padding:2px 6px;border-radius:10px;font-weight:700}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:258px 1fr 276px;gap:18px;align-items:start}
+
+/* PANELS */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;animation:fadeUp 0.5s ease both}
+.plabel{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.18em;color:var(--muted);margin-bottom:16px}
+.divider{height:1px;background:var(--border);margin:14px 0}
+
+/* LEFT STATS */
+.stat-block{margin-bottom:14px}
+.stat-name{font-size:0.68rem;color:var(--muted);margin-bottom:3px}
+.stat-num{font-size:2rem;font-weight:800;line-height:1}
+.stat-num.blue{background:linear-gradient(135deg,var(--base-l),#00D4FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-num.white{background:linear-gradient(135deg,#fff,rgba(255,255,255,0.7));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:7px;font-size:0.7rem;font-weight:600;margin-top:5px;margin-right:4px}
+.b-streak{background:rgba(255,184,0,0.1);color:var(--gold);border:1px solid rgba(255,184,0,0.2)}
+.b-rank{background:rgba(0,82,255,0.1);color:var(--base-l);border:1px solid rgba(0,82,255,0.2)}
+.b-mult{background:rgba(0,214,143,0.1);color:var(--green);border:1px solid rgba(0,214,143,0.2)}
+.b-acc{background:rgba(123,47,255,0.1);color:#b388ff;border:1px solid rgba(123,47,255,0.2)}
+
+.record-row{display:flex;gap:10px;align-items:baseline;margin-top:4px}
+.rec-w{font-size:1.4rem;font-weight:800;color:var(--green)}
+.rec-l{font-size:1.4rem;font-weight:800;color:var(--red)}
+.rec-sep{font-size:0.75rem;color:var(--muted)}
+.rec-wr{font-size:0.7rem;color:var(--muted);margin-left:2px}
+
+.pts-box{background:rgba(0,82,255,0.05);border:1px solid rgba(0,82,255,0.12);border-radius:10px;padding:11px;margin-top:10px}
+.pts-row{display:flex;justify-content:space-between;font-size:0.7rem;padding:2px 0;color:rgba(255,255,255,0.4)}
+.pts-row span:last-child{color:var(--base-l);font-weight:600}
+.pts-row.sep{border-top:1px solid rgba(255,255,255,0.05);margin-top:5px;padding-top:7px;color:rgba(255,255,255,0.6)}
+
+/* MULTIPLIER */
+.mult-wrap{margin-top:12px}
+.mult-head{display:flex;justify-content:space-between;font-size:0.68rem;color:var(--muted);margin-bottom:7px}
+.mult-track{display:flex;gap:3px;margin-bottom:5px}
+.mstep{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,0.07)}
+.mstep.on{background:var(--base)}
+.mstep.gold{background:var(--gold)}
+.mstep.green{background:var(--green)}
+.mult-labels{display:flex;justify-content:space-between;font-size:0.58rem;color:var(--muted)}
+.mult-labels .hi{color:var(--green);font-weight:700}
+.mult-note{font-size:0.62rem;color:rgba(255,255,255,0.2);margin-top:6px;text-align:center;font-style:italic}
+
+/* REFERRAL */
+.ref-bar-wrap{background:rgba(255,255,255,0.05);border-radius:4px;height:4px;margin:7px 0;overflow:hidden}
+.ref-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--base),#00D4FF)}
+.ref-btn{width:100%;padding:8px;border-radius:9px;border:1px solid rgba(0,82,255,0.25);background:rgba(0,82,255,0.07);color:var(--base-l);font-size:0.73rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;margin-top:7px;transition:all 0.2s}
+.ref-btn:hover{background:rgba(0,82,255,0.15)}
+.ref-note{font-size:0.6rem;color:rgba(255,255,255,0.2);text-align:center;margin-top:5px;line-height:1.5}
+
+/* CENTER GM */
+.center-col{display:flex;flex-direction:column;align-items:center;gap:22px}
+.global-count{text-align:center}
+.g-label{font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.g-number{font-size:3rem;font-weight:800;font-family:'JetBrains Mono',monospace;background:linear-gradient(135deg,var(--base-l) 0%,#00D4FF 50%,var(--base-l) 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 3s linear infinite}
+
+.gm-wrap{position:relative;width:210px;height:210px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.gm-ring{position:absolute;border-radius:50%;border:1.5px solid rgba(0,82,255,0.25);animation:pulse-ring 3s ease-in-out infinite}
+.gr1{width:208px;height:208px}
+.gr2{width:178px;height:178px;animation-delay:0.4s;border-color:rgba(0,82,255,0.15)}
+.gr3{width:148px;height:148px;animation-delay:0.8s;border-color:rgba(0,82,255,0.08)}
+.gm-orbit{position:absolute;width:188px;height:188px;border-radius:50%;border:1px dashed rgba(0,82,255,0.18);animation:spin 18s linear infinite}
+.orbit-dot{position:absolute;width:8px;height:8px;background:var(--base);border-radius:50%;top:-4px;left:50%;margin-left:-4px;box-shadow:0 0 10px var(--base)}
+.gm-btn{width:140px;height:140px;border-radius:50%;border:none;background:var(--base);cursor:pointer;position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 40px var(--base-glow),0 0 80px rgba(0,82,255,0.12);transition:box-shadow 0.2s,transform 0.15s}
+.gm-btn:hover{box-shadow:0 0 60px rgba(0,82,255,0.7),0 0 100px rgba(0,82,255,0.25);transform:scale(1.04)}
+.gm-btn.fired{animation:gmBounce 0.5s ease}
+.gm-btn.done{background:linear-gradient(135deg,#1a2540,#0d1525);box-shadow:none;cursor:not-allowed;transform:none!important}
+.base-logo{width:50px;height:50px;background:rgba(255,255,255,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:5px}
+.gm-label{font-size:0.95rem;font-weight:800;letter-spacing:0.1em;color:rgba(255,255,255,0.9)}
+.gm-ready{font-size:0.85rem;font-weight:700;color:var(--green);text-shadow:0 0 12px rgba(0,214,143,0.4);animation:float 3s ease-in-out infinite}
+.cd-box{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:12px 26px;text-align:center;animation:float 5s ease-in-out infinite}
+.cd-label{font-size:0.58rem;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
+.cd-time{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--base-l);text-shadow:0 0 18px rgba(0,82,255,0.4)}
+.gm-note{font-size:0.65rem;color:rgba(255,255,255,0.18);text-align:center;line-height:1.7;max-width:280px}
+
+/* CENTER PREDICT */
+.predict-col{display:flex;flex-direction:column;gap:16px;width:100%}
+.asset-tabs{display:flex;gap:6px;justify-content:center}
+.asset-tab{padding:7px 18px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:0.78rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;display:flex;align-items:center;gap:6px}
+.asset-tab.active{border-color:var(--base);background:rgba(0,82,255,0.12);color:#fff}
+.asset-icon{font-size:1rem}
+
+.price-card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center}
+.price-asset{font-size:0.65rem;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+.price-val{font-family:'JetBrains Mono',monospace;font-size:2.4rem;font-weight:700;color:#fff;margin-bottom:4px}
+.price-change{font-size:0.8rem;font-weight:600}
+.price-change.up{color:var(--green)}
+.price-change.down{color:var(--red)}
+.snapshot-info{font-size:0.65rem;color:var(--muted);margin-top:6px}
+
+.round-tabs{display:flex;gap:6px;background:rgba(255,255,255,0.03);border-radius:10px;padding:4px}
+.round-tab{flex:1;padding:7px;border:none;border-radius:8px;background:transparent;color:var(--muted);font-size:0.72rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
+.round-tab.active{background:rgba(0,82,255,0.2);color:#fff}
+
+.predict-btns{display:flex;gap:10px}
+.pred-btn{flex:1;padding:14px;border-radius:12px;border:1.5px solid;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.pred-up{background:rgba(0,214,143,0.08);border-color:rgba(0,214,143,0.3);color:var(--green)}
+.pred-up:hover{background:rgba(0,214,143,0.18);transform:translateY(-2px)}
+.pred-down{background:rgba(255,77,106,0.08);border-color:rgba(255,77,106,0.3);color:var(--red)}
+.pred-down:hover{background:rgba(255,77,106,0.18);transform:translateY(-2px)}
+.pred-btn.selected{transform:scale(1.03)}
+.pred-up.selected{background:rgba(0,214,143,0.22);border-color:var(--green)}
+.pred-down.selected{background:rgba(255,77,106,0.22);border-color:var(--red)}
+
+.deadline-info{display:flex;justify-content:space-between;font-size:0.68rem;color:var(--muted);background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:9px;padding:9px 12px}
+.deadline-info span:last-child{color:var(--gold);font-weight:600}
+
+.pred-result{text-align:center;padding:12px;border-radius:11px;font-weight:700;font-size:0.88rem;animation:fadeUp 0.3s ease}
+.pr-correct{background:rgba(0,214,143,0.1);border:1px solid rgba(0,214,143,0.25);color:var(--green)}
+.pr-wrong{background:rgba(255,77,106,0.1);border:1px solid rgba(255,77,106,0.25);color:var(--red)}
+.pr-pending{background:rgba(255,184,0,0.08);border:1px solid rgba(255,184,0,0.2);color:var(--gold)}
+
+.my-predictions{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:14px}
+.mypred-title{font-size:0.65rem;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
+.mypred-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.72rem}
+.mypred-row:last-child{border-bottom:none}
+.mypred-asset{font-weight:700;min-width:36px}
+.mypred-round{color:var(--muted);flex:1}
+.mypred-dir{font-weight:600;min-width:32px}
+.mypred-dir.up{color:var(--green)}
+.mypred-dir.down{color:var(--red)}
+.mypred-status{font-size:0.65rem;padding:2px 7px;border-radius:6px;font-weight:600}
+.s-correct{background:rgba(0,214,143,0.1);color:var(--green)}
+.s-wrong{background:rgba(255,77,106,0.1);color:var(--red)}
+.s-pending{background:rgba(255,184,0,0.1);color:var(--gold)}
+
+/* LEADERBOARD */
+.lb-tabs{display:flex;gap:3px;background:rgba(255,255,255,0.03);border-radius:8px;padding:3px;margin-bottom:12px}
+.lb-tab{flex:1;padding:5px;border:none;border-radius:6px;background:transparent;color:var(--muted);font-size:0.65rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.15s}
+.lb-tab.active{background:rgba(0,82,255,0.22);color:#fff}
+.lb-list{display:flex;flex-direction:column;gap:5px}
+.lb-row{display:flex;align-items:center;gap:7px;padding:8px 9px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);animation:slideIn 0.3s ease both;cursor:pointer;transition:border-color 0.2s}
+.lb-row:hover{border-color:rgba(0,82,255,0.2)}
+.lb-row.me{border-color:rgba(0,82,255,0.3);background:rgba(0,82,255,0.05)}
+.lb-rank{font-family:'JetBrains Mono',monospace;font-size:0.72rem;font-weight:700;min-width:20px;color:var(--muted)}
+.lb-rank.g{color:var(--gold)}
+.lb-rank.s{color:#C0C0C0}
+.lb-rank.b{color:#CD7F32}
+.lb-info{flex:1}
+.lb-addr{font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:rgba(255,255,255,0.5)}
+.lb-meta{font-size:0.58rem;color:var(--muted);margin-top:1px}
+.lb-right{text-align:right}
+.lb-score{font-weight:800;font-size:0.85rem;color:#fff}
+.lb-pts{font-size:0.58rem;color:var(--muted)}
+.share-btn{width:100%;margin-top:12px;padding:9px;border-radius:9px;border:1px solid rgba(0,82,255,0.25);background:rgba(0,82,255,0.07);color:var(--base-l);font-size:0.72rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
+.share-btn:hover{background:rgba(0,82,255,0.16)}
+.prize-box{margin-top:10px;padding:12px;border-radius:10px;border:1px solid rgba(255,184,0,0.2);background:rgba(255,184,0,0.04);text-align:center}
+.prize-label{font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,184,0,0.5);margin-bottom:4px}
+.prize-val{font-size:1.1rem;font-weight:800;color:var(--gold)}
+.prize-sub{font-size:0.62rem;color:rgba(255,255,255,0.25);margin-top:2px}
+.prize-split{display:flex;gap:4px;margin-top:8px;font-size:0.58rem}
+.ps-item{flex:1;text-align:center;padding:4px;border-radius:6px;background:rgba(255,255,255,0.03)}
+.ps-rank{color:var(--muted);margin-bottom:2px}
+.ps-pct{font-weight:700;color:var(--gold)}
+
+/* PARTICLES */
+.pw{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+/* HIDDEN */
+.hidden{display:none!important}
+.section{display:none}
+.section.active{display:flex;flex-direction:column;align-items:center;gap:22px;width:100%}
+</style>
+</head>
+<body>
+<div class="pw" id="pw"></div>
+<div class="app">
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <circle cx="11" cy="11" r="11" fill="white" opacity="0.12"/>
+        <path d="M11 3C6.58 3 3 6.58 3 11C3 15.42 6.58 19 11 19C15.42 19 19 15.42 19 11C19 6.58 15.42 3 11 3Z" fill="white" opacity="0.85"/>
+        <path d="M11 6C8.24 6 6 8.24 6 11C6 13.76 8.24 16 11 16H14.5V14H11C9.34 14 8 12.66 8 11C8 9.34 9.34 8 11 8H14.5V6H11Z" fill="#0052FF"/>
+      </svg>
+    </div>
+    <div>
+      <div class="logo-text">CoinGyaan <span>Play</span></div>
+      <div class="logo-sub">coingyaan.com/play · Base Sepolia Testnet</div>
+    </div>
+  </div>
+  <div class="nav-right" id="nav-right">
+    <a class="faucet-btn" href="https://faucet.quicknode.com/base/sepolia" target="_blank" rel="noopener noreferrer">⛽ Get test ETH</a>
+    <div id="wallet-area">
+      <button class="connect-btn" onclick="connectWallet()">Connect Wallet</button>
+    </div>
+  </div>
+</nav>
+
+<!-- TABS -->
+<div id="not-connected" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:20px;position:relative;z-index:5">
+  <div style="width:56px;height:56px;background:linear-gradient(135deg,#0052FF,#00D4FF);border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(0,82,255,0.4)">
+    <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+      <circle cx="17" cy="17" r="17" fill="white" opacity="0.12"/>
+      <path d="M17 5C10.37 5 5 10.37 5 17C5 23.63 10.37 29 17 29C23.63 29 29 23.63 29 17C29 10.37 23.63 5 17 5Z" fill="white" opacity="0.85"/>
+      <path d="M17 9C13.13 9 10 12.13 10 16C10 19.87 13.13 23 17 23H21.5V21H17C14.24 21 12 18.76 12 16C12 13.24 14.24 11 17 11H21.5V9H17Z" fill="#0052FF"/>
+    </svg>
+  </div>
+  <div style="font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;text-align:center">Welcome to <span style="color:#4D8EFF">CoinGyaan Play</span></div>
+  <p style="color:rgba(255,255,255,0.35);font-size:0.9rem;text-align:center;max-width:360px;line-height:1.6">Predict BTC and ETH price direction daily on Base chain. Say GM to build your streak. Win USDC every Sunday.</p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px 16px;font-size:0.75rem;color:rgba(255,255,255,0.35)">🌅 Daily GM</div>
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px 16px;font-size:0.75rem;color:rgba(255,255,255,0.35)">🔮 Predict BTC &amp; ETH</div>
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px 16px;font-size:0.75rem;color:rgba(255,255,255,0.35)">🏆 Weekly Leaderboard</div>
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px 16px;font-size:0.75rem;color:rgba(255,255,255,0.35)">💰 Win USDC Sunday</div>
+  </div>
+  <button class="connect-btn" style="font-size:1rem;padding:13px 32px" onclick="connectWallet()">Connect Wallet to Play</button>
+</div>
+
+<div id="main-app" style="display:none">
+<div class="tabs">
+  <button class="tab active" onclick="switchMain('gm',this)">🌅 Daily GM</button>
+  <button class="tab" onclick="switchMain('predict',this)">🔮 Predict <span class="tab-badge">3 assets</span></button>
+  <button class="tab" onclick="switchMain('lb',this)">🏆 Leaderboard</button>
+</div>
+
+<!-- MAIN GRID -->
+<div class="grid">
+
+  <!-- LEFT PANEL -->
+  <div class="panel" style="animation-delay:0.05s">
+    <div class="plabel">Your Stats</div>
+
+    <div class="stat-block">
+      <div class="stat-name">Total Points</div>
+      <div class="stat-num blue" id="total-pts">63.4</div>
+      <span class="badge b-rank">🏆 Rank #3</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="stat-block">
+      <div class="stat-name">Daily GM Streak</div>
+      <div class="stat-num white" id="my-gms">7</div>
+      <div>
+        <span class="badge b-streak">🔥 7 day streak</span>
+        <span class="badge b-mult">1.5x GM pts</span>
+      </div>
+      <div class="mult-wrap">
+        <div class="mult-head">
+          <span>Streak Multiplier</span>
+          <span style="color:var(--green)">1.5x active</span>
+        </div>
+        <div class="mult-track" id="mult-track"></div>
+        <div class="mult-labels">
+          <span>1x</span>
+          <span>3d→<span class="hi">1.2x</span></span>
+          <span>7d→<span class="hi">1.5x</span></span>
+          <span>15d→<span class="hi">2x</span></span>
+        </div>
+        <div class="mult-note">⚡ Multiplier applies to GM points only</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="stat-block">
+      <div class="stat-name">Prediction Record</div>
+      <div class="record-row">
+        <span class="rec-w" id="pred-w">18</span>
+        <span class="rec-sep">W</span>
+        <span class="rec-l" id="pred-l">7</span>
+        <span class="rec-sep">L</span>
+        <span class="rec-wr" id="pred-wr">72% acc</span>
+      </div>
+      <span class="badge b-acc">🎯 Best: BTC 80%</span>
+    </div>
+
+    <div class="pts-box">
+      <div class="pts-row"><span>GM check-in</span><span>+1 pt × streak mult</span></div>
+      <div class="pts-row"><span>4h correct</span><span>+2 pts flat</span></div>
+      <div class="pts-row"><span>24h correct</span><span>+3 pts flat</span></div>
+      <div class="pts-row"><span>Wrong prediction</span><span>0 pts</span></div>
+      <div class="pts-row sep"><span>Max predictions/day</span><span>21</span></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="stat-name">Referrals</div>
+      <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--muted);margin-top:6px">
+        <span>1 / 3 used</span>
+        <span style="color:var(--green)">2 left</span>
+      </div>
+      <div class="ref-bar-wrap"><div class="ref-bar" style="width:33%"></div></div>
+      <button class="ref-btn" onclick="copyRef()">📋 Copy Referral Link</button>
+      <div class="ref-note">Max 3 referrals · Activates after 5 predictions and 7 GMs</div>
+    </div>
+  </div>
+
+  <!-- CENTER -->
+  <div class="center-col" id="center-col">
+
+    <!-- GM SECTION -->
+    <div class="section active" id="gm-section">
+
+      <div class="global-count">
+        <div class="g-label">Global GM Count · Base Testnet</div>
+        <div class="g-number" id="global-gms">31,428</div>
+      </div>
+
+      <div class="gm-wrap" onclick="handleGM()">
+        <div class="gm-ring gr1"></div>
+        <div class="gm-ring gr2"></div>
+        <div class="gm-ring gr3"></div>
+        <div class="gm-orbit"><div class="orbit-dot"></div></div>
+        <div class="gm-btn" id="gm-btn">
+          <div class="base-logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <circle cx="16" cy="16" r="16" fill="white" opacity="0.1"/>
+              <path d="M16 4C9.37 4 4 9.37 4 16C4 22.63 9.37 28 16 28C22.63 28 28 22.63 28 16C28 9.37 22.63 4 16 4Z" fill="white" opacity="0.85"/>
+              <path d="M16 8C11.58 8 8 11.58 8 16C8 20.42 11.58 24 16 24H20.5V22H16C12.69 22 10 19.31 10 16C10 12.69 12.69 10 16 10H20.5V8H16Z" fill="#0052FF"/>
+            </svg>
+          </div>
+          <span class="gm-label" id="gm-label">GM</span>
+        </div>
+      </div>
+
+      <div id="gm-ready" class="gm-ready">✦ Tap to say GM on Base ✦</div>
+      <div class="cd-box hidden" id="cd-box">
+        <div class="cd-label">Resets at UTC 00:00 in</div>
+        <div class="cd-time" id="countdown">00h 00m 00s</div>
+      </div>
+
+      <div class="gm-note">
+        One GM per wallet per UTC day · Resets at 00:00 UTC for everyone<br>
+        Streak multiplier applies to GM points only
+      </div>
+
+    </div>
+
+    <!-- PREDICT SECTION -->
+    <div class="section" id="predict-section">
+
+      <div class="asset-tabs">
+        <button class="asset-tab active" onclick="switchAsset('BTC',this)"><span class="asset-icon">₿</span>Bitcoin</button>
+        <button class="asset-tab" onclick="switchAsset('ETH',this)"><span class="asset-icon">Ξ</span>Ethereum</button>
+        <button class="asset-tab" onclick="switchAsset('SOL',this)"><span class="asset-icon">◎</span>Solana</button>
+      </div>
+
+      <div class="price-card" style="width:100%">
+        <div class="price-asset" id="price-asset">BTC / USD · Live via Chainlink</div>
+        <div class="price-val" id="price-val">$67,420</div>
+        <div class="price-change up" id="price-change">▲ +2.4% today</div>
+        <div class="snapshot-info" id="snapshot-info">Snapshot at UTC 00:00: $65,840 · Current: $67,420</div>
+      </div>
+
+      <div class="round-tabs" style="width:100%">
+        <button class="round-tab active" onclick="switchRound('4h',this)">⏱ 4 Hour Round</button>
+        <button class="round-tab" onclick="switchRound('24h',this)">📅 24 Hour Round</button>
+      </div>
+
+      <div class="deadline-info" style="width:100%">
+        <span id="round-label">Current round: 20:00 → 00:00 UTC</span>
+        <span id="deadline-label">Closes in: 1h 24m</span>
+      </div>
+
+      <div class="predict-btns" style="width:100%">
+        <button class="pred-btn pred-up" id="btn-up" onclick="predict('UP')">📈 UP</button>
+        <button class="pred-btn pred-down" id="btn-down" onclick="predict('DOWN')">📉 DOWN</button>
+      </div>
+
+      <div class="pred-result pr-correct" id="pred-result" style="width:100%;display:none"></div>
+
+      <div class="my-predictions" style="width:100%">
+        <div class="mypred-title">Today's Predictions</div>
+        <div id="pred-list">
+          <div class="mypred-row">
+            <span class="mypred-asset">BTC</span>
+            <span class="mypred-round">4h · 16:00 round</span>
+            <span class="mypred-dir up">▲ UP</span>
+            <span class="mypred-status s-correct">✓ +2pts</span>
+          </div>
+          <div class="mypred-row">
+            <span class="mypred-asset">ETH</span>
+            <span class="mypred-round">4h · 16:00 round</span>
+            <span class="mypred-dir up">▲ UP</span>
+            <span class="mypred-status s-correct">✓ +2pts</span>
+          </div>
+          <div class="mypred-row">
+            <span class="mypred-asset">SOL</span>
+            <span class="mypred-round">4h · 16:00 round</span>
+            <span class="mypred-dir down">▼ DOWN</span>
+            <span class="mypred-status s-wrong">✗ 0pts</span>
+          </div>
+          <div class="mypred-row">
+            <span class="mypred-asset">BTC</span>
+            <span class="mypred-round">24h round</span>
+            <span class="mypred-dir up">▲ UP</span>
+            <span class="mypred-status s-pending">⏳ Pending</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- LEADERBOARD SECTION (center when tab active) -->
+    <div class="section" id="lb-center-section" style="width:100%">
+      <div style="text-align:center;padding:40px 0">
+        <div class="g-label" style="margin-bottom:8px">Full Leaderboard</div>
+        <div style="font-size:0.8rem;color:var(--muted)">Switch to Leaderboard tab to see full rankings</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: LEADERBOARD -->
+  <div class="panel" style="animation-delay:0.1s">
+    <div class="lb-tabs">
+      <button class="lb-tab active" onclick="switchLB('weekly',this)">Weekly</button>
+      <button class="lb-tab" onclick="switchLB('daily',this)">Daily</button>
+      <button class="lb-tab" onclick="switchLB('alltime',this)">All-time</button>
+    </div>
+
+    <div class="lb-list" id="lb-list"></div>
+
+    <button class="share-btn" onclick="shareRank()">📤 Share my rank #3 on X</button>
+
+    <div class="prize-box">
+      <div class="prize-label">Sunday Prize Pool</div>
+      <div class="prize-val">$250 USDC</div>
+      <div class="prize-sub">Resets every Sunday · Top 10 win</div>
+      <div class="prize-split">
+        <div class="ps-item"><div class="ps-rank">🥇#1</div><div class="ps-pct">30%</div></div>
+        <div class="ps-item"><div class="ps-rank">🥈#2</div><div class="ps-pct">20%</div></div>
+        <div class="ps-item"><div class="ps-rank">🥉#3</div><div class="ps-pct">12%</div></div>
+        <div class="ps-item"><div class="ps-rank">#4-10</div><div class="ps-pct">split</div></div>
+      </div>
+    </div>
+    <div style="margin-top:10px;padding:10px 12px;border-radius:10px;border:1px solid rgba(0,82,255,0.15);background:rgba(0,82,255,0.04);text-align:center">
+      <div style="font-size:0.6rem;color:rgba(0,82,255,0.5);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:3px">Testnet</div>
+      <div style="font-size:0.72rem;color:rgba(255,255,255,0.3)">Points only · Real USDC on mainnet</div>
+    </div>
+  </div>
+
+</div>
+</div><!-- end main-app -->
+</div><!-- end app -->
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+<script>
+// ── CONFIG ──
+const CONTRACT = '0xA296b410fb5058FA1917219C0F30eC31CACeC5A6'
+const BASE_SEPOLIA_ID = 84532
+const BASE_SEPOLIA_HEX = '0x14a34'
+const ZERO_ADDR = '0x0000000000000000000000000000000000000000'
+const ABI = [
+  'function gm(address referrer) external',
+  'function predict(uint256 roundId, bool isUp) external',
+  'function claimPredictionPoints(uint256 roundId) external',
+  'function getTotalGlobalGMs() view returns (uint256)',
+  'function roundCount() view returns (uint256)',
+  'function getUser(address wallet) view returns (uint256,uint256,uint256,uint256,uint256,bool,uint256,uint256,uint256,bool)',
+  'function getLeaderboard() view returns (address[],uint256[],uint256[],uint256[],uint256[],uint256[])',
+  'function getRound(uint256 roundId) view returns (uint8,uint8,uint256,uint256,int256,int256,bool,uint256,uint256)',
+  'function getUserPrediction(uint256 roundId, address wallet) view returns (bool,bool,bool)',
+]
+
+let provider, signer, contract, userAddress
+let activeRoundId = null, gmDone = false
+let userData = null, leaderboardData = null
+let curLBType = 'weekly'
+const referrer = new URLSearchParams(window.location.search).get('ref') || ZERO_ADDR
+const medals = ['🥇','🥈','🥉']
+
+// ── WALLET CONNECT ──
+async function connectWallet() {
+  if (!window.ethereum) { alert('Please install MetaMask or Rabby wallet'); return }
+  try {
+    await window.ethereum.request({ method: 'eth_requestAccounts' })
+    provider = new ethers.BrowserProvider(window.ethereum)
+    const net = await provider.getNetwork()
+    if (Number(net.chainId) !== BASE_SEPOLIA_ID) await switchNetwork()
+    signer = await provider.getSigner()
+    userAddress = await signer.getAddress()
+    contract = new ethers.Contract(CONTRACT, ABI, signer)
+    showApp()
+    loadAll()
+    startCountdown()
+  } catch(e) { console.error('Connect error:', e) }
+}
+
+async function switchNetwork() {
+  try {
+    await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: BASE_SEPOLIA_HEX }] })
+  } catch {
+    await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [{
+      chainId: BASE_SEPOLIA_HEX, chainName: 'Base Sepolia',
+      nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
+      rpcUrls: ['https://sepolia.base.org'],
+      blockExplorerUrls: ['https://sepolia.basescan.org']
+    }]})
+  }
+  provider = new ethers.BrowserProvider(window.ethereum)
+  signer = await provider.getSigner()
+}
+
+function showApp() {
+  document.getElementById('not-connected').style.display = 'none'
+  document.getElementById('main-app').style.display = 'block'
+  const short = `${userAddress.slice(0,6)}...${userAddress.slice(-4)}`
+  document.getElementById('wallet-area').innerHTML =
+    `<div class="wallet-pill" onclick="disconnectWallet()" title="Click to disconnect"><div class="w-dot"></div>${short}</div>`
+}
+
+function disconnectWallet() {
+  userAddress = null; signer = null; contract = null
+  document.getElementById('not-connected').style.display = 'flex'
+  document.getElementById('main-app').style.display = 'none'
+  document.getElementById('wallet-area').innerHTML = '<button class="connect-btn" onclick="connectWallet()">Connect Wallet</button>'
+}
+
+// ── LOAD ALL DATA ──
+async function loadAll() {
+  await Promise.all([loadGlobalGMs(), loadUserData(), loadLeaderboard(), loadRounds()])
+}
+
+async function loadGlobalGMs() {
+  try {
+    const g = await contract.getTotalGlobalGMs()
+    document.getElementById('global-gms').textContent = Number(g).toLocaleString()
+  } catch(e) { console.error(e) }
+}
+
+async function loadUserData() {
+  if (!contract || !userAddress) return
+  try {
+    const d = await contract.getUser(userAddress)
+    userData = {
+      totalPts:    Number(ethers.formatUnits(d[0], 18)),
+      weeklyPts:   Number(ethers.formatUnits(d[1], 18)),
+      totalGMs:    Number(d[2]),
+      streak:      Number(d[3]),
+      canGM:       d[5],
+      totalPreds:  Number(d[6]),
+      correctPreds:Number(d[7]),
+      referrals:   Number(d[8]),
+    }
+    updateStatsUI()
+  } catch(e) { console.error('User error:', e) }
+}
+
+async function loadLeaderboard() {
+  if (!contract) return
+  try {
+    const d = await contract.getLeaderboard()
+    leaderboardData = d[0].map((w, i) => ({
+      wallet:    w,
+      weeklyPts: Number(ethers.formatUnits(d[1][i], 18)),
+      totalPts:  Number(ethers.formatUnits(d[2][i], 18)),
+      streak:    Number(d[3][i]),
+      correct:   Number(d[4][i]),
+      total:     Number(d[5][i]),
+    })).sort((a, b) => b.weeklyPts - a.weeklyPts).slice(0, 10)
+    renderLB(curLBType)
+    updateRankBadge()
+  } catch(e) { console.error('LB error:', e) }
+}
+
+async function loadRounds() {
+  if (!contract) return
+  try {
+    const rc = await contract.roundCount()
+    const count = Number(rc)
+    if (count === 0) {
+      document.getElementById('pred-area-inner').innerHTML =
+        '<div style="text-align:center;color:rgba(255,255,255,0.35);padding:30px 0;font-size:0.82rem">No active rounds yet. Check back soon.</div>'
+      return
+    }
+    activeRoundId = count - 1
+    const r = await contract.getRound(BigInt(activeRoundId))
+    const snap = Number(ethers.formatUnits(r[4], 8))
+    const isFinalized = r[6]
+    const roundTypeTxt = Number(r[1]) === 0 ? '4h' : '24h'
+    document.getElementById('round-label').textContent = `Round #${activeRoundId} · ${roundTypeTxt}`
+    document.getElementById('deadline-label').textContent = isFinalized ? '✅ Finalized' : 'Active'
+    document.getElementById('price-val').textContent = `$${snap.toLocaleString(undefined, { maximumFractionDigits: 2 })}`
+    document.getElementById('snapshot-info').textContent = `Snapshot: $${snap.toLocaleString()} · ▲ UP: ${Number(r[7])} · ▼ DOWN: ${Number(r[8])}`
+    if (userAddress) {
+      const up = await contract.getUserPrediction(BigInt(activeRoundId), userAddress)
+      if (up[1]) {
+        const dir = up[0] ? '📈 UP' : '📉 DOWN'
+        let html = `<div class="pred-result pr-pending" style="margin-bottom:10px">⏳ Predicted: ${dir} · ${isFinalized ? 'Round ended — claim points below' : 'Waiting for round end'}</div>`
+        if (isFinalized && !up[2]) html += `<button class="pred-btn" style="background:rgba(0,82,255,0.1);border-color:rgba(0,82,255,0.3);color:#4D8EFF" onclick="handleClaim()">🎁 Claim Points</button>`
+        if (up[2]) html = `<div class="pred-result pr-correct">✅ Points claimed successfully!</div>`
+        document.getElementById('pred-area-inner').innerHTML = html
+      } else {
+        document.getElementById('pred-area-inner').innerHTML = `
+          <div class="predict-btns">
+            <button class="pred-btn pred-up" id="btn-up" onclick="handlePredict(true)">📈 UP</button>
+            <button class="pred-btn pred-down" id="btn-down" onclick="handlePredict(false)">📉 DOWN</button>
+          </div>`
+      }
+    }
+  } catch(e) { console.error('Round error:', e) }
+}
+
+// ── UPDATE STATS UI ──
+function updateStatsUI() {
+  if (!userData) return
+  document.getElementById('total-pts').textContent = userData.weeklyPts.toFixed(1)
+  document.getElementById('my-gms').textContent = userData.streak
+  document.getElementById('pred-w').textContent = userData.correctPreds
+  document.getElementById('pred-l').textContent = userData.totalPreds - userData.correctPreds
+  const acc = userData.totalPreds > 0 ? Math.round(userData.correctPreds / userData.totalPreds * 100) : 0
+  document.getElementById('pred-wr').textContent = `${acc}% acc`
+  renderMultTrack(userData.streak)
+  const multLabel = getMultLabel(userData.streak)
+  document.querySelector('.mult-head span:last-child') && (document.querySelector('.mult-head span:last-child').textContent = `${multLabel} active`)
+  if (!userData.canGM) {
+    document.getElementById('gm-btn').classList.add('done')
+    document.getElementById('gm-label').textContent = "GM'd ✓"
+    document.getElementById('gm-ready').style.display = 'none'
+    document.getElementById('cd-box').classList.remove('hidden')
+  }
+}
+
+function updateRankBadge() {
+  if (!leaderboardData || !userAddress) return
+  const rank = leaderboardData.findIndex(e => e.wallet?.toLowerCase() === userAddress?.toLowerCase()) + 1
+  if (rank > 0) {
+    const badge = document.querySelector('.badge.b-rank')
+    if (badge) badge.textContent = `🏆 Rank #${rank}`
+    document.querySelector('.share-btn') && (document.querySelector('.share-btn').textContent = `📤 Share my rank #${rank} on X`)
+  }
+}
+
+function renderMultTrack(streak) {
+  const track = document.getElementById('mult-track')
+  if (!track) return
+  track.innerHTML = ''
+  for (let i = 0; i < 15; i++) {
+    const s = document.createElement('div')
+    const cls = i < streak ? (i < 3 ? ' on' : i < 7 ? ' gold' : ' green') : ''
+    s.className = 'mstep' + cls
+    track.appendChild(s)
+  }
+}
+
+function getMultLabel(streak) {
+  if (streak >= 15) return '2x'
+  if (streak >= 7) return '1.5x'
+  if (streak >= 3) return '1.2x'
+  return '1x'
+}
+
+// ── RENDER LEADERBOARD ──
+function renderLB(type) {
+  curLBType = type
+  const list = document.getElementById('lb-list')
+  if (!leaderboardData || leaderboardData.length === 0) {
+    list.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.35);font-size:0.78rem;padding:20px 0">No players yet. Be the first! 🌅</div>'
+    return
+  }
+  list.innerHTML = leaderboardData.map((e, i) => {
+    const acc = e.total > 0 ? Math.round(e.correct / e.total * 100) : 0
+    const isMe = e.wallet?.toLowerCase() === userAddress?.toLowerCase()
+    const pts = type === 'alltime' ? e.totalPts : e.weeklyPts
+    const rankCls = i === 0 ? 'g' : i === 1 ? 's' : i === 2 ? 'b' : ''
+    const rank = i < 3 ? medals[i] : `#${i+1}`
+    const addr = `${e.wallet.slice(0,6)}...${e.wallet.slice(-4)}`
+    return `<div class="lb-row${isMe ? ' me' : ''}" style="animation-delay:${i*0.04}s">
+      <div class="lb-rank ${rankCls}">${rank}</div>
+      <div class="lb-info">
+        <div class="lb-addr">${addr}${isMe ? ' <span style="color:var(--base-l);font-size:0.58rem">(you)</span>' : ''}</div>
+        <div class="lb-meta">🔥${e.streak}d · ${e.correct}W ${e.total - e.correct}L · ${acc}% acc</div>
+      </div>
+      <div class="lb-right">
+        <div class="lb-score">${pts.toFixed(1)}</div>
+        <div class="lb-pts">pts</div>
+      </div>
+    </div>`
+  }).join('')
+}
+
+// Override the static switchLB to use live data
+function switchLB(type, btn) {
+  document.querySelectorAll('.lb-tab').forEach(b => b.classList.remove('active'))
+  btn.classList.add('active')
+  renderLB(type)
+}
+
+// ── GM HANDLER ──
+async function handleGM() {
+  if (!contract) { alert('Please connect your wallet first'); return }
+  if (gmDone || (userData && !userData.canGM)) return
+  try {
+    document.getElementById('gm-label').textContent = '...'
+    document.getElementById('gm-ready').innerHTML = '<div style="color:var(--green);font-size:0.8rem">⏳ Confirm in wallet...</div>'
+    const tx = await contract.gm(referrer)
+    document.getElementById('gm-ready').innerHTML = '<div style="color:var(--green);font-size:0.8rem">⛓ Confirming on chain...</div>'
+    await tx.wait()
+    gmDone = true
+    spawnParticles()
+    const btn = document.getElementById('gm-btn')
+    btn.classList.add('fired', 'done')
+    setTimeout(() => btn.classList.remove('fired'), 500)
+    document.getElementById('gm-label').textContent = "GM'd ✓"
+    document.getElementById('gm-ready').style.display = 'none'
+    document.getElementById('cd-box').classList.remove('hidden')
+    loadAll()
+  } catch(e) {
+    document.getElementById('gm-label').textContent = 'GM'
+    document.getElementById('gm-ready').innerHTML = '✦ Tap to say GM on Base ✦'
+    console.error(e)
+  }
+}
+
+// ── PREDICT HANDLER ──
+async function handlePredict(isUp) {
+  if (!contract || activeRoundId === null) return
+  try {
+    document.getElementById('btn-up').disabled = true
+    document.getElementById('btn-down').disabled = true
+    document.getElementById('pred-area-inner').innerHTML += '<div style="text-align:center;color:var(--green);font-size:0.75rem;margin-top:10px">⏳ Confirm in wallet...</div>'
+    const tx = await contract.predict(BigInt(activeRoundId), isUp)
+    await tx.wait()
+    loadRounds()
+    loadUserData()
+  } catch(e) {
+    document.getElementById('pred-area-inner').innerHTML = `
+      <div class="predict-btns">
+        <button class="pred-btn pred-up" id="btn-up" onclick="handlePredict(true)">📈 UP</button>
+        <button class="pred-btn pred-down" id="btn-down" onclick="handlePredict(false)">📉 DOWN</button>
+      </div>`
+    console.error(e)
+  }
+}
+
+// ── CLAIM HANDLER ──
+async function handleClaim() {
+  if (!contract || activeRoundId === null) return
+  try {
+    const tx = await contract.claimPredictionPoints(BigInt(activeRoundId))
+    await tx.wait()
+    loadRounds()
+    loadUserData()
+  } catch(e) { console.error(e) }
+}
+
+// ── SHARE ──
+function shareRank() {
+  if (!leaderboardData || !userAddress) return
+  const rank = leaderboardData.findIndex(e => e.wallet?.toLowerCase() === userAddress?.toLowerCase()) + 1
+  const acc = userData ? Math.round(userData.correctPreds / Math.max(userData.totalPreds, 1) * 100) : 0
+  const txt = `I'm Rank #${rank} on CoinGyaan Play with ${acc}% prediction accuracy 🎯\ncoingyaan.com/play\n#BaseChain #CryptoPredict #CoinGyaan`
+  navigator.clipboard?.writeText(txt)
+  alert('Copied to clipboard!\n\n' + txt)
+}
+
+function copyRef() {
+  if (!userAddress) return
+  const link = `https://coingyaan.com/play?ref=${userAddress}`
+  navigator.clipboard?.writeText(link)
+  alert('Referral link copied!\n' + link)
+}
+
+// ── COUNTDOWN ──
+function startCountdown() {
+  setInterval(() => {
+    const el = document.getElementById('countdown')
+    if (!el) return
+    const now = new Date()
+    const mid = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1))
+    const diff = Math.floor((mid - now) / 1000)
+    const h = Math.floor(diff / 3600), m = Math.floor((diff % 3600) / 60), s = diff % 60
+    el.textContent = `${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`
+  }, 1000)
+}
+
+// ── PARTICLES ──
+function spawnParticles() {
+  const wrap = document.getElementById('pw')
+  const colors = ['#0052FF','#4D8EFF','#00D68F','#FFB800','#00D4FF','#fff']
+  for (let i = 0; i < 32; i++) {
+    const p = document.createElement('div')
+    const dx = (Math.random() - 0.5) * 500
+    const dy = (Math.random() - 0.5) * 500
+    p.style.cssText = `position:fixed;border-radius:50%;left:50%;top:45%;width:${4+Math.random()*8}px;height:${4+Math.random()*8}px;background:${colors[Math.floor(Math.random()*colors.length)]};--dx:${dx}px;--dy:${dy}px;animation:burst 1s ease-out ${Math.random()*0.2}s forwards;pointer-events:none;z-index:9999`
+    wrap.appendChild(p)
+    setTimeout(() => p.remove(), 1400)
+  }
+}
+
+// ── PREDICT SECTION: wrap inner content ──
+// Add wrapper div to pred-area for dynamic replacement
+document.addEventListener('DOMContentLoaded', () => {
+  const predBtns = document.querySelector('.predict-btns')
+  if (predBtns && predBtns.parentElement) {
+    const wrapper = document.createElement('div')
+    wrapper.id = 'pred-area-inner'
+    predBtns.parentElement.insertBefore(wrapper, predBtns)
+    wrapper.appendChild(predBtns)
+  }
+  // Remove pred-result static element
+  const pr = document.getElementById('pred-result')
+  if (pr) pr.remove()
+})
+
+// Auto refresh every 30s
+setInterval(() => { if (contract) loadAll() }, 30000)
+
+// Handle wallet events
+if (window.ethereum) {
+  window.ethereum.on('accountsChanged', () => location.reload())
+  window.ethereum.on('chainChanged', () => location.reload())
+}
+</script>
+</body>
+</html>
