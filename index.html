@@ -566,40 +566,8 @@
 
 <body>
 
-<!-- TOP MARKET BAR -->
-<div class="top-market-bar" id="topMarketBar">
-  <div class="top-bar-track" id="topBarTrack">
-    <!-- items injected by JS -->
-  </div>
-  <span class="top-bar-updated" id="topBarUpdated"></span>
-</div>
-
-<!-- HEADER -->
-<header>
-  <div class="container">
-    <div class="header-bar">
-      <a href="/" class="brand">
-        <img src="/assets/images/logo/coingyaan-logo-transparent.png" alt="CoinGyaan – Crypto Sentiment Checker and Fear &amp; Greed Index" loading="eager" />
-        <div class="brand-text"><strong>CoinGyaan</strong></div>
-      </a>
-      <nav class="header-nav">
-        <a href="/bitcoin.html" style="color:#f59e0b;">Bitcoin Guide</a>
-        <div class="nav-dropdown">
-          <span class="nav-dropdown-trigger">Tools ▾</span>
-          <div class="nav-dropdown-menu">
-            <a href="/bitcoin-sentiment-today.html">Crypto Sentiment Checker</a>
-            <a href="/fear-greed-index-today.html">Fear &amp; Greed Index</a>
-            <a href="/airdrop-rescue">Airdrop Rescue Tool</a>
-          </div>
-        </div>
-        <a href="/play">Play</a>
-        <a href="/guides.html">Guides</a>
-        <a href="/contact.html">Contact</a>
-      </nav>
-      <img src="/assets/images/logo/owl-mascot.png" alt="CoinGyaan Mascot" class="owl-mascot" title="Meet our crypto owl mascot! 🦉" loading="eager" />
-    </div>
-  </div>
-</header>
+<!-- TOP MARKET BAR + HEADER -->
+<div id="site-nav"></div>
 
 <!-- MAIN CONTENT -->
 <main class="container">
@@ -1025,24 +993,7 @@
 </main>
 
 <!-- FOOTER -->
-<footer>
-  <div class="container">
-    <div class="footer-promo">
-      <p>Built for crypto curious minds. Free crypto sentiment checker, real data and no noise.</p>
-    </div>
-    <div class="footer-links">
-      <a href="/about.html">About</a>
-      <a href="/contact.html">Contact</a>
-      <a href="/editorial-policy.html">Editorial Policy</a>
-      <a href="/disclaimer.html">Disclaimer</a>
-      <a href="/privacy.html">Privacy</a>
-      <a href="/advertise.html">Advertise</a>
-    </div>
-    <p class="footer-note">&copy; <span id="year"></span> CoinGyaan.com</p>
-  </div>
-</footer>
-
-<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+<div id="site-footer"></div>
 
 <script>
   function fetchPrices() {
@@ -1406,5 +1357,7 @@
 })();
 </script>
 
+<script src="/assets/js/nav.js"></script>
+<script src="/assets/js/footer.js"></script>
 </body>
 </html>
