@@ -240,7 +240,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
     </div>
   </div>
   <div class="nav-right">
-    <a class="faucet-btn" href="https://coingyaan.com" style="color:rgba(255,255,255,0.3);border-color:rgba(255,255,255,0.08);background:transparent;">← CoinGyaan</a>
+    <a class="faucet-btn" href="https://coingyaan.com" style="color:rgba(255,255,255,0.4);border-color:rgba(255,255,255,0.1);background:transparent;">← Back to CoinGyaan</a>
     <a class="faucet-btn" href="https://faucet.quicknode.com/base/sepolia" target="_blank" rel="noopener noreferrer">⛽ Get test ETH</a>
     <div id="wallet-area">
       <button class="connect-btn" onclick="connectWallet()">Connect Wallet</button>
@@ -409,9 +409,16 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 
     <!-- LEADERBOARD CENTER -->
     <div class="section" id="lb-section">
-      <div style="text-align:center;padding:40px 0">
-        <div class="g-label" style="margin-bottom:8px">Full Leaderboard</div>
-        <div style="font-size:0.8rem;color:var(--muted)">Rankings shown in the right panel →</div>
+      <div style="width:100%">
+        <div class="g-label" style="margin-bottom:16px;text-align:center">Full Leaderboard</div>
+        <div style="display:flex;gap:3px;background:rgba(255,255,255,0.03);border-radius:8px;padding:3px;margin-bottom:16px">
+          <button class="lb-tab active" onclick="switchLBCenter('weekly',this)" style="flex:1;padding:7px;border:none;border-radius:6px;background:rgba(0,82,255,0.22);color:#fff;font-size:0.72rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif">Weekly</button>
+          <button class="lb-tab" onclick="switchLBCenter('daily',this)" style="flex:1;padding:7px;border:none;border-radius:6px;background:transparent;color:var(--muted);font-size:0.72rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif">Daily</button>
+          <button class="lb-tab" onclick="switchLBCenter('alltime',this)" style="flex:1;padding:7px;border:none;border-radius:6px;background:transparent;color:var(--muted);font-size:0.72rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif">All-time</button>
+        </div>
+        <div class="lb-list" id="lb-list-center">
+          <div style="text-align:center;color:var(--muted);font-size:0.78rem;padding:20px 0">Loading leaderboard...</div>
+        </div>
       </div>
     </div>
 
@@ -451,26 +458,36 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
 <script>
-const CONTRACT = '0xA296b410fb5058FA1917219C0F30eC31CACeC5A6'
+const CONTRACT = '0xd7A220fF0b3c0A18DA2d0B8c91FFFCf503eDfeAd'
 const BASE_SEPOLIA_ID = 84532
 const BASE_SEPOLIA_HEX = '0x14a34'
 const ZERO_ADDR = '0x0000000000000000000000000000000000000000'
 const ABI = [
   'function gm(address referrer) external',
-  'function predict(uint256 roundId, bool isUp) external',
-  'function claimPredictionPoints(uint256 roundId) external',
+  'function predict(uint8 roundType, uint8 asset, bool isUp) external',
+  'function finalizeRound(uint8 roundType, uint8 asset, uint256 roundId) external',
+  'function claimPoints(uint8 roundType, uint8 asset, uint256 roundId) external',
+  'function claimWeeklyReferralBonus() external',
   'function getTotalGlobalGMs() view returns (uint256)',
-  'function roundCount() view returns (uint256)',
+  'function getCurrentRoundId(uint8 roundType) view returns (uint256)',
+  'function getCurrentRoundIds() view returns (uint256,uint256)',
+  'function getRoundStartTime(uint8 roundType, uint256 roundId) pure returns (uint256)',
+  'function getRoundEndTime(uint8 roundType, uint256 roundId) pure returns (uint256)',
+  'function isPredictionOpen(uint8 roundType, uint256 roundId) view returns (bool)',
+  'function getPrice(uint8 asset) view returns (int256)',
+  'function getRoundInfo(uint8 roundType, uint8 asset, uint256 roundId) view returns (uint256,uint256,int256,int256,bool)',
+  'function getRoundStats(uint8 roundType, uint8 asset, uint256 roundId) view returns (bool,uint256,uint256,bool)',
+  'function getUserPrediction(uint8 roundType, uint8 asset, uint256 roundId, address wallet) view returns (bool,bool,bool)',
   'function getUser(address wallet) view returns (uint256,uint256,uint256,uint256,uint256,bool,uint256,uint256,uint256,bool)',
   'function getLeaderboard() view returns (address[],uint256[],uint256[],uint256[],uint256[],uint256[])',
-  'function getRound(uint256 roundId) view returns (uint8,uint8,uint256,uint256,int256,int256,bool,uint256,uint256)',
-  'function getUserPrediction(uint256 roundId, address wallet) view returns (bool,bool,bool)',
+  'function getUserCount() view returns (uint256)',
 ]
 
 let provider, signer, contract, userAddress
-let activeRoundId = null, gmDone = false
+let cur4hRoundId = null, cur24hRoundId = null, gmDone = false
 let userData = null, leaderboardData = null
 let curLBType = 'weekly', todayPreds = []
+let curRoundType = 0 // 0=4h 1=24h
 const referrer = new URLSearchParams(window.location.search).get('ref') || ZERO_ADDR
 const medals = ['🥇','🥈','🥉']
 
@@ -485,18 +502,34 @@ function switchMain(tab, btn) {
 function switchAsset(asset, btn) {
   document.querySelectorAll('.asset-tab').forEach(b => b.classList.remove('active'))
   btn.classList.add('active')
+  curAssetId = asset
   document.getElementById('price-asset').textContent = (asset === 0 ? 'BTC' : 'ETH') + ' / USD · Live via Chainlink'
+  loadLivePrice()
   loadRounds()
 }
 
 function switchRound(round, btn) {
   document.querySelectorAll('.round-tab').forEach(b => b.classList.remove('active'))
   btn.classList.add('active')
+  curRoundType = round
+  loadRounds()
 }
 
 function switchLB(type, btn) {
   document.querySelectorAll('.lb-tab').forEach(b => b.classList.remove('active'))
   btn.classList.add('active')
+  curLBType = type
+  renderLB()
+}
+
+function switchLBCenter(type, btn) {
+  // Only update the center leaderboard tabs
+  btn.parentElement.querySelectorAll('.lb-tab').forEach(b => {
+    b.style.background = 'transparent'
+    b.style.color = 'var(--muted)'
+  })
+  btn.style.background = 'rgba(0,82,255,0.22)'
+  btn.style.color = '#fff'
   curLBType = type
   renderLB()
 }
@@ -595,53 +628,109 @@ async function loadLeaderboard() {
   } catch(e) { console.error('LB error:', e) }
 }
 
+// Chainlink price feed addresses on Base Sepolia
+const BTC_FEED = '0x0FB99723Aee6f420beAD13e6bBB79b7E6F034298'
+const ETH_FEED = '0x4aDC67696bA383F43DD60A9e78F2C97Fbbfc7cb1'
+const FEED_ABI = ['function latestRoundData() view returns (uint80,int256,uint256,uint256,uint80)']
+let curAssetId = 0 // 0=BTC 1=ETH
+
+async function loadLivePrice() {
+  try {
+    const readProvider = new ethers.BrowserProvider(window.ethereum)
+    const feedAddr = curAssetId === 0 ? BTC_FEED : ETH_FEED
+    const feed = new ethers.Contract(feedAddr, FEED_ABI, readProvider)
+    const data = await feed.latestRoundData()
+    const price = Number(ethers.formatUnits(data[1], 8))
+    const assetName = curAssetId === 0 ? 'BTC' : 'ETH'
+    document.getElementById('price-val').textContent = `$${price.toLocaleString(undefined, { maximumFractionDigits: 2 })}`
+    document.getElementById('price-asset').textContent = `${assetName} / USD · Live via Chainlink`
+    document.getElementById('snapshot-info').textContent = `Live price: $${price.toLocaleString(undefined, { maximumFractionDigits: 2 })} · Updates every 30s`
+  } catch(e) {
+    document.getElementById('price-val').textContent = 'Fetching...'
+    document.getElementById('snapshot-info').textContent = 'Connecting to Chainlink...'
+    console.error('Price feed error:', e)
+  }
+}
+
 async function loadRounds() {
   if (!contract) return
   try {
-    const rc = await contract.roundCount()
-    const count = Number(rc)
-    if (count === 0) {
-      document.getElementById('pred-area').innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.35);padding:30px 0;font-size:0.82rem">No active rounds yet. Admin needs to create a round first.</div>'
-      document.getElementById('round-label').textContent = 'No rounds created yet'
-      document.getElementById('deadline-label').textContent = '—'
-      return
+    // Always load live price from Chainlink
+    await loadLivePrice()
+
+    // Get current round ID from contract
+    const roundId = await contract.getCurrentRoundId(curRoundType)
+    const currentRoundId = BigInt(roundId)
+
+    if (curRoundType === 0) cur4hRoundId = currentRoundId
+    else cur24hRoundId = currentRoundId
+
+    // Get round info
+    const info = await contract.getRoundInfo(curRoundType, curAssetId, currentRoundId)
+    const stats = await contract.getRoundStats(curRoundType, curAssetId, currentRoundId)
+
+    const endTime = Number(info[1]) * 1000
+    const snapshotPrice = Number(ethers.formatUnits(info[2], 8))
+    const isFinalized = info[4]
+    const snapshotTaken = stats[0]
+    const upCount = Number(stats[1])
+    const downCount = Number(stats[2])
+    const predOpen = stats[3]
+    const roundTypeTxt = curRoundType === 0 ? '4h' : '24h'
+    const assetName = curAssetId === 0 ? 'BTC' : 'ETH'
+
+    document.getElementById('round-label').textContent = `${assetName} ${roundTypeTxt} · Round #${currentRoundId}`
+    document.getElementById('deadline-label').textContent = isFinalized
+      ? '✅ Finalized'
+      : endTime > Date.now()
+        ? `Ends ${new Date(endTime).toUTCString().slice(5, 22)} UTC`
+        : 'Ended · Awaiting finalization'
+
+    if (snapshotTaken && snapshotPrice > 0) {
+      document.getElementById('snapshot-info').textContent = `Snapshot: $${snapshotPrice.toLocaleString(undefined, { maximumFractionDigits: 2 })} · ▲ UP: ${upCount} · ▼ DOWN: ${downCount}`
     }
-    activeRoundId = count - 1
-    const r = await contract.getRound(BigInt(activeRoundId))
-    const snap = Number(ethers.formatUnits(r[4], 8))
-    const isFinalized = r[6]
-    const roundTypeTxt = Number(r[1]) === 0 ? '4h' : '24h'
-    const endTime = Number(r[3]) * 1000
-    document.getElementById('round-label').textContent = `Round #${activeRoundId} · ${roundTypeTxt}`
-    document.getElementById('deadline-label').textContent = isFinalized ? '✅ Finalized' : endTime > Date.now() ? `Ends ${new Date(endTime).toUTCString().slice(0,25)}` : 'Ended · Awaiting finalization'
-    document.getElementById('price-val').textContent = snap > 0 ? `$${snap.toLocaleString(undefined, { maximumFractionDigits: 2 })}` : 'Loading...'
-    document.getElementById('snapshot-info').textContent = snap > 0 ? `Snapshot: $${snap.toLocaleString()} · ▲ UP: ${Number(r[7])} · ▼ DOWN: ${Number(r[8])}` : 'Fetching price data...'
-    if (userAddress) {
-      const up = await contract.getUserPrediction(BigInt(activeRoundId), userAddress)
-      if (up[1]) {
-        // Already predicted
-        const dir = up[0] ? '📈 UP' : '📉 DOWN'
-        const statusTxt = isFinalized ? 'Round ended' : 'Waiting for round end'
-        let html = `<div class="pred-result pr-pending" style="margin-bottom:10px">⏳ Predicted: ${dir} · ${statusTxt}</div>`
-        if (isFinalized && !up[2]) html += `<button class="pred-btn" style="border-color:rgba(0,82,255,0.3);color:#4D8EFF;background:rgba(0,82,255,0.1)" onclick="handleClaim()">🎁 Claim Points</button>`
-        if (up[2]) html = `<div class="pred-result pr-correct">✅ Points claimed successfully!</div>`
-        document.getElementById('pred-area').innerHTML = html
-        // Add to today's list
-        if (!todayPreds.find(p => p.roundId === activeRoundId)) {
-          todayPreds.push({ roundId: activeRoundId, asset: Number(r[0]) === 0 ? 'BTC' : 'ETH', type: roundTypeTxt, dir: up[0] ? 'UP' : 'DOWN', status: up[2] ? 'correct' : isFinalized ? 'pending' : 'pending' })
-          renderPredList()
-        }
-      } else if (!isFinalized && endTime > Date.now() + 30 * 60 * 1000) {
-        // Can predict
-        document.getElementById('pred-area').innerHTML = `
-          <div class="pred-btns">
-            <button class="pred-btn pred-up" id="btn-up" onclick="handlePredict(true)">📈 UP</button>
-            <button class="pred-btn pred-down" id="btn-down" onclick="handlePredict(false)">📉 DOWN</button>
-          </div>
-          <div style="text-align:center;font-size:0.65rem;color:rgba(255,255,255,0.2);margin-top:8px">Prediction closes 30 min before round ends</div>`
-      } else if (!isFinalized) {
-        document.getElementById('pred-area').innerHTML = '<div class="pred-result pr-pending">🔒 Prediction window closed for this round</div>'
+
+    if (!userAddress) return
+
+    // Check user prediction
+    const up = await contract.getUserPrediction(curRoundType, curAssetId, currentRoundId, userAddress)
+
+    if (up[1]) {
+      // Already predicted
+      const dir = up[0] ? '📈 UP' : '📉 DOWN'
+      let html = `<div class="pred-result pr-pending" style="margin-bottom:10px">⏳ Predicted: ${dir} · ${isFinalized ? 'Round ended' : 'Waiting for round end'}</div>`
+      if (isFinalized && !up[2]) {
+        html += `<button class="pred-btn" style="border-color:rgba(0,82,255,0.3);color:#4D8EFF;background:rgba(0,82,255,0.1)" onclick="handleClaim()">🎁 Claim Points</button>`
       }
+      if (!isFinalized && endTime < Date.now()) {
+        html += `<button class="pred-btn" style="border-color:rgba(255,184,0,0.3);color:var(--gold);background:rgba(255,184,0,0.08);margin-top:8px" onclick="handleFinalize()">⚡ Finalize Round</button>`
+      }
+      if (up[2]) html = `<div class="pred-result pr-correct">✅ Points claimed successfully!</div>`
+      document.getElementById('pred-area').innerHTML = html
+
+      // Add to today's list
+      const key = `${curRoundType}-${curAssetId}-${currentRoundId}`
+      if (!todayPreds.find(p => p.key === key)) {
+        todayPreds.push({ key, roundId: currentRoundId.toString(), asset: assetName, type: roundTypeTxt, dir: up[0] ? 'UP' : 'DOWN' })
+        renderPredList()
+      }
+    } else if (predOpen) {
+      // Can predict
+      document.getElementById('pred-area').innerHTML = `
+        <div class="pred-btns">
+          <button class="pred-btn pred-up" id="btn-up" onclick="handlePredict(true)">📈 UP</button>
+          <button class="pred-btn pred-down" id="btn-down" onclick="handlePredict(false)">📉 DOWN</button>
+        </div>
+        <div style="text-align:center;font-size:0.65rem;color:rgba(255,255,255,0.2);margin-top:8px">
+          ${curRoundType === 0 ? 'Closes 30 min before round ends' : 'Closes 1 hour before round ends'}
+        </div>`
+    } else if (!isFinalized && endTime < Date.now()) {
+      // Round ended but not finalized — anyone can finalize
+      document.getElementById('pred-area').innerHTML = `
+        <div class="pred-result pr-pending" style="margin-bottom:10px">🔒 Prediction window closed</div>
+        <button class="pred-btn" style="border-color:rgba(255,184,0,0.3);color:var(--gold);background:rgba(255,184,0,0.08)" onclick="handleFinalize()">⚡ Finalize Round (anyone can do this)</button>`
+    } else if (!predOpen) {
+      document.getElementById('pred-area').innerHTML = '<div class="pred-result pr-pending">🔒 Prediction window closed for this round</div>'
     }
   } catch(e) { console.error('Round error:', e) }
 }
@@ -720,12 +809,15 @@ function getMultLabel(streak) {
 }
 
 function renderLB() {
-  const list = document.getElementById('lb-list')
+  const emptyMsg = '<div style="text-align:center;color:rgba(255,255,255,0.35);font-size:0.78rem;padding:20px 0">No players yet. Be the first! 🌅</div>'
+  const rightList = document.getElementById('lb-list')
+  const centerList = document.getElementById('lb-list-center')
   if (!leaderboardData || leaderboardData.length === 0) {
-    list.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.35);font-size:0.78rem;padding:20px 0">No players yet. Be the first! 🌅</div>'
+    if (rightList) rightList.innerHTML = emptyMsg
+    if (centerList) centerList.innerHTML = emptyMsg
     return
   }
-  list.innerHTML = leaderboardData.map((e, i) => {
+  const html = leaderboardData.map((e, i) => {
     const acc = e.total > 0 ? Math.round(e.correct / e.total * 100) : 0
     const isMe = e.wallet?.toLowerCase() === userAddress?.toLowerCase()
     const pts = curLBType === 'alltime' ? e.totalPts : e.weeklyPts
@@ -744,6 +836,8 @@ function renderLB() {
       </div>
     </div>`
   }).join('')
+  if (rightList) rightList.innerHTML = html
+  if (centerList) centerList.innerHTML = html
 }
 
 // ── HANDLERS ──
@@ -773,12 +867,27 @@ async function handleGM() {
 }
 
 async function handlePredict(isUp) {
-  if (!contract || activeRoundId === null) return
+  if (!contract) return
   try {
     document.getElementById('btn-up').disabled = true
     document.getElementById('btn-down').disabled = true
     document.getElementById('pred-area').innerHTML += '<div style="text-align:center;color:var(--green);font-size:0.75rem;margin-top:10px">⏳ Confirm in wallet...</div>'
-    const tx = await contract.predict(BigInt(activeRoundId), isUp)
+    const tx = await contract.predict(curRoundType, curAssetId, isUp)
+    await tx.wait()
+    loadRounds()
+    loadUserData()
+  } catch(e) {
+    loadRounds()
+    console.error(e)
+  }
+}
+
+async function handleFinalize() {
+  if (!contract) return
+  try {
+    const roundId = curRoundType === 0 ? cur4hRoundId : cur24hRoundId
+    document.getElementById('pred-area').innerHTML = '<div style="text-align:center;color:var(--gold);font-size:0.8rem">⏳ Finalizing round...</div>'
+    const tx = await contract.finalizeRound(curRoundType, curAssetId, roundId)
     await tx.wait()
     loadRounds()
     loadUserData()
@@ -789,14 +898,18 @@ async function handlePredict(isUp) {
 }
 
 async function handleClaim() {
-  if (!contract || activeRoundId === null) return
+  if (!contract) return
   try {
+    const roundId = curRoundType === 0 ? cur4hRoundId : cur24hRoundId
     document.getElementById('pred-area').innerHTML = '<div style="text-align:center;color:var(--green);font-size:0.8rem">⏳ Claiming points...</div>'
-    const tx = await contract.claimPredictionPoints(BigInt(activeRoundId))
+    const tx = await contract.claimPoints(curRoundType, curAssetId, roundId)
     await tx.wait()
     loadRounds()
     loadUserData()
-  } catch(e) { loadRounds(); console.error(e) }
+  } catch(e) {
+    loadRounds()
+    console.error(e)
+  }
 }
 
 function shareRank() {
