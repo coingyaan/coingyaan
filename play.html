@@ -11,18 +11,13 @@
   gtag("js", new Date());
   gtag("config", "G-DXY9ZZ543X");
 </script>
-
 <!-- AdSense -->
 <meta name="google-adsense-account" content="ca-pub-9704432095241296" />
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9704432095241296" crossorigin="anonymous"></script>
-
 <!-- Favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon/coingyaan-favicon-16x16.png" />
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon/coingyaan-favicon-32x32.png" />
-<link rel="icon" type="image/png" sizes="48x48" href="/assets/images/favicon/coingyaan-favicon-48x48.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon/coingyaan-apple-touch-icon-180x180.png" />
-<link rel="icon" sizes="192x192" href="/assets/images/favicon/coingyaan-android-icon-192x192.png" />
-<link rel="icon" sizes="512x512" href="/assets/images/favicon/coingyaan-android-icon-512x512.png" />
 <!-- Primary SEO -->
 <title>CoinGyaan Play — Predict BTC &amp; ETH Daily, Win USDC Every Sunday</title>
 <meta name="description" content="Predict BTC and ETH price direction daily on Base chain. Say GM to build your streak. Top 10 weekly winners share a USDC prize pool. Free to play on testnet."/>
@@ -30,7 +25,6 @@
 <meta name="author" content="CoinGyaan"/>
 <meta name="robots" content="index, follow"/>
 <link rel="canonical" href="https://coingyaan.com/play"/>
-
 <!-- Open Graph -->
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://coingyaan.com/play"/>
@@ -41,14 +35,12 @@
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:locale" content="en_US"/>
-
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="CoinGyaan Play — Predict BTC &amp; ETH Daily, Win USDC Every Sunday"/>
 <meta name="twitter:description" content="Predict BTC and ETH price direction daily on Base chain. Say GM to build your streak. Top 10 weekly winners share a USDC prize pool."/>
 <meta name="twitter:image" content="https://coingyaan.com/assets/images/social/coingyaan-play-og-1200x630.png"/>
-
-<!-- Schema Markup -->
+<!-- Schema -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -58,20 +50,8 @@
   "description": "Daily crypto prediction game on Base chain. Predict BTC and ETH price direction and win USDC every Sunday.",
   "applicationCategory": "Game",
   "operatingSystem": "Web Browser",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "CoinGyaan",
-    "url": "https://coingyaan.com",
-    "sameAs": [
-      "https://twitter.com/coin_gyaan",
-      "https://t.me/coingyaan"
-    ]
-  }
+  "offers": {"@type": "Offer","price": "0","priceCurrency": "USD"},
+  "publisher": {"@type": "Organization","name": "CoinGyaan","url": "https://coingyaan.com","sameAs": ["https://twitter.com/coin_gyaan","https://t.me/coingyaan"]}
 }
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
@@ -85,7 +65,6 @@
 }
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:#fff;min-height:100vh;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,82,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,82,255,0.04) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0}
-
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 @keyframes pulse-ring{0%,100%{transform:scale(0.96);opacity:0.7}50%{transform:scale(1.04);opacity:0.3}}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
@@ -94,13 +73,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 @keyframes burst{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
-@keyframes countPulse{0%,100%{opacity:1}50%{opacity:0.6}}
-@keyframes correctFlash{0%,100%{background:rgba(0,214,143,0.08)}50%{background:rgba(0,214,143,0.18)}}
-
 .app{max-width:1160px;margin:0 auto;padding:0 24px 60px;position:relative;z-index:1}
-
-/* HEADER */
-nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0 20px;border-bottom:1px solid var(--border);margin-bottom:0}
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0 20px;border-bottom:1px solid var(--border)}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
 .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--base),#00D4FF);border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px var(--base-glow)}
 .logo-text{font-size:1.05rem;font-weight:800;letter-spacing:0.03em}
@@ -113,22 +87,14 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .w-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green)}
 .connect-btn{background:var(--base);border:none;color:#fff;padding:8px 20px;border-radius:20px;font-family:'Outfit',sans-serif;font-size:0.8rem;font-weight:600;cursor:pointer;box-shadow:0 0 16px var(--base-glow);transition:opacity 0.2s}
 .connect-btn:hover{opacity:0.85}
-
-/* TABS */
-.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:28px;margin-top:0;padding-top:4px}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:28px;padding-top:4px}
 .tab{padding:14px 24px;font-size:0.82rem;font-weight:600;cursor:pointer;color:var(--muted);border:none;background:transparent;border-bottom:2px solid transparent;transition:all 0.2s;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:7px}
 .tab.active{color:#fff;border-bottom-color:var(--base);background:rgba(0,82,255,0.06)}
 .tab-badge{background:var(--base);color:#fff;font-size:0.58rem;padding:2px 6px;border-radius:10px;font-weight:700}
-
-/* GRID */
 .grid{display:grid;grid-template-columns:258px 1fr 276px;gap:18px;align-items:start}
-
-/* PANELS */
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;animation:fadeUp 0.5s ease both}
 .plabel{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.18em;color:var(--muted);margin-bottom:16px}
 .divider{height:1px;background:var(--border);margin:14px 0}
-
-/* LEFT STATS */
 .stat-block{margin-bottom:14px}
 .stat-name{font-size:0.68rem;color:var(--muted);margin-bottom:3px}
 .stat-num{font-size:2rem;font-weight:800;line-height:1}
@@ -139,19 +105,15 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .b-rank{background:rgba(0,82,255,0.1);color:var(--base-l);border:1px solid rgba(0,82,255,0.2)}
 .b-mult{background:rgba(0,214,143,0.1);color:var(--green);border:1px solid rgba(0,214,143,0.2)}
 .b-acc{background:rgba(123,47,255,0.1);color:#b388ff;border:1px solid rgba(123,47,255,0.2)}
-
 .record-row{display:flex;gap:10px;align-items:baseline;margin-top:4px}
 .rec-w{font-size:1.4rem;font-weight:800;color:var(--green)}
 .rec-l{font-size:1.4rem;font-weight:800;color:var(--red)}
 .rec-sep{font-size:0.75rem;color:var(--muted)}
 .rec-wr{font-size:0.7rem;color:var(--muted);margin-left:2px}
-
 .pts-box{background:rgba(0,82,255,0.05);border:1px solid rgba(0,82,255,0.12);border-radius:10px;padding:11px;margin-top:10px}
 .pts-row{display:flex;justify-content:space-between;font-size:0.7rem;padding:2px 0;color:rgba(255,255,255,0.4)}
 .pts-row span:last-child{color:var(--base-l);font-weight:600}
 .pts-row.sep{border-top:1px solid rgba(255,255,255,0.05);margin-top:5px;padding-top:7px;color:rgba(255,255,255,0.6)}
-
-/* MULTIPLIER */
 .mult-wrap{margin-top:12px}
 .mult-head{display:flex;justify-content:space-between;font-size:0.68rem;color:var(--muted);margin-bottom:7px}
 .mult-track{display:flex;gap:3px;margin-bottom:5px}
@@ -162,20 +124,14 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .mult-labels{display:flex;justify-content:space-between;font-size:0.58rem;color:var(--muted)}
 .mult-labels .hi{color:var(--green);font-weight:700}
 .mult-note{font-size:0.62rem;color:rgba(255,255,255,0.2);margin-top:6px;text-align:center;font-style:italic}
-
-/* REFERRAL */
 .ref-bar-wrap{background:rgba(255,255,255,0.05);border-radius:4px;height:4px;margin:7px 0;overflow:hidden}
 .ref-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--base),#00D4FF)}
 .ref-btn{width:100%;padding:8px;border-radius:9px;border:1px solid rgba(0,82,255,0.25);background:rgba(0,82,255,0.07);color:var(--base-l);font-size:0.73rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;margin-top:7px;transition:all 0.2s}
 .ref-btn:hover{background:rgba(0,82,255,0.15)}
 .ref-note{font-size:0.6rem;color:rgba(255,255,255,0.2);text-align:center;margin-top:5px;line-height:1.5}
-
-/* CENTER GM */
 .center-col{display:flex;flex-direction:column;align-items:center;gap:22px}
-.global-count{text-align:center}
 .g-label{font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
 .g-number{font-size:3rem;font-weight:800;font-family:'JetBrains Mono',monospace;background:linear-gradient(135deg,var(--base-l) 0%,#00D4FF 50%,var(--base-l) 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 3s linear infinite}
-
 .gm-wrap{position:relative;width:210px;height:210px;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .gm-ring{position:absolute;border-radius:50%;border:1.5px solid rgba(0,82,255,0.25);animation:pulse-ring 3s ease-in-out infinite}
 .gr1{width:208px;height:208px}
@@ -194,45 +150,32 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .cd-label{font-size:0.58rem;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
 .cd-time{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--base-l);text-shadow:0 0 18px rgba(0,82,255,0.4)}
 .gm-note{font-size:0.65rem;color:rgba(255,255,255,0.18);text-align:center;line-height:1.7;max-width:280px}
-
-/* CENTER PREDICT */
-.predict-col{display:flex;flex-direction:column;gap:16px;width:100%}
 .asset-tabs{display:flex;gap:6px;justify-content:center}
 .asset-tab{padding:7px 18px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:0.78rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;display:flex;align-items:center;gap:6px}
 .asset-tab.active{border-color:var(--base);background:rgba(0,82,255,0.12);color:#fff}
-.asset-icon{font-size:1rem}
-
-.price-card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center}
+.price-card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;width:100%}
 .price-asset{font-size:0.65rem;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
 .price-val{font-family:'JetBrains Mono',monospace;font-size:2.4rem;font-weight:700;color:#fff;margin-bottom:4px}
 .price-change{font-size:0.8rem;font-weight:600}
 .price-change.up{color:var(--green)}
 .price-change.down{color:var(--red)}
 .snapshot-info{font-size:0.65rem;color:var(--muted);margin-top:6px}
-
-.round-tabs{display:flex;gap:6px;background:rgba(255,255,255,0.03);border-radius:10px;padding:4px}
+.round-tabs{display:flex;gap:6px;background:rgba(255,255,255,0.03);border-radius:10px;padding:4px;width:100%}
 .round-tab{flex:1;padding:7px;border:none;border-radius:8px;background:transparent;color:var(--muted);font-size:0.72rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
 .round-tab.active{background:rgba(0,82,255,0.2);color:#fff}
-
-.predict-btns{display:flex;gap:10px}
+.deadline-info{display:flex;justify-content:space-between;font-size:0.68rem;color:var(--muted);background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:9px;padding:9px 12px;width:100%}
+.deadline-info span:last-child{color:var(--gold);font-weight:600}
+.pred-btns{display:flex;gap:10px;width:100%}
 .pred-btn{flex:1;padding:14px;border-radius:12px;border:1.5px solid;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
 .pred-up{background:rgba(0,214,143,0.08);border-color:rgba(0,214,143,0.3);color:var(--green)}
 .pred-up:hover{background:rgba(0,214,143,0.18);transform:translateY(-2px)}
 .pred-down{background:rgba(255,77,106,0.08);border-color:rgba(255,77,106,0.3);color:var(--red)}
 .pred-down:hover{background:rgba(255,77,106,0.18);transform:translateY(-2px)}
-.pred-btn.selected{transform:scale(1.03)}
-.pred-up.selected{background:rgba(0,214,143,0.22);border-color:var(--green)}
-.pred-down.selected{background:rgba(255,77,106,0.22);border-color:var(--red)}
-
-.deadline-info{display:flex;justify-content:space-between;font-size:0.68rem;color:var(--muted);background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:9px;padding:9px 12px}
-.deadline-info span:last-child{color:var(--gold);font-weight:600}
-
-.pred-result{text-align:center;padding:12px;border-radius:11px;font-weight:700;font-size:0.88rem;animation:fadeUp 0.3s ease}
+.pred-result{text-align:center;padding:12px;border-radius:11px;font-weight:700;font-size:0.88rem;width:100%}
 .pr-correct{background:rgba(0,214,143,0.1);border:1px solid rgba(0,214,143,0.25);color:var(--green)}
 .pr-wrong{background:rgba(255,77,106,0.1);border:1px solid rgba(255,77,106,0.25);color:var(--red)}
 .pr-pending{background:rgba(255,184,0,0.08);border:1px solid rgba(255,184,0,0.2);color:var(--gold)}
-
-.my-predictions{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:14px}
+.my-predictions{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:14px;width:100%}
 .mypred-title{font-size:0.65rem;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
 .mypred-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.72rem}
 .mypred-row:last-child{border-bottom:none}
@@ -245,8 +188,6 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .s-correct{background:rgba(0,214,143,0.1);color:var(--green)}
 .s-wrong{background:rgba(255,77,106,0.1);color:var(--red)}
 .s-pending{background:rgba(255,184,0,0.1);color:var(--gold)}
-
-/* LEADERBOARD */
 .lb-tabs{display:flex;gap:3px;background:rgba(255,255,255,0.03);border-radius:8px;padding:3px;margin-bottom:12px}
 .lb-tab{flex:1;padding:5px;border:none;border-radius:6px;background:transparent;color:var(--muted);font-size:0.65rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.15s}
 .lb-tab.active{background:rgba(0,82,255,0.22);color:#fff}
@@ -274,11 +215,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .ps-item{flex:1;text-align:center;padding:4px;border-radius:6px;background:rgba(255,255,255,0.03)}
 .ps-rank{color:var(--muted);margin-bottom:2px}
 .ps-pct{font-weight:700;color:var(--gold)}
-
-/* PARTICLES */
 .pw{position:fixed;inset:0;pointer-events:none;z-index:999}
-
-/* HIDDEN */
 .hidden{display:none!important}
 .section{display:none}
 .section.active{display:flex;flex-direction:column;align-items:center;gap:22px;width:100%}
@@ -288,7 +225,6 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 <div class="pw" id="pw"></div>
 <div class="app">
 
-<!-- NAV -->
 <nav>
   <div class="logo">
     <div class="logo-icon">
@@ -303,7 +239,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
       <div class="logo-sub">coingyaan.com/play · Base Sepolia Testnet</div>
     </div>
   </div>
-  <div class="nav-right" id="nav-right">
+  <div class="nav-right">
     <a class="faucet-btn" href="https://coingyaan.com" style="color:rgba(255,255,255,0.3);border-color:rgba(255,255,255,0.08);background:transparent;">← CoinGyaan</a>
     <a class="faucet-btn" href="https://faucet.quicknode.com/base/sepolia" target="_blank" rel="noopener noreferrer">⛽ Get test ETH</a>
     <div id="wallet-area">
@@ -312,7 +248,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
   </div>
 </nav>
 
-<!-- TABS -->
+<!-- NOT CONNECTED -->
 <div id="not-connected" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:20px;position:relative;z-index:5">
   <div style="width:56px;height:56px;background:linear-gradient(135deg,#0052FF,#00D4FF);border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(0,82,255,0.4)">
     <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
@@ -321,50 +257,48 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
       <path d="M17 9C13.13 9 10 12.13 10 16C10 19.87 13.13 23 17 23H21.5V21H17C14.24 21 12 18.76 12 16C12 13.24 14.24 11 17 11H21.5V9H17Z" fill="#0052FF"/>
     </svg>
   </div>
-  <div style="font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;text-align:center">Welcome to <span style="color:#4D8EFF">CoinGyaan Play</span></div>
+  <div style="font-size:2rem;font-weight:800;text-align:center">Welcome to <span style="color:#4D8EFF">CoinGyaan Play</span></div>
   <p style="color:rgba(255,255,255,0.35);font-size:0.9rem;text-align:center;max-width:360px;line-height:1.6">Predict BTC and ETH price direction daily on Base chain. Say GM to build your streak. Win USDC every Sunday.</p>
   <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
     <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px 16px;font-size:0.75rem;color:rgba(255,255,255,0.35)">🌅 Daily GM</div>
     <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px 16px;font-size:0.75rem;color:rgba(255,255,255,0.35)">🔮 Predict BTC &amp; ETH</div>
     <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px 16px;font-size:0.75rem;color:rgba(255,255,255,0.35)">🏆 Weekly Leaderboard</div>
-    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px 16px;font-size:0.75rem;color:rgba(255,255,255,0.35)">💰 Win USDC Sunday</div>
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px 16px;font-size:0.75rem;color:rgba(255,255,255,0.35)">💰 Win USDC Every Sunday</div>
   </div>
   <button class="connect-btn" style="font-size:1rem;padding:13px 32px" onclick="connectWallet()">Connect Wallet to Play</button>
 </div>
 
+<!-- MAIN APP -->
 <div id="main-app" style="display:none">
+
 <div class="tabs">
   <button class="tab active" onclick="switchMain('gm',this)">🌅 Daily GM</button>
-  <button class="tab" onclick="switchMain('predict',this)">🔮 Predict <span class="tab-badge">3 assets</span></button>
+  <button class="tab" onclick="switchMain('predict',this)">🔮 Predict <span class="tab-badge">BTC &amp; ETH</span></button>
   <button class="tab" onclick="switchMain('lb',this)">🏆 Leaderboard</button>
 </div>
 
-<!-- MAIN GRID -->
 <div class="grid">
 
   <!-- LEFT PANEL -->
   <div class="panel" style="animation-delay:0.05s">
     <div class="plabel">Your Stats</div>
-
     <div class="stat-block">
-      <div class="stat-name">Total Points</div>
-      <div class="stat-num blue" id="total-pts">63.4</div>
-      <span class="badge b-rank">🏆 Rank #3</span>
+      <div class="stat-name">Weekly Points</div>
+      <div class="stat-num blue" id="total-pts">0.0</div>
+      <span class="badge b-rank" id="rank-badge" style="display:none">🏆 Rank #-</span>
     </div>
-
     <div class="divider"></div>
-
     <div class="stat-block">
       <div class="stat-name">Daily GM Streak</div>
-      <div class="stat-num white" id="my-gms">7</div>
+      <div class="stat-num white" id="my-gms">0</div>
       <div>
-        <span class="badge b-streak">🔥 7 day streak</span>
-        <span class="badge b-mult">1.5x GM pts</span>
+        <span class="badge b-streak" id="streak-badge">🔥 0 day streak</span>
+        <span class="badge b-mult" id="mult-badge">1x GM pts</span>
       </div>
       <div class="mult-wrap">
         <div class="mult-head">
           <span>Streak Multiplier</span>
-          <span style="color:var(--green)">1.5x active</span>
+          <span style="color:var(--green)" id="mult-active">1x active</span>
         </div>
         <div class="mult-track" id="mult-track"></div>
         <div class="mult-labels">
@@ -376,38 +310,33 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
         <div class="mult-note">⚡ Multiplier applies to GM points only</div>
       </div>
     </div>
-
     <div class="divider"></div>
-
     <div class="stat-block">
       <div class="stat-name">Prediction Record</div>
       <div class="record-row">
-        <span class="rec-w" id="pred-w">18</span>
+        <span class="rec-w" id="pred-w">0</span>
         <span class="rec-sep">W</span>
-        <span class="rec-l" id="pred-l">7</span>
+        <span class="rec-l" id="pred-l">0</span>
         <span class="rec-sep">L</span>
-        <span class="rec-wr" id="pred-wr">72% acc</span>
+        <span class="rec-wr" id="pred-wr">0% acc</span>
       </div>
-      <span class="badge b-acc">🎯 Best: BTC 80%</span>
+      <span class="badge b-acc" id="acc-badge">🎯 0% accuracy</span>
     </div>
-
     <div class="pts-box">
       <div class="pts-row"><span>GM check-in</span><span>+1 pt × streak mult</span></div>
       <div class="pts-row"><span>4h correct</span><span>+2 pts flat</span></div>
       <div class="pts-row"><span>24h correct</span><span>+3 pts flat</span></div>
       <div class="pts-row"><span>Wrong prediction</span><span>0 pts</span></div>
-      <div class="pts-row sep"><span>Max predictions/day</span><span>21</span></div>
+      <div class="pts-row sep"><span>Total GMs ever</span><span id="total-gms-ever">0</span></div>
     </div>
-
     <div class="divider"></div>
-
     <div>
       <div class="stat-name">Referrals</div>
       <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--muted);margin-top:6px">
-        <span>1 / 3 used</span>
-        <span style="color:var(--green)">2 left</span>
+        <span id="ref-used">0 / 3 used</span>
+        <span id="ref-left" style="color:var(--green)">3 left</span>
       </div>
-      <div class="ref-bar-wrap"><div class="ref-bar" style="width:33%"></div></div>
+      <div class="ref-bar-wrap"><div class="ref-bar" id="ref-bar" style="width:0%"></div></div>
       <button class="ref-btn" onclick="copyRef()">📋 Copy Referral Link</button>
       <div class="ref-note">Max 3 referrals · Activates after 5 predictions and 7 GMs</div>
     </div>
@@ -418,12 +347,10 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 
     <!-- GM SECTION -->
     <div class="section active" id="gm-section">
-
-      <div class="global-count">
-        <div class="g-label">Global GM Count · Base Testnet</div>
-        <div class="g-number" id="global-gms">31,428</div>
+      <div style="text-align:center">
+        <div class="g-label">Global GM Count · Base Sepolia</div>
+        <div class="g-number" id="global-gms">0</div>
       </div>
-
       <div class="gm-wrap" onclick="handleGM()">
         <div class="gm-ring gr1"></div>
         <div class="gm-ring gr2"></div>
@@ -440,90 +367,51 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
           <span class="gm-label" id="gm-label">GM</span>
         </div>
       </div>
-
       <div id="gm-ready" class="gm-ready">✦ Tap to say GM on Base ✦</div>
       <div class="cd-box hidden" id="cd-box">
         <div class="cd-label">Resets at UTC 00:00 in</div>
         <div class="cd-time" id="countdown">00h 00m 00s</div>
       </div>
-
-      <div class="gm-note">
-        One GM per wallet per UTC day · Resets at 00:00 UTC for everyone<br>
-        Streak multiplier applies to GM points only
-      </div>
-
+      <div class="gm-note">One GM per wallet per UTC day · Resets at 00:00 UTC for everyone<br>Streak multiplier applies to GM points only</div>
     </div>
 
     <!-- PREDICT SECTION -->
     <div class="section" id="predict-section">
-
       <div class="asset-tabs">
-        <button class="asset-tab active" onclick="switchAsset('BTC',this)"><span class="asset-icon">₿</span>Bitcoin</button>
-        <button class="asset-tab" onclick="switchAsset('ETH',this)"><span class="asset-icon">Ξ</span>Ethereum</button>
-        <button class="asset-tab" onclick="switchAsset('SOL',this)"><span class="asset-icon">◎</span>Solana</button>
+        <button class="asset-tab active" onclick="switchAsset(0,this)"><span>₿</span>Bitcoin</button>
+        <button class="asset-tab" onclick="switchAsset(1,this)"><span>Ξ</span>Ethereum</button>
       </div>
-
-      <div class="price-card" style="width:100%">
+      <div class="price-card">
         <div class="price-asset" id="price-asset">BTC / USD · Live via Chainlink</div>
-        <div class="price-val" id="price-val">$67,420</div>
-        <div class="price-change up" id="price-change">▲ +2.4% today</div>
-        <div class="snapshot-info" id="snapshot-info">Snapshot at UTC 00:00: $65,840 · Current: $67,420</div>
+        <div class="price-val" id="price-val">Loading...</div>
+        <div class="snapshot-info" id="snapshot-info">Fetching round data from contract...</div>
       </div>
-
-      <div class="round-tabs" style="width:100%">
-        <button class="round-tab active" onclick="switchRound('4h',this)">⏱ 4 Hour Round</button>
-        <button class="round-tab" onclick="switchRound('24h',this)">📅 24 Hour Round</button>
+      <div class="round-tabs">
+        <button class="round-tab active" onclick="switchRound(0,this)">⏱ 4 Hour Round</button>
+        <button class="round-tab" onclick="switchRound(1,this)">📅 24 Hour Round</button>
       </div>
-
-      <div class="deadline-info" style="width:100%">
-        <span id="round-label">Current round: 20:00 → 00:00 UTC</span>
-        <span id="deadline-label">Closes in: 1h 24m</span>
+      <div class="deadline-info">
+        <span id="round-label">Loading round...</span>
+        <span id="deadline-label">...</span>
       </div>
-
-      <div class="predict-btns" style="width:100%">
-        <button class="pred-btn pred-up" id="btn-up" onclick="predict('UP')">📈 UP</button>
-        <button class="pred-btn pred-down" id="btn-down" onclick="predict('DOWN')">📉 DOWN</button>
+      <!-- Prediction area — fully dynamic -->
+      <div id="pred-area" style="width:100%">
+        <div style="text-align:center;color:var(--muted);padding:20px;font-size:0.82rem">Connect wallet to predict</div>
       </div>
-
-      <div class="pred-result pr-correct" id="pred-result" style="width:100%;display:none"></div>
-
-      <div class="my-predictions" style="width:100%">
+      <!-- Today's predictions list -->
+      <div class="my-predictions">
         <div class="mypred-title">Today's Predictions</div>
         <div id="pred-list">
-          <div class="mypred-row">
-            <span class="mypred-asset">BTC</span>
-            <span class="mypred-round">4h · 16:00 round</span>
-            <span class="mypred-dir up">▲ UP</span>
-            <span class="mypred-status s-correct">✓ +2pts</span>
-          </div>
-          <div class="mypred-row">
-            <span class="mypred-asset">ETH</span>
-            <span class="mypred-round">4h · 16:00 round</span>
-            <span class="mypred-dir up">▲ UP</span>
-            <span class="mypred-status s-correct">✓ +2pts</span>
-          </div>
-          <div class="mypred-row">
-            <span class="mypred-asset">SOL</span>
-            <span class="mypred-round">4h · 16:00 round</span>
-            <span class="mypred-dir down">▼ DOWN</span>
-            <span class="mypred-status s-wrong">✗ 0pts</span>
-          </div>
-          <div class="mypred-row">
-            <span class="mypred-asset">BTC</span>
-            <span class="mypred-round">24h round</span>
-            <span class="mypred-dir up">▲ UP</span>
-            <span class="mypred-status s-pending">⏳ Pending</span>
-          </div>
+          <div style="text-align:center;color:var(--muted);font-size:0.75rem;padding:10px 0">No predictions yet today</div>
         </div>
       </div>
-
     </div>
 
-    <!-- LEADERBOARD SECTION (center when tab active) -->
-    <div class="section" id="lb-center-section" style="width:100%">
+    <!-- LEADERBOARD CENTER -->
+    <div class="section" id="lb-section">
       <div style="text-align:center;padding:40px 0">
         <div class="g-label" style="margin-bottom:8px">Full Leaderboard</div>
-        <div style="font-size:0.8rem;color:var(--muted)">Switch to Leaderboard tab to see full rankings</div>
+        <div style="font-size:0.8rem;color:var(--muted)">Rankings shown in the right panel →</div>
       </div>
     </div>
 
@@ -536,11 +424,10 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
       <button class="lb-tab" onclick="switchLB('daily',this)">Daily</button>
       <button class="lb-tab" onclick="switchLB('alltime',this)">All-time</button>
     </div>
-
-    <div class="lb-list" id="lb-list"></div>
-
-    <button class="share-btn" onclick="shareRank()">📤 Share my rank #3 on X</button>
-
+    <div class="lb-list" id="lb-list">
+      <div style="text-align:center;color:var(--muted);font-size:0.78rem;padding:20px 0">Connect wallet to see leaderboard</div>
+    </div>
+    <button class="share-btn" id="share-btn" style="display:none" onclick="shareRank()">📤 Share my rank on X</button>
     <div class="prize-box">
       <div class="prize-label">Sunday Prize Pool</div>
       <div class="prize-val" style="font-size:0.85rem;color:rgba(255,184,0,0.6)">Testnet · Points Only</div>
@@ -562,10 +449,8 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 </div><!-- end main-app -->
 </div><!-- end app -->
 
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
 <script>
-// ── CONFIG ──
 const CONTRACT = '0xA296b410fb5058FA1917219C0F30eC31CACeC5A6'
 const BASE_SEPOLIA_ID = 84532
 const BASE_SEPOLIA_HEX = '0x14a34'
@@ -585,11 +470,38 @@ const ABI = [
 let provider, signer, contract, userAddress
 let activeRoundId = null, gmDone = false
 let userData = null, leaderboardData = null
-let curLBType = 'weekly'
+let curLBType = 'weekly', todayPreds = []
 const referrer = new URLSearchParams(window.location.search).get('ref') || ZERO_ADDR
 const medals = ['🥇','🥈','🥉']
 
-// ── WALLET CONNECT ──
+// ── TAB SWITCHING ──
+function switchMain(tab, btn) {
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'))
+  btn.classList.add('active')
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'))
+  document.getElementById(tab + '-section').classList.add('active')
+}
+
+function switchAsset(asset, btn) {
+  document.querySelectorAll('.asset-tab').forEach(b => b.classList.remove('active'))
+  btn.classList.add('active')
+  document.getElementById('price-asset').textContent = (asset === 0 ? 'BTC' : 'ETH') + ' / USD · Live via Chainlink'
+  loadRounds()
+}
+
+function switchRound(round, btn) {
+  document.querySelectorAll('.round-tab').forEach(b => b.classList.remove('active'))
+  btn.classList.add('active')
+}
+
+function switchLB(type, btn) {
+  document.querySelectorAll('.lb-tab').forEach(b => b.classList.remove('active'))
+  btn.classList.add('active')
+  curLBType = type
+  renderLB()
+}
+
+// ── WALLET ──
 async function connectWallet() {
   if (!window.ethereum) { alert('Please install MetaMask or Rabby wallet'); return }
   try {
@@ -636,7 +548,7 @@ function disconnectWallet() {
   document.getElementById('wallet-area').innerHTML = '<button class="connect-btn" onclick="connectWallet()">Connect Wallet</button>'
 }
 
-// ── LOAD ALL DATA ──
+// ── LOAD ALL ──
 async function loadAll() {
   await Promise.all([loadGlobalGMs(), loadUserData(), loadLeaderboard(), loadRounds()])
 }
@@ -678,7 +590,7 @@ async function loadLeaderboard() {
       correct:   Number(d[4][i]),
       total:     Number(d[5][i]),
     })).sort((a, b) => b.weeklyPts - a.weeklyPts).slice(0, 10)
-    renderLB(curLBType)
+    renderLB()
     updateRankBadge()
   } catch(e) { console.error('LB error:', e) }
 }
@@ -689,8 +601,9 @@ async function loadRounds() {
     const rc = await contract.roundCount()
     const count = Number(rc)
     if (count === 0) {
-      document.getElementById('pred-area-inner').innerHTML =
-        '<div style="text-align:center;color:rgba(255,255,255,0.35);padding:30px 0;font-size:0.82rem">No active rounds yet. Check back soon.</div>'
+      document.getElementById('pred-area').innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.35);padding:30px 0;font-size:0.82rem">No active rounds yet. Admin needs to create a round first.</div>'
+      document.getElementById('round-label').textContent = 'No rounds created yet'
+      document.getElementById('deadline-label').textContent = '—'
       return
     }
     activeRoundId = count - 1
@@ -698,41 +611,76 @@ async function loadRounds() {
     const snap = Number(ethers.formatUnits(r[4], 8))
     const isFinalized = r[6]
     const roundTypeTxt = Number(r[1]) === 0 ? '4h' : '24h'
+    const endTime = Number(r[3]) * 1000
     document.getElementById('round-label').textContent = `Round #${activeRoundId} · ${roundTypeTxt}`
-    document.getElementById('deadline-label').textContent = isFinalized ? '✅ Finalized' : 'Active'
-    document.getElementById('price-val').textContent = `$${snap.toLocaleString(undefined, { maximumFractionDigits: 2 })}`
-    document.getElementById('snapshot-info').textContent = `Snapshot: $${snap.toLocaleString()} · ▲ UP: ${Number(r[7])} · ▼ DOWN: ${Number(r[8])}`
+    document.getElementById('deadline-label').textContent = isFinalized ? '✅ Finalized' : endTime > Date.now() ? `Ends ${new Date(endTime).toUTCString().slice(0,25)}` : 'Ended · Awaiting finalization'
+    document.getElementById('price-val').textContent = snap > 0 ? `$${snap.toLocaleString(undefined, { maximumFractionDigits: 2 })}` : 'Loading...'
+    document.getElementById('snapshot-info').textContent = snap > 0 ? `Snapshot: $${snap.toLocaleString()} · ▲ UP: ${Number(r[7])} · ▼ DOWN: ${Number(r[8])}` : 'Fetching price data...'
     if (userAddress) {
       const up = await contract.getUserPrediction(BigInt(activeRoundId), userAddress)
       if (up[1]) {
+        // Already predicted
         const dir = up[0] ? '📈 UP' : '📉 DOWN'
-        let html = `<div class="pred-result pr-pending" style="margin-bottom:10px">⏳ Predicted: ${dir} · ${isFinalized ? 'Round ended — claim points below' : 'Waiting for round end'}</div>`
-        if (isFinalized && !up[2]) html += `<button class="pred-btn" style="background:rgba(0,82,255,0.1);border-color:rgba(0,82,255,0.3);color:#4D8EFF" onclick="handleClaim()">🎁 Claim Points</button>`
+        const statusTxt = isFinalized ? 'Round ended' : 'Waiting for round end'
+        let html = `<div class="pred-result pr-pending" style="margin-bottom:10px">⏳ Predicted: ${dir} · ${statusTxt}</div>`
+        if (isFinalized && !up[2]) html += `<button class="pred-btn" style="border-color:rgba(0,82,255,0.3);color:#4D8EFF;background:rgba(0,82,255,0.1)" onclick="handleClaim()">🎁 Claim Points</button>`
         if (up[2]) html = `<div class="pred-result pr-correct">✅ Points claimed successfully!</div>`
-        document.getElementById('pred-area-inner').innerHTML = html
-      } else {
-        document.getElementById('pred-area-inner').innerHTML = `
-          <div class="predict-btns">
+        document.getElementById('pred-area').innerHTML = html
+        // Add to today's list
+        if (!todayPreds.find(p => p.roundId === activeRoundId)) {
+          todayPreds.push({ roundId: activeRoundId, asset: Number(r[0]) === 0 ? 'BTC' : 'ETH', type: roundTypeTxt, dir: up[0] ? 'UP' : 'DOWN', status: up[2] ? 'correct' : isFinalized ? 'pending' : 'pending' })
+          renderPredList()
+        }
+      } else if (!isFinalized && endTime > Date.now() + 30 * 60 * 1000) {
+        // Can predict
+        document.getElementById('pred-area').innerHTML = `
+          <div class="pred-btns">
             <button class="pred-btn pred-up" id="btn-up" onclick="handlePredict(true)">📈 UP</button>
             <button class="pred-btn pred-down" id="btn-down" onclick="handlePredict(false)">📉 DOWN</button>
-          </div>`
+          </div>
+          <div style="text-align:center;font-size:0.65rem;color:rgba(255,255,255,0.2);margin-top:8px">Prediction closes 30 min before round ends</div>`
+      } else if (!isFinalized) {
+        document.getElementById('pred-area').innerHTML = '<div class="pred-result pr-pending">🔒 Prediction window closed for this round</div>'
       }
     }
   } catch(e) { console.error('Round error:', e) }
 }
 
-// ── UPDATE STATS UI ──
+function renderPredList() {
+  const list = document.getElementById('pred-list')
+  if (todayPreds.length === 0) {
+    list.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:0.75rem;padding:10px 0">No predictions yet today</div>'
+    return
+  }
+  list.innerHTML = todayPreds.map(p => `
+    <div class="mypred-row">
+      <span class="mypred-asset">${p.asset}</span>
+      <span class="mypred-round">${p.type} · Round #${p.roundId}</span>
+      <span class="mypred-dir ${p.dir === 'UP' ? 'up' : 'down'}">${p.dir === 'UP' ? '▲ UP' : '▼ DOWN'}</span>
+      <span class="mypred-status s-pending">⏳ Pending</span>
+    </div>`).join('')
+}
+
+// ── UI UPDATES ──
 function updateStatsUI() {
   if (!userData) return
   document.getElementById('total-pts').textContent = userData.weeklyPts.toFixed(1)
   document.getElementById('my-gms').textContent = userData.streak
+  document.getElementById('streak-badge').textContent = `🔥 ${userData.streak} day streak`
+  const ml = getMultLabel(userData.streak)
+  document.getElementById('mult-badge').textContent = `${ml} GM pts`
+  document.getElementById('mult-active').textContent = `${ml} active`
   document.getElementById('pred-w').textContent = userData.correctPreds
   document.getElementById('pred-l').textContent = userData.totalPreds - userData.correctPreds
   const acc = userData.totalPreds > 0 ? Math.round(userData.correctPreds / userData.totalPreds * 100) : 0
   document.getElementById('pred-wr').textContent = `${acc}% acc`
+  document.getElementById('acc-badge').textContent = `🎯 ${acc}% accuracy`
+  document.getElementById('total-gms-ever').textContent = userData.totalGMs
+  document.getElementById('ref-used').textContent = `${userData.referrals} / 3 used`
+  document.getElementById('ref-left').textContent = userData.referrals >= 3 ? 'Capped' : `${3 - userData.referrals} left`
+  document.getElementById('ref-left').style.color = userData.referrals >= 3 ? 'var(--red)' : 'var(--green)'
+  document.getElementById('ref-bar').style.width = `${(userData.referrals / 3) * 100}%`
   renderMultTrack(userData.streak)
-  const multLabel = getMultLabel(userData.streak)
-  document.querySelector('.mult-head span:last-child') && (document.querySelector('.mult-head span:last-child').textContent = `${multLabel} active`)
   if (!userData.canGM) {
     document.getElementById('gm-btn').classList.add('done')
     document.getElementById('gm-label').textContent = "GM'd ✓"
@@ -744,10 +692,12 @@ function updateStatsUI() {
 function updateRankBadge() {
   if (!leaderboardData || !userAddress) return
   const rank = leaderboardData.findIndex(e => e.wallet?.toLowerCase() === userAddress?.toLowerCase()) + 1
-  if (rank > 0) {
-    const badge = document.querySelector('.badge.b-rank')
-    if (badge) badge.textContent = `🏆 Rank #${rank}`
-    document.querySelector('.share-btn') && (document.querySelector('.share-btn').textContent = `📤 Share my rank #${rank} on X`)
+  const badge = document.getElementById('rank-badge')
+  if (rank > 0 && badge) {
+    badge.style.display = 'inline-flex'
+    badge.textContent = `🏆 Rank #${rank}`
+    const sb = document.getElementById('share-btn')
+    if (sb) { sb.style.display = 'block'; sb.textContent = `📤 Share my rank #${rank} on X` }
   }
 }
 
@@ -757,8 +707,7 @@ function renderMultTrack(streak) {
   track.innerHTML = ''
   for (let i = 0; i < 15; i++) {
     const s = document.createElement('div')
-    const cls = i < streak ? (i < 3 ? ' on' : i < 7 ? ' gold' : ' green') : ''
-    s.className = 'mstep' + cls
+    s.className = 'mstep' + (i < streak ? (i < 3 ? ' on' : i < 7 ? ' gold' : ' green') : '')
     track.appendChild(s)
   }
 }
@@ -770,9 +719,7 @@ function getMultLabel(streak) {
   return '1x'
 }
 
-// ── RENDER LEADERBOARD ──
-function renderLB(type) {
-  curLBType = type
+function renderLB() {
   const list = document.getElementById('lb-list')
   if (!leaderboardData || leaderboardData.length === 0) {
     list.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.35);font-size:0.78rem;padding:20px 0">No players yet. Be the first! 🌅</div>'
@@ -781,7 +728,7 @@ function renderLB(type) {
   list.innerHTML = leaderboardData.map((e, i) => {
     const acc = e.total > 0 ? Math.round(e.correct / e.total * 100) : 0
     const isMe = e.wallet?.toLowerCase() === userAddress?.toLowerCase()
-    const pts = type === 'alltime' ? e.totalPts : e.weeklyPts
+    const pts = curLBType === 'alltime' ? e.totalPts : e.weeklyPts
     const rankCls = i === 0 ? 'g' : i === 1 ? 's' : i === 2 ? 'b' : ''
     const rank = i < 3 ? medals[i] : `#${i+1}`
     const addr = `${e.wallet.slice(0,6)}...${e.wallet.slice(-4)}`
@@ -789,7 +736,7 @@ function renderLB(type) {
       <div class="lb-rank ${rankCls}">${rank}</div>
       <div class="lb-info">
         <div class="lb-addr">${addr}${isMe ? ' <span style="color:var(--base-l);font-size:0.58rem">(you)</span>' : ''}</div>
-        <div class="lb-meta">🔥${e.streak}d · ${e.correct}W ${e.total - e.correct}L · ${acc}% acc</div>
+        <div class="lb-meta">🔥${e.streak}d · ${e.correct}W ${e.total-e.correct}L · ${acc}% acc</div>
       </div>
       <div class="lb-right">
         <div class="lb-score">${pts.toFixed(1)}</div>
@@ -799,14 +746,7 @@ function renderLB(type) {
   }).join('')
 }
 
-// Override the static switchLB to use live data
-function switchLB(type, btn) {
-  document.querySelectorAll('.lb-tab').forEach(b => b.classList.remove('active'))
-  btn.classList.add('active')
-  renderLB(type)
-}
-
-// ── GM HANDLER ──
+// ── HANDLERS ──
 async function handleGM() {
   if (!contract) { alert('Please connect your wallet first'); return }
   if (gmDone || (userData && !userData.canGM)) return
@@ -827,51 +767,45 @@ async function handleGM() {
     loadAll()
   } catch(e) {
     document.getElementById('gm-label').textContent = 'GM'
-    document.getElementById('gm-ready').innerHTML = '✦ Tap to say GM on Base ✦'
+    document.getElementById('gm-ready').innerHTML = '<span class="gm-ready">✦ Tap to say GM on Base ✦</span>'
     console.error(e)
   }
 }
 
-// ── PREDICT HANDLER ──
 async function handlePredict(isUp) {
   if (!contract || activeRoundId === null) return
   try {
     document.getElementById('btn-up').disabled = true
     document.getElementById('btn-down').disabled = true
-    document.getElementById('pred-area-inner').innerHTML += '<div style="text-align:center;color:var(--green);font-size:0.75rem;margin-top:10px">⏳ Confirm in wallet...</div>'
+    document.getElementById('pred-area').innerHTML += '<div style="text-align:center;color:var(--green);font-size:0.75rem;margin-top:10px">⏳ Confirm in wallet...</div>'
     const tx = await contract.predict(BigInt(activeRoundId), isUp)
     await tx.wait()
     loadRounds()
     loadUserData()
   } catch(e) {
-    document.getElementById('pred-area-inner').innerHTML = `
-      <div class="predict-btns">
-        <button class="pred-btn pred-up" id="btn-up" onclick="handlePredict(true)">📈 UP</button>
-        <button class="pred-btn pred-down" id="btn-down" onclick="handlePredict(false)">📉 DOWN</button>
-      </div>`
+    loadRounds()
     console.error(e)
   }
 }
 
-// ── CLAIM HANDLER ──
 async function handleClaim() {
   if (!contract || activeRoundId === null) return
   try {
+    document.getElementById('pred-area').innerHTML = '<div style="text-align:center;color:var(--green);font-size:0.8rem">⏳ Claiming points...</div>'
     const tx = await contract.claimPredictionPoints(BigInt(activeRoundId))
     await tx.wait()
     loadRounds()
     loadUserData()
-  } catch(e) { console.error(e) }
+  } catch(e) { loadRounds(); console.error(e) }
 }
 
-// ── SHARE ──
 function shareRank() {
   if (!leaderboardData || !userAddress) return
   const rank = leaderboardData.findIndex(e => e.wallet?.toLowerCase() === userAddress?.toLowerCase()) + 1
   const acc = userData ? Math.round(userData.correctPreds / Math.max(userData.totalPreds, 1) * 100) : 0
   const txt = `I'm Rank #${rank} on CoinGyaan Play with ${acc}% prediction accuracy 🎯\ncoingyaan.com/play\n#BaseChain #CryptoPredict #CoinGyaan`
   navigator.clipboard?.writeText(txt)
-  alert('Copied to clipboard!\n\n' + txt)
+  alert('Copied!\n\n' + txt)
 }
 
 function copyRef() {
@@ -881,7 +815,6 @@ function copyRef() {
   alert('Referral link copied!\n' + link)
 }
 
-// ── COUNTDOWN ──
 function startCountdown() {
   setInterval(() => {
     const el = document.getElementById('countdown')
@@ -894,7 +827,6 @@ function startCountdown() {
   }, 1000)
 }
 
-// ── PARTICLES ──
 function spawnParticles() {
   const wrap = document.getElementById('pw')
   const colors = ['#0052FF','#4D8EFF','#00D68F','#FFB800','#00D4FF','#fff']
@@ -908,25 +840,7 @@ function spawnParticles() {
   }
 }
 
-// ── PREDICT SECTION: wrap inner content ──
-// Add wrapper div to pred-area for dynamic replacement
-document.addEventListener('DOMContentLoaded', () => {
-  const predBtns = document.querySelector('.predict-btns')
-  if (predBtns && predBtns.parentElement) {
-    const wrapper = document.createElement('div')
-    wrapper.id = 'pred-area-inner'
-    predBtns.parentElement.insertBefore(wrapper, predBtns)
-    wrapper.appendChild(predBtns)
-  }
-  // Remove pred-result static element
-  const pr = document.getElementById('pred-result')
-  if (pr) pr.remove()
-})
-
-// Auto refresh every 30s
 setInterval(() => { if (contract) loadAll() }, 30000)
-
-// Handle wallet events
 if (window.ethereum) {
   window.ethereum.on('accountsChanged', () => location.reload())
   window.ethereum.on('chainChanged', () => location.reload())
