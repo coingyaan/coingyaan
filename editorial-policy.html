@@ -80,24 +80,7 @@
 <body>
 
 <!-- HEADER -->
-<header>
-  <div class="container">
-    <div class="header-bar">
-      <a href="/" class="brand">
-        <img src="/assets/images/logo/coingyaan-logo-transparent.png" alt="CoinGyaan" loading="eager" />
-        <div class="brand-text"><strong>CoinGyaan</strong></div>
-      </a>
-      <nav class="header-nav">
-        <a href="/bitcoin.html" style="color:#f59e0b;">Bitcoin Guide</a>
-        <a href="/bitcoin-sentiment-today.html">Sentiment</a>
-        <a href="/fear-greed-index-today.html">Fear &amp; Greed</a>
-        <a href="/guides.html">Guides</a>
-        <a href="/contact.html">Contact</a>
-      </nav>
-      <img src="/assets/images/logo/owl-mascot.png" alt="CoinGyaan Mascot" class="owl-mascot" title="CoinGyaan Owl 🦉" loading="eager" />
-    </div>
-  </div>
-</header>
+<div id="site-nav"></div>
 
 <!-- MAIN CONTENT -->
 <main class="container">
@@ -184,23 +167,8 @@
 </main>
 
 <!-- FOOTER -->
-<footer>
-  <div class="container">
-    <div class="footer-promo">
-      <p>Built for crypto curious minds. Free crypto sentiment checker, real data and no noise.</p>
-    </div>
-    <div class="footer-links">
-      <a href="/about.html">About</a>
-      <a href="/contact.html">Contact</a>
-      <a href="/editorial-policy.html">Editorial Policy</a>
-      <a href="/disclaimer.html">Disclaimer</a>
-      <a href="/privacy.html">Privacy</a>
-      <a href="/advertise.html">Advertise</a>
-    </div>
-    <p class="footer-note">© <span id="year"></span> CoinGyaan.com</p>
-  </div>
-</footer>
-
-<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+<div id="site-footer"></div>
+<script src="/assets/js/nav.js"></script>
+<script src="/assets/js/footer.js"></script>
 </body>
 </html>
