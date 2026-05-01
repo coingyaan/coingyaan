@@ -159,21 +159,8 @@
 </head>
 <body>
 
-<header>
-  <div class="container">
-    <div class="header-bar">
-      <a href="/" class="brand">
-        <img src="/assets/images/logo/coingyaan-logo-transparent.png" alt="CoinGyaan" loading="eager" />
-        <div class="brand-text"><strong>CoinGyaan</strong></div>
-      </a>
-      <nav class="header-nav">
-        <a href="/guides.html">Guides</a>
-        <a href="/contact.html">Contact</a>
-      </nav>
-      <img src="/assets/images/logo/owl-mascot.png" alt="CoinGyaan Mascot" class="owl-mascot" title="CoinGyaan Owl 🦉" loading="eager" />
-    </div>
-  </div>
-</header>
+<!-- HEADER -->
+<div id="site-nav"></div>
 
 <main class="container">
   <a href="/guides.html" class="back-link">← Back to Guides</a>
@@ -293,24 +280,13 @@ main();</code></pre><button class="copy-button" onclick="copyCode(this)">Copy</b
   </div>
 </main>
 
-<footer>
-  <div class="container">
-    <div class="footer-promo">
-      <p>Built for crypto curious minds. Free crypto sentiment checker, real data and no noise.</p>
-    </div>
-    <div class="footer-links">
-      <a href="/about.html">About</a>
-      <a href="/contact.html">Contact</a>
-      <a href="/disclaimer.html">Disclaimer</a>
-      <a href="/privacy.html">Privacy</a>
-      <a href="/advertise.html">Advertise</a>
-    </div>
-    <p class="footer-note">© <span id="year"></span> CoinGyaan.com &nbsp;·&nbsp; Educational only. Not financial advice.</p>
-  </div>
-</footer>
+<!-- FOOTER -->
+<div id="site-footer"></div>
+
+<script src="/assets/js/nav.js"></script>
+<script src="/assets/js/footer.js"></script>
 
 <script>
-  document.getElementById("year").textContent = new Date().getFullYear();
   function copyCode(button) {
     const code = button.closest('.code-block').querySelector('code').textContent.trim();
     navigator.clipboard.writeText(code).then(() => {
@@ -322,4 +298,3 @@ main();</code></pre><button class="copy-button" onclick="copyCode(this)">Copy</b
 </script>
 <script src="/assets/js/guides-data.js"></script>
 </body>
-</html>
