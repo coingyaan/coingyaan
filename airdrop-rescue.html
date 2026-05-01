@@ -193,10 +193,12 @@
     .network-pills { display: flex; flex-wrap: wrap; gap: 8px; }
     .net-pill { background: #0d1526; border: 1px solid #1e293b; border-radius: 20px; padding: 6px 14px; font-size: 12px; color: #94a3b8; display: flex; align-items: center; gap: 6px; }
     .net-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; }
-    .net-pill.pharos { border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.04); color: #f59e0b; }
-    .net-pill.pharos .dot { background: #f59e0b; }
-    .net-pill.testnet { border-color: rgba(148,163,184,0.2); color: #475569; }
-    .net-pill.testnet .dot { background: #475569; }
+    .net-pill.live { border-color: rgba(34,197,94,0.4); background: rgba(34,197,94,0.06); color: #22c55e; font-weight: 700; }
+    .net-pill.live .dot { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.5); }
+    .net-pill.soon-blue { border-color: rgba(96,165,250,0.25); background: rgba(96,165,250,0.05); color: #60a5fa; }
+    .net-pill.soon-blue .dot { background: #60a5fa; opacity: 0.5; }
+    .net-pill.soon-amber { border-color: rgba(245,158,11,0.25); background: rgba(245,158,11,0.05); color: #f59e0b; }
+    .net-pill.soon-amber .dot { background: #f59e0b; opacity: 0.5; }
 
     .rescue-disclaimer { background: #0d1526; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 18px; font-size: 12px; color: #475569; line-height: 1.7; }
     .rescue-disclaimer strong { color: #64748b; }
@@ -256,12 +258,7 @@
         <div class="step-body">
           <div class="step-label">Select Network</div>
           <select id="networkDropdown" onchange="selectNetworkDropdown(this)" style="width:100%;background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:13px 16px;color:#e2e8f0;font-size:14px;font-weight:600;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'8\' viewBox=\'0 0 12 8\'><path fill=\'%2364748b\' d=\'M1 1l5 5 5-5\'/></svg>');background-repeat:no-repeat;background-position:right 16px center;">
-            <option value="11155111" data-name="Sepolia Testnet">&#x1F9EA; Sepolia Testnet (Testing)</option>
-            <option value="1" data-name="Ethereum">&#x1F537; Ethereum Mainnet</option>
-            <option value="8453" data-name="Base">&#x1F535; Base</option>
-            <option value="42161" data-name="Arbitrum">&#x1F535; Arbitrum</option>
-            <option value="56" data-name="BSC">&#x1F7E1; BSC</option>
-            <option value="1672" data-name="Pharos">&#x26A1; Pharos (Airdrop Soon)</option>
+            <option value="11155111" data-name="Sepolia Testnet">&#x1F9EA; Sepolia Testnet (Live)</option>
           </select>
           <div class="input-helper" id="networkHelper">Currently testing on Sepolia. Switch your wallet to Sepolia Testnet before connecting.</div>
         </div>
@@ -381,9 +378,9 @@
   <section class="network-section">
     <h3>&#x1F310; Supported Networks</h3>
     <div class="network-pills">
-      <div class="net-pill testnet"><span class="dot"></span>Sepolia Testnet</div>
-      <div class="net-pill testnet"><span class="dot"></span>Base <span style="font-size:9px;margin-left:2px;font-family:monospace;">SOON</span></div>
-      <div class="net-pill testnet"><span class="dot"></span>Ethereum <span style="font-size:9px;margin-left:2px;font-family:monospace;">SOON</span></div>
+      <div class="net-pill live"><span class="dot"></span>Sepolia Testnet <span style="font-size:9px;margin-left:4px;font-family:monospace;letter-spacing:0.06em;">LIVE</span></div>
+      <div class="net-pill soon-blue"><span class="dot"></span>Base <span style="font-size:9px;margin-left:4px;font-family:monospace;letter-spacing:0.06em;">SOON</span></div>
+      <div class="net-pill soon-amber"><span class="dot"></span>Ethereum <span style="font-size:9px;margin-left:4px;font-family:monospace;letter-spacing:0.06em;">SOON</span></div>
     </div>
   </section>
 
