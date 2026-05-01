@@ -1,7 +1,7 @@
 (function() {
 
   var NAV_HTML = `
-<div class="top-market-bar" id="topMarketBar" style="display:none;">
+<div class="top-market-bar" id="topMarketBar">
   <div class="top-bar-track" id="topBarTrack"></div>
   <span class="top-bar-updated" id="topBarUpdated"></span>
 </div>
