@@ -178,21 +178,8 @@
 </head>
 <body>
 
-<header>
-  <div class="container">
-    <div class="header-bar">
-      <a href="/" class="brand">
-        <img src="/assets/images/logo/coingyaan-logo-transparent.png" alt="CoinGyaan" loading="eager" />
-        <div class="brand-text"><strong>CoinGyaan</strong></div>
-      </a>
-      <nav class="header-nav">
-        <a href="/guides.html">Guides</a>
-        <a href="/contact.html">Contact</a>
-      </nav>
-      <img src="/assets/images/logo/owl-mascot.png" alt="CoinGyaan Mascot" class="owl-mascot" title="CoinGyaan Owl 🦉" loading="eager" />
-    </div>
-  </div>
-</header>
+<!-- HEADER -->
+<div id="site-nav"></div>
 
 <main class="container">
 
@@ -665,22 +652,11 @@
 </main>
 
 <!-- FOOTER -->
-<footer>
-  <div class="container">
-    <div class="footer-promo">
-      <p>Know the market mood before you make a move.</p>
-    </div>
-    <div class="footer-links">
-      <a href="/">Home</a>
-      <a href="/guides/">Guides</a>
-      <a href="/disclaimer.html">Disclaimer</a>
-    </div>
-    <p class="footer-copy">
-      &copy; <span id="year"></span> CoinGyaan.com &nbsp;·&nbsp; Educational only. Not financial advice.
-    </p>
-  </div>
-</footer>
-<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+<div id="site-footer"></div>
+
+<script src="/assets/js/nav.js"></script>
+<script src="/assets/js/footer.js"></script>
+
 <script src="/assets/js/main.js" defer></script>
 <script src="/assets/js/guides-data.js"></script>
 
