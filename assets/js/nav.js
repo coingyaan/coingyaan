@@ -14,9 +14,9 @@
       </a>
       <nav class="header-nav">
         <a href="/bitcoin.html" style="color:#f59e0b;">Bitcoin Guide</a>
-        <div class="nav-dropdown">
-          <span class="nav-dropdown-trigger">Tools &#9662;</span>
-          <div class="nav-dropdown-menu">
+        <div class="nav-dropdown" id="navDropdown">
+          <span class="nav-dropdown-trigger" id="navDropdownTrigger" onclick="toggleNavDropdown(event)">Tools &#9662;</span>
+          <div class="nav-dropdown-menu" id="navDropdownMenu">
             <a href="/bitcoin-sentiment-today.html">Crypto Sentiment Checker</a>
             <a href="/fear-greed-index-today.html">Fear &amp; Greed Index</a>
             <a href="/airdrop-rescue">Airdrop Rescue Tool</a>
@@ -45,10 +45,11 @@
       transition: color 0.2s;
     }
     .nav-dropdown-trigger:hover { color: #e2e8f0; }
+    .nav-dropdown-trigger.open { color: #f59e0b; }
     .nav-dropdown-menu {
       display: none;
       position: absolute;
-      top: calc(100% + 10px);
+      top: calc(100% + 8px);
       left: 50%;
       transform: translateX(-50%);
       background: #0d1526;
@@ -59,10 +60,10 @@
       z-index: 999;
       box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     }
-    .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu.open { display: block; }
     .nav-dropdown-menu a {
       display: block;
-      padding: 9px 14px;
+      padding: 10px 14px;
       font-size: 13px;
       color: #94a3b8;
       text-decoration: none;
@@ -91,5 +92,24 @@
   if (placeholder) {
     placeholder.outerHTML = NAV_HTML;
   }
+
+  // Dropdown click toggle
+  window.toggleNavDropdown = function(e) {
+    e.stopPropagation();
+    var menu    = document.getElementById('navDropdownMenu');
+    var trigger = document.getElementById('navDropdownTrigger');
+    if (!menu) return;
+    var isOpen = menu.classList.contains('open');
+    menu.classList.toggle('open', !isOpen);
+    trigger.classList.toggle('open', !isOpen);
+  };
+
+  // Close dropdown when clicking anywhere outside
+  document.addEventListener('click', function() {
+    var menu    = document.getElementById('navDropdownMenu');
+    var trigger = document.getElementById('navDropdownTrigger');
+    if (menu)    menu.classList.remove('open');
+    if (trigger) trigger.classList.remove('open');
+  });
 
 })();
