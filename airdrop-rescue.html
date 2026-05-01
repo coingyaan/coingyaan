@@ -203,6 +203,17 @@
     .rescue-disclaimer { background: #0d1526; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 18px; font-size: 12px; color: #475569; line-height: 1.7; }
     .rescue-disclaimer strong { color: #64748b; }
 
+    /* FAQ */
+    .faq-section { margin-bottom: 28px; }
+    .faq-list { display: flex; flex-direction: column; gap: 10px; }
+    .faq-item { background: #0d1526; border: 1px solid #1e293b; border-radius: 10px; overflow: hidden; }
+    .faq-question { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; cursor: pointer; font-size: 14px; font-weight: 600; color: #e2e8f0; gap: 12px; transition: background 0.15s; }
+    .faq-question:hover { background: #111f38; }
+    .faq-arrow { color: #f59e0b; font-size: 12px; flex-shrink: 0; transition: transform 0.2s; }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    .faq-answer { display: none; padding: 0 18px 16px; font-size: 13px; color: #94a3b8; line-height: 1.8; border-top: 1px solid #1e293b; padding-top: 14px; }
+    .faq-item.open .faq-answer { display: block; }
+
     .section-title { font-size: 13px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.08em; }
 
     @media (max-width: 480px) { .rescue-tool-card { padding: 20px 16px; } .fee-badge-row { gap: 8px; } }
@@ -220,7 +231,9 @@
   <!-- HERO -->
   <section class="rescue-hero">
     <h1>Airdrop Rescue Tool</h1>
-    <p>Rescue airdrop tokens stuck in a compromised or hacked wallet before sweeper bots act. Our smart contract sweeps your tokens to a safe wallet in one transaction. Only 15% recovery fee.</p>
+    <p>Rescue airdrop tokens stuck in a compromised or hacked wallet before sweeper bots act. If your wallet was drained or is being monitored by a sweeper bot, our smart contract sweeps your tokens to a safe wallet in one transaction.</p>
+    <p>You can also use this tool to claim airdrops directly from a project link where you need to connect your compromised wallet and claim tokens.</p>
+    <p>We rescue them to your safe address before bots can intercept. Works for any ERC-20 token rescue from a compromised address. Only 15% recovery fee.</p>
   </section>
 
   <!-- WARNING BANNER -->
@@ -381,6 +394,77 @@
       <div class="net-pill live"><span class="dot"></span>Sepolia Testnet <span style="font-size:9px;margin-left:4px;font-family:monospace;letter-spacing:0.06em;">LIVE</span></div>
       <div class="net-pill soon-blue"><span class="dot"></span>Base <span style="font-size:9px;margin-left:4px;font-family:monospace;letter-spacing:0.06em;">SOON</span></div>
       <div class="net-pill soon-amber"><span class="dot"></span>Ethereum <span style="font-size:9px;margin-left:4px;font-family:monospace;letter-spacing:0.06em;">SOON</span></div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <div class="rescue-divider"></div>
+  <section class="faq-section">
+    <div class="section-header" style="margin-bottom:16px;">
+      <span class="section-title">&#x2753; Frequently Asked Questions</span>
+    </div>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>Can I recover tokens from a hacked wallet?</span>
+          <span class="faq-arrow">&#x25BE;</span>
+        </div>
+        <div class="faq-answer">
+          Yes. If your wallet is compromised but the tokens are still sitting in it, you can rescue them before sweeper bots act. The CoinGyaan Airdrop Rescue Tool works by connecting your compromised wallet, setting a fresh safe wallet as the destination and executing a smart contract transfer in one transaction. The key is to act fast. Sweeper bots monitor compromised wallets continuously and will drain any incoming tokens within seconds.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>How to beat a sweeper bot in crypto?</span>
+          <span class="faq-arrow">&#x25BE;</span>
+        </div>
+        <div class="faq-answer">
+          Sweeper bots are automated scripts that monitor a compromised wallet and instantly transfer any tokens or ETH that arrive. To beat a sweeper bot you need to use a flash rescue approach where gas is funded from a separate clean wallet so the sweeper bot cannot front run the transaction. Our Airdrop Rescue Tool does exactly this. Your safe wallet pays the gas and the rescue transaction sweeps tokens directly to your safe address before the bot can react. Never send ETH to a compromised wallet directly as the bot will drain it instantly.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>Is it safe to claim an airdrop from a compromised wallet?</span>
+          <span class="faq-arrow">&#x25BE;</span>
+        </div>
+        <div class="faq-answer">
+          Claiming an airdrop from a compromised wallet is risky without a rescue tool because any tokens you claim will likely be swept away instantly by the bot monitoring your wallet. The safe approach is to use a rescue tool like ours that intercepts the claimed tokens and routes them to a safe wallet in the same transaction flow. Never approve unlimited token allowances from a compromised wallet and never send funds to it expecting to move them manually later.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>Can I rescue tokens without my private key?</span>
+          <span class="faq-arrow">&#x25BE;</span>
+        </div>
+        <div class="faq-answer">
+          No. To rescue tokens from a wallet you need to sign transactions from that wallet which requires either your private key or your seed phrase to import it into a wallet like MetaMask or Rabby. CoinGyaan Airdrop Rescue Tool never asks for or stores your private key. All signing happens locally in your browser through your connected wallet extension. If you have lost access to your private key and seed phrase, unfortunately the tokens in that wallet cannot be recovered by any tool.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>What is the recovery fee and how does it work?</span>
+          <span class="faq-arrow">&#x25BE;</span>
+        </div>
+        <div class="faq-answer">
+          CoinGyaan charges a 15% recovery fee on the total token amount rescued. This means if you rescue 1000 tokens, 850 tokens go to your safe wallet and 150 tokens go to CoinGyaan as the recovery fee. This split is handled automatically by the smart contract with no manual steps required. There is no upfront fee. The fee is only deducted from the rescued tokens themselves.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>Which wallets and networks are supported?</span>
+          <span class="faq-arrow">&#x25BE;</span>
+        </div>
+        <div class="faq-answer">
+          The tool currently supports MetaMask, Rabby and OKX wallet on Sepolia Testnet. Base and Ethereum mainnet support is coming soon. The tool works with any standard ERC-20 token on supported networks. If your token is not detected automatically you can enter the contract address manually using the manual input option in Step 4.
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -558,6 +642,70 @@ async function executeRescue() {
 
 function showStatus(msg, type) { var el = document.getElementById('rescueStatus'); el.innerHTML = msg; el.className = 'rescue-status show '+type; }
 function resetTokenList() { state.selectedTokens = []; document.getElementById('tokenList').innerHTML = '<div class="token-empty">Connect your compromised wallet first, then click Auto Detect.</div>'; document.getElementById('rescuePreview').classList.remove('show'); document.getElementById('rescueBtn').disabled = true; }
+
+function toggleFaq(el) {
+  var item = el.parentElement;
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can I recover tokens from a hacked wallet?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. If your wallet is compromised but the tokens are still in it, you can rescue them before sweeper bots act. The CoinGyaan Airdrop Rescue Tool connects your compromised wallet, sets a fresh safe wallet as the destination and executes a smart contract transfer in one transaction."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How to beat a sweeper bot in crypto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "To beat a sweeper bot you need to fund gas from a separate clean wallet so the sweeper bot cannot front run the transaction. CoinGyaan Airdrop Rescue Tool does this automatically. Your safe wallet pays the gas and the rescue transaction sweeps tokens directly to your safe address before the bot can react."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it safe to claim an airdrop from a compromised wallet?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Claiming an airdrop from a compromised wallet is risky without a rescue tool because any tokens claimed will likely be swept away instantly. Use a rescue tool that intercepts the claimed tokens and routes them to a safe wallet in the same transaction flow."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I rescue tokens without my private key?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. To rescue tokens from a wallet you need to sign transactions from that wallet which requires your private key or seed phrase to import it into a wallet like MetaMask or Rabby. CoinGyaan never asks for or stores your private key. All signing happens locally in your browser."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the recovery fee and how does it work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "CoinGyaan charges a 15% recovery fee on the total token amount rescued. If you rescue 1000 tokens, 850 go to your safe wallet and 150 go to CoinGyaan as the recovery fee. This is handled automatically by the smart contract with no manual steps required."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which wallets and networks are supported?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The tool currently supports MetaMask, Rabby and OKX wallet on Sepolia Testnet. Base and Ethereum mainnet support is coming soon. Works with any standard ERC-20 token on supported networks."
+      }
+    }
+  ]
+}
 </script>
 
 </body>
