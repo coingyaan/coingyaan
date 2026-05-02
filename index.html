@@ -565,15 +565,6 @@
     100% { transform: translateX(-50%); }
   }
 
-  /* AADS responsive ad switching */
-  @media (max-width: 768px) {
-    .aads-desktop { display: none !important; }
-    .aads-mobile  { display: block !important; }
-  }
-  @media (min-width: 769px) {
-    .aads-desktop { display: block !important; }
-    .aads-mobile  { display: none !important; }
-  }
   </style>
 </head>
 
@@ -587,14 +578,8 @@
 
   <!-- AADS AD UNIT - TOP -->
   <div style="width:100%;margin:20px 0 8px;position:relative;z-index:99998;max-height:100px;overflow:hidden;">
-    <!-- Desktop -->
     <iframe data-aa='2436239' src='//acceptable.a-ads.com/2436239/?size=Adaptive&background_color=0d1526'
-      style='border:0;padding:0;width:100%;height:90px;overflow:hidden;margin:auto;'
-      class='aads-desktop'></iframe>
-    <!-- Mobile -->
-    <iframe data-aa='2436308' src='//acceptable.a-ads.com/2436308/?size=Adaptive&background_color=0d1526'
-      style='border:0;padding:0;width:100%;height:90px;overflow:hidden;margin:auto;'
-      class='aads-mobile'></iframe>
+      style='border:0;padding:0;width:100%;height:90px;overflow:hidden;display:block;margin:auto;'></iframe>
   </div>
 
   <!-- HERO SECTION - surgical change: wrapped in flex row, added Airdrop Rescue card -->
@@ -822,6 +807,12 @@
 
   </section>
 
+  <!-- AADS AD UNIT - MID -->
+  <div style="width:100%;margin:28px 0 8px;position:relative;z-index:99998;max-height:100px;overflow:hidden;">
+    <iframe data-aa='2436239' src='//acceptable.a-ads.com/2436239/?size=Adaptive&background_color=0d1526'
+      style='border:0;padding:0;width:100%;height:90px;overflow:hidden;display:block;margin:auto;'></iframe>
+  </div>
+
   <!-- ALTCOIN SEASON INDEX -->
   <section class="altseason-section" id="altseason-section">
     <div class="section-header">
@@ -948,17 +939,6 @@
   </section>
 
 
-  <!-- AADS AD UNIT - MID -->
-  <div style="width:100%;margin:28px 0;position:relative;z-index:99998;max-height:100px;overflow:hidden;">
-    <!-- Desktop -->
-    <iframe data-aa='2436239' src='//acceptable.a-ads.com/2436239/?size=Adaptive&background_color=0d1526'
-      style='border:0;padding:0;width:100%;height:90px;overflow:hidden;margin:auto;'
-      class='aads-desktop'></iframe>
-    <!-- Mobile -->
-    <iframe data-aa='2436308' src='//acceptable.a-ads.com/2436308/?size=Adaptive&background_color=0d1526'
-      style='border:0;padding:0;width:100%;height:90px;overflow:hidden;margin:auto;'
-      class='aads-mobile'></iframe>
-  </div>
   <!-- INFO / SEO SECTION -->
   <section class="info-section">
 
@@ -1003,14 +983,8 @@
 
     <!-- AADS AD UNIT - BOTTOM -->
     <div style="width:100%;margin:28px 0 8px;position:relative;z-index:99998;max-height:100px;overflow:hidden;">
-      <!-- Desktop -->
       <iframe data-aa='2436239' src='//acceptable.a-ads.com/2436239/?size=Adaptive&background_color=0d1526'
-        style='border:0;padding:0;width:100%;height:90px;overflow:hidden;margin:auto;'
-        class='aads-desktop'></iframe>
-      <!-- Mobile -->
-      <iframe data-aa='2436308' src='//acceptable.a-ads.com/2436308/?size=Adaptive&background_color=0d1526'
-        style='border:0;padding:0;width:100%;height:90px;overflow:hidden;margin:auto;'
-        class='aads-mobile'></iframe>
+        style='border:0;padding:0;width:100%;height:90px;overflow:hidden;display:block;margin:auto;'></iframe>
     </div>
 
   </section>
