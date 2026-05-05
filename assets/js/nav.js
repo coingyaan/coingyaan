@@ -87,6 +87,15 @@
     document.head.insertAdjacentHTML('beforeend', NAV_CSS);
   }
 
+  // Inject Cointraffic unified script (loads once per page)
+  if (!document.getElementById('ct-unified')) {
+    var ctScript = document.createElement('script');
+    ctScript.async = true;
+    ctScript.id = 'ct-unified';
+    ctScript.src = 'https://appsha-pnd.ctengine.io/js/script.js?wkey=EjA8CfgEz1';
+    document.head.appendChild(ctScript);
+  }
+
   // Inject nav into placeholder
   var placeholder = document.getElementById('site-nav');
   if (placeholder) {
