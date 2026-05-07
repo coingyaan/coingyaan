@@ -576,11 +576,6 @@
 <!-- MAIN CONTENT -->
 <main class="container">
 
-  <!-- COINTRAFFIC - TOP 728x90 -->
-  <div style="width:100%;margin:20px 0 8px;text-align:center;">
-    <span id="ct_cuRrRAK61gI"></span>
-  </div>
-
   <!-- HERO SECTION - surgical change: wrapped in flex row, added Airdrop Rescue card -->
   <section class="hero-section">
     <div style="display:flex; align-items:flex-start; gap:24px; flex-wrap:wrap;">
@@ -806,11 +801,6 @@
 
   </section>
 
-  <!-- COINTRAFFIC - MID 1 (below sentiment and fear greed) 728x90 -->
-  <div style="width:100%;margin:28px 0 8px;text-align:center;">
-    <span id="ct_cuRrRAK61gI"></span>
-  </div>
-
   <!-- ALTCOIN SEASON INDEX -->
   <section class="altseason-section" id="altseason-section">
     <div class="section-header">
@@ -898,11 +888,6 @@
     </div>
   </section>
 
-  <!-- COINTRAFFIC - MID 2 (below stablecoin dominance) 728x90 -->
-  <div style="width:100%;margin:28px 0 8px;text-align:center;">
-    <span id="ct_cD4ETRsSqTF"></span>
-  </div>
-
   <!-- MARKET PULSE -->
   <section class="market-pulse-section">
     <div class="section-header">
@@ -986,11 +971,6 @@
 
   </section>
 </main>
-
-<!-- COINTRAFFIC - BOTTOM (below Why Use CoinGyaan) 728x90 -->
-<div style="width:100%;margin:0 0 0;text-align:center;background:#0a0f1e;padding:20px 0;">
-  <span id="ct_cYDPldEah4d"></span>
-</div>
 
 <!-- FOOTER -->
 <div id="site-footer"></div>
@@ -1177,187 +1157,4 @@
       barData.altScore = altScoreEl.textContent.trim();
       if (altBadgeEl) {
         var badge = altBadgeEl.textContent.trim();
-        badge = badge.replace(/[^\x00-\x7F]/g, '').replace('Season', '').trim();
-        barData.altLabel = badge || '';
-      }
-    }
-
-    var btcEl    = document.getElementById('btcPrice');
-    var btcChgEl = document.getElementById('btcChange');
-    var ethEl    = document.getElementById('ethPrice');
-    var ethChgEl = document.getElementById('ethChange');
-    if (btcEl && btcEl.textContent && btcEl.textContent !== 'N/A' && btcEl.textContent !== '$--') {
-      barData.btcPrice = btcEl.textContent.trim();
-      if (btcChgEl) {
-        var btcUp = btcChgEl.className.indexOf('price-up') !== -1;
-        var btcDown = btcChgEl.className.indexOf('price-down') !== -1;
-        barData.btcChange = btcUp ? 1 : btcDown ? -1 : 0;
-      }
-    }
-    if (ethEl && ethEl.textContent && ethEl.textContent !== 'N/A' && ethEl.textContent !== '$--') {
-      barData.ethPrice = ethEl.textContent.trim();
-      if (ethChgEl) {
-        var ethUp = ethChgEl.className.indexOf('price-up') !== -1;
-        var ethDown = ethChgEl.className.indexOf('price-down') !== -1;
-        barData.ethChange = ethUp ? 1 : ethDown ? -1 : 0;
-      }
-    }
-
-    renderBar();
-  }
-
-  fetch('https://api.coingecko.com/api/v3/global')
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data && data.data) {
-        var pct  = data.data.market_cap_percentage || {};
-        var mcap = data.data.total_market_cap ? data.data.total_market_cap.usd : null;
-        var mcapChange = data.data.market_cap_change_percentage_24h_usd || null;
-        if (mcap)               barData.mcap       = fmtMcap(mcap);
-        if (mcapChange !== null) barData.mcapChange = mcapChange;
-        if (pct.btc)            barData.btcDom     = pct.btc.toFixed(1) + '%';
-        window._cgBtcDom = pct.btc || null;
-      }
-      readDomValues();
-    })
-    .catch(function() { readDomValues(); });
-
-  var observer = new MutationObserver(function() { readDomValues(); });
-
-  window.addEventListener('load', function() {
-    var els = ['fgScore', 'stableCombinedPct', 'altseasonScore', 'btcPrice', 'ethPrice'];
-    els.forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) observer.observe(el, { childList: true, characterData: true, subtree: true });
-    });
-    readDomValues();
-  });
-
-  setInterval(readDomValues, 20000);
-
-})();
-</script>
-
-<script>
-// MARKET PULSE
-(function() {
-
-  function fgColorClass(label) {
-    if (!label) return '';
-    var l = label.toLowerCase();
-    if (l.indexOf('fear') !== -1) return 'fear';
-    if (l.indexOf('greed') !== -1) return 'greed';
-    return 'neutral';
-  }
-
-  function getPulseVerdict(fng, alt, stable) {
-    var bearishCount = 0;
-    var bullishCount = 0;
-    if (fng <= 25) bullishCount++;
-    else if (fng <= 45) bearishCount++;
-    else if (fng >= 75) bearishCount++;
-    else if (fng >= 55) bullishCount++;
-    if (alt >= 60) bullishCount++;
-    else if (alt <= 30) bearishCount++;
-    if (stable >= 9) bearishCount++;
-    else if (stable <= 5) bullishCount++;
-
-    if (bearishCount >= 2 && fng <= 25) {
-      return { badge: 'Risk Off', badgeClass: 'pulse-badge-riskoff', text: 'Market is defensive. Capital sitting in stablecoins with fear dominating. Bitcoin absorbing most flows. Patient accumulation phase historically for long term buyers.' };
-    }
-    if (bearishCount >= 2) {
-      return { badge: 'Caution', badgeClass: 'pulse-badge-caution', text: 'Mixed signals leaning cautious. Stablecoin dominance is elevated and sentiment is weak. No clear catalyst for a broad market move yet. Patience is the right approach.' };
-    }
-    if (bullishCount >= 2 && alt >= 60) {
-      return { badge: 'Bull Market Conditions', badgeClass: 'pulse-badge-bull', text: 'Strong conditions across multiple signals. Capital rotating into altcoins, sentiment positive and stablecoin dominance low. Historically one of the strongest environments for crypto.' };
-    }
-    if (bullishCount >= 2) {
-      return { badge: 'Risk On', badgeClass: 'pulse-badge-riskon', text: 'Conditions are broadly favourable. Sentiment is positive, capital is moving into crypto and altcoins are gaining relative to Bitcoin. Momentum favours buyers but stay alert.' };
-    }
-    return { badge: 'Mixed Market', badgeClass: 'pulse-badge-mixed', text: 'No strong dominant signal across the market right now. Fear and Greed, altcoin activity and stablecoin flows are all in neutral territory. Markets are waiting for a catalyst.' };
-  }
-
-  function updatePulse() {
-    var fgScoreEl  = document.getElementById('fgScore');
-    var fgLabelEl  = document.getElementById('fgLabel');
-    var altScoreEl = document.getElementById('altseasonScore');
-    var altBadgeEl = document.getElementById('altseasonBadge');
-    var stableEl   = document.getElementById('stableCombinedPct');
-
-    var fng    = fgScoreEl  ? parseInt(fgScoreEl.textContent)  : null;
-    var fngLbl = fgLabelEl  ? fgLabelEl.textContent.trim()     : '';
-    var alt    = altScoreEl ? parseInt(altScoreEl.textContent) : null;
-    var altLbl = altBadgeEl ? altBadgeEl.textContent.replace(/[^\x00-\x7F]/g, '').trim() : '';
-    var stableRaw = stableEl ? stableEl.textContent.trim() : null;
-    var stable = stableRaw ? parseFloat(stableRaw) : null;
-    var btcDom = window._cgBtcDom ? window._cgBtcDom.toFixed(1) + '%' : null;
-
-    if (!fng || isNaN(fng)) return;
-
-    var dateEl = document.getElementById('pulseDate');
-    if (dateEl) {
-      dateEl.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    }
-
-    var pulseFng = document.getElementById('pulseFng');
-    var pulseFngLabel = document.getElementById('pulseFngLabel');
-    if (pulseFng) { pulseFng.textContent = fng; pulseFng.className = 'pulse-item-value ' + fgColorClass(fngLbl); }
-    if (pulseFngLabel) pulseFngLabel.textContent = fngLbl;
-
-    var pulseAlt = document.getElementById('pulseAlt');
-    var pulseAltLabel = document.getElementById('pulseAltLabel');
-    if (pulseAlt) {
-      pulseAlt.textContent = (alt && !isNaN(alt)) ? alt : '--';
-      pulseAlt.className = 'pulse-item-value ' + (alt >= 60 ? 'greed' : alt <= 30 ? 'fear' : 'neutral');
-    }
-    if (pulseAltLabel) pulseAltLabel.textContent = altLbl || '';
-
-    var pulseStable = document.getElementById('pulseStable');
-    var pulseStableLabel = document.getElementById('pulseStableLabel');
-    if (pulseStable) {
-      pulseStable.textContent = stable ? stable.toFixed(1) + '%' : '--';
-      pulseStable.className = 'pulse-item-value ' + (stable >= 9 ? 'fear' : stable <= 5 ? 'greed' : 'neutral');
-    }
-    if (pulseStableLabel) pulseStableLabel.textContent = stable >= 9 ? 'Extreme Fear' : stable >= 7 ? 'Fear' : stable <= 5 ? 'Greed' : 'Neutral';
-
-    var pulseBtcDom = document.getElementById('pulseBtcDom');
-    var pulseBtcDomLabel = document.getElementById('pulseBtcDomLabel');
-    if (pulseBtcDom) {
-      pulseBtcDom.textContent = btcDom || '--';
-      var dom = window._cgBtcDom;
-      pulseBtcDom.className = 'pulse-item-value ' + (dom > 58 ? 'fear' : dom < 48 ? 'greed' : 'neutral');
-    }
-    if (pulseBtcDomLabel && window._cgBtcDom) {
-      pulseBtcDomLabel.textContent = window._cgBtcDom > 58 ? 'BTC Dominant' : window._cgBtcDom < 48 ? 'Alts Leading' : 'Balanced';
-    }
-
-    var verdict = getPulseVerdict(fng, alt || 50, stable || 7);
-    var badgeEl = document.getElementById('pulseVerdictBadge');
-    var textEl  = document.getElementById('pulseVerdictText');
-    if (badgeEl) { badgeEl.textContent = verdict.badge; badgeEl.className = 'pulse-verdict-badge ' + verdict.badgeClass; }
-    if (textEl)  textEl.textContent = verdict.text;
-
-    var refreshEl = document.getElementById('pulseRefreshTime');
-    if (refreshEl) refreshEl.textContent = 'Updated ' + new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-  }
-
-  window.addEventListener('load', function() { setTimeout(updatePulse, 3000); });
-  setInterval(updatePulse, 5 * 60 * 1000);
-
-  var pulseObserver = new MutationObserver(function() { setTimeout(updatePulse, 500); });
-  document.addEventListener('DOMContentLoaded', function() {
-    var fgEl  = document.getElementById('fgScore');
-    var altEl = document.getElementById('altseasonScore');
-    var stEl  = document.getElementById('stableCombinedPct');
-    if (fgEl)  pulseObserver.observe(fgEl,  { childList: true, characterData: true, subtree: true });
-    if (altEl) pulseObserver.observe(altEl, { childList: true, characterData: true, subtree: true });
-    if (stEl)  pulseObserver.observe(stEl,  { childList: true, characterData: true, subtree: true });
-  });
-
-})();
-</script>
-
-<script src="/assets/js/nav.js"></script>
-<script src="/assets/js/footer.js"></script>
-</body>
-</html>
+        badge = badge.replace(/[^
