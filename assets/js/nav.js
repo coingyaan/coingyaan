@@ -80,16 +80,6 @@
       .header-nav > a { font-size: 12px; }
       .nav-dropdown-trigger { font-size: 12px; }
     }
-
-    /* Cointraffic auto-injected ad slots */
-    .ct-auto-slot {
-      width: 100%;
-      text-align: center;
-      overflow: hidden;
-    }
-    .ct-auto-slot-top    { margin: 20px 0 8px; }
-    .ct-auto-slot-mid    { margin: 28px 0 8px; }
-    .ct-auto-slot-bottom { background: #0a0f1e; padding: 20px 0; margin: 0; }
   </style>`;
 
   // Inject CSS into head
@@ -130,76 +120,5 @@
     if (menu)    menu.classList.remove('open');
     if (trigger) trigger.classList.remove('open');
   });
-
-  // ── AUTO AD INJECTION ──────────────────────────────────────────────────────
-  // Automatically injects 3 Cointraffic ad slots on every page:
-  //   Slot 1 (728x90)  — top of <main>, before first child
-  //   Slot 2 (300x250) — after the 3rd direct child of <main>
-  //   Slot 3 (320x50)  — before site-footer
-  // Pages that already have manual CT spans are unaffected (Cointraffic
-  // renders whichever span it finds; duplicates are handled by their script).
-  // ──────────────────────────────────────────────────────────────────────────
-  function injectAds() {
-    var main = document.querySelector('main.container');
-    if (!main) return;
-
-    // ── SLOT 1: TOP 728x90 ──
-    if (!document.getElementById('ct-auto-top')) {
-      var top = document.createElement('div');
-      top.id = 'ct-auto-top';
-      top.className = 'ct-auto-slot ct-auto-slot-top';
-      top.innerHTML = '<span id="ct_cuRrRAK61gI"></span>';
-      main.insertBefore(top, main.firstChild);
-    }
-
-    // ── SLOT 2: MID 300x250 ──
-    // Insert after 3rd direct child of main (skips top ad + hero + first tool)
-    if (!document.getElementById('ct-auto-mid')) {
-      var children = Array.prototype.slice.call(main.children);
-      // Find a good anchor: after tool-grid or after 4th child, whichever exists
-      var anchor = null;
-      for (var i = 0; i < children.length; i++) {
-        var el = children[i];
-        if (el.classList && (
-          el.classList.contains('tool-grid') ||
-          el.classList.contains('altseason-section') ||
-          el.classList.contains('stable-section')
-        )) {
-          anchor = el;
-          break;
-        }
-      }
-      // Fallback: use 4th child
-      if (!anchor && children.length >= 4) anchor = children[3];
-
-      if (anchor && anchor.nextSibling) {
-        var mid = document.createElement('div');
-        mid.id = 'ct-auto-mid';
-        mid.className = 'ct-auto-slot ct-auto-slot-mid';
-        mid.innerHTML = '<span id="ct_cD4ETRsSqTF"></span>';
-        main.insertBefore(mid, anchor.nextSibling);
-      }
-    }
-
-    // ── SLOT 3: BOTTOM 320x50 — before footer ──
-    if (!document.getElementById('ct-auto-bottom')) {
-      var footer = document.getElementById('site-footer');
-      if (footer) {
-        var bottom = document.createElement('div');
-        bottom.id = 'ct-auto-bottom';
-        bottom.className = 'ct-auto-slot ct-auto-slot-bottom';
-        bottom.innerHTML = '<span id="ct_cYDPldEah4d"></span>';
-        footer.parentNode.insertBefore(bottom, footer);
-      }
-    }
-  }
-
-  // Run after DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', injectAds);
-  } else {
-    injectAds();
-  }
-  // ──────────────────────────────────────────────────────────────────────────
 
 })();
