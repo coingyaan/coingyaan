@@ -22,7 +22,6 @@
             <a href="/airdrop-rescue">Airdrop Rescue Tool</a>
           </div>
         </div>
-        <a href="/play">Play</a>
         <a href="/guides.html">Guides</a>
         <a href="/contact.html">Contact</a>
       </nav>
