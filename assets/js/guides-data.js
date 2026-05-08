@@ -8,13 +8,14 @@
 // Newest guide must always be FIRST in the array.
 // ============================================
 var GUIDES_DATA = [
-  {
-  title: "Arc Network Testnet Guide: Points Program, Discord Roles and Building on Circle's L1",
-  url: "/guides/arc-network-testnet-guide-points-discord-circle-l1.html",
-  tag: "Web3",
-  read: "12 min read",
-  date: "2026-05-08"
-},
+{
+    url:      "/guides/arc-network-testnet-guide-points-discord-circle-l1.html",
+    tag:      "Web3",
+    readTime: "12 min read",
+    title:    "Arc Network Testnet Guide: Points Program, Discord Roles and Building on Circle's L1",
+    desc:     "Complete guide to contributing on Arc Network testnet in 2026. Points program tiers, Discord roles, building on Circle's institutional Layer-1 blockchain and how to get noticed by the team.",
+    date:     "May 2026"
+  },
   {
     url:      "/guides/concrete-defi-yield-guide.html",
     tag:      "DeFi",
