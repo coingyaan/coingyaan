@@ -9,6 +9,13 @@
 // ============================================
 var GUIDES_DATA = [
   {
+  title: "Arc Network Testnet Guide: Points Program, Discord Roles and Building on Circle's L1",
+  url: "/guides/arc-network-testnet-guide-points-discord-circle-l1.html",
+  tag: "Web3",
+  read: "12 min read",
+  date: "2026-05-08"
+},
+  {
     url:      "/guides/concrete-defi-yield-guide.html",
     tag:      "DeFi",
     readTime: "8 min read",
