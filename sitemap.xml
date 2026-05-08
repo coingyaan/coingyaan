@@ -180,4 +180,10 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+  <loc>https://coingyaan.com/guides/arc-network-testnet-guide-points-discord-circle-l1.html</loc>
+  <lastmod>2026-05-08</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
 </urlset>
