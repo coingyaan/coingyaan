@@ -1066,7 +1066,50 @@ function renderTickerBtc(price,chg) {
 // Fetch helpers
 function fetchFnG() { return fetch('https://api.alternative.me/fng/?limit=2').then(function(r){return r.json();}).then(function(d){return{cur:parseInt(d.data[0].value),prev:parseInt(d.data[1].value)};}).catch(function(){return null;}); }
 function fetchGecko() { return fetch('https://api.coingecko.com/api/v3/global').then(function(r){return r.json();}).then(function(d){var g=d.data;return{btcDom:parseFloat(g.market_cap_percentage.btc.toFixed(1)),stableDom:parseFloat(((g.market_cap_percentage.usdt||0)+(g.market_cap_percentage.usdc||0)).toFixed(1)),mcap:g.total_market_cap?g.total_market_cap.usd:null};}).catch(function(){return null;}); }
-function fetchBTCPrice() { return fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true').then(function(r){return r.json();}).then(function(d){return{price:d.bitcoin.usd,change24h:d.bitcoin.usd_24h_change,vol24h:d.bitcoin.usd_24h_vol,ethPrice:d.ethereum.usd,ethChg:d.ethereum.usd_24h_change};}).catch(function(){return null;}); }
+function fetchBTCPrice() {
+  // Primary: Binance 24hr ticker — fastest, no rate limit issues
+  return fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT')
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var price  = parseFloat(d.lastPrice);
+      var change = parseFloat(d.priceChangePercent);
+      var vol    = parseFloat(d.quoteVolume); // USDT volume
+      if(!price || isNaN(price)) throw new Error('Binance price invalid');
+      // ETH still fetched from CoinGecko since Binance ticker is single-symbol
+      return fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd&include_24hr_change=true')
+        .then(function(r2){ return r2.json(); })
+        .then(function(e){
+          return {
+            price:    price,
+            change24h: change,
+            vol24h:   vol,
+            ethPrice: e.ethereum ? e.ethereum.usd : null,
+            ethChg:   e.ethereum ? e.ethereum.usd_24h_change : null,
+            source:   'binance'
+          };
+        })
+        .catch(function(){
+          // ETH unavailable — return BTC data alone, ETH ticker stays blank
+          return { price:price, change24h:change, vol24h:vol, ethPrice:null, ethChg:null, source:'binance' };
+        });
+    })
+    .catch(function(){
+      // Fallback: CoinGecko for both BTC and ETH
+      return fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true')
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          return {
+            price:    d.bitcoin.usd,
+            change24h: d.bitcoin.usd_24h_change,
+            vol24h:   d.bitcoin.usd_24h_vol,
+            ethPrice: d.ethereum ? d.ethereum.usd : null,
+            ethChg:   d.ethereum ? d.ethereum.usd_24h_change : null,
+            source:   'coingecko-fallback'
+          };
+        })
+        .catch(function(){ return null; });
+    });
+}
 function fetchKlines() {
   return fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=15').then(function(r){return r.json();}).then(function(d){
     var c=d.slice(-14);
