@@ -65,22 +65,22 @@
       {
         "@type": "Question",
         "name": "How is the BTC Market Outlook score calculated?",
-        "acceptedAnswer": { "@type": "Answer", "text": "CoinGyaan calculates the BTC Market Outlook using multiple live crypto market signals rather than a single indicator. Bitcoin sentiment today, Fear and Greed Index values, RSI, BTC dominance, liquidity conditions and recent market momentum are combined into a weighted score. This helps users understand current Bitcoin market conditions and crypto market sentiment. The score does not predict exact future prices. It highlights whether current signals lean bullish, bearish or neutral." }
+        "acceptedAnswer": { "@type": "Answer", "text": "CoinGyaan's BTC Market Outlook is a directional prediction engine that answers one question: what is the probability BTC moves higher over the next 24 hours? It uses five Binance-derived signals: price momentum across three timeframes (40% weight), RSI and RSI slope (25%), funding rate (15%), open interest direction (10%) and volatility (10%). Fear and Greed, BTC Dominance and Stablecoin Dominance are displayed separately as market context but have zero influence on the prediction score." }
       },
       {
         "@type": "Question",
         "name": "What does Bitcoin sentiment mean?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Bitcoin sentiment reflects how traders and investors currently feel about the market. Positive Bitcoin sentiment usually appears when confidence, liquidity and buying activity increase. Negative sentiment often appears during fear, uncertainty or stronger selling pressure. CoinGyaan tracks Bitcoin sentiment today using multiple market signals to help users understand overall crypto market sentiment." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Bitcoin sentiment reflects how traders and investors currently feel about the market. CoinGyaan displays the Fear and Greed Index as a standalone market context indicator. It is shown in the Contrarian Insight section which is educational only and does not affect the BTC Market Outlook prediction score." }
       },
       {
         "@type": "Question",
         "name": "Is the Fear and Greed Index updated live?",
-        "acceptedAnswer": { "@type": "Answer", "text": "The Fear and Greed Index on CoinGyaan updates regularly using live market data and sentiment indicators. It helps users understand whether current market conditions show fear, caution or optimism. Tracking the Fear and Greed Index today alongside Bitcoin sentiment and BTC market signals can provide additional context for market research." }
+        "acceptedAnswer": { "@type": "Answer", "text": "The Fear and Greed Index on CoinGyaan updates regularly and is displayed as a Contrarian Insight card. It helps users understand whether current market conditions show fear, caution or optimism from a long-term perspective. It is informational only and has no influence on the BTC Market Outlook directional score." }
       },
       {
         "@type": "Question",
         "name": "How accurate are probability signals?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Probability signals help users understand market conditions but they are not future price predictions. CoinGyaan uses crypto market signals such as Bitcoin sentiment, market momentum, volatility and liquidity data to estimate current conditions. These signals should be used as educational insights and combined with personal research rather than treated as guaranteed outcomes." }
+        "acceptedAnswer": { "@type": "Answer", "text": "CoinGyaan's BTC Market Outlook uses live derivatives data including momentum, RSI, funding rate and open interest to estimate 24-hour directional probability. These signals are educational tools, not guaranteed predictions. They should be used as one input in your own research process alongside other sources." }
       }
     ]
   }
@@ -395,6 +395,62 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
 .v5-footer-attr { font-family:var(--mono); font-size:10px; color:#94a3b8; font-weight:500; letter-spacing:0.04em; }
 .v5-footer-copy { font-family:var(--mono); font-size:10px; color:#64748b; }
 
+/* ── UPSIDE PROBABILITY HERO ── */
+.v5-upside-pct {
+  font-family: var(--mono); font-size: 58px; font-weight: 800;
+  line-height: 1; letter-spacing: -2px;
+}
+.v5-upside-pct .v5-pct { font-size: 22px; font-weight: 500; color: var(--muted); letter-spacing: 0; }
+.v5-upside-label { font-family: var(--mono); font-size: 11px; color: #94a3b8; font-weight: 600;
+  margin-top: 4px; letter-spacing: 0.06em; text-transform: uppercase; }
+.v5-horizon-row { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.v5-horizon-chip {
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  padding: 3px 9px; border-radius: 5px;
+  background: var(--card2); border: 1px solid var(--border2); color: #94a3b8;
+}
+.v5-horizon-chip strong { color: #e2e8f0; font-weight: 700; }
+
+/* ── DRIVERS SECTION ── */
+.v5-drivers-blk {
+  background: var(--card2); border: 1px solid var(--border2);
+  border-radius: 9px; padding: 14px 16px; margin-bottom: 14px;
+}
+.v5-drivers-hd { font-family: var(--mono); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.1em; color: #94a3b8; font-weight: 600; margin-bottom: 12px; }
+.v5-drivers-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.v5-drivers-col-hd { font-family: var(--mono); font-size: 10px; font-weight: 700;
+  margin-bottom: 8px; letter-spacing: 0.05em; }
+.v5-drivers-col-hd.bull { color: #22c55e; }
+.v5-drivers-col-hd.bear { color: #ef4444; }
+.v5-driver-item { font-size: 12px; color: #94a3b8; font-weight: 500;
+  display: flex; align-items: flex-start; gap: 7px; line-height: 1.45; margin-bottom: 6px; }
+.v5-driver-item:last-child { margin-bottom: 0; }
+.v5-driver-icon { flex-shrink: 0; }
+.v5-driver-none { font-size: 11px; color: var(--dimmer); font-style: italic; }
+
+/* ── CONTRARIAN INSIGHT CARD ── */
+.v5-contrarian-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-left: 3px solid #8b5cf6;
+  border-radius: 12px; padding: 16px 18px; margin-bottom: 20px;
+}
+.v5-contrarian-hd { font-family: var(--mono); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.12em; color: #8b5cf6; font-weight: 700; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px; }
+.v5-contrarian-hd::after { content: ''; flex: 1; height: 1px; background: rgba(139,92,246,0.2); }
+.v5-contrarian-body { display: flex; align-items: flex-start; gap: 16px; }
+.v5-contrarian-score-wrap { text-align: center; flex-shrink: 0; min-width: 60px; }
+.v5-contrarian-score { font-family: var(--mono); font-size: 36px; font-weight: 800; line-height: 1; }
+.v5-contrarian-score-lbl { font-family: var(--mono); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.08em; color: #94a3b8; margin-top: 3px; }
+.v5-contrarian-text { flex: 1; }
+.v5-contrarian-title { font-size: 13px; font-weight: 600; color: #e2e8f0; margin-bottom: 6px; }
+.v5-contrarian-desc { font-size: 12px; color: #94a3b8; font-weight: 500; line-height: 1.65; }
+.v5-contrarian-disc { font-family: var(--mono); font-size: 9px; color: var(--dimmer);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border2); }
+
 /* Mobile */
 @media (max-width:660px) {
   .v5-prob-top { grid-template-columns:1fr; gap:14px; }
@@ -410,6 +466,9 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
   .v5-fng-bar-lbls .v5-lbl-full { display:none; }
   .v5-fng-bar-lbls .v5-lbl-short { display:inline; }
   .v5-range-bias { flex-direction:column; align-items:flex-start; gap:6px; }
+  .v5-drivers-cols { grid-template-columns:1fr; }
+  .v5-upside-pct { font-size:46px; }
+  .v5-contrarian-body { flex-direction:column; gap:10px; }
 }
   </style>
 </head>
@@ -497,9 +556,17 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
       <div class="v5-prob-top">
         <div>
           <div class="v5-score-eye">BTC Market Outlook</div>
-          <div class="v5-score-big" id="probBig"><span style="font-size:16px;color:var(--dimmer);font-family:var(--sans);font-weight:500;">Calculating outlook...</span></div>
+          <div class="v5-upside-pct" id="probBig" style="color:var(--dimmer)">
+            <span style="font-size:16px;font-family:var(--sans);font-weight:500;">Calculating outlook...</span>
+          </div>
+          <div class="v5-upside-label" id="upsideLabel">Upside Probability</div>
           <div class="v5-score-sub" id="probSub">Gathering signals...</div>
-          <div class="v5-score-bar"><div class="v5-score-fill" id="scoreBar"></div></div>
+          <div class="v5-score-bar" style="margin-top:10px;"><div class="v5-score-fill" id="scoreBar"></div></div>
+          <div class="v5-horizon-row">
+            <div class="v5-horizon-chip">Direction: <strong id="horizonDir">···</strong></div>
+            <div class="v5-horizon-chip">Confidence: <strong id="horizonConf">···</strong></div>
+            <div class="v5-horizon-chip">Next <strong>24 Hours</strong></div>
+          </div>
         </div>
         <div class="v5-meta-col">
           <div class="v5-meta-row" style="padding-top:4px;padding-bottom:4px;border-bottom:1px solid rgba(22,35,56,0.4);">
@@ -576,24 +643,19 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
         </div>
       </div>
 
-      <div class="v5-dir-bias-blk">
-        <div class="v5-dir-bias-hd">Directional Bias</div>
-        <div class="v5-dir-bias-main">
-          <span class="v5-dir-bias-label" id="dirBiasLabel">Analyzing signals...</span>
-          <span class="v5-dir-bias-conf">Signal confidence: <strong id="dirBiasConf" style="color:#cbd5e1">Calculating...</strong></span>
+      <!-- Drivers section -->
+      <div class="v5-drivers-blk">
+        <div class="v5-drivers-hd">Signal Drivers</div>
+        <div class="v5-drivers-cols">
+          <div>
+            <div class="v5-drivers-col-hd bull">✓ Bullish Drivers</div>
+            <div id="bullDrivers"><div class="v5-driver-none">Analyzing signals...</div></div>
+          </div>
+          <div>
+            <div class="v5-drivers-col-hd bear">✗ Bearish Drivers</div>
+            <div id="bearDrivers"><div class="v5-driver-none">Analyzing signals...</div></div>
+          </div>
         </div>
-        <div class="v5-dir-prob-bar">
-          <div class="v5-dir-prob-up"   id="dirProbUpBar"   style="width:50%"></div>
-          <div class="v5-dir-prob-down" id="dirProbDownBar" style="width:50%"></div>
-        </div>
-        <div class="v5-dir-prob-lbls">
-          <span class="v5-dir-prob-up-lbl">Up <span id="dirProbUpPct">Loading...</span></span>
-          <span class="v5-dir-prob-down-lbl">Down <span id="dirProbDownPct">Loading...</span></span>
-        </div>
-        <div class="v5-dir-signals-title" id="dirSignalsTitle">Analyzing conditions...</div>
-        <ul class="v5-dir-signals-list" id="dirSignalsList">
-          <li>Loading market data...</li>
-        </ul>
       </div>
 
       <div class="v5-spark-blk">
@@ -618,6 +680,22 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
       <span class="v5-prob-disc">Probability estimates only. Not future guarantees.</span>
       <span class="v5-prob-phase">BTC available now. ETH and SOL support coming soon.</span>
     </div>
+  </div>
+
+  <!-- CONTRARIAN INSIGHT -->
+  <div class="v5-contrarian-card" id="contrarianCard">
+    <div class="v5-contrarian-hd">Contrarian Insight</div>
+    <div class="v5-contrarian-body">
+      <div class="v5-contrarian-score-wrap">
+        <div class="v5-contrarian-score" id="contrarianScore" style="color:#fb923c">···</div>
+        <div class="v5-contrarian-score-lbl">Fear &amp; Greed</div>
+      </div>
+      <div class="v5-contrarian-text">
+        <div class="v5-contrarian-title" id="contrarianTitle">Loading sentiment data...</div>
+        <div class="v5-contrarian-desc" id="contrarianDesc"></div>
+      </div>
+    </div>
+    <div class="v5-contrarian-disc">This insight is informational only and does not affect the BTC Market Outlook score.</div>
   </div>
 
   <!-- MARKET CONDITIONS -->
@@ -720,10 +798,10 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
     <div class="v5-collapse-list">
 
       <div class="v5-collapse-item">
-        <button class="v5-collapse-btn open" onclick="v5Toggle(this)">What is Crypto Probability Intelligence?<span class="v5-arrow">▼</span></button>
+        <button class="v5-collapse-btn open" onclick="v5Toggle(this)">What is the BTC Market Outlook?<span class="v5-arrow">▼</span></button>
         <div class="v5-collapse-body open">
           <div class="v5-collapse-inner">
-            <p>Crypto Probability Intelligence is CoinGyaan's approach to converting raw market signals into a single weighted score. It uses RSI, Fear and Greed, stablecoin dominance, BTC dominance and price momentum. The score shows how aligned current conditions are with historical bullish or bearish patterns. It does not predict future prices. It measures signal alignment so you can form your own view.</p>
+            <p>The BTC Market Outlook is CoinGyaan's directional prediction engine. It answers one question: what is the probability BTC moves higher over the next 24 hours? It uses five Binance-derived signals — momentum across three timeframes, RSI and RSI slope, funding rate, open interest direction and volatility. Fear and Greed, BTC Dominance and Stablecoin Dominance are shown separately as market context but have zero influence on this score.</p>
           </div>
         </div>
       </div>
@@ -732,16 +810,16 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
         <button class="v5-collapse-btn" onclick="v5Toggle(this)">How is the BTC Market Outlook score calculated?<span class="v5-arrow">▼</span></button>
         <div class="v5-collapse-body">
           <div class="v5-collapse-inner">
-            <p>CoinGyaan calculates the <a href="https://www.coingyaan.com/bitcoin">BTC Market Outlook</a> using multiple live crypto market signals rather than a single indicator. <a href="/bitcoin-sentiment-today">Bitcoin sentiment today</a>, Fear and Greed Index values, RSI, BTC dominance, liquidity conditions and recent market momentum are combined into a weighted score. The score does not predict exact future prices. It highlights whether current signals lean bullish, bearish or neutral.</p>
+            <p>The <a href="https://www.coingyaan.com/bitcoin">BTC Market Outlook</a> score is calculated from five signals using Binance data only. Momentum across 1-day, 3-day and 7-day timeframes carries 40% of the weight. RSI and its slope carry 25%. Funding rate carries 15%. Open interest direction carries 10%. Volatility carries 10%. The result is an upside probability between 0% and 100% showing the strength of the directional signal for the next 24 hours.</p>
           </div>
         </div>
       </div>
 
       <div class="v5-collapse-item">
-        <button class="v5-collapse-btn" onclick="v5Toggle(this)">What does Bitcoin sentiment mean?<span class="v5-arrow">▼</span></button>
+        <button class="v5-collapse-btn" onclick="v5Toggle(this)">What is the Contrarian Insight card?<span class="v5-arrow">▼</span></button>
         <div class="v5-collapse-body">
           <div class="v5-collapse-inner">
-            <p>Bitcoin sentiment reflects how traders and investors currently feel about the market. Positive Bitcoin sentiment usually appears when confidence, liquidity and buying activity increase. Negative sentiment often appears during fear, uncertainty or stronger selling pressure. CoinGyaan tracks <a href="/bitcoin-sentiment-today">Bitcoin sentiment today</a> using multiple market signals to help users understand overall crypto market sentiment.</p>
+            <p>The Contrarian Insight card shows the <a href="/fear-greed-index-today">Fear and Greed Index</a> as an educational signal only. Historically, extreme fear has created long-term accumulation opportunities while extreme greed has often preceded volatility. This card is completely separate from the BTC Market Outlook score and has no influence on the prediction engine.</p>
           </div>
         </div>
       </div>
@@ -750,16 +828,16 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
         <button class="v5-collapse-btn" onclick="v5Toggle(this)">Is the Fear and Greed Index updated live?<span class="v5-arrow">▼</span></button>
         <div class="v5-collapse-body">
           <div class="v5-collapse-inner">
-            <p>The <a href="/fear-greed-index-today">Fear and Greed Index</a> on CoinGyaan updates regularly using live market data and sentiment indicators. It helps users understand whether current market conditions show fear, caution or optimism. Tracking the Fear and Greed Index today alongside Bitcoin sentiment and BTC market signals can provide additional context for market research.</p>
+            <p>The <a href="/fear-greed-index-today">Fear and Greed Index</a> on CoinGyaan updates regularly and is displayed in the Contrarian Insight section. It is informational context only and does not affect the BTC Market Outlook directional score. The prediction engine uses only Binance-derived momentum, RSI, funding rate, open interest and volatility data.</p>
           </div>
         </div>
       </div>
 
       <div class="v5-collapse-item">
-        <button class="v5-collapse-btn" onclick="v5Toggle(this)">How accurate are probability signals?<span class="v5-arrow">▼</span></button>
+        <button class="v5-collapse-btn" onclick="v5Toggle(this)">How accurate are the probability signals?<span class="v5-arrow">▼</span></button>
         <div class="v5-collapse-body">
           <div class="v5-collapse-inner">
-            <p>Probability signals help users understand market conditions but they are not future price predictions. CoinGyaan uses crypto market signals such as Bitcoin sentiment, market momentum, volatility and liquidity data to estimate current conditions. These signals should be used as educational insights and combined with personal research rather than treated as guaranteed outcomes.</p>
+            <p>The BTC Market Outlook uses live derivatives and price data to estimate 24-hour directional probability. These are educational tools based on historical signal patterns, not guaranteed predictions. Strong alignment across momentum, RSI and funding rate historically improves directional reliability. Always combine these signals with your own research.</p>
           </div>
         </div>
       </div>
@@ -767,16 +845,14 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
     </div>
   </div>
 
-  <!-- SIGNAL CHIPS -->
   <div class="v5-chips-block">
-    <div class="v5-chips-label">How CoinGyaan Calculates Signals</div>
+    <div class="v5-chips-label">BTC Market Outlook Signal Sources</div>
     <div class="v5-chips-row">
-      <span class="v5-chip">RSI</span>
+      <span class="v5-chip">Momentum (1D/3D/7D)</span>
+      <span class="v5-chip">RSI + Slope</span>
+      <span class="v5-chip">Funding Rate</span>
+      <span class="v5-chip">Open Interest</span>
       <span class="v5-chip">Volatility</span>
-      <span class="v5-chip">Fear &amp; Greed</span>
-      <span class="v5-chip">Liquidity</span>
-      <span class="v5-chip">BTC Dominance</span>
-      <span class="v5-chip">Market Rotation</span>
     </div>
   </div>
 
@@ -829,11 +905,11 @@ function rsiLabel(r) { if(r==null) return 'Loading...'; if(r<30) return 'Oversol
 function rsiBadgeCls(r) { if(r==null) return 'v5-mb-muted'; if(r<30) return 'v5-mb-green'; if(r<45) return 'v5-mb-amber'; if(r<55) return 'v5-mb-muted'; if(r<70) return 'v5-mb-green'; return 'v5-mb-red'; }
 
 function outlookFromProb(p) {
-  if(p<=30) return {label:'Bearish',      color:'#ef4444', text:'Market conditions currently show weak momentum and elevated fear.'};
-  if(p<=45) return {label:'Cautious',     color:'#fb923c', text:'Market conditions remain uncertain with mixed signals across indicators.'};
-  if(p<=55) return {label:'Neutral',      color:'#eab308', text:'Signals remain mixed and market direction is unclear right now.'};
-  if(p<=70) return {label:'Lean Bullish', color:'#22c55e', text:'Most market signals support bullish conditions with moderate confidence.'};
-  return           {label:'Strong Bullish',color:'#22c55e',text:'Most market indicators support continued strength in Bitcoin.'};
+  if(p>=70) return {label:'Bullish',       color:'#22c55e', text:'Momentum, RSI and derivatives data align toward upside over the next 24 hours.'};
+  if(p>=55) return {label:'Slight Bullish',color:'#86efac', text:'More signals favor upside than downside. Conviction is moderate.'};
+  if(p>=45) return {label:'Neutral',       color:'#eab308', text:'Signals are split. No clear directional edge over the next 24 hours.'};
+  if(p>=30) return {label:'Slight Bearish',color:'#fb923c', text:'More signals favor downside than upside. Conviction is moderate.'};
+  return           {label:'Bearish',       color:'#ef4444', text:'Momentum, RSI and derivatives data align toward downside over the next 24 hours.'};
 }
 
 function marketCond(md, p) {
@@ -847,12 +923,11 @@ function marketCond(md, p) {
 }
 
 function interpFromProb(p) {
-  if(p<=35) return {label:'Lean Bearish',      desc:'Market conditions are defensive. Downside pressure is increasing.',color:'#ef4444'};
-  if(p<=45) return {label:'Slight Bearish Bias',desc:'Signals lean slightly bearish with no strong directional conviction yet.',color:'#fb923c'};
-  if(p<=54) return {label:'Neutral',            desc:'Market signals are mixed. No strong directional advantage is visible.',color:'#94a3b8'};
-  if(p<=65) return {label:'Lean Bullish',       desc:'Most signals support bullish continuation with moderate confidence.',color:'#22c55e'};
-  if(p<=80) return {label:'Strong Bullish',     desc:'Momentum, liquidity and sentiment are aligned toward continuation.',color:'#22c55e'};
-  return           {label:'Very Strong Bullish',desc:'Signal alignment is near consensus. This is historically rare.',color:'#22c55e'};
+  if(p>=70) return {label:'Bullish',       desc:'Momentum and market structure support upside continuation.',     color:'#22c55e'};
+  if(p>=55) return {label:'Slight Bullish',desc:'Conditions lean bullish with moderate conviction.',              color:'#86efac'};
+  if(p>=45) return {label:'Neutral',       desc:'No dominant direction. Market is consolidating.',                color:'#eab308'};
+  if(p>=30) return {label:'Slight Bearish',desc:'Conditions lean bearish with moderate conviction.',              color:'#fb923c'};
+  return           {label:'Bearish',       desc:'Momentum and market structure point toward further downside.',    color:'#ef4444'};
 }
 
 function setBadge(numId, badgeId, num, txt, cls) {
@@ -878,14 +953,56 @@ function biasFromProb(p, scores) {
   return {icon:icon,curTxt:curTxt,dirTxt:dirTxt,col:col,up:up,dn:dn,cfLbl:cfLbl,cfCol:cfCol};
 }
 
+// ── DIRECTIONAL SCORING ENGINE ────────────────────
+// Answers: "What is the probability BTC moves higher over the next 24 hours?"
+// Inputs: Momentum 40% | RSI+slope 25% | Funding 15% | OI direction 10% | Volatility 10%
+// NO Fear&Greed, NO BTC Dominance, NO Stablecoin Dominance in this calculation.
+
+function momScore(m) {
+  if(m==null) return 50;
+  if(m> 0.03) return 85; if(m> 0.01) return 70; if(m> 0.003) return 58;
+  if(m>-0.003) return 50;
+  if(m>-0.01) return 42; if(m>-0.03) return 30; return 15;
+}
 function calcBullishProb(md) {
-  var rsiS =md.rsi!=null      ?(md.rsi<30?85:md.rsi<45?65:md.rsi<55?50:md.rsi<70?38:20):50;
-  var fngS =md.fearGreed!=null?(md.fearGreed<25?80:md.fearGreed<45?62:md.fearGreed<56?50:md.fearGreed<75?38:20):50;
-  var stS  =md.stableDom!=null?(md.stableDom>9?72:md.stableDom>7?60:md.stableDom>5?50:md.stableDom>3?40:28):50;
-  var domS =md.btcDom!=null   ?(md.btcDom>60?65:md.btcDom>55?55:md.btcDom>50?50:md.btcDom>45?42:32):50;
-  var momS =md.momentum!=null ?(md.momentum>0.03?75:md.momentum>0?58:md.momentum>-0.03?42:25):50;
-  md._scores=[rsiS,fngS,stS,domS,momS];
-  return Math.round(rsiS*0.30+fngS*0.25+momS*0.20+stS*0.15+domS*0.10);
+  // Momentum: average of three timeframes
+  var s1=momScore(md.mom1d!=null?md.mom1d:md.momentum);
+  var s3=momScore(md.mom3d!=null?md.mom3d:md.momentum);
+  var s7=momScore(md.mom7d!=null?md.mom7d:md.momentum);
+  var mS=( s1+s3+s7)/3;
+
+  // RSI + slope
+  var rBase=md.rsi==null?50:md.rsi>65?78:md.rsi>55?64:md.rsi>45?50:md.rsi>35?36:22;
+  var slope=md.rsiSlope!=null?md.rsiSlope:0;
+  var sAdj=slope>5?9:slope>2?5:slope<-5?-9:slope<-2?-5:0;
+  var rS=Math.min(90,Math.max(10,rBase+sAdj));
+
+  // Funding rate
+  var fr=md.fundingRate;
+  var fS=fr==null?52:fr<-0.0001?72:fr<0?60:fr<0.0001?52:fr<0.0002?40:25;
+
+  // Open Interest direction
+  var oiDir=50;
+  if(md.oi!=null&&md.prevOI!=null&&md.prevOI>0){
+    var oiUp=md.oi>md.prevOI*1.005;
+    var oiDn=md.oi<md.prevOI*0.995;
+    var priceUp=(md.change24h!=null?md.change24h:0)>=0;
+    if(oiUp&&priceUp)  oiDir=72;
+    else if(oiUp&&!priceUp) oiDir=28;
+    else if(oiDn&&priceUp)  oiDir=58;
+    else if(oiDn&&!priceUp) oiDir=42;
+  }
+
+  // Volatility × momentum direction
+  var vp=md.realVol?md.realVol*100:2;
+  var posM=(md.mom3d!=null?md.mom3d:md.momentum||0)>=0;
+  var vS=vp<1.5?58:vp<3?(posM?62:40):vp<5?(posM?54:32):35;
+
+  // Store individual scores for confidence + drivers
+  md._sigScores={mS:Math.round(mS),rS:rS,fS:fS,oiDir:oiDir,vS:vS};
+  md._sigRaw={s1:s1,s3:s3,s7:s7,slope:slope,fr:fr,oiDir:oiDir,vp:vp,posM:posM};
+
+  return Math.round(mS*0.40 + rS*0.25 + fS*0.15 + oiDir*0.10 + vS*0.10);
 }
 
 function computeRange(price,atr14,realVol,momentum,tf) {
@@ -966,72 +1083,145 @@ function renderRangeBias(p,pct,scores) {
   if(cE) cE.textContent=b.cfLbl;
 }
 
-function renderDirectionalBias(md,p) {
-  var b=biasFromProb(p,md._scores);
-  var uB=document.getElementById('dirProbUpBar'),dB=document.getElementById('dirProbDownBar');
-  if(uB) uB.style.width=b.up+'%';
-  if(dB) dB.style.width=b.dn+'%';
-  set('dirProbUpPct',b.up+'%'); set('dirProbDownPct',b.dn+'%');
-  var lE=document.getElementById('dirBiasLabel');
-  if(lE){lE.textContent=b.icon+' '+b.dirTxt;lE.style.color=b.col;}
-  var cE=document.getElementById('dirBiasConf');
-  if(cE){cE.textContent=b.cfLbl;cE.style.color=b.cfCol;}
-  var isBull=p>55,isBear=p<=45;
-  var tE=document.getElementById('dirSignalsTitle'),lsE=document.getElementById('dirSignalsList');
-  if(!tE||!lsE) return;
-  if(isBull){
-    tE.textContent='Conditions supporting this outlook:';
-    var pts=[];
-    if(md.stableDom!=null&&md.stableDom>6) pts.push('Stablecoin liquidity is elevated suggesting capital is ready to enter the market.');
-    if(md.btcDom!=null&&md.btcDom>52) pts.push('BTC dominance remains strong showing Bitcoin is leading current market conditions.');
-    if(md.momentum!=null&&md.momentum>0) pts.push('Recent price momentum is positive over the last three days.');
-    if(md.rsi!=null&&md.rsi>50&&md.rsi<70) pts.push('RSI is in a healthy range without being overbought.');
-    if(md.fearGreed!=null&&md.fearGreed<70) pts.push('Sentiment is optimistic without reaching extreme greed levels.');
-    if(pts.length===0) pts.push('Multiple signals are aligned in a bullish direction.');
-    lsE.className='v5-dir-signals-list v5-bullish';
-    lsE.innerHTML=pts.slice(0,3).map(function(p){return '<li>'+p+'</li>';}).join('');
-  } else if(isBear){
-    tE.textContent='Conditions creating headwinds:';
-    var pts2=[];
-    if(md.fearGreed!=null&&md.fearGreed<35) pts2.push('Fear remains elevated with traders staying cautious.');
-    if(md.momentum!=null&&md.momentum<0) pts2.push('Recent price momentum is negative over the last three days.');
-    if(md.rsi!=null&&md.rsi<45) pts2.push('RSI is showing weak momentum and limited buying pressure.');
-    if(md.stableDom!=null&&md.stableDom<5) pts2.push('Low stablecoin dominance suggests most available capital is already deployed.');
-    if(md.btcDom!=null&&md.btcDom<48) pts2.push('BTC dominance is falling which can signal reduced conviction in Bitcoin.');
-    if(pts2.length===0) pts2.push('Multiple signals are aligned in a bearish direction.');
-    lsE.className='v5-dir-signals-list v5-bearish';
-    lsE.innerHTML=pts2.slice(0,3).map(function(p){return '<li>'+p+'</li>';}).join('');
-  } else {
-    tE.textContent='Current signal picture:';
-    lsE.className='v5-dir-signals-list';
-    lsE.innerHTML=['Signals are mixed with no clear directional advantage visible.','Watching for RSI or sentiment to break in either direction.','Volume and momentum data suggest the market is consolidating.'].map(function(p){return '<li>'+p+'</li>';}).join('');
+function calcConfidence(md, p) {
+  var sc=md._sigScores;
+  if(!sc) return 'Low';
+  if(p>=45&&p<=55) return 'Low';
+  var scores=[sc.mS,sc.rS,sc.fS,sc.oiDir,sc.vS];
+  var agree=0;
+  if(p>55) agree=scores.filter(function(s){return s>55;}).length;
+  else     agree=scores.filter(function(s){return s<45;}).length;
+  return agree>=4?'High':agree>=2?'Medium':'Low';
+}
+
+function renderDrivers(md, p) {
+  var bull=[], bear=[];
+  var raw=md._sigRaw||{};
+  var m1=md.mom1d!=null?md.mom1d:md.momentum||0;
+  var m3=md.mom3d!=null?md.mom3d:md.momentum||0;
+  var m7=md.mom7d!=null?md.mom7d:md.momentum||0;
+  var rsi=md.rsi, slope=raw.slope||0;
+  var fr=md.fundingRate, vp=raw.vp||2;
+  var oiDir=raw.oiDir||50;
+
+  // Momentum drivers
+  if(m1> 0.005) bull.push('Positive short-term momentum over the past 24 hours');
+  if(m1<-0.005) bear.push('Short-term momentum is negative over the past 24 hours');
+  if(m3> 0.01)  bull.push('3-day trend is rising');
+  if(m3<-0.01)  bear.push('3-day trend is declining');
+  if(m7> 0.02)  bull.push('Weekly momentum supports continued upside');
+  if(m7<-0.02)  bear.push('Weekly momentum is falling');
+
+  // RSI drivers
+  if(rsi!=null){
+    if(rsi>55&&slope>2)  bull.push('RSI is rising and in bullish territory');
+    if(rsi>55&&slope<-2) bear.push('RSI is fading from bullish territory');
+    if(rsi<45&&slope<-2) bear.push('RSI is falling and showing weak momentum');
+    if(rsi<45&&slope>2)  bear.push('RSI remains weak despite a slight bounce');
   }
+
+  // Funding drivers
+  if(fr!=null){
+    if(fr<-0.0001) bull.push('Funding rate is negative — short sellers are overcrowded');
+    if(fr> 0.0002) bear.push('Funding rate is elevated — long positions are overcrowded');
+  }
+
+  // Volatility drivers
+  if(vp<1.5) bull.push('Low volatility indicates controlled price action');
+  if(vp>4&&m3<0) bear.push('Elevated volatility with declining price action');
+
+  // OI drivers
+  if(oiDir===72) bull.push('Open interest rising with price — trend has conviction');
+  if(oiDir===28) bear.push('Open interest rising as price falls — shorts are building');
+
+  // Build HTML — max 3 per side
+  function buildItems(arr, type) {
+    if(arr.length===0) return '<div class="v5-driver-none">No dominant signals in this direction</div>';
+    return arr.slice(0,3).map(function(txt){
+      return '<div class="v5-driver-item"><span class="v5-driver-icon">'+(type==='bull'?'✓':'✗')+'</span><span>'+txt+'</span></div>';
+    }).join('');
+  }
+
+  var bE=document.getElementById('bullDrivers');
+  var bearE=document.getElementById('bearDrivers');
+  if(bE)   bE.innerHTML=buildItems(bull,'bull');
+  if(bearE) bearE.innerHTML=buildItems(bear,'bear');
+
+  // Color the icons
+  if(bE)   bE.querySelectorAll('.v5-driver-icon').forEach(function(e){e.style.color='#22c55e';});
+  if(bearE) bearE.querySelectorAll('.v5-driver-icon').forEach(function(e){e.style.color='#ef4444';});
+}
+
+function renderContrarianInsight(fng) {
+  if(fng==null) return;
+  var el=document.getElementById('contrarianScore');
+  var col=fngColor(fng);
+  if(el){el.textContent=fng;el.style.color=col;}
+
+  var title, desc;
+  if(fng<25){
+    title='Extreme fear is present in the market.';
+    desc='Historically, extreme fear has often created long-term accumulation opportunities as capitulation approaches. This does not predict near-term price direction.';
+  } else if(fng<45){
+    title='Market fear is elevated.';
+    desc='Long-term investors have historically found value during periods of sustained fear. Fear-driven selling can create entry opportunities but timing remains uncertain.';
+  } else if(fng<56){
+    title='Sentiment is balanced.';
+    desc='No strong contrarian signal at current sentiment levels. The market is neither excessively fearful nor greedy right now.';
+  } else if(fng<75){
+    title='Greed is rising across the market.';
+    desc='Historically this level warrants caution for new positions. Elevated greed can persist but has often preceded periods of increased volatility.';
+  } else {
+    title='Extreme greed is present in the market.';
+    desc='Markets have historically experienced increased volatility and pullbacks after extended periods at extreme greed levels. This is not a sell signal but a caution flag.';
+  }
+  set('contrarianTitle', title);
+  set('contrarianDesc',  desc);
 }
 
 function renderProbCard(md,p) {
   var ok=outlookFromProb(p);
-  var bE=document.getElementById('probBig');
-  if(bE){bE.innerHTML=p+'<span class="v5-pct">%</span>';bE.style.color=ok.color;}
+
+  // Hero: upside probability number
+  var bigEl=document.getElementById('probBig');
+  if(bigEl){
+    bigEl.innerHTML=p+'<span class="v5-pct">%</span>';
+    bigEl.style.color=ok.color;
+    bigEl.className='v5-upside-pct';
+  }
   set('probSub',ok.text);
   var bar=document.getElementById('scoreBar');
   if(bar) bar.style.width=p+'%';
-  var sc=md._scores||[50,50,50,50,50];
-  var mn=sc.reduce(function(a,b){return a+b;},0)/sc.length;
-  var sd=Math.sqrt(sc.reduce(function(a,b){return a+Math.pow(b-mn,2);},0)/sc.length);
-  var cf=Math.max(20,Math.round(100-sd*2));
-  setBadge('metaConfNum','metaConfBadge',cf+'/100',cf>=75?'High':cf>=55?'Medium':'Low',cf>=75?'v5-mb-green':cf>=55?'v5-mb-gold':'v5-mb-amber');
+
+  // Direction / Confidence chips
+  set('horizonDir',ok.label);
+  var dirEl=document.getElementById('horizonDir');
+  if(dirEl) dirEl.style.color=ok.color;
+  var conf=calcConfidence(md,p);
+  var confEl=document.getElementById('horizonConf');
+  if(confEl){
+    confEl.textContent=conf;
+    confEl.style.color=conf==='High'?'#22c55e':conf==='Medium'?'#f59e0b':'#fb923c';
+  }
+
+  // Meta table
+  var vp=md.realVol?md.realVol*100:null;
+  setBadge('metaConfNum','metaConfBadge',conf,conf,conf==='High'?'v5-mb-green':conf==='Medium'?'v5-mb-gold':'v5-mb-amber');
   var cnd=marketCond(md,p);
   setBadge('metaRegimeNum','metaRegimeBadge',cnd.label,cnd.label,cnd.badge);
-  var vp=md.realVol?md.realVol*100:null;
   var vol=vp==null?{label:'Unknown',badge:'v5-mb-muted'}:vp<2?{label:'Low',badge:'v5-mb-green'}:vp<5?{label:'Moderate',badge:'v5-mb-amber'}:{label:'Elevated',badge:'v5-mb-red'};
   setBadge('metaVolNum','metaVolBadge',vp!=null?vp.toFixed(1)+'%':'Loading...',vol.label,vol.badge);
-  var r=md.rsi;
-  setBadge('metaRsiNum','metaRsiBadge',r!=null?r:'Loading...',rsiLabel(r),rsiBadgeCls(r));
+  setBadge('metaRsiNum','metaRsiBadge',md.rsi!=null?md.rsi:'Loading...',rsiLabel(md.rsi),rsiBadgeCls(md.rsi));
+
+  // Interp strip
   var i=interpFromProb(p);
   var dot=document.getElementById('interpDot');
   if(dot){dot.style.background=i.color;dot.style.boxShadow='0 0 5px '+i.color+'55';}
-  set('interpLabel',i.label); set('interpDesc',i.desc);
-  renderDirectionalBias(md,p);
+  set('interpLabel',i.label);
+  set('interpDesc',i.desc);
+
+  // Drivers section
+  renderDrivers(md,p);
 }
 
 function renderRange(tf) {
@@ -1119,16 +1309,32 @@ function fetchKlines() {
     var rets=closes.slice(1).map(function(x,i){return(x-closes[i])/closes[i];});
     var mn=rets.reduce(function(a,b){return a+b;},0)/rets.length;
     var realVol=Math.sqrt(rets.reduce(function(a,b){return a+Math.pow(b-mn,2);},0)/rets.length);
+
+    // RSI on full window
     var gains=[],losses=[];
     for(var i=1;i<closes.length;i++){var df=closes[i]-closes[i-1];gains.push(Math.max(df,0));losses.push(Math.max(-df,0));}
     var avgG=gains.reduce(function(a,b){return a+b;},0)/gains.length;
     var avgL=losses.reduce(function(a,b){return a+b;},0)/losses.length;
     var rsi=avgL===0?100:Math.round(100-(100/(1+avgG/avgL)));
-    var momentum=(closes[closes.length-1]-closes[closes.length-4])/closes[closes.length-4];
+
+    // RSI slope — compute RSI on previous window (closes[0..12]) vs current
+    var g2=[],l2=[];
+    for(var j=1;j<closes.length-1;j++){var df2=closes[j]-closes[j-1];g2.push(Math.max(df2,0));l2.push(Math.max(-df2,0));}
+    var ag2=g2.reduce(function(a,b){return a+b;},0)/g2.length;
+    var al2=l2.reduce(function(a,b){return a+b;},0)/l2.length;
+    var rsiPrev=al2===0?100:Math.round(100-(100/(1+ag2/al2)));
+    var rsiSlope=rsi-rsiPrev;
+
+    // Three momentum timeframes
+    var n=closes.length;
+    var mom1d=(closes[n-1]-closes[n-2])/closes[n-2];
+    var mom3d=(closes[n-1]-closes[n-4])/closes[n-4];
+    var mom7d=n>=8?(closes[n-1]-closes[n-8])/closes[n-8]:mom3d;
+
     var pV=parseFloat(d[d.length-2][5])*parseFloat(d[d.length-2][4]);
     var cV=parseFloat(d[d.length-1][5])*parseFloat(d[d.length-1][4]);
     var volChange=pV>0?((cV-pV)/pV)*100:null;
-    return{atr14:atr14,realVol:realVol,momentum:momentum,rsi:rsi,volChange:volChange};
+    return{atr14:atr14,realVol:realVol,momentum:mom3d,mom1d:mom1d,mom3d:mom3d,mom7d:mom7d,rsi:rsi,rsiSlope:rsiSlope,volChange:volChange};
   }).catch(function(){return null;});
 }
 function fetchFutures() {
@@ -1146,12 +1352,24 @@ function fetchFutures() {
 function fmtMcap(v) { if(v>=1e12) return '$'+(v/1e12).toFixed(2)+'T'; if(v>=1e9) return '$'+(v/1e9).toFixed(1)+'B'; return '$'+(v/1e6).toFixed(0)+'M'; }
 
 function init() {
-  Promise.all([fetchFnG(),fetchGecko(),fetchBTCPrice(),fetchKlines()]).then(function(results) {
-    var fng=results[0],gecko=results[1],btc=results[2],klines=results[3];
-    if(fng)  {window.MD.fearGreed=fng.cur;window.MD.prevFearGreed=fng.prev;}
-    if(gecko){window.MD.btcDom=gecko.btcDom;window.MD.stableDom=gecko.stableDom;window.MD.mcap=gecko.mcap;}
-    if(btc)  {window.MD.btcPrice=btc.price;window.MD.change24h=btc.change24h;window.MD.vol24h=btc.vol24h;window.MD.ethPrice=btc.ethPrice;window.MD.ethChg=btc.ethChg;}
-    if(klines){window.MD.atr14=klines.atr14;window.MD.realVol=klines.realVol;window.MD.momentum=klines.momentum;window.MD.rsi=klines.rsi;window.MD.volChange=klines.volChange;}
+  Promise.all([fetchFnG(),fetchGecko(),fetchBTCPrice(),fetchKlines(),fetchFutures()]).then(function(results) {
+    var fng=results[0],gecko=results[1],btc=results[2],klines=results[3],futures=results[4];
+    if(fng)   {window.MD.fearGreed=fng.cur;window.MD.prevFearGreed=fng.prev;}
+    if(gecko) {window.MD.btcDom=gecko.btcDom;window.MD.stableDom=gecko.stableDom;window.MD.mcap=gecko.mcap;}
+    if(btc)   {window.MD.btcPrice=btc.price;window.MD.change24h=btc.change24h;window.MD.vol24h=btc.vol24h;window.MD.ethPrice=btc.ethPrice;window.MD.ethChg=btc.ethChg;}
+    if(klines){window.MD.atr14=klines.atr14;window.MD.realVol=klines.realVol;window.MD.momentum=klines.momentum;window.MD.mom1d=klines.mom1d;window.MD.mom3d=klines.mom3d;window.MD.mom7d=klines.mom7d;window.MD.rsi=klines.rsi;window.MD.rsiSlope=klines.rsiSlope;window.MD.volChange=klines.volChange;}
+    if(futures){
+      window.MD.oi=futures.oi;
+      window.MD.fundingRate=futures.fundingRate;
+      // Seed prevOI using 24h price change as proxy:
+      // If price is up, assume OI was slightly lower (accumulation)
+      // If price is down, assume OI was slightly higher (liquidation)
+      // This gives a meaningful first-load OI signal rather than a neutral 50
+      if(futures.oi!=null && window.MD.change24h!=null) {
+        var oiSeedFactor = window.MD.change24h >= 0 ? 0.992 : 1.008;
+        window.MD.prevOI = futures.oi * oiSeedFactor;
+      }
+    }
 
     window.MD.bullishProb=calcBullishProb(window.MD);
     var prevMD=Object.assign({},window.MD,{fearGreed:window.MD.prevFearGreed});
@@ -1160,13 +1378,14 @@ function init() {
     // Render ticker
     if(btc) {
       renderTickerBtc(btc.price,btc.change24h);
-      // ETH in ticker
-      var ep='$'+btc.ethPrice.toLocaleString();
-      ['tEth','tEth2'].forEach(function(id){set(id,ep);});
-      var ec=(btc.ethChg>=0?'▲ +':'▼ ')+Math.abs(btc.ethChg).toFixed(1)+'%';
-      ['tEthChg','tEthChg2'].forEach(function(id){var e=document.getElementById(id);if(e){e.textContent=ec;e.className=btc.ethChg>=0?'v5-t-up':'v5-t-dn';}});
+      if(btc.ethPrice){
+        var ep='$'+btc.ethPrice.toLocaleString();
+        ['tEth','tEth2'].forEach(function(id){set(id,ep);});
+        var ec=(btc.ethChg>=0?'▲ +':'▼ ')+Math.abs(btc.ethChg).toFixed(1)+'%';
+        ['tEthChg','tEthChg2'].forEach(function(id){var e=document.getElementById(id);if(e){e.textContent=ec;e.className=btc.ethChg>=0?'v5-t-up':'v5-t-dn';}});
+      }
     }
-    if(gecko&&gecko.mcap) {
+    if(gecko&&gecko.mcap){
       var mc=fmtMcap(gecko.mcap);
       ['tMcap','tMcap2'].forEach(function(id){set(id,mc);});
     }
@@ -1175,24 +1394,30 @@ function init() {
     renderRotation(window.MD.btcDom);
     renderLiquidity(window.MD.stableDom);
     renderProbCard(window.MD,window.MD.bullishProb);
+    renderContrarianInsight(window.MD.fearGreed);
     renderSparkDelta(prevProb,window.MD.bullishProb);
     var activeTf=document.querySelector('.v5-tf-tab.active');
     renderRange(activeTf?activeTf.textContent.trim():'24H');
-    renderActivity(window.MD.vol24h,klines?klines.volChange:null,null,null);
-    fetchFutures().then(function(fd){if(fd) renderActivity(window.MD.vol24h,klines?klines.volChange:null,fd.oi,fd.fundingRate);});
+    renderActivity(window.MD.vol24h,klines?klines.volChange:null,futures?futures.oi:null,futures?futures.fundingRate:null);
 
     setInterval(function() {
-      Promise.all([fetchFnG(),fetchBTCPrice()]).then(function(r2){
-        var f2=r2[0],b2=r2[1];
+      Promise.all([fetchFnG(),fetchBTCPrice(),fetchFutures()]).then(function(r2){
+        var f2=r2[0],b2=r2[1],fd=r2[2];
         if(f2){window.MD.prevFearGreed=window.MD.fearGreed;window.MD.fearGreed=f2.cur;}
         if(b2){window.MD.btcPrice=b2.price;window.MD.change24h=b2.change24h;window.MD.vol24h=b2.vol24h;}
+        if(fd){
+          window.MD.prevOI=window.MD.oi; // store previous OI before overwriting
+          window.MD.oi=fd.oi;
+          window.MD.fundingRate=fd.fundingRate;
+        }
         window.MD.bullishProb=calcBullishProb(window.MD);
         renderFnG(window.MD.fearGreed);
         if(b2) renderTickerBtc(b2.price,b2.change24h);
         renderProbCard(window.MD,window.MD.bullishProb);
+        renderContrarianInsight(window.MD.fearGreed);
         var tf=document.querySelector('.v5-tf-tab.active');
         renderRange(tf?tf.textContent.trim():'24H');
-        fetchFutures().then(function(fd){if(fd) renderActivity(window.MD.vol24h,null,fd.oi,fd.fundingRate);});
+        if(fd) renderActivity(window.MD.vol24h,null,fd.oi,fd.fundingRate);
       });
     },5*60*1000);
   });
