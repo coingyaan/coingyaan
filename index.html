@@ -178,9 +178,11 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
 .v5-nav-dropdown { position: relative; display: flex; align-items: center; }
 .v5-nav-dropdown-trigger {
   color: var(--muted); font-size: 13px; cursor: pointer; user-select: none;
-  transition: color 0.2s; background: none; border: none; padding: 0;
-  font-family: inherit; line-height: inherit; vertical-align: baseline;
-  display: inline; white-space: nowrap;
+  transition: color 0.2s; background: none; border: none; padding: 0; margin: 0;
+  font-family: inherit; font-weight: inherit; line-height: 1;
+  display: flex; align-items: center;
+  -webkit-appearance: none; -moz-appearance: none; appearance: none;
+  white-space: nowrap;
 }
 .v5-nav-dropdown-trigger:hover { color: var(--text); }
 .v5-nav-dropdown-menu {
