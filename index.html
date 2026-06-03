@@ -60,27 +60,27 @@
       {
         "@type": "Question",
         "name": "What is the BTC Market Outlook?",
-        "acceptedAnswer": { "@type": "Answer", "text": "The BTC Market Outlook is a 24-hour directional signal that estimates whether Bitcoin is more likely to move up or down. It runs five calculations using live Binance data: price momentum across three timeframes, RSI and its slope, funding rate, open interest direction and volatility. Each signal is weighted and combined into a single upside probability percentage. Fear and Greed, BTC Dominance and Stablecoin Dominance are shown separately as market context and have no impact on this score." }
+        "acceptedAnswer": { "@type": "Answer", "text": "The BTC Market Outlook is a 24-hour directional signal that estimates whether Bitcoin is more likely to move up or down. It runs five calculations using live Binance data: price momentum across three timeframes, RSI and its slope, bitcoin funding rate, open interest direction and volatility. Each signal is weighted and combined into a single upside probability. Fear and Greed, BTC Dominance and Stablecoin Dominance are shown separately as market context and have no impact on this score." }
       },
       {
         "@type": "Question",
         "name": "How is the BTC upside probability calculated?",
-        "acceptedAnswer": { "@type": "Answer", "text": "The BTC Market Outlook score runs five signals from Binance. Momentum across 1-day, 3-day and 7-day timeframes carries the most weight at 40%. RSI and its slope carry 25%. Bitcoin funding rate carries 15%. Open interest direction carries 10%. Volatility carries the remaining 10%. The result is a directional probability for the next 24 hours. A score above 55 leans bullish. Below 45 leans bearish." }
+        "acceptedAnswer": { "@type": "Answer", "text": "The BTC Market Outlook score uses five signals from Binance. Momentum across 1-day, 3-day and 7-day timeframes carries 40% of the weight. RSI and its slope carry 25%. Bitcoin funding rate carries 15%. Open interest direction carries 10%. Volatility carries the remaining 10%. The result is a directional probability for the next 24 hours. A score above 55 leans bullish. Below 45 leans bearish." }
       },
       {
         "@type": "Question",
         "name": "What does bitcoin funding rate tell you?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Funding rate shows whether the futures market is leaning long or short. When Bitcoin funding rate is positive and rising, longs are paying shorts and the market is crowded on the long side. That raises the risk of a pullback. When funding is negative, shorts are overcrowded and there is potential for a squeeze upward. CoinGyaan tracks live BTC funding rate from Binance and feeds it directly into the directional model as a 15% input." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Funding rate shows whether the futures market is leaning long or short. When bitcoin funding rate is positive and rising, longs are paying shorts and the market is crowded to the long side. That increases liquidation risk on a pullback. When funding turns negative, shorts are overcrowded and a squeeze upward becomes more likely. CoinGyaan pulls live BTC funding rate from Binance every five minutes and uses it as a 15% input into the bitcoin outlook score." }
       },
       {
         "@type": "Question",
         "name": "What does bitcoin open interest tell you?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Bitcoin open interest measures the total value of active futures contracts. When open interest rises alongside price, it usually signals that new money is entering the move and the trend has conviction. When open interest rises while price is falling, it suggests short sellers are adding positions. CoinGyaan compares current BTC open interest to the previous reading and combines the direction with price change to generate a 10% input into the outlook score." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Bitcoin open interest tracks the total value of active futures contracts. When open interest rises with price, new money is entering the move and the btc market direction today has conviction behind it. When open interest rises while price is falling, short sellers are adding positions and the downtrend is strengthening. CoinGyaan compares current and previous open interest readings to score the OI signal at 10% of the total outlook." }
       },
       {
         "@type": "Question",
         "name": "Is this a bitcoin price prediction?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. The BTC Market Outlook is a directional signal, not a price prediction. It shows which way momentum, RSI, bitcoin funding rate and open interest are currently pointing. A score of 65% means current signals lean bullish for the next 24 hours, not that BTC will definitely go up. Always do your own research. These signals are one input, not financial advice." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Not in the traditional sense. The bitcoin market outlook on CoinGyaan does not predict a specific price. It estimates the directional probability for the next 24 hours based on live market structure. A score of 65% means current bitcoin futures signals, momentum and RSI all lean bullish. It does not guarantee BTC goes up. Use this as one input alongside your own analysis." }
       }
     ]
   }
@@ -175,11 +175,12 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
 .v5-nav-links a.v5-btc { color: var(--gold); font-weight: 600; }
 
 /* ── V5 TOOLS DROPDOWN ── */
-.v5-nav-dropdown { position: relative; display: inline-flex; align-items: center; }
+.v5-nav-dropdown { position: relative; display: flex; align-items: center; }
 .v5-nav-dropdown-trigger {
   color: var(--muted); font-size: 13px; cursor: pointer; user-select: none;
   transition: color 0.2s; background: none; border: none; padding: 0;
-  font-family: inherit;
+  font-family: inherit; line-height: inherit; vertical-align: baseline;
+  display: inline; white-space: nowrap;
 }
 .v5-nav-dropdown-trigger:hover { color: var(--text); }
 .v5-nav-dropdown-menu {
@@ -922,6 +923,14 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
     </div>
   </div>
 
+  <!-- SEO content block -->
+  <div style="margin:0 0 32px;padding:24px 0;border-top:1px solid var(--border2);">
+    <h2 style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;">BTC Price Prediction Today</h2>
+    <p style="font-size:13px;color:#64748b;line-height:1.75;margin-bottom:20px;max-width:720px;">The BTC Market Outlook on CoinGyaan estimates the probability of Bitcoin moving higher or lower over the next 24 hours. Unlike traditional bitcoin price prediction tools that forecast a specific price, this model focuses on current market structure: momentum, RSI, funding rate, open interest and volatility. The output is a directional signal, not a price target. It tells you whether the current setup leans bullish or bearish for the next trading session.</p>
+    <h2 style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;">Bitcoin Futures Signals and Market Direction</h2>
+    <p style="font-size:13px;color:#64748b;line-height:1.75;max-width:720px;">BTC market direction today is shaped by derivatives data as much as price action. CoinGyaan reads live bitcoin funding rate and open interest from Binance to measure conviction behind the current move. Rising open interest alongside rising price signals trend strength. Negative funding suggests shorts are overcrowded. These bitcoin futures signals are updated every five minutes and feed directly into the BTC outlook score.</p>
+  </div>
+
   <!-- FAQ -->
   <h2 class="v5-sec-lbl">Frequently Asked Questions</h2>
   <div class="v5-faq-block">
@@ -933,7 +942,7 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
         <button class="v5-collapse-btn open" onclick="v5Toggle(this)">What is the BTC Market Outlook?<span class="v5-arrow">▼</span></button>
         <div class="v5-collapse-body open">
           <div class="v5-collapse-inner">
-            <p>The BTC Market Outlook is a 24-hour directional signal that estimates whether Bitcoin is more likely to move up or down. It runs five calculations using live Binance data: price momentum across three timeframes, RSI and its slope, funding rate, open interest direction and volatility. Each signal is weighted and combined into a single upside probability percentage. Fear and Greed, BTC Dominance and Stablecoin Dominance are shown separately as market context and have no impact on this score.</p>
+            <p>The BTC Market Outlook is a 24-hour directional signal that estimates whether Bitcoin is more likely to move up or down. It runs five calculations using live Binance data: price momentum across three timeframes, RSI and its slope, bitcoin funding rate, open interest direction and volatility. Each signal is weighted and combined into a single upside probability. Fear and Greed, BTC Dominance and Stablecoin Dominance are shown separately as market context and have no impact on this score.</p>
           </div>
         </div>
       </div>
@@ -942,7 +951,7 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
         <button class="v5-collapse-btn" onclick="v5Toggle(this)">How is the BTC upside probability calculated?<span class="v5-arrow">▼</span></button>
         <div class="v5-collapse-body">
           <div class="v5-collapse-inner">
-            <p>The <a href="https://www.coingyaan.com/bitcoin">BTC Market Outlook</a> score runs five signals from Binance. Momentum across 1-day, 3-day and 7-day timeframes carries the most weight at 40%. RSI and its slope carry 25%. Bitcoin funding rate carries 15%. Open interest direction carries 10%. Volatility carries the remaining 10%. The result is a directional probability for the next 24 hours. A score above 55 leans bullish. Below 45 leans bearish.</p>
+            <p>The <a href="https://www.coingyaan.com/bitcoin">BTC Market Outlook</a> score uses five signals from Binance. Momentum across 1-day, 3-day and 7-day timeframes carries 40% of the weight. RSI and its slope carry 25%. Bitcoin funding rate carries 15%. Open interest direction carries 10%. Volatility carries the remaining 10%. The result is a btc price prediction today in probability form. A score above 55 leans bullish. Below 45 leans bearish for the next 24 hours.</p>
           </div>
         </div>
       </div>
@@ -951,7 +960,7 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
         <button class="v5-collapse-btn" onclick="v5Toggle(this)">What does bitcoin funding rate tell you?<span class="v5-arrow">▼</span></button>
         <div class="v5-collapse-body">
           <div class="v5-collapse-inner">
-            <p>Funding rate shows whether the futures market is leaning long or short. When Bitcoin funding rate is positive and rising, longs are paying shorts and the market is crowded on the long side. That raises the risk of a pullback. When funding is negative, shorts are overcrowded and there is potential for a squeeze upward. CoinGyaan tracks live BTC funding rate from Binance and feeds it directly into the directional model as a 15% input.</p>
+            <p>Funding rate shows whether the futures market is leaning long or short. When bitcoin funding rate is positive and rising, longs are paying shorts and the market is crowded to the long side. That increases liquidation risk on a pullback. When funding turns negative, shorts are overcrowded and a squeeze upward becomes more likely. CoinGyaan pulls live BTC funding rate from Binance every five minutes and uses it as a 15% input into the bitcoin outlook score.</p>
           </div>
         </div>
       </div>
@@ -960,7 +969,7 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
         <button class="v5-collapse-btn" onclick="v5Toggle(this)">What does bitcoin open interest tell you?<span class="v5-arrow">▼</span></button>
         <div class="v5-collapse-body">
           <div class="v5-collapse-inner">
-            <p>Bitcoin open interest measures the total value of active futures contracts. When open interest rises alongside price, it usually signals that new money is entering the move and the trend has conviction. When open interest rises while price is falling, it suggests short sellers are adding positions. CoinGyaan compares current BTC open interest to the previous reading and combines the direction with price change to generate a 10% input into the outlook score.</p>
+            <p>Bitcoin open interest tracks the total value of active futures contracts. When open interest rises with price, new money is entering the move and the btc market direction today has conviction behind it. When open interest rises while price is falling, short sellers are adding positions and the downtrend is strengthening. CoinGyaan compares current and previous open interest readings and combines the direction with the 24-hour price change to score the OI signal at 10% of the total outlook.</p>
           </div>
         </div>
       </div>
@@ -969,31 +978,12 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
         <button class="v5-collapse-btn" onclick="v5Toggle(this)">Is this a bitcoin price prediction?<span class="v5-arrow">▼</span></button>
         <div class="v5-collapse-body">
           <div class="v5-collapse-inner">
-            <p>No. The BTC Market Outlook is a directional signal, not a price prediction. It shows which way momentum, RSI, bitcoin funding rate and open interest are currently pointing. A score of 65% means current signals lean bullish for the next 24 hours, not that BTC will definitely go up. Always do your own research. These signals are one input, not financial advice.</p>
+            <p>Not in the traditional sense. The bitcoin market outlook on CoinGyaan does not predict a specific price. It estimates the directional probability for the next 24 hours based on live market structure. A score of 65% means current bitcoin futures signals, momentum and RSI all lean bullish. It does not guarantee BTC goes up. Use this as one input alongside your own analysis. This is not financial advice.</p>
           </div>
         </div>
       </div>
 
     </div>
-  </div>
-
-  <div class="v5-chips-block">
-    <div class="v5-chips-label">BTC Market Outlook Signal Sources</div>
-    <div class="v5-chips-row">
-      <span class="v5-chip">Momentum (1D/3D/7D)</span>
-      <span class="v5-chip">RSI + Slope</span>
-      <span class="v5-chip">Funding Rate</span>
-      <span class="v5-chip">Open Interest</span>
-      <span class="v5-chip">Volatility</span>
-    </div>
-  </div>
-
-  <!-- SEO content block — visually minimal, semantically meaningful -->
-  <div style="margin:32px 0 0;padding:24px 0;border-top:1px solid var(--border2);">
-    <h2 style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;">BTC Price Prediction Today</h2>
-    <p style="font-size:13px;color:#64748b;line-height:1.75;margin-bottom:20px;max-width:720px;">This BTC Market Outlook estimates the probability of Bitcoin moving higher or lower over the next 24 hours using momentum, RSI, funding rate, open interest and volatility. Unlike traditional bitcoin price prediction models, this tool focuses on current market structure and directional bias rather than forecasting a specific price target.</p>
-    <h2 style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;">Bitcoin Futures Signals and Market Direction</h2>
-    <p style="font-size:13px;color:#64748b;line-height:1.75;max-width:720px;">The model combines BTC funding rate, open interest, volatility and trend strength to help traders understand current market direction. These signals are commonly used by futures traders, prediction market participants and active Bitcoin traders.</p>
   </div>
 
 </div><!-- /v5-container -->
