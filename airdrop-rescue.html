@@ -1058,27 +1058,33 @@ async function executeRescue() {
       transport: viem.http(proj.rpc)
     }).extend(viem.eip7702Actions());
 
+    var publicClient = viem.createPublicClient({
+      chain: viemChain,
+      transport: viem.http(proj.rpc)
+    });
+
     showStatus("Step 2 of 3: Signing EIP-7702 authorization...", "pending");
 
+    // Get the compromised wallet's current nonce directly from chain
+    var authNonce = await publicClient.getTransactionCount({ address: compromisedAddr });
+
     // Sign authorization — compromised wallet delegates to BatchRescue
-    var authorization = await walletClient.signAuthorization({
-      account: compromisedAccount,
+    // Since sponsor (different account) sends the tx, authorization nonce = compromised wallet's current nonce
+    var authorization = await compromisedAccount.experimental_signAuthorization({
       contractAddress: proj.rescueDelegate,
       chainId: proj.chainId,
-      nonce: compNonce
+      nonce: authNonce
     });
 
     showStatus("Step 3 of 3: Submitting rescue transaction...", "pending");
 
     // Send EIP-7702 type-4 transaction — sponsor pays gas
-    // No hardcoded gas limit — let viem estimate automatically
     var txHash = await walletClient.sendTransaction({
       authorizationList: [authorization],
       to:                compromisedAddr,
       data:              calldata,
       maxFeePerGas:      BigInt(maxFee.toString()),
       maxPriorityFeePerGas: BigInt(maxPrio.toString()),
-      nonce:             gasNonce,
       value:             BigInt(0)
     });
 
