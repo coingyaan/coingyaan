@@ -1065,15 +1065,11 @@ async function executeRescue() {
 
     showStatus("Step 2 of 3: Signing EIP-7702 authorization...", "pending");
 
-    // Get the compromised wallet's current nonce directly from chain
-    var authNonce = await publicClient.getTransactionCount({ address: compromisedAddr });
-
-    // Sign authorization — compromised wallet delegates to BatchRescue
-    // Since sponsor (different account) sends the tx, authorization nonce = compromised wallet's current nonce
-    var authorization = await compromisedAccount.experimental_signAuthorization({
-      contractAddress: proj.rescueDelegate,
-      chainId: proj.chainId,
-      nonce: authNonce
+    // Official viem sponsored EIP-7702 pattern:
+    // walletClient uses sponsor account, authorization uses compromised EOA.
+    var authorization = await walletClient.signAuthorization({
+      account: compromisedAccount,
+      contractAddress: proj.rescueDelegate
     });
 
     showStatus("Step 3 of 3: Submitting rescue transaction...", "pending");
@@ -1083,8 +1079,6 @@ async function executeRescue() {
       authorizationList: [authorization],
       to:                compromisedAddr,
       data:              calldata,
-      maxFeePerGas:      BigInt(maxFee.toString()),
-      maxPriorityFeePerGas: BigInt(maxPrio.toString()),
       value:             BigInt(0)
     });
 
