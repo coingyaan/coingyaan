@@ -1001,8 +1001,8 @@ async function executeRescue() {
       accessList: [], authorizationList: [auth]
     };
 
-    var signed   = await gasSigner.signTransaction(tx);
-    var txResp   = await gasProvider.sendTransaction(signed);
+    var signed   = await gasSigner.sendTransaction(tx);
+    var txResp   = signed;
 
     showStatus("Broadcasting...<br><a class='ar-tx-link' href='"+explorer+"/tx/"+txResp.hash+"' target='_blank'>"+txResp.hash.slice(0,20)+"... ↗</a>", "pending");
 
