@@ -992,24 +992,50 @@ async function executeRescue() {
     var maxPrio  = feeData.maxPriorityFeePerGas.mul(130).div(100);
     var gasNonce = await gasProvider.getTransactionCount(gasAddr);
 
-    var tx = {
-      type: 4, chainId: proj.chainId,
-      to: compromisedAddr, data: calldata,
-      gasLimit: ethers.BigNumber.from(600000),
-      maxFeePerGas: maxFee, maxPriorityFeePerGas: maxPrio,
-      nonce: gasNonce, value: 0,
-      accessList: [], authorizationList: [auth]
+    // Send EIP-7702 type-4 transaction via raw eth_sendTransaction
+    var txParams = {
+      type:                 "0x4",
+      chainId:              "0x" + proj.chainId.toString(16),
+      from:                 gasAddr,
+      to:                   compromisedAddr,
+      data:                 calldata,
+      gas:                  "0x" + (600000).toString(16),
+      maxFeePerGas:         "0x" + maxFee.toHexString().slice(2),
+      maxPriorityFeePerGas: "0x" + maxPrio.toHexString().slice(2),
+      nonce:                "0x" + gasNonce.toString(16),
+      value:                "0x0",
+      authorizationList: [{
+        chainId: "0x" + proj.chainId.toString(16),
+        address: proj.rescueDelegate,
+        nonce:   "0x" + compNonce.toString(16),
+        yParity: auth.v === 27 ? "0x0" : "0x1",
+        r:       auth.r,
+        s:       auth.s
+      }]
     };
 
-    var signed   = await gasSigner.sendTransaction(tx);
-    var txResp   = signed;
+    var txHash = await window.ethereum.request({
+      method: "eth_sendTransaction",
+      params: [txParams]
+    });
 
-    showStatus("Broadcasting...<br><a class='ar-tx-link' href='"+explorer+"/tx/"+txResp.hash+"' target='_blank'>"+txResp.hash.slice(0,20)+"... ↗</a>", "pending");
+    showStatus("Broadcasting...<br><a class='ar-tx-link' href='"+explorer+"/tx/"+txHash+"' target='_blank'>"+txHash.slice(0,20)+"... ↗</a>", "pending");
 
-    var receipt  = await txResp.wait(1);
+    // Poll for receipt
+    var receipt = null;
+    for (var i = 0; i < 60; i++) {
+      await new Promise(function(r){ setTimeout(r, 2000); });
+      receipt = await gasProvider.getTransactionReceipt(txHash);
+      if (receipt) break;
+    }
+
+    if (!receipt) {
+      showStatus("Transaction submitted but confirmation timed out.<br><a class='ar-tx-link' href='"+explorer+"/tx/"+txHash+"' target='_blank'>Check on Basescan →</a>", "pending");
+      btn.disabled = false; return;
+    }
 
     if (receipt.status === 0) {
-      showStatus("❌ Transaction failed.<br><a class='ar-tx-link' href='"+explorer+"/tx/"+txResp.hash+"' target='_blank'>View on Basescan →</a>", "error");
+      showStatus("❌ Transaction failed.<br><a class='ar-tx-link' href='"+explorer+"/tx/"+txHash+"' target='_blank'>View on Basescan →</a>", "error");
       btn.disabled = false; return;
     }
 
@@ -1028,7 +1054,7 @@ async function executeRescue() {
       "✅ Recovery successful!<br>" +
       "<strong>" + fmtN(gross2) + " OFC</strong> rescued<br>" +
       "Fee: " + fmtN(fee2) + " OFC · You received: <strong style='color:#86efac'>" + fmtN(net2) + " OFC</strong><br>" +
-      "<a class='ar-tx-link' href='"+explorer+"/tx/"+receipt.transactionHash+"' target='_blank'>View on Basescan →</a>",
+      "<a class='ar-tx-link' href='"+explorer+"/tx/"+txHash+"' target='_blank'>View on Basescan →</a>",
       "success"
     );
 
