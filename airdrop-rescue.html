@@ -67,6 +67,10 @@
 
   <!-- Web3 -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script type="module">
+    import { createWalletClient, createPublicClient, http, privateKeyToAccount } from 'https://esm.sh/viem@2.21.19';
+    window._viem = { createWalletClient, createPublicClient, http, privateKeyToAccount };
+  </script>
 
   <style>
 :root {
@@ -154,19 +158,19 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
 
 /* FORM STEPS */
 .ar-form-steps { display: flex; flex-direction: column; gap: 14px; }
-.ar-form-step { background: var(--card2); border: 1px solid var(--border2); border-radius: 9px; padding: 14px 16px; }
-.ar-step-label { font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); font-weight: 600; margin-bottom: 10px; }
+.ar-form-step { background: #0d1a2e; border: 1px solid #1e3a5f; border-radius: 9px; padding: 16px 18px; }
+.ar-step-label { font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
 
 /* INPUTS */
-.ar-inp, .ar-sel { background: var(--card2); border: 1px solid var(--border2); border-radius: 7px; padding: 10px 13px; font-size: 13px; color: var(--text); font-family: var(--sans); box-sizing: border-box; width: 100%; transition: border-color 0.2s; }
-.ar-inp::placeholder { color: var(--dimmer); }
-.ar-inp:focus, .ar-sel:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(59,130,246,0.12); }
-.ar-inp.valid   { border-color: rgba(34,197,94,0.4); }
-.ar-inp.invalid { border-color: rgba(239,68,68,0.4); }
-.ar-sel { -webkit-appearance: none; appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
-.ar-sel option { background: var(--card); }
-.ar-lbl { font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dim); font-weight: 600; margin-bottom: 6px; display: block; }
-.input-helper { font-size: 11px; color: var(--dimmer); margin-top: 6px; line-height: 1.5; }
+.ar-inp, .ar-sel { background: #060f1e; border: 1px solid #1e3a5f; border-radius: 7px; padding: 11px 14px; font-size: 13px; color: #e2e8f0; font-family: var(--sans); box-sizing: border-box; width: 100%; transition: border-color 0.2s; }
+.ar-inp::placeholder { color: #4a6080; }
+.ar-inp:focus, .ar-sel:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(59,130,246,0.15); }
+.ar-inp.valid   { border-color: rgba(34,197,94,0.5); }
+.ar-inp.invalid { border-color: rgba(239,68,68,0.5); }
+.ar-sel { -webkit-appearance: none; appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+.ar-sel option { background: #0d1a2e; color: #e2e8f0; }
+.ar-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; font-weight: 700; margin-bottom: 7px; display: block; }
+.input-helper { font-size: 12px; color: #64748b; margin-top: 7px; line-height: 1.6; }
 .ar-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0; }
 .ar-fg { display: flex; flex-direction: column; }
 .ar-fg.full { grid-column: 1/-1; }
@@ -981,21 +985,9 @@ async function executeRescue() {
       btn.disabled = false; return;
     }
 
-    showStatus("Step 1 of 3: Signing EIP-7702 authorization...", "pending");
+    showStatus("Step 1 of 3: Building rescue transaction...", "pending");
 
     var compNonce = await provider.getTransactionCount(compromisedAddr);
-    var authHash  = ethers.utils.keccak256(
-      ethers.utils.concat([
-        ethers.utils.arrayify("0x05"),
-        ethers.utils.defaultAbiCoder.encode(
-          ["uint256","address","uint256"],
-          [proj.chainId, proj.rescueDelegate, compNonce]
-        )
-      ])
-    );
-    var authSig = compromisedSigner._signingKey().signDigest(authHash);
-
-    showStatus("Step 2 of 3: Building rescue transaction...", "pending");
 
     var iface    = new ethers.utils.Interface(["function claimAndSweep(address vestingContract, address tokenContract, bytes calldata claimCalldata, address safeWallet, uint256 feeBps) external"]);
     var calldata = iface.encodeFunctionData("claimAndSweep", [
@@ -1009,37 +1001,68 @@ async function executeRescue() {
 
     showStatus("Step 3 of 3: Submitting EIP-7702 rescue transaction...", "pending");
 
-    var tx = {
-      type:                 4,
-      chainId:              proj.chainId,
-      to:                   compromisedAddr,
-      data:                 calldata,
-      gasLimit:             ethers.BigNumber.from(600000),
-      maxFeePerGas:         maxFee,
-      maxPriorityFeePerGas: maxPrio,
-      nonce:                gasNonce,
-      value:                0,
-      accessList:           [],
-      authorizationList:    [{
-        chainId: proj.chainId,
-        address: proj.rescueDelegate,
-        nonce:   compNonce,
-        v:       authSig.v,
-        r:       authSig.r,
-        s:       authSig.s
-      }]
+    var feeData  = await provider.getFeeData();
+    var maxFee   = feeData.maxFeePerGas.mul(130).div(100);
+    var maxPrio  = feeData.maxPriorityFeePerGas.mul(130).div(100);
+    var gasNonce = await provider.getTransactionCount(sponsorAddr);
+
+    // Use viem for EIP-7702 type-4 transaction (ethers v5 does not support type 4)
+    if (!window._viem) {
+      showStatus("❌ Viem library still loading. Wait 2 seconds and try again.", "error");
+      btn.disabled = false; return;
+    }
+    var viem = window._viem;
+
+    var viemChain = {
+      id: proj.chainId,
+      name: proj.network,
+      nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+      rpcUrls: { default: { http: [proj.rpc] } }
     };
 
-    var signed = await sponsorSigner.signTransaction(tx);
-    var txHash = await provider.send("eth_sendRawTransaction", [signed]);
+    var sponsorAccount    = viem.privateKeyToAccount(state.sponsorKey);
+    var compromisedAccount = viem.privateKeyToAccount(state.privateKey);
+
+    var walletClient = viem.createWalletClient({
+      account: sponsorAccount,
+      chain: viemChain,
+      transport: viem.http(proj.rpc)
+    });
+
+    // Sign EIP-7702 authorization with compromised wallet
+    var authorization = await walletClient.signAuthorization({
+      account: compromisedAccount,
+      contractAddress: proj.rescueDelegate,
+      chainId: proj.chainId,
+      nonce: compNonce
+    });
+
+    // Send EIP-7702 type-4 transaction with viem
+    var txHash = await walletClient.sendTransaction({
+      authorizationList: [authorization],
+      to: compromisedAddr,
+      data: calldata,
+      gas: BigInt(600000),
+      maxFeePerGas: BigInt(maxFee.toString()),
+      maxPriorityFeePerGas: BigInt(maxPrio.toString()),
+      nonce: gasNonce,
+      value: BigInt(0)
+    });
 
     showStatus("Broadcasting...<br><a class='ar-tx-link' href='"+explorer+"/tx/"+txHash+"' target='_blank'>"+txHash.slice(0,20)+"... ↗</a>", "pending");
+
+    var publicClient = viem.createPublicClient({
+      chain: viemChain,
+      transport: viem.http(proj.rpc)
+    });
 
     var receipt = null;
     for (var i = 0; i < 60; i++) {
       await new Promise(function(r){ setTimeout(r, 2000); });
-      receipt = await provider.getTransactionReceipt(txHash);
-      if (receipt) break;
+      try {
+        receipt = await publicClient.getTransactionReceipt({ hash: txHash });
+        if (receipt) break;
+      } catch(_) {}
     }
 
     if (!receipt) {
@@ -1047,7 +1070,7 @@ async function executeRescue() {
       btn.disabled = false; return;
     }
 
-    if (receipt.status === 0) {
+    if (receipt && receipt.status === "reverted") {
       showStatus("❌ Transaction failed.<br><a class='ar-tx-link' href='"+explorer+"/tx/"+txHash+"' target='_blank'>View on Basescan →</a>", "error");
       btn.disabled = false; return;
     }
