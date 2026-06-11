@@ -453,6 +453,8 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
 
           <!-- COMPROMISED WALLET PRIVATE KEY -->
           <div class="ar-form-step">
+          <!-- COMPROMISED WALLET PRIVATE KEY -->
+          <div class="ar-form-step">
             <label class="ar-lbl">Compromised Private Key</label>
             <input type="password" class="ar-inp" id="pkInput" placeholder="0x... compromised wallet private key" oninput="onPKInput(this.value)" autocomplete="off" />
             <div class="input-helper">Used only to sign locally in your browser. Never sent to CoinGyaan servers.</div>
@@ -462,7 +464,15 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
           <div class="ar-form-step">
             <label class="ar-lbl">Safe Receiver Address</label>
             <input type="text" class="ar-inp" id="safeWalletInput" placeholder="0x... safe wallet address" oninput="validateSafeWallet(this.value)" />
-            <div class="input-helper">Rescued tokens land here. This wallet also pays gas (~0.001 ETH on Base). Use a fresh wallet with no connection to the compromised one.</div>
+            <div class="input-helper">Rescued tokens land here. Use a fresh wallet with no connection to the compromised one.</div>
+          </div>
+
+          <!-- SPONSOR WALLET -->
+          <div class="ar-form-step">
+            <label class="ar-lbl">Sponsor Wallet Private Key</label>
+            <input type="password" class="ar-inp" id="sponsorKeyInput" placeholder="0x... fresh wallet private key (pays gas)" oninput="onSponsorInput(this.value)" autocomplete="off" />
+            <div class="input-helper">Create a brand new wallet, send <strong>0.002 ETH on Base</strong> to it, export its private key and paste here. This wallet pays gas only. Never send ETH to your compromised wallet.</div>
+            <div id="sponsorStatus" style="margin-top:6px;font-size:12px;display:none;"></div>
           </div>
 
           <!-- CLAIM HEX DATA -->
@@ -679,6 +689,7 @@ var PROJECT_REGISTRY = {
 var state = {
   projectKey:    null,
   privateKey:    null,
+  sponsorKey:    null,
   safeWallet:    null,
   claimHexData:  null,
   claimAmount:   null,
@@ -775,6 +786,12 @@ function resetForm() {
   var hexStatus = document.getElementById("claimHexStatus");
   if (hexStatus) hexStatus.style.display = "none";
 
+  var sponsorInput = document.getElementById("sponsorKeyInput");
+  if (sponsorInput) { sponsorInput.value = ""; sponsorInput.classList.remove("valid","invalid"); }
+  var sponsorStatus = document.getElementById("sponsorStatus");
+  if (sponsorStatus) sponsorStatus.style.display = "none";
+  state.sponsorKey = null;
+
   showPreview(false);
 }
 
@@ -799,7 +816,32 @@ function onPKInput(val) {
   updatePreview();
 }
 
-/* ── SAFE WALLET ── */
+/* ── SPONSOR KEY INPUT ── */
+function onSponsorInput(val) {
+  var input    = document.getElementById("sponsorKeyInput");
+  var statusEl = document.getElementById("sponsorStatus");
+  val = val.trim();
+  if (!val) {
+    input.classList.remove("valid","invalid");
+    statusEl.style.display = "none";
+    state.sponsorKey = null;
+    updatePreview(); return;
+  }
+  if (!val.startsWith("0x") && val.length === 64) val = "0x" + val;
+  try {
+    var wallet = new ethers.Wallet(val);
+    input.classList.remove("invalid"); input.classList.add("valid");
+    state.sponsorKey = val;
+    statusEl.innerHTML = "✅ Sponsor address: " + wallet.address.slice(0,10) + "..." + wallet.address.slice(-6) + " — Make sure it has ETH on Base";
+    statusEl.style.cssText = "margin-top:6px;font-size:12px;display:block;color:#86efac;";
+  } catch(e) {
+    input.classList.remove("valid"); input.classList.add("invalid");
+    state.sponsorKey = null;
+    statusEl.innerHTML = "❌ Invalid private key";
+    statusEl.style.cssText = "margin-top:6px;font-size:12px;display:block;color:#fca5a5;";
+  }
+  updatePreview();
+}
 function validateSafeWallet(val) {
   var input = document.getElementById("safeWalletInput");
   if (ethers.utils.isAddress(val.trim())) {
@@ -861,7 +903,7 @@ function validateClaimHex(val) {
 /* ── PREVIEW ── */
 function updatePreview() {
   var proj    = PROJECT_REGISTRY[state.projectKey];
-  var ready   = proj && state.privateKey && state.safeWallet && state.claimHexData;
+  var ready   = proj && state.privateKey && state.sponsorKey && state.safeWallet && state.claimHexData;
 
   showPreview(!!ready);
   if (!ready) return;
@@ -908,10 +950,10 @@ async function executeRescue() {
   var proj = PROJECT_REGISTRY[state.projectKey];
   if (!proj || !proj.live || !proj.rescueDelegate) { showStatus("Recovery not yet available for this project.", "error"); return; }
   if (!state.privateKey)   { showStatus("Enter your compromised wallet private key.", "error"); return; }
+  if (!state.sponsorKey)   { showStatus("Enter your sponsor wallet private key.", "error"); return; }
   if (!state.safeWallet)   { showStatus("Enter your safe wallet address.", "error"); return; }
   if (!state.claimHexData) { showStatus("Paste your claim hex data.", "error"); return; }
 
-  // Check deadline
   if (state.claimDeadline) {
     var now = Math.floor(Date.now() / 1000);
     if (state.claimDeadline.toNumber() < now) {
@@ -925,47 +967,22 @@ async function executeRescue() {
   try {
     var explorer = proj.explorer;
     var feeBps   = proj.feeBps || 1500;
+    var provider = new ethers.providers.JsonRpcProvider(proj.rpc);
 
-    // Compromised wallet signer (signs EIP-7702 authorization)
-    var provider          = new ethers.providers.JsonRpcProvider(proj.rpc);
     var compromisedSigner = new ethers.Wallet(state.privateKey, provider);
+    var sponsorSigner     = new ethers.Wallet(state.sponsorKey, provider);
     var compromisedAddr   = await compromisedSigner.getAddress();
+    var sponsorAddr       = await sponsorSigner.getAddress();
 
-    // Safe wallet = gas payer (MetaMask/Rabby)
-    showStatus("Step 1 of 3: Connect your SAFE WALLET in MetaMask to pay gas...", "pending");
-
-    if (!window.ethereum) { showStatus("MetaMask or Rabby required to pay gas from safe wallet.", "error"); btn.disabled = false; return; }
-    var gasProvider = new ethers.providers.Web3Provider(window.ethereum);
-    await gasProvider.send("eth_requestAccounts", []);
-
-    var gasNet = await gasProvider.getNetwork();
-    if (gasNet.chainId !== proj.chainId) {
-      try {
-        await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: proj.chainHex }] });
-        gasProvider = new ethers.providers.Web3Provider(window.ethereum);
-      } catch(e) {
-        showStatus("Switch your wallet to " + proj.network + " and try again.", "error");
-        btn.disabled = false; return;
-      }
-    }
-
-    var gasSigner = gasProvider.getSigner();
-    var gasAddr   = await gasSigner.getAddress();
-
-    if (gasAddr.toLowerCase() === compromisedAddr.toLowerCase()) {
-      showStatus("❌ You connected the compromised wallet. Please connect your SAFE wallet for gas.", "error");
+    showStatus("Checking sponsor wallet balance...", "pending");
+    var sponsorBal = await provider.getBalance(sponsorAddr);
+    if (sponsorBal.lt(ethers.utils.parseEther("0.0005"))) {
+      showStatus("❌ Sponsor wallet needs at least 0.001 ETH on Base. Balance: " + parseFloat(ethers.utils.formatEther(sponsorBal)).toFixed(6) + " ETH", "error");
       btn.disabled = false; return;
     }
 
-    var gasBal = await gasProvider.getBalance(gasAddr);
-    if (gasBal.lt(ethers.utils.parseEther("0.0005"))) {
-      showStatus("❌ Safe wallet needs at least 0.001 ETH on Base for gas. Add ETH to " + gasAddr.slice(0,10) + "...", "error");
-      btn.disabled = false; return;
-    }
+    showStatus("Step 1 of 3: Signing EIP-7702 authorization...", "pending");
 
-    showStatus("Step 2 of 3: Signing EIP-7702 authorization with compromised wallet...", "pending");
-
-    // EIP-7702 authorization
     var compNonce = await provider.getTransactionCount(compromisedAddr);
     var authHash  = ethers.utils.keccak256(
       ethers.utils.concat([
@@ -977,60 +994,56 @@ async function executeRescue() {
       ])
     );
     var authSig = compromisedSigner._signingKey().signDigest(authHash);
-    var auth    = { chainId: proj.chainId, address: proj.rescueDelegate, nonce: compNonce, v: authSig.v, r: authSig.r, s: authSig.s };
 
-    // Build claimAndSweep calldata
+    showStatus("Step 2 of 3: Building rescue transaction...", "pending");
+
     var iface    = new ethers.utils.Interface(["function claimAndSweep(address vestingContract, address tokenContract, bytes calldata claimCalldata, address safeWallet, uint256 feeBps) external"]);
     var calldata = iface.encodeFunctionData("claimAndSweep", [
       proj.vestingContract, proj.tokenContract, state.claimHexData, state.safeWallet, feeBps
     ]);
 
-    showStatus("Step 3 of 3: Submitting rescue transaction. Confirm in your safe wallet...", "pending");
-
-    var feeData  = await gasProvider.getFeeData();
+    var feeData  = await provider.getFeeData();
     var maxFee   = feeData.maxFeePerGas.mul(130).div(100);
     var maxPrio  = feeData.maxPriorityFeePerGas.mul(130).div(100);
-    var gasNonce = await gasProvider.getTransactionCount(gasAddr);
+    var gasNonce = await provider.getTransactionCount(sponsorAddr);
 
-    // Send EIP-7702 type-4 transaction via raw eth_sendTransaction
-    var txParams = {
-      type:                 "0x4",
-      chainId:              "0x" + proj.chainId.toString(16),
-      from:                 gasAddr,
+    showStatus("Step 3 of 3: Submitting EIP-7702 rescue transaction...", "pending");
+
+    var tx = {
+      type:                 4,
+      chainId:              proj.chainId,
       to:                   compromisedAddr,
       data:                 calldata,
-      gas:                  "0x" + (600000).toString(16),
-      maxFeePerGas:         "0x" + maxFee.toHexString().slice(2),
-      maxPriorityFeePerGas: "0x" + maxPrio.toHexString().slice(2),
-      nonce:                "0x" + gasNonce.toString(16),
-      value:                "0x0",
-      authorizationList: [{
-        chainId: "0x" + proj.chainId.toString(16),
+      gasLimit:             ethers.BigNumber.from(600000),
+      maxFeePerGas:         maxFee,
+      maxPriorityFeePerGas: maxPrio,
+      nonce:                gasNonce,
+      value:                0,
+      accessList:           [],
+      authorizationList:    [{
+        chainId: proj.chainId,
         address: proj.rescueDelegate,
-        nonce:   "0x" + compNonce.toString(16),
-        yParity: auth.v === 27 ? "0x0" : "0x1",
-        r:       auth.r,
-        s:       auth.s
+        nonce:   compNonce,
+        v:       authSig.v,
+        r:       authSig.r,
+        s:       authSig.s
       }]
     };
 
-    var txHash = await window.ethereum.request({
-      method: "eth_sendTransaction",
-      params: [txParams]
-    });
+    var signed = await sponsorSigner.signTransaction(tx);
+    var txHash = await provider.send("eth_sendRawTransaction", [signed]);
 
     showStatus("Broadcasting...<br><a class='ar-tx-link' href='"+explorer+"/tx/"+txHash+"' target='_blank'>"+txHash.slice(0,20)+"... ↗</a>", "pending");
 
-    // Poll for receipt
     var receipt = null;
     for (var i = 0; i < 60; i++) {
       await new Promise(function(r){ setTimeout(r, 2000); });
-      receipt = await gasProvider.getTransactionReceipt(txHash);
+      receipt = await provider.getTransactionReceipt(txHash);
       if (receipt) break;
     }
 
     if (!receipt) {
-      showStatus("Transaction submitted but confirmation timed out.<br><a class='ar-tx-link' href='"+explorer+"/tx/"+txHash+"' target='_blank'>Check on Basescan →</a>", "pending");
+      showStatus("Submitted but confirmation timed out.<br><a class='ar-tx-link' href='"+explorer+"/tx/"+txHash+"' target='_blank'>Check on Basescan →</a>", "pending");
       btn.disabled = false; return;
     }
 
@@ -1039,15 +1052,14 @@ async function executeRescue() {
       btn.disabled = false; return;
     }
 
-    // Parse Rescued event
-    var gross2  = state.claimAmount || ethers.BigNumber.from(0);
-    var fee2    = gross2.mul(feeBps).div(10000);
-    var net2    = gross2.sub(fee2);
-    var fmtN    = function(n){ return parseFloat(ethers.utils.formatUnits(n,18)).toLocaleString(undefined,{maximumFractionDigits:4}); };
+    var gross2 = state.claimAmount || ethers.BigNumber.from(0);
+    var fee2   = gross2.mul(feeBps).div(10000);
+    var net2   = gross2.sub(fee2);
+    var fmtN   = function(n){ return parseFloat(ethers.utils.formatUnits(n,18)).toLocaleString(undefined,{maximumFractionDigits:4}); };
 
     try {
       var iface2 = new ethers.utils.Interface(["event Rescued(address indexed token, address indexed safeWallet, uint256 grossAmount, uint256 feeAmount, uint256 netAmount, uint256 feeBps)"]);
-      receipt.logs.forEach(function(l){ try { var p = iface2.parseLog(l); if(p.name==="Rescued"){ gross2=p.args.grossAmount; fee2=p.args.feeAmount; net2=p.args.netAmount; }} catch(_){} });
+      receipt.logs.forEach(function(l){ try { var p=iface2.parseLog(l); if(p.name==="Rescued"){gross2=p.args.grossAmount;fee2=p.args.feeAmount;net2=p.args.netAmount;}}catch(_){} });
     } catch(_){}
 
     showStatus(
