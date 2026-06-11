@@ -652,7 +652,7 @@ var PROJECT_REGISTRY = {
     claimUrl:        "https://fanpass.onefootball.com/airdrop-claim",
     tokenContract:   "0x752C5a95d202972E124390F30a50154409d3c858",
     vestingContract: "0xaD6C87E99547c7C2F610088dfC7d6d2C8BCa74Ff",
-    rescueDelegate:  "0x168B04bE7242343b8f8E33A84Eb9D7728cc2701d",
+    rescueDelegate:  "0xB14eBf2E8ebAC2B9e1712fD8B0FdAaB29A54C77e",
     feeBps:          1500,
     live:            true
   },
@@ -986,17 +986,18 @@ async function executeRescue() {
 
     var compNonce = await provider.getTransactionCount(compromisedAddr);
 
-    var iface    = new ethers.utils.Interface(["function claimAndSweep(address vestingContract, address tokenContract, bytes calldata claimCalldata, address safeWallet, uint256 feeBps) external"]);
-    var calldata = iface.encodeFunctionData("claimAndSweep", [
-      proj.vestingContract, proj.tokenContract, state.claimHexData, state.safeWallet, feeBps
+    // BatchRescue.claimAndSweep signature:
+    // claimAndSweep(address vestingContract, bytes claimCalldata, address tokenContract, address safeWallet, uint256 feeBps)
+    var iface    = new ethers.utils.Interface([
+      "function claimAndSweep(address vestingContract, bytes calldata claimCalldata, address tokenContract, address safeWallet, uint256 feeBps) external"
     ]);
-
-    var feeData  = await provider.getFeeData();
-    var maxFee   = feeData.maxFeePerGas.mul(130).div(100);
-    var maxPrio  = feeData.maxPriorityFeePerGas.mul(130).div(100);
-    var gasNonce = await provider.getTransactionCount(sponsorAddr);
-
-    showStatus("Step 3 of 3: Submitting EIP-7702 rescue transaction...", "pending");
+    var calldata = iface.encodeFunctionData("claimAndSweep", [
+      proj.vestingContract,
+      state.claimHexData,
+      proj.tokenContract,
+      state.safeWallet,
+      feeBps
+    ]);
 
     var feeData  = await provider.getFeeData();
     var maxFee   = feeData.maxFeePerGas.mul(130).div(100);
@@ -1017,7 +1018,7 @@ async function executeRescue() {
       rpcUrls: { default: { http: [proj.rpc] } }
     };
 
-    var sponsorAccount    = viem.privateKeyToAccount(state.sponsorKey);
+    var sponsorAccount     = viem.privateKeyToAccount(state.sponsorKey);
     var compromisedAccount = viem.privateKeyToAccount(state.privateKey);
 
     var walletClient = viem.createWalletClient({
@@ -1026,7 +1027,9 @@ async function executeRescue() {
       transport: viem.http(proj.rpc)
     }).extend(viem.eip7702Actions());
 
-    // Sign EIP-7702 authorization with compromised wallet
+    showStatus("Step 2 of 3: Signing EIP-7702 authorization...", "pending");
+
+    // Sign authorization — compromised wallet delegates to BatchRescue
     var authorization = await walletClient.signAuthorization({
       account: compromisedAccount,
       contractAddress: proj.rescueDelegate,
@@ -1034,16 +1037,18 @@ async function executeRescue() {
       nonce: compNonce
     });
 
-    // Send EIP-7702 type-4 transaction with viem
+    showStatus("Step 3 of 3: Submitting rescue transaction...", "pending");
+
+    // Send EIP-7702 type-4 transaction — sponsor pays gas
     var txHash = await walletClient.sendTransaction({
       authorizationList: [authorization],
-      to: compromisedAddr,
-      data: calldata,
-      gas: BigInt(600000),
-      maxFeePerGas: BigInt(maxFee.toString()),
+      to:                compromisedAddr,
+      data:              calldata,
+      gas:               BigInt(600000),
+      maxFeePerGas:      BigInt(maxFee.toString()),
       maxPriorityFeePerGas: BigInt(maxPrio.toString()),
-      nonce: gasNonce,
-      value: BigInt(0)
+      nonce:             gasNonce,
+      value:             BigInt(0)
     });
 
     showStatus("Broadcasting...<br><a class='ar-tx-link' href='"+explorer+"/tx/"+txHash+"' target='_blank'>"+txHash.slice(0,20)+"... ↗</a>", "pending");
