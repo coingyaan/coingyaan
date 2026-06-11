@@ -857,10 +857,14 @@ function validateSafeWallet(val) {
 }
 
 /* ── CLAIM HEX ── */
+var _countdownTimer = null;
+
 function validateClaimHex(val) {
   val = val.trim();
   var statusEl = document.getElementById("claimHexStatus");
   var input    = document.getElementById("claimHexInput");
+
+  if (_countdownTimer) { clearInterval(_countdownTimer); _countdownTimer = null; }
 
   if (!val) {
     state.claimHexData = null; state.claimAmount = null; state.claimDeadline = null;
@@ -883,15 +887,36 @@ function validateClaimHex(val) {
       state.claimHexData = null; updatePreview(); return;
     }
 
-    var mins    = Math.floor((deadline.toNumber() - now) / 60);
-    var ofcAmt  = parseFloat(ethers.utils.formatUnits(amount, 18)).toLocaleString(undefined,{maximumFractionDigits:2});
-    statusEl.innerHTML = "✅ " + ofcAmt + " OFC · Expires in " + mins + " min";
-    statusEl.style.cssText = "margin-top:6px;font-size:12px;display:block;color:#86efac;";
-    input.classList.remove("invalid"); input.classList.add("valid");
-
+    var ofcAmt = parseFloat(ethers.utils.formatUnits(amount, 18)).toLocaleString(undefined,{maximumFractionDigits:2});
     state.claimHexData  = val;
     state.claimAmount   = amount;
     state.claimDeadline = deadline;
+    input.classList.remove("invalid"); input.classList.add("valid");
+
+    // Live countdown timer
+    function updateCountdown() {
+      var secsLeft = deadline.toNumber() - Math.floor(Date.now() / 1000);
+      if (secsLeft <= 0) {
+        clearInterval(_countdownTimer); _countdownTimer = null;
+        statusEl.innerHTML = "❌ Signature expired. Get a fresh one from OneFootball.";
+        statusEl.style.cssText = "margin-top:6px;font-size:12px;display:block;color:#fca5a5;";
+        input.classList.remove("valid"); input.classList.add("invalid");
+        state.claimHexData = null;
+        var btn = document.getElementById("rescueBtn");
+        if (btn) btn.disabled = true;
+        updatePreview(); return;
+      }
+      var mins = Math.floor(secsLeft / 60);
+      var secs = secsLeft % 60;
+      var urgency = secsLeft < 120 ? "color:#fcd34d;" : "color:#86efac;";
+      var warning = secsLeft < 120 ? " ⚠️ SUBMIT NOW" : "";
+      statusEl.innerHTML = "✅ " + ofcAmt + " OFC · Expires in " + mins + "m " + secs + "s" + warning;
+      statusEl.style.cssText = "margin-top:6px;font-size:12px;font-weight:700;display:block;" + urgency;
+    }
+
+    updateCountdown();
+    _countdownTimer = setInterval(updateCountdown, 1000);
+
   } catch(e) {
     statusEl.innerHTML = "❌ Invalid hex. Copy the full hex from the HEX tab in your wallet popup.";
     statusEl.style.cssText = "margin-top:6px;font-size:12px;display:block;color:#fca5a5;";
@@ -957,8 +982,14 @@ async function executeRescue() {
 
   if (state.claimDeadline) {
     var now = Math.floor(Date.now() / 1000);
-    if (state.claimDeadline.toNumber() < now) {
-      showStatus("❌ Signature expired. Get a fresh hex from OneFootball.", "error"); return;
+    var secsLeft = state.claimDeadline.toNumber() - now;
+    if (secsLeft <= 0) {
+      showStatus("❌ Signature expired. Go back to OneFootball and get a fresh hex.", "error");
+      btn.disabled = false; return;
+    }
+    if (secsLeft < 30) {
+      showStatus("❌ Only " + secsLeft + " seconds left on signature. Too risky. Get a fresh hex.", "error");
+      btn.disabled = false; return;
     }
   }
 
