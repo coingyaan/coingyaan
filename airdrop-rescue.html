@@ -472,7 +472,7 @@ body { background: var(--bg) !important; font-family: var(--sans); color: var(--
           <div class="ar-form-step">
             <label class="ar-lbl">Sponsor Wallet Private Key</label>
             <input type="password" class="ar-inp" id="sponsorKeyInput" placeholder="0x... fresh wallet private key (pays gas)" oninput="onSponsorInput(this.value)" autocomplete="off" />
-            <div class="input-helper">Create a brand new wallet, send <strong>0.002 ETH on Base</strong> to it, export its private key and paste here. This wallet pays gas only. Never send ETH to your compromised wallet.</div>
+            <div class="input-helper">Create a brand new wallet, send <strong>0.001 ETH on Base</strong> to it, export its private key and paste here. This wallet pays gas only. Never send ETH to your compromised wallet.</div>
             <div id="sponsorStatus" style="margin-top:6px;font-size:12px;display:none;"></div>
           </div>
 
@@ -977,8 +977,8 @@ async function executeRescue() {
 
     showStatus("Checking sponsor wallet balance...", "pending");
     var sponsorBal = await provider.getBalance(sponsorAddr);
-    if (sponsorBal.lt(ethers.utils.parseEther("0.0005"))) {
-      showStatus("❌ Sponsor wallet needs at least 0.001 ETH on Base. Balance: " + parseFloat(ethers.utils.formatEther(sponsorBal)).toFixed(6) + " ETH", "error");
+    if (sponsorBal.lt(ethers.utils.parseEther("0.001"))) {
+      showStatus("❌ Sponsor wallet needs at least 0.001 ETH on Base. Current balance: " + parseFloat(ethers.utils.formatEther(sponsorBal)).toFixed(6) + " ETH", "error");
       btn.disabled = false; return;
     }
 
@@ -1040,11 +1040,11 @@ async function executeRescue() {
     showStatus("Step 3 of 3: Submitting rescue transaction...", "pending");
 
     // Send EIP-7702 type-4 transaction — sponsor pays gas
+    // No hardcoded gas limit — let viem estimate automatically
     var txHash = await walletClient.sendTransaction({
       authorizationList: [authorization],
       to:                compromisedAddr,
       data:              calldata,
-      gas:               BigInt(600000),
       maxFeePerGas:      BigInt(maxFee.toString()),
       maxPriorityFeePerGas: BigInt(maxPrio.toString()),
       nonce:             gasNonce,
