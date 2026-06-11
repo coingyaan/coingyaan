@@ -67,10 +67,7 @@
 
   <!-- Web3 -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-  <script type="module">
-    import { createWalletClient, createPublicClient, http, privateKeyToAccount } from 'https://esm.sh/viem@2.21.19';
-    window._viem = { createWalletClient, createPublicClient, http, privateKeyToAccount };
-  </script>
+  <script src="/assets/js/viem-bundle.js"></script>
 
   <style>
 :root {
@@ -1027,7 +1024,7 @@ async function executeRescue() {
       account: sponsorAccount,
       chain: viemChain,
       transport: viem.http(proj.rpc)
-    });
+    }).extend(viem.eip7702Actions());
 
     // Sign EIP-7702 authorization with compromised wallet
     var authorization = await walletClient.signAuthorization({
