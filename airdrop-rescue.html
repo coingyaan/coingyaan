@@ -1017,18 +1017,28 @@ async function executeRescue() {
 
     var compNonce = await provider.getTransactionCount(compromisedAddr);
 
-    // BatchRescue.claimAndSweep signature:
-    // claimAndSweep(address vestingContract, bytes claimCalldata, address tokenContract, address safeWallet, uint256 feeBps)
-    var iface    = new ethers.utils.Interface([
-      "function claimAndSweep(address vestingContract, bytes calldata claimCalldata, address tokenContract, address safeWallet, uint256 feeBps) external"
+    // Pre-compute split amounts from the decoded claim amount (like Antidrain)
+    var gross = state.claimAmount;
+    var fee   = gross.mul(feeBps).div(10000);
+    var net   = gross.sub(fee);
+
+    // Build 3-call batch exactly like Antidrain's execute((address,uint256,bytes)[])
+    var erc20Iface = new ethers.utils.Interface([
+      "function transfer(address to, uint256 amount) external returns (bool)"
     ]);
-    var calldata = iface.encodeFunctionData("claimAndSweep", [
-      proj.vestingContract,
-      state.claimHexData,
-      proj.tokenContract,
-      state.safeWallet,
-      feeBps
+    var feeTransferData = erc20Iface.encodeFunctionData("transfer", [proj.feeWallet, fee]);
+    var netTransferData = erc20Iface.encodeFunctionData("transfer", [state.safeWallet, net]);
+
+    var calls = [
+      { to: proj.vestingContract, value: ethers.BigNumber.from(0), data: state.claimHexData },
+      { to: proj.tokenContract,   value: ethers.BigNumber.from(0), data: feeTransferData },
+      { to: proj.tokenContract,   value: ethers.BigNumber.from(0), data: netTransferData }
+    ];
+
+    var iface = new ethers.utils.Interface([
+      "function execute((address to, uint256 value, bytes data)[] calls) external payable"
     ]);
+    var calldata = iface.encodeFunctionData("execute", [calls]);
 
     var feeData  = await provider.getFeeData();
     var maxFee   = feeData.maxFeePerGas.mul(130).div(100);
