@@ -13,10 +13,11 @@
         <div class="brand-text"><strong>CoinGyaan</strong></div>
       </a>
       <nav class="header-nav">
-        <a href="/bitcoin.html" style="color:#f59e0b;">Bitcoin Guide</a>
+        <a href="/studio">Studio</a>
         <div class="nav-dropdown" id="navDropdown">
           <span class="nav-dropdown-trigger" id="navDropdownTrigger" onclick="toggleNavDropdown(event)">Tools &#9662;</span>
           <div class="nav-dropdown-menu" id="navDropdownMenu">
+            <a href="/bitcoin.html">Bitcoin Guide</a>
             <a href="/bitcoin-sentiment-today.html">Crypto Sentiment Checker</a>
             <a href="/fear-greed-index-today.html">Fear &amp; Greed Index</a>
             <a href="/airdrop-rescue">Airdrop Rescue Tool</a>
