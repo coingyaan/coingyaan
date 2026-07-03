@@ -48,8 +48,8 @@
   if(window.lucide) lucide.createIcons();
 
   /* ============ APP STATE / NAV ============ */
-  const CRUMBS={ "agent-home":"Agent Studio","agent-create":"Create Agent","agent-deploy":"Deploy Agent","agent-import":"Import Agent","agent-verify":"CG Verification","contract-home":"Smart Contract Studio","contract-deploy":"Deploy Contract","profile":"Public Profile","explorer":"Intelligence Explorer","docs":"Documentation","settings":"Settings" };
-  const NAVGROUP={ "agent-home":"agent-home","agent-create":"agent-home","agent-deploy":"agent-home","agent-import":"agent-home","agent-verify":"agent-home","contract-home":"contract-home","contract-deploy":"contract-home","profile":"agent-home","explorer":"explorer","docs":"docs","settings":"settings" };
+  const CRUMBS={ "agent-home":"Agent Studio","agent-create":"Create Agent","agent-deploy":"Deploy Agent","agent-import":"Import Agent","agent-verify":"CG Verification","contract-home":"Smart Contract Studio","contract-deploy":"Deploy Contract","profile":"Public Profile","explorer":"Intelligence Explorer","docs":"Documentation" };
+  const NAVGROUP={ "agent-home":"agent-home","agent-create":"agent-home","agent-deploy":"agent-home","agent-import":"agent-home","agent-verify":"agent-home","contract-home":"contract-home","contract-deploy":"contract-home","profile":"agent-home","explorer":"explorer","docs":"docs" };
   let wallet=null;
 
   window.scrollTop=()=>scrollTo({top:0,behavior:"smooth"});
@@ -78,8 +78,72 @@
 
   /* ===== wallet ===== */
   function randAddr(){ const h="0123456789abcdef"; let s="0x"; for(let i=0;i<4;i++)s+=h[(Math.random()*16)|0]; s+="..."; for(let i=0;i<4;i++)s+=h[(Math.random()*16)|0]; return s; }
-  window.connectWallet=()=>{ if(wallet){ toast("Wallet connected: "+wallet.addr); return; } openModal("wallet-modal"); };
-  window.pickWallet=(name)=>{ wallet={name,addr:randAddr()}; closeModal("wallet-modal"); document.getElementById("wallet-label").textContent=wallet.addr; toast(name+" connected"); renderAgentDeploy(); if(pendingDeploy) setTimeout(openConfirm,260); };
+  const WALLETS={
+    rabby:{name:"Rabby Wallet",rdns:"io.rabby",flag:"isRabby",install:"https://rabby.io/"},
+    metamask:{name:"MetaMask",rdns:"io.metamask",flag:"isMetaMask",install:"https://metamask.io/download/"},
+    coinbase:{name:"Coinbase Wallet",rdns:"com.coinbase.wallet",flag:"isCoinbaseWallet",install:"https://www.coinbase.com/wallet/downloads"}
+  };
+  const announcedProviders={};
+  window.addEventListener("eip6963:announceProvider",function(e){ const d=e&&e.detail; if(d&&d.info&&d.provider) announcedProviders[d.info.rdns]=d; });
+  function requestProviders(){ try{ window.dispatchEvent(new Event("eip6963:requestProvider")); }catch(e){} }
+  requestProviders();
+  function shortAddr(a){ return (a&&a.length>10)?a.slice(0,6)+"..."+a.slice(-4):a; }
+  function findProvider(key){
+    const w=WALLETS[key];
+    if(announcedProviders[w.rdns]) return announcedProviders[w.rdns].provider;
+    const eth=window.ethereum;
+    if(eth){
+      if(Array.isArray(eth.providers)){
+        let m=eth.providers.filter(function(p){ return p&&p[w.flag]; });
+        if(key==="metamask") m=m.filter(function(p){ return !p.isRabby&&!p.isCoinbaseWallet; });
+        if(m.length) return m[0];
+      }
+      if(eth[w.flag]){
+        if(key==="metamask"&&(eth.isRabby||eth.isCoinbaseWallet)) return null;
+        return eth;
+      }
+    }
+    if(key==="coinbase"&&window.coinbaseWalletExtension) return window.coinbaseWalletExtension;
+    return null;
+  }
+  function showWalletNotInstalled(key){
+    const w=WALLETS[key]; const box=document.getElementById("wallet-msg"); if(!box) return;
+    box.style.display="block";
+    box.innerHTML='<div class="rounded-xl p-4" style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25)">'
+      +'<p class="text-[13.5px] font-medium mb-1">'+w.name+' is not installed</p>'
+      +'<p class="text-[12.5px] text-muted mb-3">Install '+w.name+' to continue, then reconnect.</p>'
+      +'<a href="'+w.install+'" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 text-[13px] font-semibold px-4 py-2 rounded-full">Install '+w.name+' <i data-lucide="external-link" class="w-3.5 h-3.5"></i></a>'
+      +'</div>';
+    if(window.lucide) lucide.createIcons();
+  }
+  window.connectWallet=()=>{
+    if(wallet){ toast("Connected: "+shortAddr(wallet.addr)); return; }
+    const box=document.getElementById("wallet-msg"); if(box){ box.style.display="none"; box.innerHTML=""; }
+    requestProviders();
+    openModal("wallet-modal");
+  };
+  window.pickWallet=(key)=>{
+    const w=WALLETS[key]; if(!w) return;
+    const provider=findProvider(key);
+    if(!provider){ showWalletNotInstalled(key); return; }
+    provider.request({method:"eth_requestAccounts"}).then(function(accounts){
+      if(!accounts||!accounts.length){ toast("No account selected"); return; }
+      wallet={key:key,name:w.name,addr:accounts[0],provider:provider};
+      closeModal("wallet-modal");
+      const lbl=document.getElementById("wallet-label"); if(lbl) lbl.textContent=shortAddr(wallet.addr);
+      toast(w.name+" connected");
+      if(provider.on){ provider.on("accountsChanged",function(accs){
+        if(!accs||!accs.length){ wallet=null; const l=document.getElementById("wallet-label"); if(l) l.textContent="Connect Wallet"; }
+        else { wallet.addr=accs[0]; const l=document.getElementById("wallet-label"); if(l) l.textContent=shortAddr(accs[0]); }
+        renderAgentDeploy();
+      }); }
+      renderAgentDeploy();
+      if(pendingDeploy) setTimeout(openConfirm,260);
+    }).catch(function(err){
+      if(err&&err.code===4001) toast("Connection rejected");
+      else toast("Could not connect "+w.name);
+    });
+  };
 
   /* ===== toast + modal ===== */
   let tt;
@@ -367,7 +431,7 @@
       +'<div class="p-8 grid sm:grid-cols-2 gap-6 text-[14px]">'
       +'<div><p class="text-[12.5px] text-muted mb-1">Name</p><p class="font-medium">'+name+(type?' <span class="text-muted">('+type+')</span>':'')+'</p></div>'
       +'<div><p class="text-[12.5px] text-muted mb-1">Contract address</p><p class="font-mono flex items-center gap-2">'+shortMid(addr)+' <button onclick="copyAddr(\''+addr+'\')" class="text-muted hover:text-ink"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button></p></div>'
-      +'<div><p class="text-[12.5px] text-muted mb-1">Owner</p><p class="font-mono">'+owner+'</p></div>'
+      +'<div><p class="text-[12.5px] text-muted mb-1">Owner</p><p class="font-mono">'+shortMid(owner)+'</p></div>'
       +'<div><p class="text-[12.5px] text-muted mb-1">Created</p><p>'+date+'</p></div>'
       +'<div><p class="text-[12.5px] text-muted mb-1">Chain</p><p class="inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full" style="background:var(--blue)"></span> Base</p></div>'
       +'<div><p class="text-[12.5px] text-muted mb-1">Verification status</p><p style="color:var(--emerald)">Verified</p></div>'
@@ -394,7 +458,6 @@
     openModal("cert-modal");
   };
 
-  window.saveFee=()=>{ const v=document.getElementById("fee-input").value; toast("Studio fee updated to $"+v+" for new deployments"); };
 })();
 
 /* ============================================================
