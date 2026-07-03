@@ -224,7 +224,6 @@
         </div>
         <div class="pt-3 mt-3 border-t border-white/8"></div>
         <div class="side-link" data-nav="docs" onclick="showView('docs')"><i data-lucide="book-open" class="w-[18px] h-[18px]"></i> Documentation</div>
-        <div class="side-link" data-nav="settings" onclick="showView('settings')"><i data-lucide="settings" class="w-[18px] h-[18px]"></i> Settings</div>
       </nav>
       <div class="mt-4 flex items-center gap-2 px-2 text-[12px] text-muted">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald tick"></span> <span id="side-agents">8,412</span> agents live
@@ -427,30 +426,6 @@
           </div>
         </section>
 
-        <!-- ===== SETTINGS ===== -->
-        <section class="view" id="settings">
-          <div class="max-w-2xl mx-auto">
-            <h1 class="text-[32px] font-extrabold tracking-[-0.02em] mb-3">Settings</h1>
-            <p class="text-[16px] text-muted mb-8">Manage your Studio configuration.</p>
-
-            <div class="glass rounded-2xl p-6 mb-5">
-              <h3 class="text-[16px] font-semibold mb-1">Studio fee</h3>
-              <p class="text-[13.5px] text-muted mb-5">Charged on every deployment, on top of network gas.</p>
-              <div class="grid sm:grid-cols-2 gap-5">
-                <div class="field"><label>Fee amount (USD, quoted in ETH at deploy)</label><input id="fee-input" value="0.08" /></div>
-                <div class="field"><label>Treasury address</label><input id="fee-treasury" value="0x7a3f...C21e" /></div>
-              </div>
-              <p class="text-[12.5px] text-muted mt-4 flex items-start gap-2"><i data-lucide="info" class="w-4 h-4 text-blue mt-0.5 shrink-0"></i> This fee is collected as part of each deployment transaction and applies to new deployments only. Users review the full cost in their wallet at confirmation.</p>
-              <button onclick="saveFee()" class="btn-primary mt-5 font-semibold px-5 py-2.5 rounded-full text-[14px]">Save fee</button>
-            </div>
-
-            <div class="glass rounded-2xl p-6">
-              <h3 class="text-[16px] font-semibold mb-1">Network</h3>
-              <p class="text-[13.5px] text-muted mb-4">Default deployment network.</p>
-              <div class="field" style="max-width:220px"><select><option>Base</option></select></div>
-            </div>
-          </div>
-        </section>
 
       </div>
     </div>
@@ -463,10 +438,11 @@
   <div class="modal-card glass rounded-2xl p-6">
     <div class="flex items-center justify-between mb-5"><h3 class="text-[17px] font-semibold">Connect wallet</h3><button onclick="closeModal('wallet-modal')" class="text-muted hover:text-ink"><i data-lucide="x" class="w-5 h-5"></i></button></div>
     <div class="space-y-3">
-      <button onclick="pickWallet('MetaMask')" class="btn-ghost w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-[14.5px] font-medium text-ink"><span class="grid place-items-center w-8 h-8 rounded-lg" style="background:rgba(96,165,250,.12)"><i data-lucide="wallet" class="w-4 h-4 text-blue"></i></span> MetaMask</button>
-      <button onclick="pickWallet('Coinbase Wallet')" class="btn-ghost w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-[14.5px] font-medium text-ink"><span class="grid place-items-center w-8 h-8 rounded-lg" style="background:rgba(96,165,250,.12)"><i data-lucide="wallet" class="w-4 h-4 text-blue"></i></span> Coinbase Wallet</button>
-      <button onclick="pickWallet('WalletConnect')" class="btn-ghost w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-[14.5px] font-medium text-ink"><span class="grid place-items-center w-8 h-8 rounded-lg" style="background:rgba(96,165,250,.12)"><i data-lucide="link" class="w-4 h-4 text-blue"></i></span> WalletConnect</button>
+      <button onclick="pickWallet('rabby')" class="btn-ghost w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-[14.5px] font-medium text-ink"><span class="grid place-items-center w-8 h-8 rounded-lg" style="background:rgba(96,165,250,.12)"><i data-lucide="wallet" class="w-4 h-4 text-blue"></i></span> Rabby Wallet</button>
+      <button onclick="pickWallet('metamask')" class="btn-ghost w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-[14.5px] font-medium text-ink"><span class="grid place-items-center w-8 h-8 rounded-lg" style="background:rgba(96,165,250,.12)"><i data-lucide="wallet" class="w-4 h-4 text-blue"></i></span> MetaMask</button>
+      <button onclick="pickWallet('coinbase')" class="btn-ghost w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-[14.5px] font-medium text-ink"><span class="grid place-items-center w-8 h-8 rounded-lg" style="background:rgba(96,165,250,.12)"><i data-lucide="wallet" class="w-4 h-4 text-blue"></i></span> Coinbase Wallet</button>
     </div>
+    <div id="wallet-msg" class="mt-4" style="display:none"></div>
   </div>
 </div>
 
