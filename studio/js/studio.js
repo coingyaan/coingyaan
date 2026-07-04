@@ -130,20 +130,61 @@
       if(!accounts||!accounts.length){ toast("No account selected"); return; }
       wallet={key:key,name:w.name,addr:accounts[0],provider:provider};
       closeModal("wallet-modal");
-      const lbl=document.getElementById("wallet-label"); if(lbl) lbl.textContent=shortAddr(wallet.addr);
+      renderWalletUI();
       toast(w.name+" connected");
       if(provider.on){ provider.on("accountsChanged",function(accs){
-        if(!accs||!accs.length){ wallet=null; const l=document.getElementById("wallet-label"); if(l) l.textContent="Connect Wallet"; }
-        else { wallet.addr=accs[0]; const l=document.getElementById("wallet-label"); if(l) l.textContent=shortAddr(accs[0]); }
-        renderAgentDeploy();
+        if(!accs||!accs.length){ wallet=null; } else { wallet.addr=accs[0]; }
+        renderWalletUI();
       }); }
-      renderAgentDeploy();
       if(pendingDeploy) setTimeout(openConfirm,260);
     }).catch(function(err){
       if(err&&err.code===4001) toast("Connection rejected");
       else toast("Could not connect "+w.name);
     });
   };
+
+  /* ===== wallet management (connected state UI) ===== */
+  function hideWalletMenu(){ var m=document.getElementById("wallet-menu"); if(m) m.style.display="none"; }
+  function renderWalletUI(){
+    var lbl=document.getElementById("wallet-label"), caret=document.getElementById("wallet-caret"), chip=document.getElementById("wallet-chip");
+    if(wallet){
+      if(lbl) lbl.textContent=shortAddr(wallet.addr);
+      if(caret) caret.style.display="";
+      if(chip) chip.setAttribute("aria-label","Wallet menu");
+      var a=document.getElementById("wallet-menu-addr"); if(a) a.textContent=wallet.addr;
+    } else {
+      if(lbl) lbl.textContent="Connect Wallet";
+      if(caret) caret.style.display="none";
+      if(chip) chip.setAttribute("aria-label","Connect wallet");
+      hideWalletMenu();
+    }
+    if(typeof renderAgentDeploy==="function") renderAgentDeploy();
+  }
+  window.walletChipClick=function(e){
+    if(e&&e.stopPropagation) e.stopPropagation();
+    if(!wallet){ connectWallet(); return; }
+    var m=document.getElementById("wallet-menu"); if(m) m.style.display=(m.style.display==="block")?"none":"block";
+  };
+  window.copyConnectedAddr=function(){ if(!wallet) return; try{ if(navigator.clipboard) navigator.clipboard.writeText(wallet.addr); }catch(e){} toast("Address copied"); hideWalletMenu(); };
+  window.changeWallet=function(){ hideWalletMenu(); var box=document.getElementById("wallet-msg"); if(box){ box.style.display="none"; box.innerHTML=""; } requestProviders(); openModal("wallet-modal"); };
+  window.disconnectWallet=function(){ wallet=null; renderWalletUI(); toast("Wallet disconnected"); };
+  document.addEventListener("click",function(e){ var wrap=document.getElementById("wallet-wrap"), menu=document.getElementById("wallet-menu"); if(menu&&menu.style.display==="block"&&wrap&&!wrap.contains(e.target)) menu.style.display="none"; });
+
+  /* ===== Deploy architecture layer (prepared for real Deploy Manager; contracts not deployed yet) =====
+     When the Deploy Manager + Factory addresses are set in studio-config.js, fill in the on-chain
+     reads/sends below. Until then isLive() is false and the UI keeps the current simulated flow. */
+  var CGDeploy={
+    cfg:function(){ return window.CG_STUDIO_CONFIG||{}; },
+    networks:function(){ return this.cfg().networks||[]; },
+    network:function(id){ return this.networks().filter(function(n){return n.id===id;})[0]||null; },
+    manager:function(id){ var m=(this.cfg().deployManager||{})[id]; return (m&&m.address)?m:null; },
+    isLive:function(id){ return !!this.manager(id); },
+    factory:function(id,type){ var f=(this.cfg().factories||{})[id]; return f?f[type]:null; },
+    getTreasury:function(id){ /* TODO: eth_call DeployManager.treasury() when live */ return (this.cfg().defaultTreasury||null); },
+    getStudioFee:function(id){ /* TODO: eth_call DeployManager.studioFee() when live */ return null; },
+    deploy:function(opts){ /* TODO: wallet eth_sendTransaction -> DeployManager.deployXXX -> Factory when live */ return this.isLive(opts&&opts.network)?undefined:null; }
+  };
+  window.CGDeploy=CGDeploy;
 
   /* ===== toast + modal ===== */
   let tt;
@@ -359,13 +400,13 @@
   function renderField(f){
     const opt = f.optional ? ' <span class="text-muted font-normal">(optional)</span>' : '';
     if(f.type==="network"){
-      return '<div class="field"><label for="'+f.id+'">Network</label><select id="'+f.id+'">'
-        +'<option value="base" selected>Base</option>'
-        +'<option disabled>Ethereum (Coming Soon)</option>'
-        +'<option disabled>Arbitrum (Coming Soon)</option>'
-        +'<option disabled>Arc Network (Coming Soon)</option>'
-        +'<option disabled>Robinhood Chain (Coming Soon)</option>'
-        +'</select></div>';
+      var nets=(window.CG_STUDIO_CONFIG&&window.CG_STUDIO_CONFIG.networks)||[{id:"base",label:"Base",status:"active"}];
+      var opts=nets.map(function(n){
+        return n.status==="active"
+          ? '<option value="'+n.id+'" selected>'+n.label+'</option>'
+          : '<option disabled>'+n.label+' (Coming Soon)</option>';
+      }).join("");
+      return '<div class="field"><label for="'+f.id+'">Network</label><select id="'+f.id+'">'+opts+'</select></div>';
     }
     if(f.type==="image"){
       return '<div class="field"><label for="'+f.id+'">'+f.label+opt+'</label>'
