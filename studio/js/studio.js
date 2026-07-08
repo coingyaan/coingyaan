@@ -126,7 +126,7 @@
     const w=WALLETS[key]; if(!w) return;
     const provider=findProvider(key);
     if(!provider){ showWalletNotInstalled(key); return; }
-    provider.request({method:"eth_requestAccounts"}).then(function(accounts){
+    provider.request({method:"wallet_requestPermissions",params:[{eth_accounts:{}}]}).catch(function(){return null;}).then(function(){ return provider.request({method:"eth_requestAccounts"}); }).then(function(accounts){
       if(!accounts||!accounts.length){ toast("No account selected"); return; }
       wallet={key:key,name:w.name,addr:accounts[0],provider:provider};
       closeModal("wallet-modal");
@@ -178,13 +178,69 @@
     networks:function(){ return this.cfg().networks||[]; },
     network:function(id){ return this.networks().filter(function(n){return n.id===id;})[0]||null; },
     manager:function(id){ var m=(this.cfg().deployManager||{})[id]; return (m&&m.address)?m:null; },
-    isLive:function(id){ return !!this.manager(id); },
+    isLive:function(id){ return !!(window.ethers && this.manager(id)); },
     factory:function(id,type){ var f=(this.cfg().factories||{})[id]; return f?f[type]:null; },
-    getTreasury:function(id){ /* TODO: eth_call DeployManager.treasury() when live */ return (this.cfg().defaultTreasury||null); },
-    getStudioFee:function(id){ /* TODO: eth_call DeployManager.studioFee() when live */ return null; },
-    deploy:function(opts){ /* TODO: wallet eth_sendTransaction -> DeployManager.deployXXX -> Factory when live */ return this.isLive(opts&&opts.network)?undefined:null; }
+    kindHash:function(t){ return window.ethers.keccak256(window.ethers.toUtf8Bytes(t)); },
+    _contract:async function(id){
+      var m=this.manager(id); if(!m||!window.ethers||!wallet||!wallet.provider) return null;
+      var bp=new window.ethers.BrowserProvider(wallet.provider);
+      var signer=await bp.getSigner();
+      return new window.ethers.Contract(m.address, this.cfg().deployManagerAbi, signer);
+    },
+    getStudioFee:async function(id){ try{ var c=await this._contract(id); return c?await c.studioFee():null; }catch(e){ return null; } },
+    getTreasury:async function(id){ try{ var c=await this._contract(id); return c?await c.treasury():(this.cfg().defaultTreasury||null); }catch(e){ return this.cfg().defaultTreasury||null; } },
+    ensureChain:async function(id){
+      var net=this.network(id); if(!net||!net.chainId||!wallet||!wallet.provider) return;
+      var want="0x"+Number(net.chainId).toString(16);
+      try{ await wallet.provider.request({method:"wallet_switchEthereumChain",params:[{chainId:want}]}); }
+      catch(err){
+        if(err&&err.code===4902){
+          var rpc=(this.cfg().rpc||{})[id]||null;
+          await wallet.provider.request({method:"wallet_addEthereumChain",params:[{chainId:want,chainName:net.label,rpcUrls:rpc?[rpc]:[],nativeCurrency:{name:"ETH",symbol:"ETH",decimals:18}}]});
+        } else { throw err; }
+      }
+    },
+    // Real deploy: switch chain -> read fee -> send tx to DeployManager -> wait -> parse Deployed event.
+    deploy:async function(opts){
+      await this.ensureChain(opts.network);
+      var c=await this._contract(opts.network); if(!c) throw new Error("Deploy manager unavailable");
+      var kind=this.kindHash(opts.kindStr);
+      var types=(this.cfg().paramSchema||{})[opts.kindStr];
+      var params=window.ethers.AbiCoder.defaultAbiCoder().encode(types, opts.values);
+      var fee=await c.studioFee();
+      var tx=await c.deploy(kind, params, { value: fee });
+      var rc=await tx.wait();
+      var addr=null;
+      for(var i=0;i<rc.logs.length;i++){ try{ var p=c.interface.parseLog(rc.logs[i]); if(p&&p.name==="Deployed"){ addr=p.args.contractAddress; break; } }catch(e){} }
+      return { address: addr, hash: (rc.hash||tx.hash) };
+    }
   };
   window.CGDeploy=CGDeploy;
+
+  // Collect ABI-encode values from the contract form for a given type.
+  function collectContractValues(type){
+    function v(id){ var e=document.getElementById(id); return e?(e.value||"").trim():""; }
+    var owner=v("cf_owner")|| (wallet?wallet.addr:"");
+    if(type==="ERC20") return { kindStr:"ERC20", values:[ v("cf_name")||"Token", v("cf_symbol")||"TKN", (v("cf_supply")||"0"), parseInt(v("cf_decimals")||"18",10) ], owner:owner };
+    if(type==="B20")   return { kindStr:"B20",   values:[ v("cf_name")||"Token", v("cf_symbol")||"TKN", (v("cf_supply")||"0"), parseInt(v("cf_decimals")||"18",10) ], owner:owner };
+    if(type==="ERC721") return { kindStr:"ERC721", values:[ v("cf_name")||"Collection", v("cf_symbol")||"NFT", "", (v("cf_max")||"0") ], owner:owner };
+    if(type==="ERC1155") return { kindStr:"ERC1155", values:[ v("cf_name")||"Collection", "" ], owner:owner };
+    if(type==="ERC8004"){ var slug=(v("cf_name")||"agent").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,""); return { kindStr:"ERC8004", values:[ "https://coingyaan.com/agent/"+slug ], owner:owner }; }
+    return null;
+  }
+  // Real deploy runner: shows progress in the panel, then the existing success screen via onDone.
+  function runRealDeploy(panel, kindStr, values, name, onDone){
+    if(panel) panel.innerHTML='<div class="glass rounded-2xl p-6 text-center"><span class="spinner"></span> <span class="text-[14px] text-muted">Confirm in your wallet, then deploying on Base...</span></div>';
+    CGDeploy.deploy({ network:"base", kindStr:kindStr, values:values }).then(function(res){
+      toast("Deployed on Base");
+      if(panel) showSuccess(panel, name, onDone, res.address, res.hash);
+      else if(typeof onDone==="function") onDone(res.address, res.hash);
+    }).catch(function(err){
+      if(panel) panel.innerHTML="";
+      toast((err&&err.code===4001)?"Deployment rejected":"Deploy failed: "+((err&&err.shortMessage)||(err&&err.message)||"error"));
+    });
+  }
+  window.runRealDeploy=runRealDeploy;
 
   /* ===== toast + modal ===== */
   let tt;
@@ -210,7 +266,9 @@
   function txHash(){ return "0x"+hex(64); }
   function shortMid(s){ return s.slice(0,10)+"..."+s.slice(-8); }
   window.copyAddr=(a)=>{ try{ navigator.clipboard&&navigator.clipboard.writeText(a); }catch(e){} toast("Address copied"); };
-  window.baseScan=(a)=>{ try{ window.open("https://basescan.org/address/"+a,"_blank"); }catch(e){} };
+  function explorerBase(){ try{ var n=CGDeploy.network("base")||{}; return n.chainId===84532?"https://sepolia.basescan.org":"https://basescan.org"; }catch(e){ return "https://basescan.org"; } }
+  window.baseScan=(a)=>{ try{ window.open(explorerBase()+"/address/"+a,"_blank"); }catch(e){} };
+  window.baseScanTx=(h)=>{ try{ window.open(explorerBase()+"/tx/"+h,"_blank"); }catch(e){} };
 
   /* ===== CREATE AGENT ===== */
   const REASON=["Parsing your intent","Selecting capabilities","Drafting ERC8004 metadata","Generating profile","Finalizing"];
@@ -264,6 +322,11 @@
   };
   window.deployAgent=()=>{
     const name=document.getElementById("deploy-agent-name").value.trim()||"CG Agent";
+    if(CGDeploy.isLive("base") && wallet){
+      const slug=name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+      runRealDeploy(document.getElementById("deploy-agent-progress"), "ERC8004", ["https://coingyaan.com/agent/"+slug], name, (addr,hash)=>openProfile("agent",name,null,addr));
+      return;
+    }
     beginDeploy(document.getElementById("deploy-agent-progress"), name, (addr)=>openProfile("agent",name,null,addr));
   };
 
@@ -281,17 +344,18 @@
     }
     setTimeout(next, reduce?0:700);
   }
-  function showSuccess(panel,name,onDone){
-    const addr=fullAddr(), hash=txHash();
+  function showSuccess(panel,name,onDone,realAddr,realHash){
+    const addr=realAddr||fullAddr(), hash=realHash||txHash();
     panel.innerHTML=
       '<div class="text-center mb-6"><span class="grid place-items-center w-14 h-14 rounded-full mx-auto mb-4" style="background:rgba(52,211,153,.14);border:1px solid rgba(52,211,153,.34)"><i data-lucide="check" class="w-7 h-7" style="color:var(--emerald)"></i></span><h3 class="text-[20px] font-bold">Deployment successful</h3><p class="text-[13.5px] text-muted mt-1">'+name+' is live on Base</p></div>'
       +'<div class="space-y-3 text-[13.5px]">'
       +'<div class="flex items-center justify-between gap-3"><span class="text-muted shrink-0">Address</span><span class="font-mono flex items-center gap-2">'+shortMid(addr)+' <button onclick="copyAddr(\''+addr+'\')" class="text-muted hover:text-ink"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button></span></div>'
-      +'<div class="flex items-center justify-between gap-3"><span class="text-muted shrink-0">Transaction hash</span><span class="font-mono">'+shortMid(hash)+'</span></div>'
+      +'<div class="flex items-center justify-between gap-3"><span class="text-muted shrink-0">Transaction hash</span><span class="font-mono flex items-center gap-2">'+shortMid(hash)+' <button onclick="baseScanTx(\''+hash+'\')" class="text-muted hover:text-ink"><i data-lucide="external-link" class="w-3.5 h-3.5"></i></button></span></div>'
       +'</div>'
       +'<div class="flex flex-wrap gap-3 mt-6">'
       +'<button onclick="__viewProfile()" class="btn-primary inline-flex items-center gap-2 font-semibold px-5 py-3 rounded-full text-[14px]"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> View public profile</button>'
       +'<button onclick="baseScan(\''+addr+'\')" class="btn-ghost inline-flex items-center gap-2 font-medium px-5 py-3 rounded-full text-ink text-[14px]"><i data-lucide="external-link" class="w-4 h-4 text-blue"></i> View on BaseScan</button>'
+      +'<button onclick="baseScanTx(\''+hash+'\')" class="btn-ghost inline-flex items-center gap-2 font-medium px-5 py-3 rounded-full text-ink text-[14px]"><i data-lucide="external-link" class="w-4 h-4 text-blue"></i> View transaction</button>'
       +'<button onclick="copyAddr(\''+addr+'\')" class="btn-ghost inline-flex items-center gap-2 font-medium px-5 py-3 rounded-full text-ink text-[14px]"><i data-lucide="copy" class="w-4 h-4 text-blue"></i> Copy address</button>'
       +'</div>';
     window.__viewProfile=()=>onDone&&onDone(addr);
@@ -355,7 +419,8 @@
     {id:"ERC20",icon:"coins",color:"#60A5FA",desc:"Fungible token"},
     {id:"ERC721",icon:"image",color:"#A78BFA",desc:"NFT collection"},
     {id:"ERC1155",icon:"layers",color:"#22D3EE",desc:"Multi token"},
-    {id:"ERC8004",icon:"bot",color:"#34D399",desc:"Agent identity"}
+    {id:"ERC8004",icon:"bot",color:"#34D399",desc:"Agent identity"},
+    {id:"B20",icon:"zap",color:"#F59E0B",desc:"Native Base token"}
   ];
   const CFORMS={
     ERC20:[
@@ -389,13 +454,22 @@
       {label:"Agent category",id:"cf_cat",type:"select",options:["Wallet","Markets","Research","Growth","Data","Support","General"]},
       {label:"Owner wallet address",id:"cf_owner",type:"text",placeholder:"0x..."},
       {id:"cf_network",type:"network"}
+    ],
+    B20:[
+      {label:"Token name",id:"cf_name",type:"text",placeholder:"MyToken"},
+      {label:"Token symbol",id:"cf_symbol",type:"text",placeholder:"MTK"},
+      {label:"Total supply",id:"cf_supply",type:"number",placeholder:"1000000"},
+      {label:"Decimals (6 to 18)",id:"cf_decimals",type:"number",value:"18"},
+      {label:"Owner wallet address",id:"cf_owner",type:"text",placeholder:"0x..."},
+      {id:"cf_network",type:"network"}
     ]
   };
   const CSTAGES={
     ERC20:["Preparing contract","Deploying on Base","Verifying contract"],
     ERC721:["Uploading image to IPFS","Generating metadata","Uploading metadata to IPFS","Generating Base URI","Deploying on Base","Verifying contract"],
     ERC1155:["Uploading image to IPFS","Generating metadata","Generating URI","Deploying on Base","Verifying contract"],
-    ERC8004:["Generating ERC8004 metadata","Uploading metadata to IPFS","Generating metadata URI","Deploying on Base","Verifying agent"]
+    ERC8004:["Generating ERC8004 metadata","Uploading metadata to IPFS","Generating metadata URI","Deploying on Base","Verifying agent"],
+    B20:["Encoding B20 token","Calling B20 Factory precompile","Confirming on Base"]
   };
   function renderField(f){
     const opt = f.optional ? ' <span class="text-muted font-normal">(optional)</span>' : '';
@@ -451,6 +525,13 @@
     const stages=CSTAGES[type]||CSTAGES.ERC20;
     const kind = type==="ERC8004" ? "agent" : "contract";
     const t = kind==="contract" ? type : null;
+    const net=(document.getElementById("cf_network")||{}).value||"base";
+    const b20ok = type!=="B20" || CGDeploy.factory(net,"B20");
+    if(CGDeploy.isLive(net) && wallet && b20ok){
+      const c=collectContractValues(type);
+      runRealDeploy(document.getElementById("cd-progress"), c.kindStr, c.values, name, (addr,hash)=>openProfile(kind,name,t,addr));
+      return;
+    }
     beginDeploy(document.getElementById("cd-progress"), name, (addr)=>openProfile(kind,name,t,addr), stages);
   };
 
