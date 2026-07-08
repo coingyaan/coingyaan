@@ -230,7 +230,7 @@
   }
   // Real deploy runner: shows progress in the panel, then the existing success screen via onDone.
   function runRealDeploy(panel, kindStr, values, name, onDone){
-    if(panel) panel.innerHTML='<div class="glass rounded-2xl p-6 text-center"><span class="spinner"></span> <span class="text-[14px] text-muted">Confirm in your wallet, then deploying on Base...</span></div>';
+    if(panel){ panel.style.display="block"; panel.innerHTML='<div class="text-center py-4"><span class="text-[14px] text-muted">Confirm in your wallet, then deploying on Base...</span></div>'; }
     CGDeploy.deploy({ network:"base", kindStr:kindStr, values:values }).then(function(res){
       toast("Deployed on Base");
       if(panel) showSuccess(panel, name, onDone, res.address, res.hash);
@@ -346,6 +346,7 @@
   }
   function showSuccess(panel,name,onDone,realAddr,realHash){
     const addr=realAddr||fullAddr(), hash=realHash||txHash();
+    if(panel) panel.style.display="block";
     panel.innerHTML=
       '<div class="text-center mb-6"><span class="grid place-items-center w-14 h-14 rounded-full mx-auto mb-4" style="background:rgba(52,211,153,.14);border:1px solid rgba(52,211,153,.34)"><i data-lucide="check" class="w-7 h-7" style="color:var(--emerald)"></i></span><h3 class="text-[20px] font-bold">Deployment successful</h3><p class="text-[13.5px] text-muted mt-1">'+name+' is live on Base</p></div>'
       +'<div class="space-y-3 text-[13.5px]">'
