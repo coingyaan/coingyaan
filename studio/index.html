@@ -72,7 +72,7 @@
           <a href="/contact.html">Contact</a>
         </nav>
         <div class="cg-nav-cta">
-          <button type="button" onclick="launchStudio('agent-home')" class="btn-primary text-[14px] font-semibold px-5 py-2.5 rounded-full">Launch Studio</button>
+          <button type="button" onclick="location.href='/studio/app'" class="btn-primary text-[14px] font-semibold px-5 py-2.5 rounded-full">Launch Studio</button>
           <button type="button" class="cg-hamburger" id="cgHamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
         </div>
       </div>
@@ -95,17 +95,17 @@
       <div class="grid lg:grid-cols-[1.02fr_0.98fr] gap-14 items-center">
         <div class="reveal">
           <div class="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 mb-7 glass text-[12.5px] text-muted">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald tick"></span> The intelligence layer for AI agents
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald tick"></span> The universal builder workspace for Web3
           </div>
           <h1 class="text-[46px] leading-[1.03] sm:text-[60px] lg:text-[72px] font-extrabold tracking-[-0.03em]">
-            Every AI Agent<br/><span class="grad-text">Needs Intelligence.</span>
+            Build.<br/>Deploy.<br/><span class="grad-text">Grow Your Reputation.</span>
           </h1>
           <p class="mt-6 max-w-xl text-[17px] leading-relaxed text-muted">
-            Create and deploy AI agents. Deploy smart contracts. Verify everything.
+            Complete your daily GM, deploy AI agents and smart contracts and build your onchain reputation across supported networks.
           </p>
           <div class="mt-9 flex flex-wrap items-center gap-4">
-            <button onclick="launchStudio('agent-home')" class="btn-primary inline-flex items-center gap-2 font-semibold px-6 py-3.5 rounded-full">Launch Studio <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
-            <button onclick="launchStudio('docs')" class="btn-ghost inline-flex items-center gap-2 font-semibold px-6 py-3.5 rounded-full text-ink"><i data-lucide="book-open" class="w-4 h-4 text-blue"></i> Documentation</button>
+            <button onclick="location.href='/studio/app'" class="btn-primary inline-flex items-center gap-2 font-semibold px-6 py-3.5 rounded-full">Launch Studio <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+            <button onclick="location.href='/studio/app?view=docs'" class="btn-ghost inline-flex items-center gap-2 font-semibold px-6 py-3.5 rounded-full text-ink"><i data-lucide="book-open" class="w-4 h-4 text-blue"></i> Documentation</button>
           </div>
         </div>
         <div class="reveal relative">
@@ -123,23 +123,28 @@
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
       <div class="reveal max-w-2xl mb-12">
         <p class="eyebrow text-[12px] font-semibold text-blue uppercase mb-4">Overview</p>
-        <h2 class="text-[32px] lg:text-[42px] font-extrabold tracking-[-0.02em] leading-tight">One studio for agents and contracts.</h2>
+        <h2 class="text-[32px] lg:text-[42px] font-extrabold tracking-[-0.02em] leading-tight">One workspace to build, deploy and grow.</h2>
       </div>
-      <div class="grid md:grid-cols-3 gap-5">
+      <div class="grid md:grid-cols-2 gap-5">
         <div class="reveal glass rounded-2xl p-7">
-          <span class="grid place-items-center w-11 h-11 rounded-xl mb-5" style="background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.25)"><i data-lucide="sparkles" class="w-5 h-5 text-blue"></i></span>
-          <h3 class="text-[18px] font-semibold mb-2">Create AI agents</h3>
-          <p class="text-[14px] text-muted leading-relaxed">Describe an agent in plain language and generate everything it needs to go onchain.</p>
+          <span class="grid place-items-center w-11 h-11 rounded-xl mb-5" style="background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.25)"><i data-lucide="sun" class="w-5 h-5 text-blue"></i></span>
+          <h3 class="text-[18px] font-semibold mb-2">Daily GM</h3>
+          <p class="text-[14px] text-muted leading-relaxed">Build your daily onchain reputation across supported networks.</p>
         </div>
         <div class="reveal glass rounded-2xl p-7">
-          <span class="grid place-items-center w-11 h-11 rounded-xl mb-5" style="background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.25)"><i data-lucide="box" class="w-5 h-5 text-purple"></i></span>
-          <h3 class="text-[18px] font-semibold mb-2">Deploy smart contracts</h3>
-          <p class="text-[14px] text-muted leading-relaxed">Ship ERC20, ERC721, ERC1155 and ERC8004 contracts on Base with a clean deploy flow.</p>
+          <span class="grid place-items-center w-11 h-11 rounded-xl mb-5" style="background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.25)"><i data-lucide="bot" class="w-5 h-5 text-purple"></i></span>
+          <h3 class="text-[18px] font-semibold mb-2">Agent Deployment</h3>
+          <p class="text-[14px] text-muted leading-relaxed">Create, deploy and verify intelligent onchain agents.</p>
         </div>
         <div class="reveal glass rounded-2xl p-7">
-          <span class="grid place-items-center w-11 h-11 rounded-xl mb-5" style="background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.25)"><i data-lucide="shield-check" class="w-5 h-5 text-emerald"></i></span>
-          <h3 class="text-[18px] font-semibold mb-2">Verify everything</h3>
-          <p class="text-[14px] text-muted leading-relaxed">Every agent and contract is checked and published as a beautiful public profile.</p>
+          <span class="grid place-items-center w-11 h-11 rounded-xl mb-5" style="background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.25)"><i data-lucide="file-code-2" class="w-5 h-5 text-emerald"></i></span>
+          <h3 class="text-[18px] font-semibold mb-2">Smart Contract Deployment</h3>
+          <p class="text-[14px] text-muted leading-relaxed">Deploy production ready smart contracts from a unified workspace.</p>
+        </div>
+        <div class="reveal glass rounded-2xl p-7">
+          <span class="grid place-items-center w-11 h-11 rounded-xl mb-5" style="background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.25)"><i data-lucide="award" class="w-5 h-5" style="color:#22D3EE"></i></span>
+          <h3 class="text-[18px] font-semibold mb-2">Builder Reputation</h3>
+          <p class="text-[14px] text-muted leading-relaxed">Grow your level, XP, streaks and onchain reputation over time.</p>
         </div>
       </div>
     </div>
@@ -149,7 +154,7 @@
   <section class="py-14 lg:py-20">
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
       <div class="grid lg:grid-cols-2 gap-5">
-        <div class="reveal card-i glass rounded-3xl p-9" onclick="launchStudio('agent-home')">
+        <div class="reveal card-i glass rounded-3xl p-9" onclick="location.href='/studio/app'">
           <div class="flex items-center justify-between mb-6">
             <span class="grid place-items-center w-12 h-12 rounded-2xl" style="background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.25)"><i data-lucide="bot" class="w-6 h-6 text-blue"></i></span>
             <i data-lucide="arrow-up-right" class="w-5 h-5 text-muted"></i>
@@ -157,13 +162,32 @@
           <h3 class="text-[24px] font-bold mb-2">Agent Studio</h3>
           <p class="text-[15px] text-muted leading-relaxed">Create, deploy, import and verify ERC8004 AI agents with CoinGyaan intelligence.</p>
         </div>
-        <div class="reveal card-i glass rounded-3xl p-9" onclick="launchStudio('contract-home')">
+        <div class="reveal card-i glass rounded-3xl p-9" onclick="location.href='/studio/app?view=contracts'">
           <div class="flex items-center justify-between mb-6">
             <span class="grid place-items-center w-12 h-12 rounded-2xl" style="background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.25)"><i data-lucide="file-code-2" class="w-6 h-6 text-purple"></i></span>
             <i data-lucide="arrow-up-right" class="w-5 h-5 text-muted"></i>
           </div>
           <h3 class="text-[24px] font-bold mb-2">Smart Contract Studio</h3>
           <p class="text-[15px] text-muted leading-relaxed">Deploy standard and custom contracts with verification and public profiles.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- supported networks -->
+  <section class="py-12 lg:py-16">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="reveal text-center">
+        <p class="eyebrow text-[12px] font-semibold text-blue uppercase mb-7">Supported Networks</p>
+        <div class="flex flex-wrap items-center justify-center gap-4">
+          <div class="glass rounded-full inline-flex items-center gap-3 px-5 py-3">
+            <span class="inline-flex w-6 h-6 rounded-md overflow-hidden"><svg viewBox="0 0 40 40" class="w-full h-full"><rect width="40" height="40" rx="11" fill="#00C805"/><path d="M27.5 11.5c-9 .8-14.2 6.4-15.8 17 1.2-1.4 3-2.4 5.2-2.4 6.3 0 10.6-6.3 10.6-14.6z" fill="#fff"/></svg></span>
+            <span class="text-[15px] font-semibold">Robinhood Chain</span>
+          </div>
+          <div class="glass rounded-full inline-flex items-center gap-3 px-5 py-3">
+            <span class="inline-flex w-6 h-6 rounded-md overflow-hidden"><svg viewBox="0 0 40 40" class="w-full h-full"><rect width="40" height="40" rx="11" fill="#0052FF"/><path d="M20 9.2a10.8 10.8 0 1 0 .5 21.6c5.5 0 10.1-4 10.8-9.3H16.3v-3.3h15c-.7-5.2-5.3-9-11.3-9z" fill="#fff"/></svg></span>
+            <span class="text-[15px] font-semibold">Base</span>
+          </div>
         </div>
       </div>
     </div>
@@ -176,7 +200,7 @@
         <div class="absolute inset-0 -z-10" style="background:radial-gradient(40rem 24rem at 50% 0%, rgba(96,165,250,.16), transparent 60%),radial-gradient(40rem 30rem at 50% 120%, rgba(167,139,250,.14), transparent 60%)"></div>
         <h2 class="text-[34px] sm:text-[46px] lg:text-[56px] font-extrabold tracking-[-0.03em] leading-[1.05]">Every AI agent<br/><span class="grad-text">needs intelligence.</span></h2>
         <div class="mt-9 flex justify-center">
-          <button onclick="launchStudio('agent-home')" class="btn-primary inline-flex items-center gap-2 text-[16px] font-semibold px-8 py-4 rounded-full">Launch Studio <i data-lucide="arrow-right" class="w-4.5 h-4.5"></i></button>
+          <button onclick="location.href='/studio/app'" class="btn-primary inline-flex items-center gap-2 text-[16px] font-semibold px-8 py-4 rounded-full">Launch Studio <i data-lucide="arrow-right" class="w-4.5 h-4.5"></i></button>
         </div>
       </div>
     </div>
