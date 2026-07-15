@@ -45,6 +45,32 @@ td{padding:9px 10px;border-top:1px solid var(--border);font-family:var(--mono)}
 .hidden{display:none}
 .muted{color:var(--muted)}
 .mono{font-family:var(--mono)}
+.overlay{position:fixed;inset:0;background:rgba(6,9,13,.62);display:grid;place-items:center;z-index:100;padding:20px}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;width:100%;max-width:400px;overflow:hidden;animation:pop .2s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+.modal-head{padding:20px 20px 4px}
+.modal-title{font-size:16px;font-weight:700}
+.modal-sub{font-size:13px;color:var(--muted);margin-top:3px}
+.modal-body{padding:16px 18px 20px}
+.wopt{display:flex;align-items:center;gap:13px;padding:12px;border-radius:11px;width:100%;text-align:left;background:none;border:none;cursor:pointer;color:var(--ink)}
+.wopt:hover{background:var(--hover)}
+.wic{width:38px;height:38px;border-radius:10px;overflow:hidden;flex-shrink:0}
+.wic svg{width:100%;height:100%;display:block}
+.wname{font-weight:600;font-size:14px}
+.wdesc{font-size:12px;color:var(--dim);margin-top:1px}
+.acct{display:flex;align-items:center;gap:12px;padding:13px;border-radius:11px;width:100%;text-align:left;background:none;border:none;cursor:pointer;color:var(--ink)}
+.acct:hover{background:var(--hover)}
+.acct+.acct{border-top:1px solid var(--border)}
+.wchip{display:flex;align-items:center;gap:9px;height:36px;padding:0 12px;background:var(--surface);border:1px solid var(--border);border-radius:9px;font-size:13px;cursor:pointer;color:var(--ink);font-family:var(--mono)}
+.wchip:hover{background:var(--hover)}
+.wchip .wic{width:20px;height:20px;border-radius:6px}
+.dd{position:absolute;top:52px;right:24px;width:230px;background:var(--surface);border:1px solid var(--border);border-radius:13px;z-index:120;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.45)}
+.dd-item{display:flex;align-items:center;gap:10px;padding:10px 15px;width:100%;text-align:left;font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer}
+.dd-item:hover{background:var(--hover);color:var(--ink)}
+.dd-item.danger:hover{color:var(--danger)}
+.dd-head{padding:14px 15px;border-bottom:1px solid var(--border)}
+.dd-a{font-family:var(--mono);font-size:13px;font-weight:500}
+.dd-n{font-size:11.5px;color:var(--dim);margin-top:2px}
 .setup{background:rgba(249,115,22,.06);border:1px solid var(--accent-soft);border-radius:11px;padding:14px 16px;font-size:12.5px;color:var(--muted);margin-bottom:18px;line-height:1.6}
 </style>
 </head>
@@ -61,6 +87,8 @@ td{padding:9px 10px;border-top:1px solid var(--border);font-family:var(--mono)}
   <div class="setup" id="setup">
     Set your deployed addresses at the top of this file (CONFIG.feeManager, CONFIG.deployManager, CONFIG.rpc) after deployment. Reads use a public RPC; writes require the owner wallet.
   </div>
+
+  <div id="layer"></div>
 
   <div id="gate" class="hidden"></div>
 
@@ -115,6 +143,29 @@ const DM_ABI = [
   "event ContractDeployed(bytes32 indexed kind, address indexed deployer, address contractAddress)"
 ];
 
+const LOGO={
+  robinhood:'<svg viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#00C805"/><path d="M27.5 11.5c-9 .8-14.2 6.4-15.8 17 1.2-1.4 3-2.4 5.2-2.4 6.3 0 10.6-6.3 10.6-14.6z" fill="#fff"/></svg>',
+  coinbase:'<svg viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#0052FF"/><circle cx="20" cy="20" r="10.5" fill="none" stroke="#fff" stroke-width="3.4"/><rect x="16" y="16" width="8" height="8" rx="1.6" fill="#fff"/></svg>',
+  rabby:'<svg viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#7084FF"/><path d="M10.5 24.5c0-5.5 4.3-9.5 9.8-9.5 4.6 0 8.7 2.4 9.7 6.6-3.3-2.2-6.6-2.2-9.9-1-4.2 1.5-6.4 3-9.6 3.9z" fill="#fff"/><circle cx="26.5" cy="18.3" r="1.5" fill="#7084FF"/></svg>',
+  metamask:'<svg viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#F6851B"/><path d="M20 10.5l7.2 5-1.8 3.1 2 2-2.9 6.4h-9l-2.9-6.4 2-2-1.8-3.1z" fill="#fff"/></svg>'
+};
+const WALLETS=[
+  {id:'robinhood',name:'Robinhood Wallet',desc:'Connect using your Robinhood Wallet.'},
+  {id:'coinbase', name:'Coinbase Wallet', desc:'Connect using Coinbase Wallet.'},
+  {id:'rabby',    name:'Rabby Wallet',    desc:'Recommended for multi-chain users.'},
+  {id:'metamask', name:'MetaMask',        desc:'Connect using MetaMask.'}
+];
+const DISCOVERED=[];
+window.addEventListener('eip6963:announceProvider',e=>{ if(!DISCOVERED.find(p=>p.info.uuid===e.detail.info.uuid)) DISCOVERED.push(e.detail); });
+try{ window.dispatchEvent(new Event('eip6963:requestProvider')); }catch(e){}
+function findProvider(id){
+  const want={robinhood:['robinhood'],coinbase:['coinbase'],rabby:['rabby'],metamask:['metamask']}[id]||[];
+  const hit=DISCOVERED.find(p=>want.some(w=>(p.info.rdns||'').toLowerCase().includes(w)||(p.info.name||'').toLowerCase().includes(w)));
+  if(hit) return hit.provider;
+  if(id==='metamask'&&window.ethereum&&window.ethereum.isMetaMask) return window.ethereum;
+  return null;
+}
+let walletId=null, ACCOUNTS=[], rawProvider=null;
 let provider, signer, account, feeRead, dmRead, feeWrite, dmWrite, ownerAddr;
 const K = s => ethers.keccak256(ethers.toUtf8Bytes(s));
 const eth = wei => Number(ethers.formatEther(wei));
@@ -131,19 +182,63 @@ async function boot(){
   try { ownerAddr = await feeRead.owner(); } catch(e){}
 }
 
-async function connect(){
-  if(!window.ethereum){ alert("No wallet found"); return; }
-  provider = new ethers.BrowserProvider(window.ethereum);
-  await provider.send("eth_requestAccounts", []);
-  signer = await provider.getSigner();
+const layer=()=>document.getElementById('layer');
+function closeLayer(){ layer().innerHTML=''; }
+function connect(){
+  layer().innerHTML='<div class="overlay" onclick="if(event.target===this)closeLayer()"><div class="modal">'
+    +'<div class="modal-head"><div class="modal-title">Connect Wallet</div><div class="modal-sub">Choose a wallet to continue.</div></div>'
+    +'<div class="modal-body">'+WALLETS.map(w=>'<button class="wopt" onclick="pickWallet(\''+w.id+'\')"><span class="wic">'+LOGO[w.id]+'</span><span><span class="wname">'+w.name+'</span><br><span class="wdesc">'+w.desc+'</span></span></button>').join('')
+    +'</div></div></div>';
+}
+async function pickWallet(id){
+  const prov=findProvider(id);
+  if(!prov){ closeLayer(); alert(WALLETS.find(w=>w.id===id).name+' not found. Install it or pick another wallet.'); return; }
+  let accs=[];
+  try{
+    await prov.request({method:'wallet_requestPermissions',params:[{eth_accounts:{}}]}).catch(()=>null);
+    accs=await prov.request({method:'eth_requestAccounts'});
+  }catch(e){ closeLayer(); return; }
+  if(!accs.length){ closeLayer(); return; }
+  rawProvider=prov; walletId=id; ACCOUNTS=accs;
+  if(accs.length===1){ closeLayer(); await useAccount(0); return; }
+  layer().innerHTML='<div class="overlay" onclick="if(event.target===this)closeLayer()"><div class="modal">'
+    +'<div class="modal-head"><div class="modal-title">Select Account</div><div class="modal-sub">Choose the owner account.</div></div>'
+    +'<div class="modal-body" style="padding-top:6px">'+accs.map((a,i)=>'<button class="acct" onclick="useAccount('+i+')"><span class="wic">'+LOGO[id]+'</span><span><span class="dd-a">'+short(a)+'</span></span></button>').join('')
+    +'</div></div></div>';
+}
+async function useAccount(i){
+  closeLayer();
+  provider = new ethers.BrowserProvider(rawProvider);
+  signer = await provider.getSigner(ACCOUNTS[i]);
   account = await signer.getAddress();
   feeWrite = new ethers.Contract(CONFIG.feeManager, FEE_ABI, signer);
   dmWrite  = new ethers.Contract(CONFIG.deployManager, DM_ABI, signer);
   feeRead = feeRead || new ethers.Contract(CONFIG.feeManager, FEE_ABI, readProvider());
   dmRead  = dmRead  || new ethers.Contract(CONFIG.deployManager, DM_ABI, readProvider());
   if(!ownerAddr){ try{ ownerAddr = await feeRead.owner(); }catch(e){} }
-  document.getElementById('walletbox').innerHTML = '<span class="chip">'+short(account)+'</span>';
-  render();
+  renderChip(); render();
+}
+function renderChip(){
+  document.getElementById('walletbox').innerHTML =
+    '<button class="wchip" onclick="walletMenu()"><span class="wic">'+(LOGO[walletId]||'')+'</span>'+short(account)+'</button>';
+}
+function walletMenu(){
+  layer().innerHTML='<div class="overlay" style="background:transparent" onclick="closeLayer()"></div>'
+    +'<div class="dd">'
+    +'<div class="dd-head"><div class="dd-a">'+short(account)+'</div><div class="dd-n">'+(WALLETS.find(w=>w.id===walletId)||{}).name+'</div></div>'
+    +'<button class="dd-item" onclick="copyAddr()">Copy address</button>'
+    +'<button class="dd-item" onclick="closeLayer();connect()">Switch wallet</button>'
+    +'<button class="dd-item danger" onclick="disconnectWallet()">Disconnect wallet</button>'
+    +'</div>';
+}
+function copyAddr(){ try{ navigator.clipboard.writeText(account); }catch(e){} closeLayer(); }
+function disconnectWallet(){
+  closeLayer();
+  account=null; signer=null; provider=null; rawProvider=null; walletId=null; ACCOUNTS=[];
+  feeWrite=null; dmWrite=null;
+  document.getElementById('walletbox').innerHTML='<button class="btn btn-primary" onclick="connect()">Connect Wallet</button>';
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('gate').classList.add('hidden');
 }
 
 function isOwner(){ return account && ownerAddr && account.toLowerCase()===ownerAddr.toLowerCase(); }
