@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow, noarchive"/>
+<title>CoinGyaan Studio · Admin</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
+<style>
+:root{--bg:#0B0F14;--surface:#151C28;--hover:#1B2434;--border:#263346;--accent:#F97316;--accent-soft:rgba(249,115,22,.12);--ink:#F8FAFC;--muted:#94A3B8;--dim:#5B6B7F;--ok:#34D399;--danger:#F87171;--mono:ui-monospace,'JetBrains Mono',monospace;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:28px 24px 80px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:8px}
+.brand{font-weight:700;font-size:16px}.brand span{color:var(--accent)}
+.sub{color:var(--muted);font-size:13px;margin-bottom:22px}
+.btn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 15px;border-radius:9px;font-weight:600;font-size:13.5px;border:none;cursor:pointer;transition:.12s}
+.btn-primary{background:var(--accent);color:#0B0F14}.btn-primary:hover{background:#fb8b3d}
+.btn-sec{background:var(--surface);border:1px solid var(--border);color:var(--ink)}.btn-sec:hover{background:var(--hover)}
+.btn-danger{background:rgba(248,113,113,.12);color:var(--danger);border:1px solid rgba(248,113,113,.25)}
+.chip{font-family:var(--mono);font-size:12.5px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:8px 12px}
+.tabs{display:inline-flex;gap:2px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:3px;margin:18px 0 22px}
+.tab{padding:7px 16px;border-radius:7px;font-size:13px;font-weight:500;color:var(--muted);background:none;border:none;cursor:pointer}
+.tab.active{background:var(--hover);color:var(--ink)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:20px;margin-bottom:16px}
+.card h3{font-size:14px;font-weight:600;margin-bottom:4px}
+.card .desc{color:var(--muted);font-size:12.5px;margin-bottom:16px}
+.row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--border)}
+.row:first-of-type{border-top:none}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;color:var(--ink);font-size:13px;font-family:var(--mono);outline:none}
+input:focus{border-color:var(--accent)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{margin-bottom:14px}
+.k{color:var(--muted);font-size:12.5px}.v{font-family:var(--mono);font-weight:600}
+.stat{background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:16px}
+.stat .lbl{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px}
+.stat .num{font-size:22px;font-weight:700;font-family:var(--mono)}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.warn{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);color:var(--danger);border-radius:11px;padding:14px 16px;font-size:13px;margin-bottom:16px}
+.ok-badge{color:var(--ok);font-size:12px;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding:0 10px 9px}
+td{padding:9px 10px;border-top:1px solid var(--border);font-family:var(--mono)}
+.hidden{display:none}
+.muted{color:var(--muted)}
+.mono{font-family:var(--mono)}
+.setup{background:rgba(249,115,22,.06);border:1px solid var(--accent-soft);border-radius:11px;padding:14px 16px;font-size:12.5px;color:var(--muted);margin-bottom:18px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <div class="brand">Coin<span>Gyaan</span> Studio · Admin</div>
+    </div>
+    <div id="walletbox"><button class="btn btn-primary" onclick="connect()">Connect Wallet</button></div>
+  </div>
+  <div class="sub">Owner console for FeeManager and DeployManager. All configuration lives on-chain.</div>
+
+  <div class="setup" id="setup">
+    Set your deployed addresses at the top of this file (CONFIG.feeManager, CONFIG.deployManager, CONFIG.rpc) after deployment. Reads use a public RPC; writes require the owner wallet.
+  </div>
+
+  <div id="gate" class="hidden"></div>
+
+  <div id="app" class="hidden">
+    <div class="tabs">
+      <button class="tab active" data-tab="config" onclick="tab('config')">Configuration</button>
+      <button class="tab" data-tab="analytics" onclick="tab('analytics')">Analytics</button>
+    </div>
+    <div id="config"></div>
+    <div id="analytics" class="hidden"></div>
+  </div>
+</div>
+
+<script>
+// ============ CONFIG: fill after deployment ============
+const CONFIG = {
+  rpc: "https://sepolia.base.org",
+  chainId: 84532,
+  explorer: "https://sepolia.basescan.org",
+  feeManager: "0x1D1a8225793A318f5a00527A654FBD34c01425E1",
+  deployManager: "0x4E9B4390Ed7e816935Ad159EB3080D7864aA3529"
+};
+
+const FEE_ABI = [
+  "function owner() view returns (address)",
+  "function feeUsdOf(bytes32) view returns (uint256)",
+  "function isAction(bytes32) view returns (bool)",
+  "function treasury() view returns (address dev, address mkt, uint16 bps)",
+  "function ACTION_GM() view returns (bytes32)",
+  "function ACTION_DEPLOY_AGENT() view returns (bytes32)",
+  "function ACTION_DEPLOY_CONTRACT() view returns (bytes32)",
+  "function setFeeUsd(bytes32,uint256)",
+  "function setActionKnown(bytes32,bool)",
+  "function setTreasury(address,address,uint16)",
+  "function transferOwnership(address)",
+  "function oracle(uint256) view returns (address)",
+  "function setOracle(uint256,address)"
+];
+const DM_ABI = [
+  "function owner() view returns (address)",
+  "function paused() view returns (bool)",
+  "function pause()",
+  "function unpause()",
+  "function setFactory(bytes32,address)",
+  "function setFeeManager(address)",
+  "function transferOwnership(address)",
+  "function quote(bytes32) view returns (uint256 weiRequired, uint256 feeUsd)",
+  "event FeeCollected(bytes32 indexed action, address indexed payer, uint256 amount)",
+  "event RevenueDistributed(bytes32 indexed action, address dev, uint256 devAmount, address mkt, uint256 mktAmount)",
+  "event GMCompleted(address indexed builder, uint256 amount)",
+  "event AgentDeployed(address indexed deployer, address contractAddress)",
+  "event ContractDeployed(bytes32 indexed kind, address indexed deployer, address contractAddress)"
+];
+
+let provider, signer, account, feeRead, dmRead, feeWrite, dmWrite, ownerAddr;
+const K = s => ethers.keccak256(ethers.toUtf8Bytes(s));
+const eth = wei => Number(ethers.formatEther(wei));
+const short = a => a ? a.slice(0,6)+"…"+a.slice(-4) : "";
+
+function readProvider(){ return new ethers.JsonRpcProvider(CONFIG.rpc); }
+
+async function boot(){
+  if(!CONFIG.feeManager || !CONFIG.deployManager){ return; } // show setup note
+  document.getElementById('setup').classList.add('hidden');
+  provider = readProvider();
+  feeRead = new ethers.Contract(CONFIG.feeManager, FEE_ABI, provider);
+  dmRead  = new ethers.Contract(CONFIG.deployManager, DM_ABI, provider);
+  try { ownerAddr = await feeRead.owner(); } catch(e){}
+}
+
+async function connect(){
+  if(!window.ethereum){ alert("No wallet found"); return; }
+  provider = new ethers.BrowserProvider(window.ethereum);
+  await provider.send("eth_requestAccounts", []);
+  signer = await provider.getSigner();
+  account = await signer.getAddress();
+  feeWrite = new ethers.Contract(CONFIG.feeManager, FEE_ABI, signer);
+  dmWrite  = new ethers.Contract(CONFIG.deployManager, DM_ABI, signer);
+  feeRead = feeRead || new ethers.Contract(CONFIG.feeManager, FEE_ABI, readProvider());
+  dmRead  = dmRead  || new ethers.Contract(CONFIG.deployManager, DM_ABI, readProvider());
+  if(!ownerAddr){ try{ ownerAddr = await feeRead.owner(); }catch(e){} }
+  document.getElementById('walletbox').innerHTML = '<span class="chip">'+short(account)+'</span>';
+  render();
+}
+
+function isOwner(){ return account && ownerAddr && account.toLowerCase()===ownerAddr.toLowerCase(); }
+
+async function render(){
+  const gate=document.getElementById('gate'), app=document.getElementById('app');
+  gate.classList.add('hidden'); app.classList.add('hidden');
+  if(!CONFIG.feeManager){ return; }
+  if(!isOwner()){
+    gate.classList.remove('hidden');
+    gate.innerHTML = '<div class="warn">This wallet is not the contract owner. Connect the owner wallet ('+short(ownerAddr)+') to manage the Studio.</div>';
+    return;
+  }
+  app.classList.remove('hidden');
+  await renderConfig();
+  await renderAnalytics();
+}
+
+function tab(t){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active', x.dataset.tab===t));
+  document.getElementById('config').classList.toggle('hidden', t!=='config');
+  document.getElementById('analytics').classList.toggle('hidden', t!=='analytics');
+}
+
+async function renderConfig(){
+  const [gm, ag, ct] = [K("GM"), K("DEPLOY_AGENT"), K("DEPLOY_CONTRACT")];
+  const [gmF, agF, ctF] = await Promise.all([feeRead.feeUsdOf(gm), feeRead.feeUsdOf(ag), feeRead.feeUsdOf(ct)]);
+  const t = await feeRead.treasury();
+  const paused = await dmRead.paused();
+  const usd = v => "$"+(Number(v)/1e8).toFixed(2);
+  document.getElementById('config').innerHTML = `
+    <div class="card">
+      <h3>Action fees (USD)</h3><div class="desc">Stored on-chain in FeeManager. Updates apply immediately, no redeploy.</div>
+      ${feeRow("Daily GM","GM",usd(gmF))}
+      ${feeRow("Deploy Agent","DEPLOY_AGENT",usd(agF))}
+      ${feeRow("Deploy Smart Contract","DEPLOY_CONTRACT",usd(ctF))}
+      <div class="row"><div><label>Add / update any action (key + USD)</label><input id="newAction" placeholder="ACTION_KEY e.g. VERIFY_AGENT"/></div><div style="display:flex;gap:8px"><input id="newFee" style="width:110px" placeholder="0.10"/><button class="btn btn-sec" onclick="setAction()">Set</button></div></div>
+    </div>
+    <div class="card">
+      <h3>Treasury and revenue split</h3><div class="desc">Development and Marketing wallets and the split, all on-chain.</div>
+      <div class="grid2">
+        <div class="field"><label>Development wallet</label><input id="dev" value="${t[0]}"/></div>
+        <div class="field"><label>Marketing wallet</label><input id="mkt" value="${t[1]}"/></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Development share (%)</label><input id="devpct" value="${Number(t[2])/100}"/></div>
+        <div class="field"><label>Marketing share (auto)</label><input value="${100-Number(t[2])/100}" disabled/></div>
+      </div>
+      <button class="btn btn-primary" onclick="setTreasury()">Update treasury</button>
+    </div>
+    <div class="card">
+      <h3>Price oracles (per network)</h3><div class="desc">DeployManager reads these to convert USD to native on-chain. Owner-configurable, no redeploy.</div>
+      ${await oracleRow(84532,"Base Sepolia")}
+      ${await oracleRow(8453,"Base")}
+      <div class="row"><div><label>Set oracle for any chainId (e.g. Robinhood Chain)</label><input id="orcChain" placeholder="chainId"/></div><div style="display:flex;gap:8px"><input id="orcAddr" style="width:150px" placeholder="0x feed"/><button class="btn btn-sec" onclick="setOracle()">Set</button></div></div>
+    </div>
+    <div class="card">
+      <h3>DeployManager controls</h3><div class="desc">Execution contract. ${paused?'<span class="ok-badge" style="color:var(--danger)">Paused</span>':'<span class="ok-badge">Active</span>'}</div>
+      <div class="row"><div class="k">Deployments</div><div>${paused?'<button class="btn btn-sec" onclick="tx(dmWrite.unpause())">Resume</button>':'<button class="btn btn-danger" onclick="tx(dmWrite.pause())">Pause</button>'}</div></div>
+      <div class="row"><div><label>Transfer ownership (FeeManager + DeployManager)</label><input id="newOwner" placeholder="0x new owner"/></div><div><button class="btn btn-danger" onclick="transferOwnership()">Transfer</button></div></div>
+    </div>`;
+}
+async function oracleRow(chainId,label){
+  var a="0x0000000000000000000000000000000000000000"; try{ a=await feeRead.oracle(chainId); }catch(e){}
+  var none = a==="0x0000000000000000000000000000000000000000";
+  return `<div class="row"><div class="k">${label} <span class="muted mono">chainId ${chainId}</span></div><div style="display:flex;gap:8px;align-items:center">${none?'<span class="muted">not set</span>':'<span class="mono">'+short(a)+'</span>'}<input id="orc_${chainId}" style="width:150px" placeholder="0x feed"/><button class="btn btn-sec" onclick="setOracleFor(${chainId})">Set</button></div></div>`;
+}
+async function setOracleFor(chainId){ var v=document.getElementById('orc_'+chainId).value.trim(); if(!v)return; await tx(feeWrite.setOracle(chainId, v)); }
+async function setOracle(){ var ch=parseInt(document.getElementById('orcChain').value); var v=document.getElementById('orcAddr').value.trim(); if(!ch||!v)return alert("Enter chainId and feed address"); await tx(feeWrite.setOracle(ch, v)); }
+function feeRow(name,key,cur){
+  return `<div class="row"><div class="k">${name} <span class="muted mono">· ${cur}</span></div><div style="display:flex;gap:8px"><input id="fee_${key}" style="width:110px" placeholder="new USD"/><button class="btn btn-sec" onclick="setFee('${key}')">Update</button></div></div>`;
+}
+async function setFee(key){
+  const v=parseFloat(document.getElementById('fee_'+key).value); if(isNaN(v))return alert("Enter a USD amount");
+  await tx(feeWrite.setFeeUsd(K(key), Math.round(v*1e8)));
+}
+async function setAction(){
+  const key=document.getElementById('newAction').value.trim(); const v=parseFloat(document.getElementById('newFee').value);
+  if(!key||isNaN(v))return alert("Enter action key and USD amount");
+  await tx(feeWrite.setFeeUsd(K(key), Math.round(v*1e8)));
+}
+async function setTreasury(){
+  const dev=document.getElementById('dev').value.trim(), mkt=document.getElementById('mkt').value.trim();
+  const pct=parseFloat(document.getElementById('devpct').value);
+  if(isNaN(pct)||pct<0||pct>100)return alert("Split must be 0-100");
+  await tx(feeWrite.setTreasury(dev, mkt, Math.round(pct*100)));
+}
+async function transferOwnership(){
+  const n=document.getElementById('newOwner').value.trim(); if(!n)return;
+  if(!confirm("Transfer ownership of BOTH contracts to "+n+"? The new owner must call acceptOwnership() on each."))return;
+  await tx(feeWrite.transferOwnership(n));
+  await tx(dmWrite.transferOwnership(n));
+}
+async function tx(p){
+  try{ const t=await p; document.getElementById('walletbox').insertAdjacentHTML('beforeend',''); const r=await t.wait(); alert("Confirmed: "+r.hash); render(); }
+  catch(e){ alert("Failed: "+(e.shortMessage||e.message||e)); }
+}
+
+// ---------------- Analytics (reads DeployManager events) ----------------
+async function renderAnalytics(){
+  const el=document.getElementById('analytics');
+  el.innerHTML='<div class="card"><div class="muted">Loading on-chain events…</div></div>';
+  let logs=[];
+  try{
+    const fee = dmRead.filters.FeeCollected();
+    const evs = await dmRead.queryFilter(fee, 0, "latest");
+    logs = evs;
+  }catch(e){ el.innerHTML='<div class="warn">Could not read events: '+(e.message||e)+'</div>'; return; }
+  const gm=K("GM"), ag=K("DEPLOY_AGENT"), ct=K("DEPLOY_CONTRACT");
+  let total=0, byAction={}, builders={}, rows=[];
+  for(const l of logs){
+    const action=l.args.action, amt=eth(l.args.amount), payer=l.args.payer;
+    total+=amt; byAction[action]=(byAction[action]||0)+amt;
+    builders[payer]=(builders[payer]||0)+amt;
+    rows.push({action, amt, payer, tx:l.transactionHash, block:l.blockNumber});
+  }
+  const rev = k => (byAction[k]||0).toFixed(6);
+  const t = await feeRead.treasury();
+  const devBps=Number(t[2]);
+  const devRev=(total*devBps/10000), mktRev=total-devRev;
+  const dep = rows.filter(r=>r.action===ag||r.action===ct).length;
+  const topB = Object.entries(builders).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const label = a => a===gm?"Daily GM":a===ag?"Agent Deploy":a===ct?"Contract Deploy":short(a);
+  el.innerHTML = `
+    <div class="statgrid">
+      <div class="stat"><div class="lbl">Total revenue (ETH)</div><div class="num">${total.toFixed(5)}</div></div>
+      <div class="stat"><div class="lbl">Total deployments</div><div class="num">${dep}</div></div>
+      <div class="stat"><div class="lbl">Paid actions</div><div class="num">${rows.length}</div></div>
+    </div>
+    <div class="card">
+      <h3>Revenue by action (ETH)</h3><div class="desc">From FeeCollected events on DeployManager.</div>
+      <div class="row"><div class="k">Daily GM</div><div class="v">${rev(gm)}</div></div>
+      <div class="row"><div class="k">Agent deployment</div><div class="v">${rev(ag)}</div></div>
+      <div class="row"><div class="k">Contract deployment</div><div class="v">${rev(ct)}</div></div>
+    </div>
+    <div class="card">
+      <h3>Treasury revenue (ETH)</h3>
+      <div class="row"><div class="k">Development wallet <span class="muted mono">${short(t[0])}</span></div><div class="v">${devRev.toFixed(6)}</div></div>
+      <div class="row"><div class="k">Marketing wallet <span class="muted mono">${short(t[1])}</span></div><div class="v">${mktRev.toFixed(6)}</div></div>
+    </div>
+    <div class="card">
+      <h3>Top builders</h3>
+      <table><thead><tr><th>Wallet</th><th>Spend (ETH)</th></tr></thead><tbody>
+      ${topB.map(b=>`<tr><td>${short(b[0])}</td><td>${b[1].toFixed(6)}</td></tr>`).join('')||'<tr><td class="muted">No activity yet</td><td></td></tr>'}
+      </tbody></table>
+    </div>
+    <div class="card">
+      <h3>Recent transactions</h3>
+      <table><thead><tr><th>Action</th><th>Payer</th><th>ETH</th><th>Tx</th></tr></thead><tbody>
+      ${rows.slice(-12).reverse().map(r=>`<tr><td>${label(r.action)}</td><td>${short(r.payer)}</td><td>${r.amt.toFixed(6)}</td><td><a class="mono" style="color:var(--accent)" target="_blank" href="${CONFIG.explorer}/tx/${r.tx}">${r.tx.slice(0,10)}…</a></td></tr>`).join('')||'<tr><td class="muted">No transactions yet</td><td></td><td></td><td></td></tr>'}
+      </tbody></table>
+    </div>`;
+}
+
+boot();
+</script>
+</body>
+</html>
