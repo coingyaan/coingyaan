@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CoinGyaan Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
+<script src="js/studio-config.js"></script>
+<style>
+:root{
+  --bg:#0B0F14; --sidebar:#101722; --surface:#151C28; --hover:#1B2434;
+  --border:#263346; --accent:#F97316; --accent-soft:rgba(249,115,22,.12);
+  --ink:#F8FAFC; --muted:#94A3B8; --dim:#5B6B7F;
+  --ok:#34D399; --ok-soft:rgba(52,211,153,.12);
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font-family:inherit}
+::selection{background:var(--accent-soft)}
+.mono{font-family:var(--mono)}
+.muted{color:var(--muted)}
+
+/* ---------- layout ---------- */
+.app{display:grid;grid-template-columns:266px 1fr;height:100vh;overflow:hidden}
+.sidebar{background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;min-height:0}
+.main{display:flex;flex-direction:column;min-width:0}
+.content{flex:1;overflow-y:auto}
+.content-inner{max-width:1080px;margin:0 auto;padding:34px 40px 60px;animation:fade .22s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---------- sidebar ---------- */
+.brand{padding:20px 18px 16px;display:flex;align-items:center;gap:11px}
+.brand-mark{width:30px;height:30px;border-radius:8px;overflow:hidden;flex-shrink:0;background:var(--hover)}
+.brand-mark img{width:100%;height:100%;object-fit:cover;display:block}
+.brand-name{font-weight:700;font-size:14.5px;letter-spacing:-.01em;line-height:1.1}
+.brand-sub{font-size:11.5px;color:var(--dim);letter-spacing:.02em}
+.nav{padding:6px 12px;display:flex;flex-direction:column;gap:2px}
+.nav-item{display:flex;align-items:center;gap:11px;padding:8px 11px;border-radius:8px;color:var(--muted);font-weight:500;font-size:13.5px;position:relative;transition:background .12s,color .12s}
+.nav-item svg{width:17px;height:17px;flex-shrink:0}
+.nav-item:hover{background:var(--hover);color:var(--ink)}
+.nav-item.active{background:var(--hover);color:var(--ink)}
+.nav-item.active::before{content:"";position:absolute;left:-12px;top:50%;transform:translateY(-50%);width:3px;height:17px;background:var(--accent);border-radius:0 3px 3px 0}
+.nav-badge{margin-left:auto;font-size:10px;font-weight:600;letter-spacing:.03em;color:var(--dim);border:1px solid var(--border);padding:1px 6px;border-radius:20px}
+.nav-sep{height:1px;background:var(--border);margin:10px 14px}
+
+.profile{margin-top:auto;padding:14px;border-top:1px solid var(--border)}
+.profile-eyebrow{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.profile-id{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.avatar{width:32px;height:32px;border-radius:8px;flex-shrink:0;background:linear-gradient(135deg,#F97316,#7C3AED)}
+.profile-addr{font-family:var(--mono);font-size:12.5px;font-weight:500}
+.profile-lvl{font-size:11.5px;color:var(--muted)}
+.lvlbar{height:4px;background:var(--bg);border-radius:3px;overflow:hidden;margin:9px 0 12px}
+.lvlbar > i{display:block;height:100%;background:var(--accent);border-radius:3px;transition:width .5s ease}
+.pstats{display:grid;grid-template-columns:1fr 1fr;gap:9px 12px}
+.pstat .k{font-size:11px;color:var(--dim)}
+.pstat .v{font-size:14px;font-weight:600;font-family:var(--mono)}
+.profile-empty{font-size:12.5px;color:var(--muted);line-height:1.55}
+.profile-empty button{color:var(--accent);font-weight:600;margin-top:8px;font-size:12.5px}
+
+/* ---------- topbar ---------- */
+.topbar{height:56px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;padding:0 22px;flex-shrink:0}
+.search{display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:0 12px;height:34px;width:300px;color:var(--muted)}
+.search svg{width:15px;height:15px}
+.search input{background:none;border:none;outline:none;color:var(--ink);font-size:13px;width:100%}
+.search input::placeholder{color:var(--dim)}
+.search kbd{font-family:var(--mono);font-size:10.5px;color:var(--dim);border:1px solid var(--border);border-radius:5px;padding:1px 5px}
+.spacer{flex:1}
+.pill{display:flex;align-items:center;gap:8px;height:34px;padding:0 12px;background:var(--surface);border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:500;color:var(--ink);transition:background .12s}
+.pill:hover{background:var(--hover)}
+.pill svg{width:14px;height:14px;color:var(--muted)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px var(--ok-soft)}
+.wallet-chip{display:flex;align-items:center;gap:9px;height:34px;padding:0 10px 0 8px;background:var(--surface);border:1px solid var(--border);border-radius:9px;font-size:13px;transition:background .12s}
+.wallet-chip:hover{background:var(--hover)}
+.wallet-chip .avatar{width:20px;height:20px;border-radius:6px}
+.wallet-chip .net{color:var(--dim);font-size:11.5px}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:0 15px;border-radius:9px;font-weight:600;font-size:13.5px;transition:background .12s,border-color .12s,opacity .12s;white-space:nowrap}
+.btn svg{width:15px;height:15px}
+.btn-primary{background:var(--accent);color:#0B0F14}
+.btn-primary:hover{background:#fb8b3d}
+.btn-primary:disabled{opacity:.45;cursor:not-allowed}
+.btn-secondary{background:var(--surface);border:1px solid var(--border);color:var(--ink)}
+.btn-secondary:hover{background:var(--hover)}
+.btn-ghost{color:var(--muted)}
+.btn-ghost:hover{background:var(--hover);color:var(--ink)}
+.btn-sm{height:30px;padding:0 11px;font-size:12.5px;border-radius:8px}
+.btn-block{width:100%}
+
+/* ---------- typography / page ---------- */
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:26px}
+.page-title{font-size:25px;font-weight:700;letter-spacing:-.02em}
+.page-sub{color:var(--muted);font-size:14px;margin-top:5px}
+.sec-title{font-size:14px;font-weight:600;color:var(--ink)}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--dim)}
+
+/* ---------- cards / lists ---------- */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:13px}
+.divider{height:1px;background:var(--border)}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:20px}
+.badge-ok{background:var(--ok-soft);color:var(--ok)}
+.badge-pending{background:rgba(148,163,184,.1);color:var(--muted)}
+.badge-soon{background:var(--accent-soft);color:var(--accent)}
+
+/* GM */
+.gm-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:22px;align-items:start}
+.checkin{padding:6px}
+.checkin-row{display:flex;align-items:center;gap:14px;padding:15px 16px;border-radius:10px}
+.checkin-row + .checkin-row{border-top:1px solid var(--border)}
+.net-ic{width:34px;height:34px;border-radius:9px;background:var(--hover);display:grid;place-items:center;color:var(--muted);flex-shrink:0}
+.net-ic svg{width:17px;height:17px}
+.checkin-name{font-weight:600;font-size:14px}
+.checkin-meta{font-size:12px;color:var(--dim);margin-top:1px}
+.xp-card{padding:18px}
+.xp-top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.xp-num{font-family:var(--mono);font-size:26px;font-weight:600}
+.xp-num small{font-size:15px;color:var(--dim)}
+.xp-bar{height:6px;background:var(--bg);border-radius:4px;overflow:hidden}
+.xp-bar > i{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .5s ease}
+.xp-hint{font-size:12px;color:var(--dim);margin-top:11px}
+.countdown-pill{display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 14px}
+.countdown-pill .t{font-family:var(--mono);font-size:15px;font-weight:600;letter-spacing:.02em}
+.countdown-pill .l{font-size:11px;color:var(--dim)}
+
+/* leaderboard */
+.tabs{display:inline-flex;gap:2px;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:3px}
+.tab{padding:5px 13px;border-radius:6px;font-size:12.5px;font-weight:500;color:var(--muted);transition:background .12s,color .12s}
+.tab.active{background:var(--surface);color:var(--ink)}
+.lb{width:100%;border-collapse:collapse;font-size:13px}
+.lb th{text-align:left;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--dim);padding:0 14px 11px}
+.lb td{padding:11px 14px;border-top:1px solid var(--border)}
+.lb tr.you td{background:var(--accent-soft)}
+.lb .rank{font-family:var(--mono);color:var(--muted);width:44px}
+.lb .w{font-family:var(--mono)}
+.lb .xp{font-family:var(--mono);text-align:right}
+
+/* two-panel */
+.work{display:grid;grid-template-columns:264px 1fr;gap:22px;align-items:start}
+.opt{display:flex;gap:12px;padding:13px;border-radius:11px;border:1px solid transparent;transition:background .12s,border-color .12s;text-align:left;width:100%}
+.opt:hover{background:var(--surface)}
+.opt.active{background:var(--surface);border-color:var(--border)}
+.opt.active .opt-ic{background:var(--accent-soft);color:var(--accent)}
+.opt-ic{width:34px;height:34px;border-radius:9px;background:var(--hover);display:grid;place-items:center;color:var(--muted);flex-shrink:0;transition:background .12s,color .12s}
+.opt-ic svg{width:17px;height:17px}
+.opt-t{font-weight:600;font-size:13.5px}
+.opt-d{font-size:12px;color:var(--dim);margin-top:2px;line-height:1.45}
+.panel{padding:28px 30px}
+.panel-head{margin-bottom:22px}
+.panel-title{font-size:18px;font-weight:700;letter-spacing:-.01em}
+.panel-sub{color:var(--muted);font-size:13px;margin-top:4px}
+
+/* forms */
+.field{margin-bottom:20px}
+.field label{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-bottom:7px}
+.field input,.field textarea,.field select{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:10px 12px;color:var(--ink);font-size:13.5px;outline:none;transition:border-color .12s}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent)}
+.field textarea{resize:vertical;min-height:76px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-size:12px;padding:5px 11px;border-radius:8px;background:var(--bg);border:1px solid var(--border);color:var(--muted);transition:all .12s}
+.chip.on{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+
+/* preview / success */
+.review{background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:16px 18px;margin-bottom:18px}
+.review-row{display:flex;justify-content:space-between;gap:16px;padding:7px 0;font-size:13px}
+.review-row + .review-row{border-top:1px solid var(--border)}
+.review-row .k{color:var(--muted)}
+.review-row .v{font-weight:500;max-width:60%;text-align:right;word-break:break-word}
+.state{text-align:center;padding:30px 10px}
+.state-ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;margin:0 auto 16px}
+.state-ic.ok{background:var(--ok-soft);color:var(--ok)}
+.state-ic.load{background:var(--accent-soft);color:var(--accent)}
+.state h4{font-size:17px;font-weight:700;margin-bottom:6px}
+.state p{color:var(--muted);font-size:13px;max-width:340px;margin:0 auto}
+.result{background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:14px 16px;margin-top:20px;text-align:left}
+.result-row{display:flex;justify-content:space-between;gap:12px;font-size:12.5px;padding:6px 0}
+.result-row .k{color:var(--muted)}
+.result-row .v{font-family:var(--mono)}
+.link{color:var(--accent);font-weight:500}
+.spin{width:22px;height:22px;border:2px solid var(--accent-soft);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* explorer */
+.exp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.exp-card{padding:22px;position:relative;overflow:hidden}
+.exp-ic{width:38px;height:38px;border-radius:10px;background:var(--hover);display:grid;place-items:center;color:var(--muted);margin-bottom:16px}
+.exp-ic svg{width:19px;height:19px}
+.exp-card h4{font-size:15px;font-weight:600;margin-bottom:5px}
+.exp-card p{font-size:12.5px;color:var(--muted);line-height:1.5;max-width:90%}
+.exp-tag{position:absolute;top:18px;right:18px}
+
+/* docs */
+.docs{display:grid;grid-template-columns:210px 1fr;gap:26px;align-items:start}
+.docs-nav{display:flex;flex-direction:column;gap:2px}
+.docs-link{text-align:left;padding:8px 12px;border-radius:8px;font-size:13px;color:var(--muted);transition:background .12s,color .12s}
+.docs-link:hover{background:var(--surface);color:var(--ink)}
+.docs-link.active{background:var(--surface);color:var(--ink);font-weight:500}
+.docs-body h3{font-size:20px;font-weight:700;margin-bottom:12px}
+.docs-body p{color:var(--muted);font-size:14px;margin-bottom:14px;max-width:640px}
+.docs-body h4{font-size:14px;font-weight:600;margin:22px 0 8px}
+.docs-body li{color:var(--muted);font-size:14px;margin:5px 0 5px 18px}
+
+/* ---------- modal ---------- */
+.overlay{position:fixed;inset:0;background:rgba(6,9,13,.62);display:grid;place-items:center;z-index:100;animation:ov .16s ease;padding:20px}
+@keyframes ov{from{opacity:0}to{opacity:1}}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;width:100%;max-width:400px;animation:pop .2s cubic-bezier(.2,.9,.3,1.2);overflow:hidden}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+.modal-head{padding:20px 20px 4px}
+.modal-title{font-size:16px;font-weight:700}
+.modal-sub{font-size:13px;color:var(--muted);margin-top:3px}
+.modal-body{padding:16px 18px 20px}
+.wallet-opt{display:flex;align-items:center;gap:13px;padding:12px;border-radius:11px;width:100%;text-align:left;transition:background .12s}
+.wallet-opt:hover{background:var(--hover)}
+.wallet-opt + .wallet-opt{margin-top:4px}
+.w-ic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;flex-shrink:0}
+.w-ic svg{width:20px;height:20px}
+.w-name{font-weight:600;font-size:14px}
+.w-desc{font-size:12px;color:var(--dim);margin-top:1px}
+.w-arrow{margin-left:auto;color:var(--dim)}
+.acct{display:flex;align-items:center;gap:12px;padding:13px;border-radius:11px;width:100%;text-align:left;transition:background .12s}
+.acct:hover{background:var(--hover)}
+.acct + .acct{border-top:1px solid var(--border)}
+.acct .avatar{width:30px;height:30px;border-radius:8px}
+.acct-a{font-family:var(--mono);font-size:13.5px;font-weight:500}
+.acct-n{font-size:11.5px;color:var(--dim)}
+.acct .w-arrow{margin-left:auto}
+
+/* wallet dropdown */
+.dropdown{position:absolute;top:52px;right:22px;width:248px;background:var(--surface);border:1px solid var(--border);border-radius:13px;z-index:120;overflow:hidden;animation:pop .16s ease;box-shadow:0 12px 40px rgba(0,0,0,.45)}
+.dd-head{padding:14px 15px}
+.dd-eyebrow{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.dd-id{display:flex;align-items:center;gap:10px}
+.dd-id .avatar{width:30px;height:30px;border-radius:8px}
+.dd-a{font-family:var(--mono);font-size:13px;font-weight:500}
+.dd-n{font-size:11.5px;color:var(--dim)}
+.dd-item{display:flex;align-items:center;gap:10px;padding:9px 15px;width:100%;text-align:left;font-size:13px;color:var(--muted);transition:background .12s,color .12s}
+.dd-item:hover{background:var(--hover);color:var(--ink)}
+.dd-item svg{width:15px;height:15px}
+.dd-item.danger:hover{color:#F87171}
+
+/* net menu */
+.netmenu{position:absolute;top:52px;width:230px;background:var(--surface);border:1px solid var(--border);border-radius:13px;z-index:120;overflow:hidden;animation:pop .16s ease;box-shadow:0 12px 40px rgba(0,0,0,.45)}
+.net-opt{display:flex;align-items:center;gap:11px;padding:11px 14px;width:100%;text-align:left;transition:background .12s}
+.net-opt:hover{background:var(--hover)}
+.net-opt + .net-opt{border-top:1px solid var(--border)}
+.net-opt .net-ic{width:28px;height:28px;border-radius:8px}
+.net-opt .net-ic svg{width:15px;height:15px}
+.net-opt .nm{font-weight:600;font-size:13.5px}
+.net-opt .ns{font-size:11px;color:var(--dim)}
+.net-check{margin-left:auto;color:var(--accent)}
+
+/* toast */
+.toasts{position:fixed;bottom:22px;right:22px;z-index:200;display:flex;flex-direction:column;gap:10px}
+.toast{display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:12px 15px;min-width:280px;max-width:360px;box-shadow:0 10px 34px rgba(0,0,0,.4);animation:tin .24s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes tin{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+.toast.out{animation:tout .2s ease forwards}
+@keyframes tout{to{opacity:0;transform:translateX(20px)}}
+.toast-ic{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;flex-shrink:0;background:var(--ok-soft);color:var(--ok)}
+.toast-ic svg{width:14px;height:14px}
+.toast-t{font-size:13px;font-weight:600}
+.toast-d{font-size:12px;color:var(--muted);margin-top:1px}
+
+
+/* --- refinement pass additions --- */
+.net-note{font-size:12px;color:var(--muted);margin-top:9px;line-height:1.5}
+.pill-logo,.chip-logo{width:18px;height:18px;display:inline-flex;flex-shrink:0}
+.pill-logo svg,.chip-logo svg,.w-ic svg,.net-logo svg,.dd-logo svg,.wpop-badge svg{width:100%;height:100%;display:block}
+.wallet-chip .chip-logo{width:20px;height:20px}
+.net-logo{width:26px;height:26px;display:inline-flex;flex-shrink:0;border-radius:8px;overflow:hidden}
+.net-logo.sm{width:18px;height:18px;border-radius:6px}
+.dd-logo{width:30px;height:30px;border-radius:8px;overflow:hidden;flex-shrink:0}
+.w-ic{overflow:hidden}
+.readonly-net{display:flex;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px 13px;font-size:13.5px;font-weight:500}
+.ro-tag{margin-left:auto;font-size:11px;color:var(--dim);font-weight:500}
+.wpop{max-width:340px}
+.wpop-head{text-align:center;padding:24px 20px 18px;border-bottom:1px solid var(--border)}
+.wpop-badge{width:46px;height:46px;margin:0 auto 13px;border-radius:13px;overflow:hidden}
+.wpop-title{font-size:15px;font-weight:600}
+.wpop-site{font-size:12.5px;color:var(--muted);margin-top:4px;font-family:var(--mono)}
+.wpop-rows{padding:6px 20px}
+.wpop-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;font-size:13px}
+.wpop-row + .wpop-row{border-top:1px solid var(--border)}
+.wpop-row .k{color:var(--muted)}
+.wpop-row .v{font-weight:500;display:flex;align-items:center;gap:7px}
+.wpop-actions{padding:16px 20px 20px;display:flex;flex-direction:column;gap:8px}
+.gh-lvl{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}
+.gh-level{font-size:14px;font-weight:700}
+.gh-title{font-size:12px;color:var(--muted)}
+.gh-xp{font-size:11.5px;color:var(--dim);margin:10px 0 15px}
+.gh-stats{display:flex;flex-direction:column}
+.gh-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:12.5px}
+.gh-row + .gh-row{border-top:1px solid var(--border)}
+.gh-row .k{color:var(--muted)}
+.gh-row .v{font-weight:600;font-family:var(--mono)}
+.opt{transition:background .14s ease,border-color .14s ease,transform .14s ease}
+.checkin-row{transition:background .14s ease}
+/* --- end additions --- */
+@media (max-width:920px){
+  .app{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .gm-grid,.work,.docs,.exp-grid,.field-row{grid-template-columns:1fr}
+  .search{width:auto;flex:1}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><img src="https://coingyaan.com/assets/images/favicon/coingyaan-android-icon-512x512.png" alt="CoinGyaan" /></div>
+      <div class="brand-name">CoinGyaan Studio</div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="nav-sep"></div>
+    <div class="profile" id="profile"></div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div class="search">
+        __ICON:search__
+        <input placeholder="Search workspace" />
+        <kbd>⌘K</kbd>
+      </div>
+      <div class="spacer"></div>
+      <button class="pill" data-act="net-toggle" id="netpill"></button>
+      <div id="walletarea"></div>
+    </header>
+    <div class="content"><div class="content-inner" id="content"></div></div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+<div id="layer"></div>
+
+<script>
+/* ============================ ICONS ============================ */
+const I = {
+  zap:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+  sun:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>',
+  bot:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M8 3h8"/><circle cx="9" cy="14" r="1.2"/><circle cx="15" cy="14" r="1.2"/></svg>',
+  code:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+  compass:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="16 8 10.5 10.5 8 16 13.5 13.5 16 8"/></svg>',
+  book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5V5.5"/></svg>',
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>',
+  chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+  ext:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>',
+  arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>',
+  spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.8L18.5 9.5 13.8 11.2 12 16 10.2 11.2 5.5 9.5l4.7-1.7z"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5.5v6c0 5 3.4 8.5 8 10.5 4.6-2 8-5.5 8-10.5v-6z"/><polyline points="9 12 11.5 14.5 16 10"/></svg>',
+  download:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5M5 21h14"/></svg>',
+  wallet:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18M17 15h.01"/></svg>',
+  repeat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
+  users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg>',
+  logout:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+  coins:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.1 6.6A6 6 0 1 1 15.4 18M7 6h1v4M6.7 14h2.6"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="1.6"/><path d="m21 15-5-5L5 21"/></svg>',
+  layers:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 21 7 12 12 3 7 12 2"/><polyline points="3 12 12 17 21 12"/><polyline points="3 17 12 22 21 17"/></svg>',
+  box:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>',
+  activity:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>',
+  target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>',
+  import:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 11l4 4 4-4M4 21h16"/></svg>',
+  flame:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s5 4 5 9a5 5 0 0 1-10 0c0-1.5.6-2.8 1.3-3.7C8.9 8.5 9 10 10 10.5c1-2 .5-4.5 2-8.5z"/></svg>'
+};
+function ic(n){return I[n]||''}
+document.body.innerHTML = document.body.innerHTML.replace(/__ICON:(\w+)__/g,(_,n)=>ic(n));
+
+/* brand-accurate marks (prototype stand-ins; swap official SVGs in production) */
+const LOGO={
+  robinhood:'<svg viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#00C805"/><path d="M27.5 11.5c-9 .8-14.2 6.4-15.8 17 1.2-1.4 3-2.4 5.2-2.4 6.3 0 10.6-6.3 10.6-14.6z" fill="#fff"/></svg>',
+  base:'<svg viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#0052FF"/><path d="M20 9.2a10.8 10.8 0 1 0 .5 21.6c5.5 0 10.1-4 10.8-9.3H16.3v-3.3h15c-.7-5.2-5.3-9-11.3-9z" fill="#fff"/></svg>',
+  coinbase:'<svg viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#0052FF"/><circle cx="20" cy="20" r="10.5" fill="none" stroke="#fff" stroke-width="3.4"/><rect x="16" y="16" width="8" height="8" rx="1.6" fill="#fff"/></svg>',
+  rabby:'<svg viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#7084FF"/><path d="M10.5 24.5c0-5.5 4.3-9.5 9.8-9.5 4.6 0 8.7 2.4 9.7 6.6-3.3-2.2-6.6-2.2-9.9-1-4.2 1.5-6.4 3-9.6 3.9z" fill="#fff"/><circle cx="26.5" cy="18.3" r="1.5" fill="#7084FF"/></svg>',
+  metamask:'<svg viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#F6851B"/><path d="M20 10.5l7.2 5-1.8 3.1 2 2-2.9 6.4h-9l-2.9-6.4 2-2-1.8-3.1z" fill="#fff"/><path d="M16.3 27l3.7-1.9 3.7 1.9" stroke="#F6851B" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>'
+};
+function lg(n){return LOGO[n]||''}
+
+
+/* ============================ STATE ============================ */
+// Only Base Sepolia has a deployed contract stack today. Robinhood Chain is listed but
+// has no contracts or price oracle yet, so it is not selectable until that is set up.
+const NETWORKS = [
+  {id:'base',      name:'Base Sepolia',    logo:'base',      chainId:84532, live:true},
+  {id:'robinhood', name:'Robinhood Chain', logo:'robinhood', chainId:4663,  live:false}
+];
+const WALLETS = [
+  {id:'robinhood', name:'Robinhood Wallet', desc:'Connect using your Robinhood Wallet.', logo:'robinhood'},
+  {id:'coinbase',  name:'Coinbase Wallet',  desc:'Connect using Coinbase Wallet.',        logo:'coinbase'},
+  {id:'rabby',     name:'Rabby Wallet',     desc:'Recommended for multi-chain users.',    logo:'rabby'},
+  {id:'metamask',  name:'MetaMask',         desc:'Connect using MetaMask.',               logo:'metamask'}
+];
+// Accounts come from the connected wallet. Nothing is hardcoded.
+let ACCOUNTS = [];
+const LEVELS=[[50,'Legend'],[35,'Expert'],[20,'Architect'],[10,'Builder'],[5,'Contributor'],[1,'Member']];
+const XP_PER_LEVEL=150;
+function levelOf(xp){const l=Math.min(50,Math.floor(xp/XP_PER_LEVEL)+1);let t='Member';for(const[min,name]of LEVELS){if(l>=min){t=name;break}}return{level:l,title:t,into:xp%XP_PER_LEVEL,need:XP_PER_LEVEL}}
+
+const S = {
+  view:'gm',
+  network:'base',
+  connected:false,
+  account:null,        // {addr, full, net}
+  walletName:null, walletId:null, provider:null,
+  xp:0, streak:0, lifetimeGMs:0, agentDeploys:0, contractDeploys:0,
+  xpToday:0, gmClaimed:false, deployClaimed:false,
+  gm:{base:false, robinhood:false},
+  agentTab:'create', contractType:'ERC20', lbTab:'today', docsPage:'quickstart',
+  ddOpen:false, netOpen:false, loadingProfile:false,
+  fees:{}      // action -> usd, read from FeeManager
+};
+function totalDeploys(){return S.agentDeploys+S.contractDeploys}
+
+/* Leaderboard: built from on-chain DeployManager events. Empty until builders act. */
+let LB = { today:[], weekly:[], alltime:[] };
+let LB_LOADED = false;
+async function loadLeaderboard(){
+  const c=dmRead(); if(!c) return;
+  try{
+    const [gms, cds, ads] = await Promise.all([
+      c.queryFilter(c.filters.GMCompleted(), 0, 'latest').catch(()=>[]),
+      c.queryFilter(c.filters.ContractDeployed(), 0, 'latest').catch(()=>[]),
+      c.queryFilter(c.filters.AgentDeployed(), 0, 'latest').catch(()=>[])
+    ]);
+    const prov=readProvider(); const cache={};
+    const day=async bn=>{ if(cache[bn]!=null) return cache[bn];
+      try{ const b=await prov.getBlock(bn); cache[bn]=Math.floor(b.timestamp/86400); }catch(e){ cache[bn]=null; }
+      return cache[bn]; };
+    const users={};
+    const touch=a=>{ a=a.toLowerCase(); if(!users[a]) users[a]={gm:new Set(), dep:new Set()}; return users[a]; };
+    for(const e of gms){ const d=await day(e.blockNumber); if(d!=null) touch(e.args.builder).gm.add(d); }
+    for(const e of [...cds,...ads]){ const d=await day(e.blockNumber); if(d!=null) touch(e.args.deployer).dep.add(d); }
+    const today=Math.floor(Date.now()/86400000);
+    const rows=Object.entries(users).map(([addr,u])=>{
+      const xp=u.gm.size*10 + u.dep.size*100;
+      let st=0,d=today; if(!u.gm.has(d)) d--; while(u.gm.has(d)){ st++; d--; }
+      const lv=levelOf(xp).level;
+      const activeToday=u.gm.has(today)||u.dep.has(today);
+      const activeWeek=[...u.gm,...u.dep].some(x=>x>today-7);
+      return {addr, xp, st, lv, activeToday, activeWeek};
+    });
+    const fmt=r=>[String(0), r.addr.slice(0,6)+'…'+r.addr.slice(-4), r.lv, r.xp, r.st];
+    const rank=list=>list.sort((a,b)=>b.xp-a.xp).slice(0,10).map((r,i)=>{const o=fmt(r);o[0]=String(i+1);return o;});
+    LB.alltime=rank([...rows]);
+    LB.today=rank(rows.filter(r=>r.activeToday));
+    LB.weekly=rank(rows.filter(r=>r.activeWeek));
+    LB_LOADED=true; render();
+  }catch(e){ LB_LOADED=true; }
+}
+
+/* ============================ CHAIN (real) ============================ */
+const CFG = () => window.CG_STUDIO_CONFIG || {};
+const K = s => ethers.keccak256(ethers.toUtf8Bytes(s));
+const ACTION = { GM:'GM', AGENT:'DEPLOY_AGENT', CONTRACT:'DEPLOY_CONTRACT' };
+
+function dmAddr(){ const d=(CFG().deployManager||{}).base||{}; return d.address||null; }
+function fmAddr(){ return (CFG().feeManager||{}).address||null; }
+function rpcUrl(){ const r=CFG().rpc||{}; return r.baseSepolia||r.base; }
+function readProvider(){ return new ethers.JsonRpcProvider(rpcUrl()); }
+function dmRead(){ const a=dmAddr(); return a?new ethers.Contract(a, CFG().deployManagerAbi, readProvider()):null; }
+function fmRead(){ const a=fmAddr(); return a?new ethers.Contract(a, CFG().feeManagerAbi, readProvider()):null; }
+async function dmWrite(){
+  if(!S.provider) throw new Error('Connect your wallet first');
+  const bp=new ethers.BrowserProvider(S.provider);
+  return new ethers.Contract(dmAddr(), CFG().deployManagerAbi, await bp.getSigner());
+}
+
+// EIP-6963 wallet discovery
+const DISCOVERED = [];
+window.addEventListener('eip6963:announceProvider', e => {
+  if(!DISCOVERED.find(p=>p.info.uuid===e.detail.info.uuid)) DISCOVERED.push(e.detail);
+});
+try{ window.dispatchEvent(new Event('eip6963:requestProvider')); }catch(e){}
+function findProvider(walletId){
+  const want={robinhood:['robinhood'],coinbase:['coinbase'],rabby:['rabby'],metamask:['metamask']}[walletId]||[];
+  const hit=DISCOVERED.find(p=>want.some(w=>(p.info.rdns||'').toLowerCase().includes(w)||(p.info.name||'').toLowerCase().includes(w)));
+  if(hit) return hit.provider;
+  if(walletId==='metamask' && window.ethereum && window.ethereum.isMetaMask) return window.ethereum;
+  return null;
+}
+
+// Fees: USD label from FeeManager, exact wei from DeployManager.quote(). No math here.
+async function loadFees(){
+  const c=fmRead(); if(!c) return;
+  for(const [k,name] of Object.entries(ACTION)){
+    try{ const v=await c.feeUsdOf(K(name)); S.fees[name]=Number(v)/1e8; }catch(e){}
+  }
+  render();
+}
+function feeLabel(action){ const u=S.fees[action]; return (u==null)?'':('$'+u.toFixed(2)); }
+async function quoteWei(action){
+  const c=dmRead(); if(!c) throw new Error('Studio contracts unavailable');
+  const q=await c.quote(K(action));
+  return (q[0]*110n)/100n;   // small buffer; DeployManager refunds the excess on-chain
+}
+async function ensureChain(){
+  const n=NETWORKS.find(x=>x.id===S.network);
+  const want='0x'+n.chainId.toString(16);
+  const cur=await S.provider.request({method:'eth_chainId'});
+  if(cur===want) return;
+  try{ await S.provider.request({method:'wallet_switchEthereumChain',params:[{chainId:want}]}); }
+  catch(err){
+    if(err && err.code===4902){
+      await S.provider.request({method:'wallet_addEthereumChain',params:[{
+        chainId:want, chainName:n.name, rpcUrls:[rpcUrl()],
+        nativeCurrency:{name:'ETH',symbol:'ETH',decimals:18}
+      }]});
+    } else throw err;
+  }
+}
+function explorerTx(h){ return 'https://sepolia.basescan.org/tx/'+h; }
+function explorerAddr(a){ return 'https://sepolia.basescan.org/address/'+a; }
+
+// Builder profile from on-chain events. Events are the source of truth; no backend.
+async function loadProfile(){
+  if(!S.connected) return;
+  const c=dmRead(); if(!c) return;
+  S.loadingProfile=true;
+  try{
+    const me=S.account.full;
+    const [gms, cds, ads] = await Promise.all([
+      c.queryFilter(c.filters.GMCompleted(me), 0, 'latest').catch(()=>[]),
+      c.queryFilter(c.filters.ContractDeployed(null, me), 0, 'latest').catch(()=>[]),
+      c.queryFilter(c.filters.AgentDeployed(me), 0, 'latest').catch(()=>[])
+    ]);
+    S.lifetimeGMs=gms.length; S.contractDeploys=cds.length; S.agentDeploys=ads.length;
+
+    // group by UTC day for XP + streak (matches the documented rules)
+    const prov=readProvider(); const blockDay={};
+    const stamp=async(bn)=>{ if(blockDay[bn]!=null) return blockDay[bn];
+      try{ const b=await prov.getBlock(bn); blockDay[bn]=Math.floor(b.timestamp/86400); }catch(e){ blockDay[bn]=null; }
+      return blockDay[bn]; };
+    const gmDays=new Set(), depDays=new Set();
+    for(const e of gms){ const d=await stamp(e.blockNumber); if(d!=null) gmDays.add(d); }
+    for(const e of [...cds,...ads]){ const d=await stamp(e.blockNumber); if(d!=null) depDays.add(d); }
+    S.xp = gmDays.size*10 + depDays.size*100;
+
+    const today=Math.floor(Date.now()/86400000);
+    S.gmClaimed = gmDays.has(today);
+    S.deployClaimed = depDays.has(today);
+    S.gm.base = S.gmClaimed;
+    S.xpToday = (S.gmClaimed?10:0) + (S.deployClaimed?100:0);
+    let streak=0, d=today;
+    if(!gmDays.has(d)) d--;              // streak survives until today's window closes
+    while(gmDays.has(d)){ streak++; d--; }
+    S.streak=streak;
+  }catch(e){ /* profile stays at zero rather than showing invented numbers */ }
+  S.loadingProfile=false; render();
+}
+
+/* ============================ HELPERS ============================ */
+const $ = s => document.querySelector(s);
+function toast(title, desc){
+  const t=document.createElement('div'); t.className='toast';
+  t.innerHTML=`<div class="toast-ic">${ic('check')}</div><div><div class="toast-t">${title}</div>${desc?`<div class="toast-d">${desc}</div>`:''}</div>`;
+  $('#toasts').appendChild(t);
+  setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),200)},3200);
+}
+function openLayer(html){ $('#layer').innerHTML=html; }
+function closeLayer(){ $('#layer').innerHTML=''; S.ddOpen=false; S.netOpen=false; }
+function net(){ return NETWORKS.find(n=>n.id===S.network); }
+
+/* ============================ RENDER SHELL ============================ */
+const NAV=[
+  {id:'gm',name:'GM',ic:'sun'},
+  {id:'agents',name:'Agents',ic:'bot'},
+  {id:'contracts',name:'Contracts',ic:'code'},
+  {id:'explorer',name:'Explorer',ic:'compass',badge:'Soon'},
+  {id:'docs',name:'Documentation',ic:'book'}
+];
+function renderNav(){
+  $('#nav').innerHTML=NAV.map(n=>`<button class="nav-item ${S.view===n.id?'active':''}" data-act="nav:${n.id}">${ic(n.ic)}<span>${n.name}</span>${n.badge?`<span class="nav-badge">${n.badge}</span>`:''}</button>`).join('');
+}
+function renderProfile(){
+  const p=$('#profile');
+  if(!S.connected){
+    p.innerHTML=`<div class="profile-eyebrow">Builder Profile</div><div class="profile-empty">Connect your wallet to start building your onchain reputation.<br><button data-act="connect">Connect wallet</button></div>`;
+    return;
+  }
+  const lv=levelOf(S.xp);
+  p.innerHTML=`<div class="profile-eyebrow">Builder Profile</div>
+  <div class="gh-lvl"><span class="gh-level">Level ${lv.level}</span><span class="gh-title">${lv.title}</span></div>
+  <div class="lvlbar"><i style="width:${Math.round(lv.into/lv.need*100)}%"></i></div>
+  <div class="gh-xp">${lv.into} / ${lv.need} XP to next level</div>
+  <div class="gh-stats">
+    <div class="gh-row"><span class="k">XP</span><span class="v">${S.xp.toLocaleString()}</span></div>
+    <div class="gh-row"><span class="k">Current streak</span><span class="v">${S.streak} days</span></div>
+    <div class="gh-row"><span class="k">Lifetime GMs</span><span class="v">${S.lifetimeGMs}</span></div>
+    <div class="gh-row"><span class="k">Deployments</span><span class="v">${totalDeploys()}</span></div>
+  </div>`;
+}
+function renderTop(){
+  $('#netpill').innerHTML=`<span class="pill-logo">${lg(net().logo)}</span>${net().name}${ic('chev')}`;
+  const wa=$('#walletarea');
+  if(!S.connected){
+    wa.innerHTML=`<button class="btn btn-secondary btn-sm" data-act="connect">${ic('wallet')}Connect Wallet</button>`;
+  }else{
+    wa.innerHTML=`<button class="wallet-chip" data-act="wallet-menu"><span class="chip-logo">${lg((WALLETS.find(w=>w.id===S.walletId)||{}).logo)}</span><span class="mono" style="font-size:12.5px;font-weight:500">${S.account.addr}</span>${ic('chev')}</button>`;
+  }
+}
+
+/* ============================ WORKSPACES ============================ */
+function render(){
+  renderNav(); renderProfile(); renderTop();
+  const c=$('#content');
+  if(S.view==='gm') c.innerHTML=viewGM();
+  else if(S.view==='agents') c.innerHTML=viewAgents();
+  else if(S.view==='contracts') c.innerHTML=viewContracts();
+  else if(S.view==='explorer') c.innerHTML=viewExplorer();
+  else if(S.view==='docs') c.innerHTML=viewDocs();
+  c.parentElement.scrollTop=0;
+}
+
+/* ---- GM ---- */
+function viewGM(){
+  const rows=NETWORKS.map(n=>{
+    const done=S.gm[n.id];
+    return `<div class="checkin-row">
+      <span class="net-logo" style="width:28px;height:28px">${lg(n.logo)}</span>
+      <div class="checkin-name" style="flex:1">${n.name}</div>
+      ${done?`<span class="badge badge-ok">${ic('check')}Completed</span>`
+             :`<button class="btn btn-primary btn-sm" data-act="gm:${n.id}">GM</button>`}
+    </div>`;
+  }).join('');
+  const pct=Math.round(S.xpToday/110*100);
+  return `
+  <div class="page-head">
+    <div><div class="page-title">Daily GM</div><div class="page-sub">Build your onchain reputation every day.</div></div>
+    <div class="countdown-pill">${ic('sun')}<div><div class="t" id="countdown">00:00:00</div><div class="l">Next XP reset · UTC</div></div></div>
+  </div>
+  <div class="gm-grid">
+    <div>
+      <div class="sec-title" style="margin-bottom:12px">Today's check-in</div>
+      <div class="card checkin">${rows}</div>
+      <div style="margin-top:26px"><div class="sec-title" style="margin-bottom:12px">Leaderboard</div>${leaderboard()}</div>
+    </div>
+    <div>
+      <div class="card xp-card">
+        <div class="eyebrow" style="margin-bottom:12px">Today's XP</div>
+        <div class="xp-top"><div class="xp-num">${S.xpToday}<small> / 110</small></div><span class="badge ${S.xpToday>=110?'badge-ok':'badge-pending'}">${S.xpToday>=110?'Complete':'In progress'}</span></div>
+        <div class="xp-bar"><i style="width:${pct}%"></i></div>
+        <div class="xp-hint">First GM +10 XP · First deployment +100 XP</div>
+      </div>
+      <div class="card xp-card" style="margin-top:18px">
+        <div class="eyebrow" style="margin-bottom:12px">Reputation</div>
+        ${S.connected?reputationMini():`<div class="profile-empty">Connect your wallet to track your builder level, streak and XP.<br><button data-act="connect">Connect wallet</button></div>`}
+      </div>
+    </div>
+  </div>`;
+}
+function reputationMini(){
+  const lv=levelOf(S.xp);
+  return `<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><div class="avatar" style="width:38px;height:38px;border-radius:10px"></div>
+    <div><div style="font-weight:600">Level ${lv.level} · ${lv.title}</div><div class="muted" style="font-size:12.5px">${lv.into} / ${lv.need} XP to next level</div></div></div>
+    <div class="xp-bar"><i style="width:${Math.round(lv.into/lv.need*100)}%"></i></div>
+    <div class="pstats" style="margin-top:16px">
+      <div class="pstat"><div class="k">Streak</div><div class="v">${S.streak} days ${ic('flame')}</div></div>
+      <div class="pstat"><div class="k">Lifetime GMs</div><div class="v">${S.lifetimeGMs}</div></div>
+    </div>`;
+}
+function leaderboard(){
+  if(!LB_LOADED) return `<div class="card" style="padding:16px"><div class="muted" style="font-size:12.5px">Loading builder activity…</div></div>`;
+  const rows=LB[S.lbTab].map(r=>{
+    const you=S.connected&&r[1]===S.account.addr;
+    return `<tr class="${you?'you':''}"><td class="rank">${r[0]}</td><td class="w">${r[1]}${you?' <span class="muted">· you</span>':''}</td><td>Lv ${r[2]}</td><td class="xp">${r[3].toLocaleString()}</td><td class="xp">${r[4]}d</td></tr>`;
+  }).join('');
+  return `<div class="card" style="padding:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div class="tabs">
+        <button class="tab ${S.lbTab==='today'?'active':''}" data-act="lb:today">Today</button>
+        <button class="tab ${S.lbTab==='weekly'?'active':''}" data-act="lb:weekly">Weekly</button>
+        <button class="tab ${S.lbTab==='alltime'?'active':''}" data-act="lb:alltime">All Time</button>
+      </div>
+      <span class="muted" style="font-size:12px">CoinGyaan XP</span>
+    </div>
+    <table class="lb"><thead><tr><th>Rank</th><th>Wallet</th><th>Level</th><th>XP</th><th>Streak</th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="muted" style="padding:16px 14px">No builder activity yet. Complete a GM to be first.</td></tr>'}</tbody></table>
+  </div>`;
+}
+
+/* ---- AGENTS ---- */
+const AGENT_OPTS=[
+  {id:'create',ic:'spark',t:'Create Agent',d:'Describe an agent and generate its full spec.'},
+  {id:'deploy',ic:'bot',t:'Deploy Agent',d:'Deploy an ERC8004 agent identity.'},
+  {id:'import',ic:'import',t:'Import Agent',d:'Bring in an existing agent by contract or wallet.'},
+  {id:'verify',ic:'shield',t:'CG Verification',d:'Run identity, metadata and endpoint checks.'}
+];
+function viewAgents(){
+  return `<div class="page-head"><div><div class="page-title">Agent Studio</div><div class="page-sub">Create, deploy and verify onchain AI agents.</div></div></div>
+  <div class="work">
+    <div>${AGENT_OPTS.map(o=>optRow('agent',o)).join('')}</div>
+    <div class="card panel" id="agent-panel">${agentPanel()}</div>
+  </div>`;
+}
+function agentPanel(){
+  const t=S.agentTab;
+  if(t==='create') return `
+    <div class="panel-head"><div class="panel-title">Create Agent</div><div class="panel-sub">AI assisted agent specification.</div></div>
+    <div class="state" style="padding:24px 10px">
+      <div class="state-ic load" style="background:var(--accent-soft);color:var(--accent)">${ic('spark')}</div>
+      <h4>Available soon</h4>
+      <p>Generated specifications are on the way. You can deploy an agent identity onchain today from Deploy Agent.</p>
+      <button class="btn btn-primary btn-sm" style="margin-top:16px" data-act="agent-tab:deploy">${ic('bot')}Deploy agent</button>
+    </div>`;
+  if(t==='deploy') return `
+    <div class="panel-head"><div class="panel-title">Deploy Agent</div><div class="panel-sub">Review and deploy your agent identity.</div></div>
+    <div class="review">
+      <div class="review-row"><span class="k">Agent</span><span class="v">BaseWallet IQ</span></div>
+      <div class="review-row"><span class="k">Standard</span><span class="v">ERC-8004</span></div>
+      <div class="review-row"><span class="k">Network</span><span class="v">${net().name}</span></div>
+      <div class="review-row"><span class="k">Owner</span><span class="v mono">${S.connected?S.account.addr:'Connect wallet'}</span></div>
+      <div class="review-row"><span class="k">Studio fee</span><span class="v">${feeLabel(ACTION.AGENT)||'—'}</span></div>
+    </div>
+    <div class="field"><label>Agent name</label><input id="f_name" placeholder="BaseWallet IQ" /></div>
+    <div class="field"><label>Metadata URI</label><input id="f_uri" placeholder="ipfs://... (optional)" /></div>
+    <button class="btn btn-primary btn-block" data-act="deploy:agent">${ic('bot')}Deploy agent</button>`;
+  if(t==='import') return `
+    <div class="panel-head"><div class="panel-title">Import Agent</div><div class="panel-sub">Bring in an existing agent by wallet or contract.</div></div>
+    <div class="state" style="padding:24px 10px">
+      <div class="state-ic load" style="background:var(--accent-soft);color:var(--accent)">${ic('import')}</div>
+      <h4>Available soon</h4>
+      <p>Importing existing agents is on the way.</p>
+    </div>`;
+  return `
+    <div class="panel-head"><div class="panel-title">CG Verification</div><div class="panel-sub">Identity, metadata and endpoint checks.</div></div>
+    <div class="state" style="padding:24px 10px">
+      <div class="state-ic load" style="background:var(--accent-soft);color:var(--accent)">${ic('shield')}</div>
+      <h4>Available soon</h4>
+      <p>Verification checks are being built. Agent identities you deploy today are already recorded onchain.</p>
+    </div>`;
+}
+
+/* ---- CONTRACTS ---- */
+const CONTRACT_OPTS=[
+  {id:'ERC20',ic:'coins',t:'ERC20',d:'Fungible token'},
+  {id:'ERC721',ic:'image',t:'ERC721',d:'NFT collection'},
+  {id:'ERC1155',ic:'layers',t:'ERC1155',d:'Multi token'},
+  {id:'ERC8004',ic:'bot',t:'ERC8004',d:'Agent identity'},
+  {id:'B20',ic:'zap',t:'B20',d:'Native Base token'}
+];
+function viewContracts(){
+  return `<div class="page-head"><div><div class="page-title">Smart Contract Studio</div><div class="page-sub">Deploy production contracts in a few clicks.</div></div></div>
+  <div class="work">
+    <div>${CONTRACT_OPTS.map(o=>optRow('contract',o)).join('')}</div>
+    <div class="card panel" id="contract-panel">${contractPanel()}</div>
+  </div>`;
+}
+function contractPanel(){
+  const owner=S.connected?S.account.addr:'Connect wallet';
+  const t=S.contractType;
+  let title,sub,fields; const blocked=(t==='B20' && S.network!=='base');
+  if(t==='ERC20'||t==='B20'){title=t==='B20'?'B20 · Native Base token':'ERC20 · Fungible token';sub='Configure and deploy your token.';
+    fields=`<div class="field"><label>Token name</label><input id="f_name" placeholder="My Token" /></div>
+    <div class="field-row"><div class="field"><label>Symbol</label><input id="f_symbol" placeholder="MTK" /></div><div class="field"><label>Decimals</label><input id="f_decimals" value="18" /></div></div>
+    <div class="field"><label>Total supply</label><input id="f_supply" placeholder="1000000" /></div>
+    <div class="field"><label>Owner</label><input value="${S.connected?S.account.full:''}" disabled /><p class="net-note">The connected wallet receives ownership and the full supply.</p></div>`;}
+  else if(t==='ERC721'){title='ERC721 · NFT collection';sub='Configure and deploy your collection.';
+    fields=`<div class="field"><label>Collection name</label><input id="f_name" placeholder="My Collection" /></div>
+    <div class="field-row"><div class="field"><label>Symbol</label><input id="f_symbol" placeholder="MYC" /></div><div class="field"><label>Max supply</label><input id="f_max" placeholder="10000" /></div></div>
+    <div class="field"><label>Base URI</label><input id="f_uri" placeholder="ipfs://..." /></div>
+    <div class="field"><label>Owner</label><input value="${S.connected?S.account.full:''}" disabled /><p class="net-note">The connected wallet receives ownership.</p></div>`;}
+  else if(t==='ERC1155'){title='ERC1155 · Multi token';sub='Configure and deploy your multi-token collection.';
+    fields=`<div class="field"><label>Collection name</label><input id="f_name" placeholder="My Items" /></div>
+    <div class="field"><label>Metadata URI</label><input id="f_uri" placeholder="ipfs://.../{id}.json" /></div>
+    <div class="field"><label>Owner</label><input value="${S.connected?S.account.full:''}" disabled /><p class="net-note">The connected wallet receives ownership.</p></div>`;}
+  else {title='ERC8004 · Agent identity';sub='Register an agent identity onchain.';
+    fields=`<div class="field"><label>Agent identity name</label><input id="f_name" placeholder="BaseWallet IQ" /></div>
+    <div class="field"><label>Metadata URI</label><input id="f_uri" placeholder="ipfs://..." /></div>
+    <div class="field"><label>Owner</label><input value="${S.connected?S.account.full:''}" disabled /><p class="net-note">The connected wallet receives ownership.</p></div>`;}
+  return `<div class="panel-head"><div class="panel-title">${title}</div><div class="panel-sub">${sub}</div></div>
+    ${fields}
+    ${blocked
+      ? `<div class="field"><label>Network</label>
+          <div class="readonly-net"><span class="net-logo sm">${lg('base')}</span>Base<span class="ro-tag">Base only</span></div>
+          <p class="net-note">B20 contracts are available exclusively on Base.</p>
+          <button class="btn btn-secondary btn-block" style="margin-top:11px" data-act="setnet:base">Switch workspace to Base</button></div>`
+      : `<div class="field"><label>Network</label><div class="readonly-net"><span class="net-logo sm">${lg((t==='B20'?NETWORKS.find(x=>x.id==='base'):net()).logo)}</span>${(t==='B20'?'Base':net().name)}</div></div>`}
+    <button class="btn btn-primary btn-block" data-act="deploy:contract" ${blocked?'disabled':''}>${ic('code')}Deploy ${t}${feeLabel(ACTION.CONTRACT)?' · '+feeLabel(ACTION.CONTRACT):''}</button>`;
+}
+
+/* ---- shared option row ---- */
+function optRow(kind,o){
+  const active = kind==='agent' ? S.agentTab===o.id : S.contractType===o.id;
+  const act = kind==='agent' ? `agent-tab:${o.id}` : `contract-type:${o.id}`;
+  return `<button class="opt ${active?'active':''}" data-act="${act}"><div class="opt-ic">${ic(o.ic)}</div><div><div class="opt-t">${o.t}</div><div class="opt-d">${o.d}</div></div></button>`;
+}
+
+/* ---- EXPLORER ---- */
+function viewExplorer(){
+  const mods=[
+    {ic:'target',t:'Wallet Intelligence',d:'Deep activity, holdings and behavior analysis for any wallet.'},
+    {ic:'compass',t:'Project Discovery',d:'Surface new and trending projects across supported networks.'},
+    {ic:'shield',t:'Trust Scores',d:'Reputation scoring for wallets, agents and contracts.'},
+    {ic:'search',t:'Search',d:'Unified search across wallets, agents, tokens and collections.'}
+  ];
+  return `<div class="page-head"><div><div class="page-title">Explorer</div><div class="page-sub">Intelligence tools for builders. Arriving soon.</div></div></div>
+  <div class="exp-grid">${mods.map(m=>`<div class="card exp-card"><div class="exp-tag"><span class="badge badge-soon">Available soon</span></div><div class="exp-ic">${ic(m.ic)}</div><h4>${m.t}</h4><p>${m.d}</p></div>`).join('')}</div>`;
+}
+
+/* ---- DOCS ---- */
+const DOCS={
+  quickstart:{t:'Quick Start',b:`<p>Welcome to CoinGyaan Studio, the universal workspace for builders. Complete your daily GM, deploy agents and contracts, and build a wallet-scoped reputation that follows you across networks.</p><h4>Three steps</h4><ul><li>Connect a wallet from the top navigation.</li><li>Complete your daily GM to earn XP and keep your streak.</li><li>Deploy an agent or contract from the Studio workspaces.</li></ul>`},
+  networks:{t:'Networks',b:`<p>Studio is network agnostic. The interface stays identical across every supported network; only the data changes.</p><h4>Supported networks</h4><ul><li>Robinhood Chain — Active</li><li>Base — Active</li></ul><p>Additional networks can be enabled without any change to your workflow.</p>`},
+  deployments:{t:'Deployments',b:`<p>Deploy fungible tokens, NFT collections, multi-token collections, agent identities and native B20 tokens from the Contracts workspace.</p><h4>Every deployment</h4><ul><li>Generates a public builder profile.</li><li>Counts toward your lifetime deployment total.</li><li>Awards XP on your first deployment each day.</li></ul>`},
+  xp:{t:'XP',b:`<p>XP belongs to your wallet, never to an individual network or deployment.</p><h4>Rules</h4><ul><li>First GM each UTC day — +10 XP</li><li>First deployment each UTC day — +100 XP</li><li>Maximum 110 XP per UTC day</li></ul><p>You can deploy as often as you like. Only XP is limited per day.</p>`},
+  profile:{t:'Builder Profile',b:`<p>Your Builder Profile is the identity layer of Studio. It tracks your level, XP, streak, lifetime GMs and total deployments in one place.</p><h4>Levels</h4><ul><li>Member · Contributor · Builder · Architect · Expert · Legend</li></ul>`},
+  verification:{t:'Verification',b:`<p>CG Verification runs trust checks across an agent's identity, metadata and endpoints, then issues a verification status you can display on the public profile.</p>`}
+};
+function viewDocs(){
+  const keys=Object.keys(DOCS);
+  const d=DOCS[S.docsPage];
+  return `<div class="page-head"><div><div class="page-title">Documentation</div><div class="page-sub">Everything you need to build with CoinGyaan Studio.</div></div></div>
+  <div class="docs">
+    <div>
+      <div class="search" style="width:auto;margin-bottom:14px">${ic('search')}<input placeholder="Search docs" /></div>
+      <div class="docs-nav">${keys.map(k=>`<button class="docs-link ${S.docsPage===k?'active':''}" data-act="docs:${k}">${DOCS[k].t}</button>`).join('')}</div>
+    </div>
+    <div class="docs-body"><h3>${d.t}</h3>${d.b}</div>
+  </div>`;
+}
+
+/* ============================ WALLET FLOW ============================ */
+function walletModal(){
+  openLayer(`<div class="overlay" data-act="close-layer"><div class="modal" data-stop>
+    <div class="modal-head"><div class="modal-title">Connect Wallet</div><div class="modal-sub">Choose a wallet to continue.</div></div>
+    <div class="modal-body">${WALLETS.map(w=>`<button class="wallet-opt" data-act="pick:${w.id}"><div class="w-ic">${lg(w.logo)}</div><div><div class="w-name">${w.name}</div><div class="w-desc">${w.desc}</div></div><span class="w-arrow">${ic('chev')}</span></button>`).join('')}</div>
+  </div></div>`);
+}
+function accountModal(walletId){
+  const w=WALLETS.find(x=>x.id===walletId);
+  openLayer(`<div class="overlay" data-act="close-layer"><div class="modal" data-stop>
+    <div class="modal-head"><div class="modal-title">Select Account</div><div class="modal-sub">${w?('Connecting with '+w.name):'Choose an account to connect.'}</div></div>
+    <div class="modal-body" style="padding-top:6px">${ACCOUNTS.map((a,i)=>`<button class="acct" data-act="acct:${i}"><span class="avatar"></span><div><div class="acct-a">${a.addr}</div><div class="acct-n">${a.net}</div></div><span class="w-arrow">${ic('arrow')}</span></button>`).join('')}</div>
+  </div></div>`);
+}
+async function walletPopup(walletId){
+  const w=WALLETS.find(x=>x.id===walletId);
+  const prov=findProvider(walletId);
+  if(!prov){
+    closeLayer();
+    toast(w.name+' not found','Install it, or pick a wallet you have installed.');
+    return;
+  }
+  let accounts=[];
+  try{
+    await prov.request({method:'wallet_requestPermissions',params:[{eth_accounts:{}}]}).catch(()=>null);
+    accounts=await prov.request({method:'eth_requestAccounts'});
+  }catch(err){
+    closeLayer();
+    toast('Connection cancelled', (err&&err.code===4001)?'You rejected the request.':'Could not connect.');
+    return;
+  }
+  if(!accounts||!accounts.length){ closeLayer(); toast('No account returned'); return; }
+  S.provider=prov;
+  ACCOUNTS=accounts.map(a=>({addr:a.slice(0,6)+'…'+a.slice(-4), full:a, net:net().name}));
+  const acct=ACCOUNTS[0];
+  openLayer(`<div class="overlay" data-act="close-layer"><div class="modal wpop" data-stop>
+    <div class="wpop-head"><div class="wpop-badge">${lg(w.logo)}</div><div class="wpop-title">Connect to CoinGyaan Studio</div><div class="wpop-site">coingyaan.studio</div></div>
+    <div class="wpop-rows">
+      <div class="wpop-row"><span class="k">Wallet</span><span class="v">${w.name}</span></div>
+      <div class="wpop-row"><span class="k">Account</span><span class="v mono">${acct.addr}</span></div>
+      <div class="wpop-row"><span class="k">Network</span><span class="v"><span class="net-logo sm">${lg(net().logo)}</span>${net().name}</span></div>
+    </div>
+    <div class="wpop-actions"><button class="btn btn-primary btn-block" data-act="wconnect:${walletId}">Connect</button><button class="btn btn-ghost btn-block" data-act="cancel">Cancel</button></div>
+  </div></div>`);
+}
+async function connectFromPopup(walletId){
+  S.connected=true; S.walletId=walletId; S.walletName=WALLETS.find(w=>w.id===walletId).name;
+  S.account={addr:ACCOUNTS[0].addr, full:ACCOUNTS[0].full, net:net().name};
+  closeLayer(); render();
+  toast('Wallet connected', ACCOUNTS[0].addr+' · '+net().name);
+  try{ await ensureChain(); }catch(e){ toast('Switch to '+net().name,'Your wallet is on another network.'); }
+  loadProfile();
+}
+function connectAccount(i){
+  const a=ACCOUNTS[i]; if(!a) return;
+  S.connected=true; S.account={addr:a.addr, full:a.full, net:net().name};
+  closeLayer(); render();
+  toast('Account switched', a.addr);
+  loadProfile();
+}
+function walletDropdown(){
+  S.ddOpen=true;
+  openLayer(`<div class="overlay" style="background:transparent" data-act="close-layer"></div>
+  <div class="dropdown" data-stop>
+    <div class="dd-head"><div class="dd-eyebrow">Connected Wallet</div><div class="dd-id"><span class="dd-logo">${lg((WALLETS.find(w=>w.id===S.walletId)||{}).logo)}</span><div><div class="dd-a">${S.account.addr}</div><div class="dd-n">${S.walletName||'Wallet'} · ${S.account.net}</div></div></div></div>
+    <div class="divider"></div>
+    <button class="dd-item" data-act="profile">${ic('users')}Profile</button>
+    <button class="dd-item" data-act="copyaddr">${ic('copy')}Copy address</button>
+    <button class="dd-item" data-act="switch">${ic('repeat')}Switch wallet</button>
+    <button class="dd-item danger" data-act="disconnect">${ic('logout')}Disconnect wallet</button>
+  </div>`);
+}
+function netMenu(){
+  S.netOpen=true;
+  const rect=$('#netpill').getBoundingClientRect();
+  openLayer(`<div class="overlay" style="background:transparent" data-act="close-layer"></div>
+  <div class="netmenu" data-stop style="left:${rect.left}px">
+    ${NETWORKS.map(n=>`<button class="net-opt" data-act="setnet:${n.id}"><span class="net-logo">${lg(n.logo)}</span><div style="flex:1"><div class="nm">${n.name}</div>${n.live?'':'<div class="ns">Not live yet</div>'}</div>${S.network===n.id?`<span class="net-check">${ic('check')}</span>`:''}</button>`).join('')}
+  </div>`);
+}
+function disconnect(){
+  S.connected=false; S.account=null; S.walletName=null; S.walletId=null; S.provider=null;
+  S.xp=0; S.streak=0; S.lifetimeGMs=0; S.agentDeploys=0; S.contractDeploys=0;
+  S.xpToday=0; S.gmClaimed=false; S.deployClaimed=false; S.gm={base:false,robinhood:false};
+  closeLayer(); render();
+  toast('Wallet disconnected','Connect again to continue building.');
+}
+
+/* ============================ ACTIONS ============================ */
+async function doGM(netId){
+  if(!S.connected){ walletModal(); return; }
+  const n=NETWORKS.find(x=>x.id===netId);
+  if(!n.live){ toast(n.name+' is not live yet','Studio contracts are not deployed there.'); return; }
+  try{
+    await ensureChain();
+    const value=await quoteWei(ACTION.GM);
+    const c=await dmWrite();
+    toast('Confirm in your wallet','Daily GM · '+feeLabel(ACTION.GM));
+    const tx=await c.pay(K(ACTION.GM), { value });
+    await tx.wait();
+    const first=!S.gmClaimed;
+    await loadProfile();
+    toast('GM completed successfully', first?'+10 XP awarded.':'XP already claimed today.');
+  }catch(err){
+    toast((err&&err.code===4001)?'GM cancelled':'GM failed', (err&&(err.shortMessage||err.message))||'');
+  }
+}
+// Read the form, validate, ABI-encode, send through DeployManager. All real.
+function collectValues(kindStr){
+  const v=id=>{ const e=document.getElementById(id); return e?(e.value||'').trim():''; };
+  if(kindStr==='ERC20'||kindStr==='B20'){
+    const name=v('f_name'), sym=v('f_symbol'), sup=v('f_supply').replace(/,/g,''), dec=v('f_decimals')||'18';
+    if(!name) return {err:'Enter a token name'};
+    if(!sym) return {err:'Enter a token symbol'};
+    if(!/^\d+$/.test(sup)||BigInt(sup)<=0n) return {err:'Total supply must be a whole number above 0'};
+    const d=Number(dec), min=(kindStr==='B20')?6:0;
+    if(!Number.isInteger(d)||d<min||d>18) return {err:'Decimals must be between '+min+' and 18'};
+    return {values:[name, sym, sup, d]};
+  }
+  if(kindStr==='ERC721'){
+    const name=v('f_name'), sym=v('f_symbol'), uri=v('f_uri'), max=(v('f_max')||'0').replace(/,/g,'');
+    if(!name) return {err:'Enter a collection name'};
+    if(!sym) return {err:'Enter a symbol'};
+    if(!/^\d+$/.test(max)) return {err:'Max supply must be a whole number'};
+    return {values:[name, sym, uri, max]};
+  }
+  if(kindStr==='ERC1155'){
+    const name=v('f_name'), uri=v('f_uri');
+    if(!name) return {err:'Enter a collection name'};
+    return {values:[name, uri]};
+  }
+  const uri=v('f_uri')||('https://coingyaan.com/agent/'+(v('f_name')||'agent').toLowerCase().replace(/[^a-z0-9]+/g,'-'));
+  if(!v('f_name')) return {err:'Enter an agent name'};
+  return {values:[uri]};
+}
+
+async function runDeploy(kind){
+  if(!S.connected){ walletModal(); return; }
+  const n=NETWORKS.find(x=>x.id===S.network);
+  if(!n.live){ toast(n.name+' is not live yet','Studio contracts are not deployed there.'); return; }
+  const kindStr = kind==='agent' ? 'ERC8004' : S.contractType;
+  if(kindStr==='B20'){ toast('B20 is not enabled yet','The B20 factory is not deployed.'); return; }
+
+  const got=collectValues(kindStr);
+  if(got.err){ toast(got.err); return; }
+
+  const panelSel = kind==='agent' ? '#agent-panel' : '#contract-panel';
+  const panel=$(panelSel); if(!panel) return;
+  panel.innerHTML=`<div class="state"><div class="state-ic load"><div class="spin"></div></div><h4>Deploying…</h4><p>Confirm the transaction in your wallet.</p></div>`;
+  try{
+    await ensureChain();
+    const action = (kindStr==='ERC8004') ? ACTION.AGENT : ACTION.CONTRACT;
+    const value = await quoteWei(action);
+    const c = await dmWrite();
+    const types = (CFG().paramSchema||{})[kindStr];
+    const params = ethers.AbiCoder.defaultAbiCoder().encode(types, got.values);
+    const tx = await c.deploy(K(kindStr), params, { value });
+    panel.innerHTML=`<div class="state"><div class="state-ic load"><div class="spin"></div></div><h4>Deploying…</h4><p>Transaction sent. Waiting for confirmation.</p></div>`;
+    const rc = await tx.wait();
+    let addr=null;
+    for(const log of rc.logs){
+      try{ const p=c.interface.parseLog(log);
+        if(p && (p.name==='ContractDeployed'||p.name==='AgentDeployed')){ addr=p.args.contractAddress; break; }
+      }catch(e){}
+    }
+    const first = !S.deployClaimed;
+    await loadProfile();
+    panel.innerHTML=`<div class="state"><div class="state-ic ok">${ic('check')}</div><h4>Deployment completed successfully</h4><p>${kind==='agent'?'Your agent is live':'Your contract is live'} on ${net().name}. ${first?'+100 XP awarded.':'XP already claimed today.'}</p>
+      <div class="result">
+        <div class="result-row"><span class="k">${kind==='agent'?'Agent registry':'Contract address'}</span><span class="v">${addr?addr.slice(0,10)+'…'+addr.slice(-6):'see transaction'}</span></div>
+        <div class="result-row"><span class="k">Transaction</span><span class="v">${rc.hash.slice(0,10)}…${rc.hash.slice(-6)}</span></div>
+        <div class="result-row"><span class="k">Network</span><span class="v">${net().name}</span></div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:18px">
+        ${addr?`<a class="btn btn-secondary btn-sm" target="_blank" href="${explorerAddr(addr)}">${ic('ext')}View contract</a>`:''}
+        <a class="btn btn-secondary btn-sm" target="_blank" href="${explorerTx(rc.hash)}">${ic('ext')}View transaction</a>
+        <button class="btn btn-secondary btn-sm" data-act="${kind==='agent'?'agent-tab:deploy':'contract-type:'+S.contractType}">Deploy another</button>
+      </div></div>`;
+    toast('Deployment completed successfully', (kind==='agent'?'Agent':'Contract')+' deployed on '+net().name);
+  }catch(err){
+    panel.innerHTML = kind==='agent' ? agentPanel() : contractPanel();
+    toast((err&&err.code===4001)?'Deployment rejected':'Deploy failed', (err&&(err.shortMessage||err.message))||'');
+  }
+}
+
+/* ============================ EVENT DELEGATION ============================ */
+document.addEventListener('click', e=>{
+  const stop=e.target.closest('[data-stop]');
+  const el=e.target.closest('[data-act]');
+  if(!el){ return; }
+  const act=el.getAttribute('data-act');
+  // clicks inside a modal card shouldn't close via card; only overlay closes
+  if(act==='close-layer'){ if(e.target.closest('[data-stop]')) return; closeLayer(); return; }
+  const [k,v]=act.split(':');
+
+  switch(k){
+    case 'dd-close': closeLayer(); break;
+    case 'nav': S.view=v; closeLayer(); render(); break;
+    case 'connect': walletModal(); break;
+    case 'pick': S.walletId=v; S.walletName=WALLETS.find(w=>w.id===v).name; closeLayer(); walletPopup(v); break;
+    case 'wconnect': connectFromPopup(v); break;
+    case 'cancel': closeLayer(); break;
+    case 'copyaddr': try{navigator.clipboard&&navigator.clipboard.writeText(S.account.addr)}catch(e){}; toast('Address copied'); closeLayer(); break;
+    case 'profile': closeLayer(); toast('Builder profile','Shown in the sidebar.'); break;
+    case 'acct': connectAccount(+v); break;
+    case 'wallet-menu': S.ddOpen?closeLayer():walletDropdown(); break;
+    case 'switch': closeLayer(); walletModal(); break;
+    case 'reconnect': closeLayer(); walletModal(); break;
+    case 'disconnect': disconnect(); break;
+    case 'net-toggle': S.netOpen?closeLayer():netMenu(); break;
+    case 'setnet': {
+      const n=NETWORKS.find(x=>x.id===v);
+      if(!n.live){ closeLayer(); toast(n.name+' is not live yet','Studio contracts are not deployed there.'); break; }
+      S.network=v; closeLayer(); render(); toast('Network switched','Now viewing '+net().name+'.');
+      if(S.connected) ensureChain().catch(()=>toast('Switch network in your wallet'));
+      break;
+    }
+    case 'gm': doGM(v); break;
+    case 'lb': S.lbTab=v; render(); break;
+    case 'agent-tab': S.agentTab=v; closeLayer(); $('#agent-panel').innerHTML=agentPanel(); document.querySelectorAll('[data-act^="agent-tab"]').forEach(x=>{}); render(); break;
+    case 'contract-type': S.contractType=v; render(); break;
+    case 'deploy': runDeploy(v); break;
+    case 'docs': S.docsPage=v; render(); break;
+    case 'chip': el.classList.toggle('on'); break;
+    default: break;
+  }
+});
+
+/* countdown to next UTC midnight */
+function tick(){
+  const el=document.getElementById('countdown'); if(!el) return;
+  const now=new Date();
+  const next=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()+1,0,0,0));
+  let s=Math.max(0,Math.floor((next-now)/1000));
+  const h=String(Math.floor(s/3600)).padStart(2,'0'); s%=3600;
+  const m=String(Math.floor(s/60)).padStart(2,'0');
+  const ss=String(s%60).padStart(2,'0');
+  el.textContent=`${h}:${m}:${ss}`;
+}
+setInterval(tick,1000);
+
+/* boot */
+// deep link from the landing: /studio/app?view=contracts
+try{
+  const v=new URLSearchParams(location.search).get('view');
+  if(v && ['gm','agents','contracts','explorer','docs'].includes(v)) S.view=v;
+}catch(e){}
+render(); tick();
+loadFees();          // fees load from FeeManager over public RPC, no wallet needed
+loadLeaderboard();   // builder activity from on-chain events
+</script>
+</body>
+</html>
