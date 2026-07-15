@@ -272,7 +272,9 @@ input,textarea,select{font-family:inherit}
 /* --- refinement pass additions --- */
 .net-note{font-size:12px;color:var(--muted);margin-top:9px;line-height:1.5}
 .pill-logo,.chip-logo{width:18px;height:18px;display:inline-flex;flex-shrink:0}
-.pill-logo svg,.chip-logo svg,.w-ic svg,.net-logo svg,.dd-logo svg,.wpop-badge svg{width:100%;height:100%;display:block}
+.pill-logo svg,.chip-logo svg,.w-ic svg,.net-logo svg,.dd-logo svg,.wpop-badge svg,
+.pill-logo img,.chip-logo img,.w-ic img,.net-logo img,.dd-logo img{width:100%;height:100%;display:block}
+.w-ic,.chip-logo,.dd-logo{border-radius:10px;overflow:hidden}
 .wallet-chip .chip-logo{width:20px;height:20px}
 .net-logo{width:26px;height:26px;display:inline-flex;flex-shrink:0;border-radius:8px;overflow:hidden}
 .net-logo.sm{width:18px;height:18px;border-radius:6px}
@@ -523,6 +525,17 @@ window.addEventListener('eip6963:announceProvider', e => {
   if(!DISCOVERED.find(p=>p.info.uuid===e.detail.info.uuid)) DISCOVERED.push(e.detail);
 });
 try{ window.dispatchEvent(new Event('eip6963:requestProvider')); }catch(e){}
+// EIP-6963 wallets announce their own official icon as a data URI. Use it when present and
+// fall back to the built-in mark only if the wallet is not installed.
+function detected(walletId){
+  const want={coinbase:['coinbase'],rabby:['rabby'],metamask:['metamask']}[walletId]||[];
+  return DISCOVERED.find(p=>want.some(w=>(p.info.rdns||'').toLowerCase().includes(w)||(p.info.name||'').toLowerCase().includes(w)))||null;
+}
+function walletIcon(walletId){
+  const d=detected(walletId);
+  if(d && d.info && d.info.icon) return '<img src="'+d.info.icon+'" alt="" style="width:100%;height:100%;display:block;object-fit:contain;border-radius:inherit" />';
+  return lg((WALLETS.find(w=>w.id===walletId)||{}).logo);
+}
 function findProvider(walletId){
   const want={robinhood:['robinhood'],coinbase:['coinbase'],rabby:['rabby'],metamask:['metamask']}[walletId]||[];
   const hit=DISCOVERED.find(p=>want.some(w=>(p.info.rdns||'').toLowerCase().includes(w)||(p.info.name||'').toLowerCase().includes(w)));
@@ -652,7 +665,7 @@ function renderTop(){
   if(!S.connected){
     wa.innerHTML=`<button class="btn btn-secondary btn-sm" data-act="connect">${ic('wallet')}Connect Wallet</button>`;
   }else{
-    wa.innerHTML=`<button class="wallet-chip" data-act="wallet-menu"><span class="chip-logo">${lg((WALLETS.find(w=>w.id===S.walletId)||{}).logo)}</span><span class="mono" style="font-size:12.5px;font-weight:500">${S.account.addr}</span>${ic('chev')}</button>`;
+    wa.innerHTML=`<button class="wallet-chip" data-act="wallet-menu"><span class="chip-logo">${walletIcon(S.walletId)}</span><span class="mono" style="font-size:12.5px;font-weight:500">${S.account.addr}</span>${ic('chev')}</button>`;
   }
 }
 
@@ -879,7 +892,7 @@ function viewDocs(){
 function walletModal(){
   openLayer(`<div class="overlay" data-act="close-layer"><div class="modal" data-stop>
     <div class="modal-head"><div class="modal-title">Connect Wallet</div><div class="modal-sub">Choose a wallet to continue.</div></div>
-    <div class="modal-body">${WALLETS.map(w=>`<button class="wallet-opt" data-act="pick:${w.id}"><div class="w-ic">${lg(w.logo)}</div><div><div class="w-name">${w.name}</div><div class="w-desc">${w.desc}</div></div><span class="w-arrow">${ic('chev')}</span></button>`).join('')}</div>
+    <div class="modal-body">${WALLETS.map(w=>`<button class="wallet-opt" data-act="pick:${w.id}"><div class="w-ic">${walletIcon(w.id)}</div><div><div class="w-name">${w.name}${detected(w.id)?' <span class="badge badge-ok" style="margin-left:5px;font-size:10px;padding:1px 7px">Installed</span>':''}</div><div class="w-desc">${w.desc}</div></div><span class="w-arrow">${ic('chev')}</span></button>`).join('')}</div>
   </div></div>`);
 }
 function accountModal(walletId){
@@ -947,7 +960,7 @@ function walletDropdown(){
   S.ddOpen=true;
   openLayer(`<div class="overlay" style="background:transparent" data-act="close-layer"></div>
   <div class="dropdown" data-stop>
-    <div class="dd-head"><div class="dd-eyebrow">Connected Wallet</div><div class="dd-id"><span class="dd-logo">${lg((WALLETS.find(w=>w.id===S.walletId)||{}).logo)}</span><div><div class="dd-a">${S.account.addr}</div><div class="dd-n">${S.walletName||'Wallet'} · ${S.account.net}</div></div></div></div>
+    <div class="dd-head"><div class="dd-eyebrow">Connected Wallet</div><div class="dd-id"><span class="dd-logo">${walletIcon(S.walletId)}</span><div><div class="dd-a">${S.account.addr}</div><div class="dd-n">${S.walletName||'Wallet'} · ${S.account.net}</div></div></div></div>
     <div class="divider"></div>
     <button class="dd-item" data-act="profile">${ic('users')}Profile</button>
     <button class="dd-item" data-act="copyaddr">${ic('copy')}Copy address</button>
