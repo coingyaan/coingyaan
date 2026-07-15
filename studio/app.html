@@ -473,17 +473,40 @@ function rpcUrl(){ const r=CFG().rpc||{}; return r.baseSepolia||r.base; }
 function readProvider(){ return new ethers.JsonRpcProvider(rpcUrl()); }
 function fromBlock(){ return (CFG().deployBlock)||44160000; }
 // Public RPCs reject wide eth_getLogs ranges. Scan in chunks and merge.
-async function scanLogs(c, filter){
-  const prov=readProvider();
-  const latest=await prov.getBlockNumber();
-  const start=fromBlock(), CHUNK=9000;
-  let out=[];
-  for(let s=start; s<=latest; s+=CHUNK){
-    const e=Math.min(s+CHUNK-1, latest);
-    try{ out=out.concat(await c.queryFilter(filter, s, e)); }
-    catch(err){ console.warn('log scan failed', s, e, err && (err.shortMessage||err.message)); throw err; }
+// Some public RPCs restrict or disable eth_getLogs. Try each endpoint until one answers,
+// and remember the one that worked for the rest of the session.
+let LOGS_RPC=null;
+function logsRpcList(){
+  const r=CFG().rpc||{};
+  return (CFG().logsRpc||[]).concat([
+    r.baseSepolia||'https://sepolia.base.org',
+    'https://base-sepolia-rpc.publicnode.com',
+    'https://base-sepolia.blockscout.com/api/eth-rpc'
+  ]).filter(Boolean);
+}
+async function scanLogs(_c, filter){
+  const addr=dmAddr();
+  const urls = LOGS_RPC ? [LOGS_RPC] : logsRpcList();
+  let lastErr=null;
+  for(const url of urls){
+    try{
+      const prov=new ethers.JsonRpcProvider(url);
+      const c=new ethers.Contract(addr, CFG().deployManagerAbi, prov);
+      const latest=await prov.getBlockNumber();
+      const start=fromBlock(), CHUNK=9000;
+      let out=[];
+      for(let s=start; s<=latest; s+=CHUNK){
+        const e=Math.min(s+CHUNK-1, latest);
+        out=out.concat(await c.queryFilter(filter, s, e));
+      }
+      if(!LOGS_RPC){ LOGS_RPC=url; console.info('[CoinGyaan] logs RPC:', url); }
+      return out;
+    }catch(err){
+      lastErr=err;
+      console.warn('[CoinGyaan] log scan failed on', url, err && (err.shortMessage||err.message||err));
+    }
   }
-  return out;
+  throw lastErr || new Error('No RPC could read logs');
 }
 function dmRead(){ const a=dmAddr(); return a?new ethers.Contract(a, CFG().deployManagerAbi, readProvider()):null; }
 function fmRead(){ const a=fmAddr(); return a?new ethers.Contract(a, CFG().feeManagerAbi, readProvider()):null; }
@@ -551,10 +574,11 @@ async function loadProfile(){
       scanLogs(c, c.filters.ContractDeployed(null, me)),
       scanLogs(c, c.filters.AgentDeployed(me))
     ]);
+    console.info('[CoinGyaan] profile events', {wallet:me, gms:gms.length, contracts:cds.length, agents:ads.length, fromBlock:fromBlock()});
     S.lifetimeGMs=gms.length; S.contractDeploys=cds.length; S.agentDeploys=ads.length;
 
     // group by UTC day for XP + streak (matches the documented rules)
-    const prov=readProvider(); const blockDay={};
+    const prov=new ethers.JsonRpcProvider(LOGS_RPC||rpcUrl()); const blockDay={};
     const stamp=async(bn)=>{ if(blockDay[bn]!=null) return blockDay[bn];
       try{ const b=await prov.getBlock(bn); blockDay[bn]=Math.floor(b.timestamp/86400); }catch(e){ blockDay[bn]=null; }
       return blockDay[bn]; };
@@ -572,7 +596,10 @@ async function loadProfile(){
     if(!gmDays.has(d)) d--;              // streak survives until today's window closes
     while(gmDays.has(d)){ streak++; d--; }
     S.streak=streak;
-  }catch(e){ console.warn('profile load failed', e); toast('Could not read your onchain activity','Retrying shortly.'); }
+  }catch(e){
+    console.error('[CoinGyaan] profile load failed:', e);
+    toast('Could not read your onchain activity', (e&&(e.shortMessage||e.message)||'').slice(0,60));
+  }
   S.loadingProfile=false; render();
 }
 
@@ -685,7 +712,8 @@ function reputationMini(){
     <div class="pstats" style="margin-top:16px">
       <div class="pstat"><div class="k">Streak</div><div class="v">${S.streak} days ${ic('flame')}</div></div>
       <div class="pstat"><div class="k">Lifetime GMs</div><div class="v">${S.lifetimeGMs}</div></div>
-    </div>`;
+    </div>
+    <button class="btn btn-ghost btn-sm" style="margin-top:14px;width:100%" data-act="refresh">${ic('repeat')}Refresh from chain</button>`;
 }
 function leaderboard(){
   if(!LB_LOADED) return `<div class="card" style="padding:16px"><div class="muted" style="font-size:12.5px">Loading builder activity…</div></div>`;
@@ -1016,8 +1044,8 @@ async function runDeploy(kind){
     const live = $(panelSel) || panel;   // re-query the fresh node before writing the result
     live.innerHTML=`<div class="state"><div class="state-ic ok">${ic('check')}</div><h4>Deployment completed successfully</h4><p>${kind==='agent'?'Your agent is live':'Your contract is live'} on ${net().name}. ${first?'+100 XP awarded.':'XP already claimed today.'}</p>
       <div class="result">
-        <div class="result-row"><span class="k">${kind==='agent'?'Agent registry':'Contract address'}</span><span class="v" style="word-break:break-all;max-width:60%;text-align:right">${addr||'see transaction'}${addr?` <button class="btn-ghost btn-sm" style="padding:0 6px;height:22px" onclick="copyText('${addr}')">${ic('copy')}</button>`:''}</span></div>
-        <div class="result-row"><span class="k">Transaction</span><span class="v" style="word-break:break-all;max-width:60%;text-align:right">${rc.hash} <button class="btn-ghost btn-sm" style="padding:0 6px;height:22px" onclick="copyText('${rc.hash}')">${ic('copy')}</button></span></div>
+        <div class="result-row"><span class="k">${kind==='agent'?'Agent registry':'Contract address'}</span><span class="v" style="word-break:break-all;max-width:60%;text-align:right">${addr||'see transaction'}${addr?` <button class="btn btn-ghost btn-sm" style="padding:0 6px;height:22px;display:inline-flex;vertical-align:middle" onclick="copyText('${addr}')">${ic('copy')}</button>`:''}</span></div>
+        <div class="result-row"><span class="k">Transaction</span><span class="v" style="word-break:break-all;max-width:60%;text-align:right">${rc.hash} <button class="btn btn-ghost btn-sm" style="padding:0 6px;height:22px;display:inline-flex;vertical-align:middle" onclick="copyText('${rc.hash}')">${ic('copy')}</button></span></div>
         <div class="result-row"><span class="k">Network</span><span class="v">${net().name}</span></div>
       </div>
       <div style="display:flex;gap:10px;justify-content:center;margin-top:18px">
@@ -1065,6 +1093,7 @@ document.addEventListener('click', e=>{
       break;
     }
     case 'gm': doGM(v); break;
+    case 'refresh': toast('Refreshing…'); loadProfile(); loadLeaderboard(); break;
     case 'lb': S.lbTab=v; render(); break;
     case 'agent-tab': S.agentTab=v; closeLayer(); $('#agent-panel').innerHTML=agentPanel(); document.querySelectorAll('[data-act^="agent-tab"]').forEach(x=>{}); render(); break;
     case 'contract-type': S.contractType=v; render(); break;
