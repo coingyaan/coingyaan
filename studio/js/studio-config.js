@@ -79,7 +79,7 @@ window.CG_STUDIO_CONFIG = {
 
   // ---- FeeManager: single source of truth for all fees + treasury (no addresses hardcoded here) ----
   // First block of the V2 stack. Event scans start here; scanning from 0 is rejected by public RPCs.
-  deployBlock: 44160000,
+  deployBlock: 44166000,
 
   feeManager: {
     address: "0x1D1a8225793A318f5a00527A654FBD34c01425E1",
