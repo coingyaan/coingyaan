@@ -432,9 +432,9 @@ async function loadLeaderboard(){
   const c=dmRead(); if(!c) return;
   try{
     const [gms, cds, ads] = await Promise.all([
-      c.queryFilter(c.filters.GMCompleted(), fromBlock(), 'latest').catch(()=>[]),
-      c.queryFilter(c.filters.ContractDeployed(), fromBlock(), 'latest').catch(()=>[]),
-      c.queryFilter(c.filters.AgentDeployed(), fromBlock(), 'latest').catch(()=>[])
+      scanLogs(c, c.filters.GMCompleted()).catch(()=>[]),
+      scanLogs(c, c.filters.ContractDeployed()).catch(()=>[]),
+      scanLogs(c, c.filters.AgentDeployed()).catch(()=>[])
     ]);
     const prov=readProvider(); const cache={};
     const day=async bn=>{ if(cache[bn]!=null) return cache[bn];
@@ -472,6 +472,19 @@ function fmAddr(){ return (CFG().feeManager||{}).address||null; }
 function rpcUrl(){ const r=CFG().rpc||{}; return r.baseSepolia||r.base; }
 function readProvider(){ return new ethers.JsonRpcProvider(rpcUrl()); }
 function fromBlock(){ return (CFG().deployBlock)||44160000; }
+// Public RPCs reject wide eth_getLogs ranges. Scan in chunks and merge.
+async function scanLogs(c, filter){
+  const prov=readProvider();
+  const latest=await prov.getBlockNumber();
+  const start=fromBlock(), CHUNK=9000;
+  let out=[];
+  for(let s=start; s<=latest; s+=CHUNK){
+    const e=Math.min(s+CHUNK-1, latest);
+    try{ out=out.concat(await c.queryFilter(filter, s, e)); }
+    catch(err){ console.warn('log scan failed', s, e, err && (err.shortMessage||err.message)); throw err; }
+  }
+  return out;
+}
 function dmRead(){ const a=dmAddr(); return a?new ethers.Contract(a, CFG().deployManagerAbi, readProvider()):null; }
 function fmRead(){ const a=fmAddr(); return a?new ethers.Contract(a, CFG().feeManagerAbi, readProvider()):null; }
 async function dmWrite(){
@@ -534,9 +547,9 @@ async function loadProfile(){
   try{
     const me=S.account.full;
     const [gms, cds, ads] = await Promise.all([
-      c.queryFilter(c.filters.GMCompleted(me), fromBlock(), 'latest').catch(()=>[]),
-      c.queryFilter(c.filters.ContractDeployed(null, me), fromBlock(), 'latest').catch(()=>[]),
-      c.queryFilter(c.filters.AgentDeployed(me), fromBlock(), 'latest').catch(()=>[])
+      scanLogs(c, c.filters.GMCompleted(me)),
+      scanLogs(c, c.filters.ContractDeployed(null, me)),
+      scanLogs(c, c.filters.AgentDeployed(me))
     ]);
     S.lifetimeGMs=gms.length; S.contractDeploys=cds.length; S.agentDeploys=ads.length;
 
@@ -574,6 +587,7 @@ function toast(title, desc){
 function openLayer(html){ $('#layer').innerHTML=html; }
 function closeLayer(){ $('#layer').innerHTML=''; S.ddOpen=false; S.netOpen=false; }
 function net(){ return NETWORKS.find(n=>n.id===S.network); }
+window.copyText=function(t){ try{ navigator.clipboard.writeText(t); toast('Copied'); }catch(e){} };
 
 /* ============================ RENDER SHELL ============================ */
 const NAV=[
@@ -931,10 +945,10 @@ async function doGM(netId){
     const c=await dmWrite();
     toast('Confirm in your wallet','Approve the transaction to record your GM.');
     const tx=await c.pay(K(ACTION.GM), { value });
-    await tx.wait();
+    const rc=await tx.wait();
     const first=!S.gmClaimed;
-    await loadProfile();
     toast('GM completed successfully', first?'+10 XP awarded.':'XP already claimed today.');
+    await loadProfile();   // refresh streak/XP from chain; errors surface via their own toast
   }catch(err){
     toast((err&&err.code===4001)?'GM cancelled':'GM failed', (err&&(err.shortMessage||err.message))||'');
   }
@@ -998,11 +1012,12 @@ async function runDeploy(kind){
       }catch(e){}
     }
     const first = !S.deployClaimed;
-    await loadProfile();
-    panel.innerHTML=`<div class="state"><div class="state-ic ok">${ic('check')}</div><h4>Deployment completed successfully</h4><p>${kind==='agent'?'Your agent is live':'Your contract is live'} on ${net().name}. ${first?'+100 XP awarded.':'XP already claimed today.'}</p>
+    await loadProfile();                 // this re-renders, so the old panel node is now detached
+    const live = $(panelSel) || panel;   // re-query the fresh node before writing the result
+    live.innerHTML=`<div class="state"><div class="state-ic ok">${ic('check')}</div><h4>Deployment completed successfully</h4><p>${kind==='agent'?'Your agent is live':'Your contract is live'} on ${net().name}. ${first?'+100 XP awarded.':'XP already claimed today.'}</p>
       <div class="result">
-        <div class="result-row"><span class="k">${kind==='agent'?'Agent registry':'Contract address'}</span><span class="v">${addr?addr.slice(0,10)+'…'+addr.slice(-6):'see transaction'}</span></div>
-        <div class="result-row"><span class="k">Transaction</span><span class="v">${rc.hash.slice(0,10)}…${rc.hash.slice(-6)}</span></div>
+        <div class="result-row"><span class="k">${kind==='agent'?'Agent registry':'Contract address'}</span><span class="v" style="word-break:break-all;max-width:60%;text-align:right">${addr||'see transaction'}${addr?` <button class="btn-ghost btn-sm" style="padding:0 6px;height:22px" onclick="copyText('${addr}')">${ic('copy')}</button>`:''}</span></div>
+        <div class="result-row"><span class="k">Transaction</span><span class="v" style="word-break:break-all;max-width:60%;text-align:right">${rc.hash} <button class="btn-ghost btn-sm" style="padding:0 6px;height:22px" onclick="copyText('${rc.hash}')">${ic('copy')}</button></span></div>
         <div class="result-row"><span class="k">Network</span><span class="v">${net().name}</span></div>
       </div>
       <div style="display:flex;gap:10px;justify-content:center;margin-top:18px">
