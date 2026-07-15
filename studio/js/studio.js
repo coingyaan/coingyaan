@@ -187,7 +187,8 @@
       var signer=await bp.getSigner();
       return new window.ethers.Contract(m.address, this.cfg().deployManagerAbi, signer);
     },
-    getStudioFee:async function(id){ try{ var c=await this._contract(id); return c?await c.studioFee():null; }catch(e){ return null; } },
+    // V1 studioFee() is gone. Fees live in FeeManager; the amount comes from DeployManager.quote().
+    getStudioFee:async function(id){ return null; },
     getTreasury:async function(id){ try{ var c=await this._contract(id); return c?await c.treasury():(this.cfg().defaultTreasury||null); }catch(e){ return this.cfg().defaultTreasury||null; } },
     ensureChain:async function(id){
       var net=this.network(id); if(!net||!net.chainId||!wallet||!wallet.provider) return;
@@ -207,15 +208,39 @@
       var kind=this.kindHash(opts.kindStr);
       var types=(this.cfg().paramSchema||{})[opts.kindStr];
       var params=window.ethers.AbiCoder.defaultAbiCoder().encode(types, opts.values);
-      var fee=await c.studioFee();
-      var tx=await c.deploy(kind, params, { value: fee });
+      // V2: the contract prices the action on-chain. Read quote(), never compute here.
+      var action=window.ethers.keccak256(window.ethers.toUtf8Bytes(opts.kindStr==="ERC8004"?"DEPLOY_AGENT":"DEPLOY_CONTRACT"));
+      var q=await c.quote(action);
+      var required=q[0];
+      // Send a small buffer over the quote: ETH can tick between the read and the tx.
+      // DeployManager refunds every wei of the excess on-chain.
+      var value=(required*110n)/100n;
+      var tx=await c.deploy(kind, params, { value: value });
       var rc=await tx.wait();
       var addr=null;
-      for(var i=0;i<rc.logs.length;i++){ try{ var p=c.interface.parseLog(rc.logs[i]); if(p&&p.name==="Deployed"){ addr=p.args.contractAddress; break; } }catch(e){} }
+      for(var i=0;i<rc.logs.length;i++){ try{ var p=c.interface.parseLog(rc.logs[i]); if(p&&(p.name==="ContractDeployed"||p.name==="AgentDeployed")){ addr=p.args.contractAddress; break; } }catch(e){} }
       return { address: addr, hash: (rc.hash||tx.hash) };
     }
   };
   window.CGDeploy=CGDeploy;
+
+  /* ===== CGFees: contracts are the source of truth. USD label from FeeManager; ETH amount from DeployManager.quote(). No frontend math. ===== */
+  var CGFees={
+    cfg:function(){ return window.CG_STUDIO_CONFIG||{}; },
+    fm:function(){ var m=this.cfg().feeManager; return (m&&m.address)?m:null; },
+    dm:function(){ var m=this.cfg().deployManager; return (m&&m.address)?m:null; },
+    isLive:function(){ return !!(window.ethers && this.dm()); },
+    key:function(action){ return window.ethers.keccak256(window.ethers.toUtf8Bytes(action)); },
+    _rpc:function(){ var r=(this.cfg().rpc||{}); return new window.ethers.JsonRpcProvider(r.baseSepolia||r.base); },
+    _fm:function(){ var m=this.fm(); return m?new window.ethers.Contract(m.address,this.cfg().feeManagerAbi,this._rpc()):null; },
+    _dm:function(){ var m=this.dm(); return m?new window.ethers.Contract(m.address,this.cfg().deployManagerAbi,this._rpc()):null; },
+    feeUsd:async function(action){ try{ var c=this._fm(); if(!c)return null; var v=await c.feeUsdOf(this.key(action)); return Number(v)/1e8; }catch(e){ return null; } },
+    treasury:async function(){ try{ var c=this._fm(); if(!c)return null; var t=await c.treasury(); return {dev:t[0],mkt:t[1],devBps:Number(t[2])}; }catch(e){ return null; } },
+    label:async function(action){ var u=await this.feeUsd(action); return (u==null)?"":("Fee: $"+u.toFixed(2)); },
+    // required native wei comes straight from the contract quote(); frontend never converts USD->ETH
+    quoteWei:async function(action){ try{ var c=this._dm(); if(!c)return null; var q=await c.quote(this.key(action)); return q[0]; }catch(e){ return null; } }
+  };
+  window.CGFees=CGFees;
 
   // Collect ABI-encode values from the contract form for a given type.
   function collectContractValues(type){
@@ -474,6 +499,10 @@
   };
   function renderField(f){
     const opt = f.optional ? ' <span class="text-muted font-normal">(optional)</span>' : '';
+    if(f.id==="cf_owner"){
+      var pre = wallet ? wallet.addr : "";
+      return '<div class="field"><label for="'+f.id+'">'+f.label+'</label><input id="'+f.id+'" type="text" value="'+pre+'" placeholder="'+(f.placeholder||'')+'" /><p class="text-[12px] text-muted mt-1">Defaults to your connected wallet. Change only if you are sure.</p></div>';
+    }
     if(f.type==="network"){
       var nets=(window.CG_STUDIO_CONFIG&&window.CG_STUDIO_CONFIG.networks)||[{id:"base",label:"Base",status:"active"}];
       var opts=nets.map(function(n){
