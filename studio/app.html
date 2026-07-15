@@ -396,11 +396,12 @@ const NETWORKS = [
   {id:'base',      name:'Base Sepolia',    logo:'base',      chainId:84532, live:true},
   {id:'robinhood', name:'Robinhood Chain', logo:'robinhood', chainId:4663,  live:false}
 ];
+// Browser-extension wallets only. Robinhood Wallet is deliberately absent: it is a mobile app
+// with no desktop extension, so listing it would be a dead end.
 const WALLETS = [
-  {id:'robinhood', name:'Robinhood Wallet', desc:'Connect using your Robinhood Wallet.', logo:'robinhood'},
-  {id:'coinbase',  name:'Coinbase Wallet',  desc:'Connect using Coinbase Wallet.',        logo:'coinbase'},
-  {id:'rabby',     name:'Rabby Wallet',     desc:'Recommended for multi-chain users.',    logo:'rabby'},
-  {id:'metamask',  name:'MetaMask',         desc:'Connect using MetaMask.',               logo:'metamask'}
+  {id:'rabby',     name:'Rabby Wallet',     desc:'Recommended for multi-chain users.', logo:'rabby'},
+  {id:'metamask',  name:'MetaMask',         desc:'Connect using MetaMask.',            logo:'metamask'},
+  {id:'coinbase',  name:'Coinbase Wallet',  desc:'Connect using Coinbase Wallet.',     logo:'coinbase'}
 ];
 // Accounts come from the connected wallet. Nothing is hardcoded.
 let ACCOUNTS = [];
@@ -893,40 +894,48 @@ async function walletPopup(walletId){
   const prov=findProvider(walletId);
   if(!prov){
     closeLayer();
-    toast(w.name+' not found','Install it, or pick a wallet you have installed.');
+    toast(w.name+' not detected','Install the extension, or pick a wallet you already have.');
     return;
   }
+  // Hand off to the wallet immediately. Its own popup is the confirmation step, exactly like
+  // Uniswap or 1inch. wallet_requestPermissions forces the account picker to appear even if
+  // this site was authorised before.
+  closeLayer();
+  toast('Check '+w.name,'Approve the connection in your wallet.');
   let accounts=[];
   try{
     await prov.request({method:'wallet_requestPermissions',params:[{eth_accounts:{}}]}).catch(()=>null);
     accounts=await prov.request({method:'eth_requestAccounts'});
   }catch(err){
-    closeLayer();
     toast('Connection cancelled', (err&&err.code===4001)?'You rejected the request.':'Could not connect.');
     return;
   }
-  if(!accounts||!accounts.length){ closeLayer(); toast('No account returned'); return; }
+  if(!accounts||!accounts.length){ toast('No account returned'); return; }
+
   S.provider=prov;
   ACCOUNTS=accounts.map(a=>({addr:a.slice(0,6)+'…'+a.slice(-4), full:a, net:net().name}));
-  const acct=ACCOUNTS[0];
-  openLayer(`<div class="overlay" data-act="close-layer"><div class="modal wpop" data-stop>
-    <div class="wpop-head"><div class="wpop-badge">${lg(w.logo)}</div><div class="wpop-title">Connect to CoinGyaan Studio</div><div class="wpop-site">coingyaan.studio</div></div>
-    <div class="wpop-rows">
-      <div class="wpop-row"><span class="k">Wallet</span><span class="v">${w.name}</span></div>
-      <div class="wpop-row"><span class="k">Account</span><span class="v mono">${acct.addr}</span></div>
-      <div class="wpop-row"><span class="k">Network</span><span class="v"><span class="net-logo sm">${lg(net().logo)}</span>${net().name}</span></div>
-    </div>
-    <div class="wpop-actions"><button class="btn btn-primary btn-block" data-act="wconnect:${walletId}">Connect</button><button class="btn btn-ghost btn-block" data-act="cancel">Cancel</button></div>
-  </div></div>`);
-}
-async function connectFromPopup(walletId){
-  S.connected=true; S.walletId=walletId; S.walletName=WALLETS.find(w=>w.id===walletId).name;
+  S.connected=true; S.walletId=walletId; S.walletName=w.name;
   S.account={addr:ACCOUNTS[0].addr, full:ACCOUNTS[0].full, net:net().name};
-  closeLayer(); render();
+  render();
   toast('Wallet connected', ACCOUNTS[0].addr+' · '+net().name);
   try{ await ensureChain(); }catch(e){ toast('Switch to '+net().name,'Your wallet is on another network.'); }
   loadProfile();
+  // Wallet-initiated account/chain changes should be reflected without a reload.
+  try{
+    if(!prov.__cgBound){
+      prov.__cgBound=true;
+      prov.on && prov.on('accountsChanged', accs=>{
+        if(!accs||!accs.length){ disconnect(); return; }
+        ACCOUNTS=accs.map(a=>({addr:a.slice(0,6)+'…'+a.slice(-4), full:a, net:net().name}));
+        S.account={addr:ACCOUNTS[0].addr, full:ACCOUNTS[0].full, net:net().name};
+        render(); loadProfile();
+        toast('Account switched', ACCOUNTS[0].addr);
+      });
+      prov.on && prov.on('chainChanged', ()=>{ loadProfile(); });
+    }
+  }catch(e){}
 }
+
 function connectAccount(i){
   const a=ACCOUNTS[i]; if(!a) return;
   S.connected=true; S.account={addr:a.addr, full:a.full, net:net().name};
@@ -1075,7 +1084,6 @@ document.addEventListener('click', e=>{
     case 'nav': S.view=v; closeLayer(); render(); break;
     case 'connect': walletModal(); break;
     case 'pick': S.walletId=v; S.walletName=WALLETS.find(w=>w.id===v).name; closeLayer(); walletPopup(v); break;
-    case 'wconnect': connectFromPopup(v); break;
     case 'cancel': closeLayer(); break;
     case 'copyaddr': try{navigator.clipboard&&navigator.clipboard.writeText(S.account.addr)}catch(e){}; toast('Address copied'); closeLayer(); break;
     case 'profile': closeLayer(); toast('Builder profile','Shown in the sidebar.'); break;
