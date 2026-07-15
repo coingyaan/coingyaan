@@ -29,14 +29,15 @@ input,textarea,select{font-family:inherit}
 
 /* ---------- layout ---------- */
 .app{display:grid;grid-template-columns:266px 1fr;height:100vh;overflow:hidden}
-.sidebar{background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;min-height:0}
-.main{display:flex;flex-direction:column;min-width:0}
-.content{flex:1;overflow-y:auto}
+.sidebar{background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;min-height:0;overflow-y:auto}
+.main{display:flex;flex-direction:column;min-width:0;min-height:0}
+.content{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .content-inner{max-width:1080px;margin:0 auto;padding:34px 40px 60px;animation:fade .22s ease}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
 /* ---------- sidebar ---------- */
-.brand{padding:20px 18px 16px;display:flex;align-items:center;gap:11px}
+.brand{padding:20px 18px 16px;display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit;border-radius:10px;transition:background .12s}
+.brand:hover{background:var(--hover)}
 .brand-mark{width:30px;height:30px;border-radius:8px;overflow:hidden;flex-shrink:0;background:var(--hover)}
 .brand-mark img{width:100%;height:100%;object-fit:cover;display:block}
 .brand-name{font-weight:700;font-size:14.5px;letter-spacing:-.01em;line-height:1.1}
@@ -314,10 +315,10 @@ input,textarea,select{font-family:inherit}
 <div class="app">
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="brand">
+    <a class="brand" href="/studio" title="Back to CoinGyaan Studio home">
       <div class="brand-mark"><img src="https://coingyaan.com/assets/images/favicon/coingyaan-android-icon-512x512.png" alt="CoinGyaan" /></div>
       <div class="brand-name">CoinGyaan Studio</div>
-    </div>
+    </a>
     <nav class="nav" id="nav"></nav>
     <div class="nav-sep"></div>
     <div class="profile" id="profile"></div>
@@ -403,6 +404,7 @@ const WALLETS = [
 ];
 // Accounts come from the connected wallet. Nothing is hardcoded.
 let ACCOUNTS = [];
+const CAPS=['Wallet analysis','Onchain data','Reputation','Alerts','Trading signals'];
 const LEVELS=[[50,'Legend'],[35,'Expert'],[20,'Architect'],[10,'Builder'],[5,'Contributor'],[1,'Member']];
 const XP_PER_LEVEL=150;
 function levelOf(xp){const l=Math.min(50,Math.floor(xp/XP_PER_LEVEL)+1);let t='Member';for(const[min,name]of LEVELS){if(l>=min){t=name;break}}return{level:l,title:t,into:xp%XP_PER_LEVEL,need:XP_PER_LEVEL}}
@@ -418,6 +420,7 @@ const S = {
   gm:{base:false, robinhood:false},
   agentTab:'create', contractType:'ERC20', lbTab:'today', docsPage:'quickstart',
   ddOpen:false, netOpen:false, loadingProfile:false,
+  draft:{name:'',desc:'',inst:'',caps:['Wallet analysis','Onchain data']},
   fees:{}      // action -> usd, read from FeeManager
 };
 function totalDeploys(){return S.agentDeploys+S.contractDeploys}
@@ -429,9 +432,9 @@ async function loadLeaderboard(){
   const c=dmRead(); if(!c) return;
   try{
     const [gms, cds, ads] = await Promise.all([
-      c.queryFilter(c.filters.GMCompleted(), 0, 'latest').catch(()=>[]),
-      c.queryFilter(c.filters.ContractDeployed(), 0, 'latest').catch(()=>[]),
-      c.queryFilter(c.filters.AgentDeployed(), 0, 'latest').catch(()=>[])
+      c.queryFilter(c.filters.GMCompleted(), fromBlock(), 'latest').catch(()=>[]),
+      c.queryFilter(c.filters.ContractDeployed(), fromBlock(), 'latest').catch(()=>[]),
+      c.queryFilter(c.filters.AgentDeployed(), fromBlock(), 'latest').catch(()=>[])
     ]);
     const prov=readProvider(); const cache={};
     const day=async bn=>{ if(cache[bn]!=null) return cache[bn];
@@ -468,6 +471,7 @@ function dmAddr(){ const d=(CFG().deployManager||{}).base||{}; return d.address|
 function fmAddr(){ return (CFG().feeManager||{}).address||null; }
 function rpcUrl(){ const r=CFG().rpc||{}; return r.baseSepolia||r.base; }
 function readProvider(){ return new ethers.JsonRpcProvider(rpcUrl()); }
+function fromBlock(){ return (CFG().deployBlock)||44160000; }
 function dmRead(){ const a=dmAddr(); return a?new ethers.Contract(a, CFG().deployManagerAbi, readProvider()):null; }
 function fmRead(){ const a=fmAddr(); return a?new ethers.Contract(a, CFG().feeManagerAbi, readProvider()):null; }
 async function dmWrite(){
@@ -530,9 +534,9 @@ async function loadProfile(){
   try{
     const me=S.account.full;
     const [gms, cds, ads] = await Promise.all([
-      c.queryFilter(c.filters.GMCompleted(me), 0, 'latest').catch(()=>[]),
-      c.queryFilter(c.filters.ContractDeployed(null, me), 0, 'latest').catch(()=>[]),
-      c.queryFilter(c.filters.AgentDeployed(me), 0, 'latest').catch(()=>[])
+      c.queryFilter(c.filters.GMCompleted(me), fromBlock(), 'latest').catch(()=>[]),
+      c.queryFilter(c.filters.ContractDeployed(null, me), fromBlock(), 'latest').catch(()=>[]),
+      c.queryFilter(c.filters.AgentDeployed(me), fromBlock(), 'latest').catch(()=>[])
     ]);
     S.lifetimeGMs=gms.length; S.contractDeploys=cds.length; S.agentDeploys=ads.length;
 
@@ -555,7 +559,7 @@ async function loadProfile(){
     if(!gmDays.has(d)) d--;              // streak survives until today's window closes
     while(gmDays.has(d)){ streak++; d--; }
     S.streak=streak;
-  }catch(e){ /* profile stays at zero rather than showing invented numbers */ }
+  }catch(e){ console.warn('profile load failed', e); toast('Could not read your onchain activity','Retrying shortly.'); }
   S.loadingProfile=false; render();
 }
 
@@ -705,23 +709,22 @@ function viewAgents(){
 function agentPanel(){
   const t=S.agentTab;
   if(t==='create') return `
-    <div class="panel-head"><div class="panel-title">Create Agent</div><div class="panel-sub">AI assisted agent specification.</div></div>
-    <div class="state" style="padding:24px 10px">
-      <div class="state-ic load" style="background:var(--accent-soft);color:var(--accent)">${ic('spark')}</div>
-      <h4>Available soon</h4>
-      <p>Generated specifications are on the way. You can deploy an agent identity onchain today from Deploy Agent.</p>
-      <button class="btn btn-primary btn-sm" style="margin-top:16px" data-act="agent-tab:deploy">${ic('bot')}Deploy agent</button>
-    </div>`;
+    <div class="panel-head"><div class="panel-title">Create Agent</div><div class="panel-sub">Define your agent, then deploy its identity onchain.</div></div>
+    <div class="field"><label>Agent name</label><input id="c_name" value="${(S.draft.name||'').replace(/"/g,'&quot;')}" placeholder="BaseWallet IQ" /></div>
+    <div class="field"><label>Description</label><textarea id="c_desc" placeholder="An agent that analyzes Base wallets and scores onchain activity.">${S.draft.desc||''}</textarea></div>
+    <div class="field"><label>Instructions</label><textarea id="c_inst" placeholder="How the agent should behave and respond.">${S.draft.inst||''}</textarea></div>
+    <div class="field"><label>Capabilities</label><div class="chips">${CAPS.map(c=>`<button class="chip ${S.draft.caps.includes(c)?'on':''}" data-act="cap:${c.replace(/ /g,'_')}">${c}</button>`).join('')}</div></div>
+    <button class="btn btn-primary btn-block" data-act="agent-continue">${ic('arrow')}Continue to deploy</button>`;
   if(t==='deploy') return `
     <div class="panel-head"><div class="panel-title">Deploy Agent</div><div class="panel-sub">Review and deploy your agent identity.</div></div>
     <div class="review">
-      <div class="review-row"><span class="k">Agent</span><span class="v">BaseWallet IQ</span></div>
+      <div class="review-row"><span class="k">Agent</span><span class="v">${S.draft.name||'Not set'}</span></div>
+      ${S.draft.caps.length?`<div class="review-row"><span class="k">Capabilities</span><span class="v">${S.draft.caps.join(', ')}</span></div>`:''}
       <div class="review-row"><span class="k">Standard</span><span class="v">ERC-8004</span></div>
       <div class="review-row"><span class="k">Network</span><span class="v">${net().name}</span></div>
       <div class="review-row"><span class="k">Owner</span><span class="v mono">${S.connected?S.account.addr:'Connect wallet'}</span></div>
-      <div class="review-row"><span class="k">Studio fee</span><span class="v">${feeLabel(ACTION.AGENT)||'—'}</span></div>
     </div>
-    <div class="field"><label>Agent name</label><input id="f_name" placeholder="BaseWallet IQ" /></div>
+    <div class="field"><label>Agent name</label><input id="f_name" value="${(S.draft.name||'').replace(/"/g,'&quot;')}" placeholder="BaseWallet IQ" /></div>
     <div class="field"><label>Metadata URI</label><input id="f_uri" placeholder="ipfs://... (optional)" /></div>
     <button class="btn btn-primary btn-block" data-act="deploy:agent">${ic('bot')}Deploy agent</button>`;
   if(t==='import') return `
@@ -785,7 +788,7 @@ function contractPanel(){
           <p class="net-note">B20 contracts are available exclusively on Base.</p>
           <button class="btn btn-secondary btn-block" style="margin-top:11px" data-act="setnet:base">Switch workspace to Base</button></div>`
       : `<div class="field"><label>Network</label><div class="readonly-net"><span class="net-logo sm">${lg((t==='B20'?NETWORKS.find(x=>x.id==='base'):net()).logo)}</span>${(t==='B20'?'Base':net().name)}</div></div>`}
-    <button class="btn btn-primary btn-block" data-act="deploy:contract" ${blocked?'disabled':''}>${ic('code')}Deploy ${t}${feeLabel(ACTION.CONTRACT)?' · '+feeLabel(ACTION.CONTRACT):''}</button>`;
+    <button class="btn btn-primary btn-block" data-act="deploy:contract" ${blocked?'disabled':''}>${ic('code')}Deploy ${t}</button>`;
 }
 
 /* ---- shared option row ---- */
@@ -926,7 +929,7 @@ async function doGM(netId){
     await ensureChain();
     const value=await quoteWei(ACTION.GM);
     const c=await dmWrite();
-    toast('Confirm in your wallet','Daily GM · '+feeLabel(ACTION.GM));
+    toast('Confirm in your wallet','Approve the transaction to record your GM.');
     const tx=await c.pay(K(ACTION.GM), { value });
     await tx.wait();
     const first=!S.gmClaimed;
@@ -1052,6 +1055,21 @@ document.addEventListener('click', e=>{
     case 'contract-type': S.contractType=v; render(); break;
     case 'deploy': runDeploy(v); break;
     case 'docs': S.docsPage=v; render(); break;
+    case 'cap': {
+      const cap=v.replace(/_/g,' ');
+      const i=S.draft.caps.indexOf(cap);
+      if(i>=0) S.draft.caps.splice(i,1); else S.draft.caps.push(cap);
+      $('#agent-panel').innerHTML=agentPanel();
+      break;
+    }
+    case 'agent-continue': {
+      const g=id=>{ const e=document.getElementById(id); return e?e.value.trim():''; };
+      S.draft.name=g('c_name'); S.draft.desc=g('c_desc'); S.draft.inst=g('c_inst');
+      if(!S.draft.name){ toast('Enter an agent name'); break; }
+      S.agentTab='deploy'; render();
+      toast('Agent ready to deploy', S.draft.name);
+      break;
+    }
     case 'chip': el.classList.toggle('on'); break;
     default: break;
   }
