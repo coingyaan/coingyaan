@@ -1,0 +1,12 @@
+# CoinGyaan Outlook cron — tiny Worker whose only job is to ping /api/refresh
+# every 5 minutes so the KV cache stays warm even without site traffic.
+name = "coingyaan-outlook-cron"
+main = "src/index.js"
+compatibility_date = "2026-05-24"
+
+[triggers]
+crons = ["*/5 * * * *"]
+
+[vars]
+REFRESH_URL = "https://coingyaan.com/api/refresh"
+# REFRESH_KEY is a secret, set with:  wrangler secret put REFRESH_KEY
