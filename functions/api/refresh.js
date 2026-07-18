@@ -12,9 +12,11 @@ export async function onRequest(context) {
   }
   try {
     const r = await refreshOutlook(env);
-    return json(r, r.ok ? 200 : 502);
+    // Always 200 so the diagnostic body (ok flag + providers) is visible.
+    // The cron worker treats any 2xx as success and simply retries next tick.
+    return json(r, 200);
   } catch (e) {
-    return json({ ok: false, error: String(e) }, 500);
+    return json({ ok: false, error: String(e) }, 200);
   }
 }
 

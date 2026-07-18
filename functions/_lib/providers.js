@@ -27,14 +27,46 @@ async function getJson(url, { method = "GET", body = null, timeout = 4500 } = {}
 const FAPI = "https://fapi.binance.com";
 const SAPI = "https://api.binance.com";
 
-async function binanceKlines(symbol, interval, limit) {
+// Candles are the one hard dependency. Binance blocks many cloud IPs (451 at the
+// edge), so we fall back to Bybit then OKX, which are not geo-blocked. Each
+// source returns OHLCV; Bybit and OKX come newest-first and are reversed.
+const BYBIT_IV = { "1h": "60", "4h": "240", "1d": "D" };
+const OKX_IV = { "1h": "1H", "4h": "4H", "1d": "1D" };
+
+async function getKlines(symbol, interval, limit) {
+  // 1) Binance USD-M futures, then spot
   let rows = await getJson(`${FAPI}/fapi/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`);
   if (!Array.isArray(rows)) rows = await getJson(`${SAPI}/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`);
-  if (!Array.isArray(rows) || !rows.length) return null;
-  return {
-    closes: rows.map((r) => parseFloat(r[4])),
-    volumes: rows.map((r) => parseFloat(r[5])),
-  };
+  if (Array.isArray(rows) && rows.length) {
+    return { closes: rows.map((r) => parseFloat(r[4])), volumes: rows.map((r) => parseFloat(r[5])), src: "binance" };
+  }
+  // 2) Bybit linear perp (newest-first -> reverse)
+  const bIv = BYBIT_IV[interval] || "60";
+  const bb = await getJson(`https://api.bybit.com/v5/market/kline?category=linear&symbol=${symbol}&interval=${bIv}&limit=${Math.min(limit, 1000)}`);
+  const bl = bb?.result?.list;
+  if (Array.isArray(bl) && bl.length) {
+    const asc = bl.slice().reverse();
+    return { closes: asc.map((r) => parseFloat(r[4])), volumes: asc.map((r) => parseFloat(r[5])), src: "bybit" };
+  }
+  // 3) OKX spot (newest-first -> reverse)
+  const oIv = OKX_IV[interval] || "1H";
+  const inst = symbol.replace("USDT", "-USDT");
+  const ok = await getJson(`https://www.okx.com/api/v5/market/candles?instId=${inst}&bar=${oIv}&limit=${Math.min(limit, 300)}`);
+  const ol = ok?.data;
+  if (Array.isArray(ol) && ol.length) {
+    const asc = ol.slice().reverse();
+    return { closes: asc.map((r) => parseFloat(r[4])), volumes: asc.map((r) => parseFloat(r[5])), src: "okx" };
+  }
+  return null;
+}
+
+async function okxTicker(symbol) {
+  const inst = symbol.replace("USDT", "-USDT");
+  const d = await getJson(`https://www.okx.com/api/v5/market/ticker?instId=${inst}`);
+  const row = d?.data?.[0];
+  if (!row || !row.last) return null;
+  const last = parseFloat(row.last), open = parseFloat(row.open24h);
+  return { price: last, changePct: open ? ((last - open) / open) * 100 : 0 };
 }
 
 async function binance24h(symbol) {
@@ -117,8 +149,8 @@ async function fearGreed() {
 export async function assembleMarket(cfg) {
   const { symbol, hlCoin, klineInterval, klineLimit } = cfg;
 
-  const [klines, tick, bnFund, bnOI, bybit, hl, dom, fg, cgPrice] = await Promise.all([
-    binanceKlines(symbol, klineInterval, klineLimit),
+  const [klines, tick, bnFund, bnOI, bybit, hl, dom, fg, cgPrice, okx] = await Promise.all([
+    getKlines(symbol, klineInterval, klineLimit),
     binance24h(symbol),
     binanceFunding(symbol),
     binanceOI(symbol),
@@ -127,18 +159,20 @@ export async function assembleMarket(cfg) {
     coingeckoDominance(),
     fearGreed(),
     coingeckoPrice(),
+    okxTicker(symbol),
   ]);
 
   const status = {
-    klines: !!klines, ticker: !!(tick || cgPrice),
-    binanceFunding: bnFund != null, bybit: !!bybit, hyperliquid: !!hl,
+    klines: !!klines, klineSource: klines?.src || null,
+    ticker: !!(tick || cgPrice || okx || bybit),
+    binanceFunding: bnFund != null, bybit: !!bybit, hyperliquid: !!hl, okx: !!okx,
     openInterest: !!(bnOI && bnOI.changePct != null),
     dominance: dom != null, fearGreed: fg != null,
   };
 
-  // price + 24h change: Binance ticker, else CoinGecko, else last kline
-  let price = tick?.price ?? cgPrice?.price ?? (klines ? klines.closes[klines.closes.length - 1] : null);
-  let changePct = tick?.changePct ?? cgPrice?.changePct ?? 0;
+  // price + 24h change: Binance ticker, else Bybit, OKX, CoinGecko, else last kline
+  let price = tick?.price ?? bybit?.price ?? okx?.price ?? cgPrice?.price ?? (klines ? klines.closes[klines.closes.length - 1] : null);
+  let changePct = tick?.changePct ?? okx?.changePct ?? cgPrice?.changePct ?? 0;
 
   // funding: average available 8h-equivalent rates (HL hourly -> *8)
   const fundings = [];
