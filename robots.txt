@@ -9,5 +9,6 @@ Disallow: /wp-login.php
 Disallow: /feed/
 Disallow: /?p=
 Disallow: /cgi-sys/
+Disallow: /search
 
 Sitemap: https://coingyaan.com/sitemap.xml

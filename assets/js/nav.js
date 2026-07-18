@@ -1,177 +1,142 @@
-(function() {
+(function () {
+  'use strict';
 
-  /* =========================================================================
-     CoinGyaan navigation for the Crypto Intelligence Platform
-     Home | Intelligence | Markets | Learn | News | About
+  /* ==========================================================================
+     CoinGyaan Version 2 shared navigation. Single source of truth.
 
-     Studio, App and the old Tools dropdown are de-listed here. Their pages are
-     NOT deleted and keep working at their existing URLs; they are simply no
-     longer discoverable from the site navigation. They move to Layeron in Phase 2.
+     Every page renders this header by placing <div id="site-nav"></div> near
+     the top of <body> and loading this file. Desktop matches Homepage v7.
+     Mobile uses a premium slide-in menu. Styling: /assets/css/coingyaan.css.
+     Clean URLs only, no .html.
+     ========================================================================== */
 
-     The full architecture is listed here (shell first, content second). Pages that do
-     not have real content yet carry <meta name="robots" content="noindex"> so Google and
-     AdSense never see a thin page. Remove that one line as each page is filled in.
-     ========================================================================= */
+  var LOGO = 'https://coingyaan.com/assets/images/favicon/coingyaan-android-icon-512x512.png';
 
   var NAV = [
     { label: 'Home', href: '/' },
-    { label: 'Intelligence', items: [
-        { label: 'Bitcoin Outlook',        href: '/bitcoin-sentiment-today.html' },
-        { label: 'Fear &amp; Greed Index', href: '/fear-greed-index-today.html' },
-        { label: 'Funding Rate',           href: '/intelligence/funding-rate.html' },
-        { label: 'Open Interest',          href: '/intelligence/open-interest.html' }
-      ] },
-    { label: 'Markets', items: [
-        { label: 'Bitcoin',  href: '/bitcoin.html', accent: true },
-        { label: 'Ethereum', href: '/markets/ethereum.html' },
-        { label: 'Altcoins', href: '/markets/altcoins.html' }
-      ] },
-    { label: 'Learn', items: [
-        { label: 'Bitcoin Basics',   href: '/learn/bitcoin-basics.html' },
-        { label: 'Trading',          href: '/learn/trading.html' },
-        { label: 'Onchain Analysis', href: '/learn/onchain-analysis.html' },
-        { label: 'Security',         href: '/learn/security.html' }
-      ] },
-    { label: 'News', items: [
-        { label: 'Bitcoin',        href: '/news/bitcoin.html' },
-        { label: 'Ethereum',       href: '/news/ethereum.html' },
-        { label: 'Altcoins',       href: '/news/altcoins.html' },
-        { label: 'Market Updates', href: '/news/market-updates.html' }
-      ] },
-    { label: 'About', items: [
-        { label: 'About CoinGyaan',  href: '/about.html' },
-        { label: 'Editorial Policy', href: '/editorial-policy.html' },
-        { label: 'Methodology',      href: '/methodology.html' },
-        { label: 'Data Sources',     href: '/data-sources.html' },
-        { label: 'Contact Us',       href: '/contact.html' }
-      ] }
+    { label: 'Intelligence', key: 'i', items: [
+      { label: 'Bitcoin Outlook',        href: '/bitcoin-outlook/' },
+      { label: 'Fear &amp; Greed Index', href: '/fear-greed-index/' },
+      { label: 'Funding Rate',           href: '/funding-rate/' },
+      { label: 'Open Interest',          href: '/open-interest/' },
+      { label: 'ETF Flows',              href: '/etf-flows/' }
+    ] },
+    { label: 'Markets', key: 'm', items: [
+      { label: 'Bitcoin',     href: '/markets/bitcoin/', gold: true },
+      { label: 'Ethereum',    href: '/markets/ethereum/' },
+      { label: 'Solana',      href: '/markets/solana/' },
+      { label: 'Altcoins',    href: '/markets/altcoins/' },
+      { label: 'Stablecoins', href: '/markets/stablecoins/' }
+    ] },
+    { label: 'News', key: 'n', items: [
+      { label: 'Blockchain',     href: '/news/blockchain/' },
+      { label: 'AI Agents',      href: '/news/ai-agents/' },
+      { label: 'DeFi',           href: '/news/defi/' },
+      { label: 'Regulation',     href: '/news/regulation/' },
+      { label: 'Press Releases', href: '/news/press-releases/' }
+    ] },
+    { label: 'About', key: 'a', items: [
+      { label: 'Our Mission',      href: '/about/our-mission/' },
+      { label: 'Editorial Policy', href: '/about/editorial-policy/' },
+      { label: 'Methodology',      href: '/about/methodology/' },
+      { label: 'Data Sources',     href: '/about/data-sources/' },
+      { label: 'Contact',          href: '/about/contact/' }
+    ] }
   ];
 
-  function buildNav() {
-    return NAV.map(function(item, i) {
-      if (item.items) {
-        var id = 'nd' + i;
-        var links = item.items.map(function(sub) {
-          return '<a href="' + sub.href + '"' + (sub.accent ? ' class="nav-accent"' : '') + '>' + sub.label + '</a>';
-        }).join('');
-        return '<div class="nav-dropdown" data-nav="' + id + '">' +
-                 '<span class="nav-dropdown-trigger" data-trigger="' + id + '">' + item.label + ' &#9662;</span>' +
-                 '<div class="nav-dropdown-menu" data-menu="' + id + '">' + links + '</div>' +
-               '</div>';
-      }
-      return '<a href="' + item.href + '">' + item.label + '</a>';
+  var here = location.pathname.replace(/index\.html$/, '');
+  if (here.length > 1) here = here.replace(/\/?$/, '/');
+  function isCur(href) { return href !== '/' ? here.indexOf(href) === 0 : here === '/'; }
+  function ac(href) { return isCur(href) ? ' aria-current="page"' : ''; }
+  function link(sub) { return '<a href="' + sub.href + '"' + (sub.gold ? ' class="gold"' : '') + ac(sub.href) + '>' + sub.label + '</a>'; }
+
+  function desktopNav() {
+    return NAV.map(function (item) {
+      if (!item.items) return '<a href="' + item.href + '"' + ac(item.href) + '>' + item.label + '</a>';
+      return '<div class="dd"><span class="dd-trigger" data-dd="' + item.key + '" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false">' + item.label + ' &#9662;</span>' +
+             '<div class="dd-menu" data-menu="' + item.key + '">' + item.items.map(link).join('') + '</div></div>';
     }).join('');
   }
 
-  var NAV_HTML = `
-<div class="top-market-bar" id="topMarketBar">
-  <div class="top-bar-track" id="topBarTrack"></div>
-  <span class="top-bar-updated" id="topBarUpdated"></span>
-</div>
-<header>
-  <div class="container">
-    <div class="header-bar">
-      <a href="/" class="brand">
-        <img src="/assets/images/logo/coingyaan-logo-transparent.png" alt="CoinGyaan" loading="eager" />
-        <div class="brand-text"><strong>CoinGyaan</strong><span class="brand-tag">Crypto Intelligence</span></div>
-      </a>
-      <nav class="header-nav">${buildNav()}</nav>
-    </div>
-  </div>
-</header>`;
-
-  var NAV_CSS = `
-  <style id="site-nav-css">
-    .brand-text { display: flex; flex-direction: column; line-height: 1.15; }
-    .brand-tag { font-size: 10.5px; font-weight: 500; color: #64748b; letter-spacing: 0.04em; }
-    .nav-dropdown { position: relative; display: inline-flex; align-items: center; }
-    .nav-dropdown-trigger {
-      font-size: 14px;
-      font-weight: 500;
-      color: #94a3b8;
-      cursor: pointer;
-      padding: 4px 0;
-      user-select: none;
-      white-space: nowrap;
-      transition: color 0.2s;
-    }
-    .nav-dropdown-trigger:hover { color: #e2e8f0; }
-    .nav-dropdown-trigger.open { color: #f59e0b; }
-    .nav-dropdown-menu {
-      display: none;
-      position: absolute;
-      top: calc(100% + 8px);
-      left: 50%;
-      transform: translateX(-50%);
-      background: #0d1526;
-      border: 1px solid #1e293b;
-      border-radius: 10px;
-      padding: 6px;
-      min-width: 210px;
-      z-index: 999999;
-      box-shadow: 0 12px 32px rgba(0,0,0,.45);
-    }
-    .nav-dropdown-menu.open { display: block; }
-    .nav-dropdown-menu a {
-      display: block;
-      padding: 9px 12px;
-      font-size: 13.5px;
-      color: #94a3b8;
-      border-radius: 7px;
-      white-space: nowrap;
-      transition: background 0.15s, color 0.15s;
-    }
-    .nav-dropdown-menu a:hover { background: #16203a; color: #e2e8f0; }
-    .nav-dropdown-menu a.nav-accent { color: #f59e0b; }
-    @media (max-width: 860px) {
-      .nav-dropdown-menu { left: 0; transform: none; }
-    }
-  </style>`;
-
-  // Inject CSS into head
-  if (!document.getElementById('site-nav-css')) {
-    document.head.insertAdjacentHTML('beforeend', NAV_CSS);
+  function mobileGroups() {
+    return NAV.map(function (item) {
+      if (!item.items) return '<div class="mnav-group"><a class="mnav-solo" href="' + item.href + '"' + ac(item.href) + '>' + item.label + '</a></div>';
+      return '<div class="mnav-group"><h6>' + item.label + '</h6>' + item.items.map(link).join('') + '</div>';
+    }).join('');
   }
 
-  // Inject Cointraffic unified script (loads once per page)
-  if (!document.getElementById('ct-unified')) {
-    var ctScript = document.createElement('script');
-    ctScript.async = true;
-    ctScript.id = 'ct-unified';
-    ctScript.src = 'https://appsha-pnd.ctengine.io/js/script.js?wkey=EjA8CfgEz1';
-    document.head.appendChild(ctScript);
+  var HEADER =
+    '<header>' +
+      '<div class="wrap hbar">' +
+        '<a href="/" class="brand">' +
+          '<img src="' + LOGO + '" alt="CoinGyaan" width="30" height="30" />' +
+          '<span class="brand-txt"><strong>Coin<span>Gyaan</span></strong><span class="brand-tag">Crypto Intelligence</span></span>' +
+        '</a>' +
+        '<nav class="nav" aria-label="Primary">' + desktopNav() + '</nav>' +
+        '<div class="hright">' +
+          '<div class="search"><svg class="ico ico-sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input placeholder="Search" aria-label="Search" /></div>' +
+          '<span class="pill-soon" title="Layeron coming soon"><span class="pill-soon-n">Layeron</span><span class="pill-soon-b">Coming Soon</span></span>' +
+          '<button class="nav-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mnav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>' +
+        '</div>' +
+      '</div>' +
+    '</header>';
+
+  var PANEL =
+    '<div class="mnav-backdrop" id="mnavBackdrop"></div>' +
+    '<aside class="mnav" id="mnav" aria-hidden="true" aria-label="Menu">' +
+      '<div class="mnav-top">' +
+        '<a href="/" class="brand"><img src="' + LOGO + '" alt="CoinGyaan" width="28" height="28" /><span class="brand-txt"><strong>Coin<span>Gyaan</span></strong></span></a>' +
+        '<button class="mnav-close" type="button" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
+      '</div>' +
+      '<div class="mnav-search"><svg class="ico ico-sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input placeholder="Search CoinGyaan" aria-label="Search" /></div>' +
+      '<nav class="mnav-links" aria-label="Mobile">' + mobileGroups() + '</nav>' +
+      '<div class="mnav-foot"><span class="pill-soon" title="Layeron coming soon"><span class="pill-soon-n">Layeron</span><span class="pill-soon-b">Coming Soon</span></span></div>' +
+    '</aside>';
+
+  var slot = document.getElementById('site-nav');
+  if (slot) slot.outerHTML = HEADER;
+  document.body.insertAdjacentHTML('beforeend', PANEL);
+
+  var panel = document.getElementById('mnav');
+  var backdrop = document.getElementById('mnavBackdrop');
+  var root = document.documentElement;
+
+  function openMenu() {
+    panel.classList.add('on'); backdrop.classList.add('on');
+    panel.setAttribute('aria-hidden', 'false'); root.classList.add('mnav-open');
+    var b = document.querySelector('.nav-burger'); if (b) b.setAttribute('aria-expanded', 'true');
+  }
+  function closeMenu() {
+    panel.classList.remove('on'); backdrop.classList.remove('on');
+    panel.setAttribute('aria-hidden', 'true'); root.classList.remove('mnav-open');
+    var b = document.querySelector('.nav-burger'); if (b) b.setAttribute('aria-expanded', 'false');
   }
 
-  // Inject nav into placeholder
-  var placeholder = document.getElementById('site-nav');
-  if (placeholder) {
-    placeholder.outerHTML = NAV_HTML;
-  }
-
-  // Dropdowns: supports any number of menus.
-  function closeAll(except) {
-    document.querySelectorAll('.nav-dropdown-menu').forEach(function(m) {
-      if (m.getAttribute('data-menu') !== except) m.classList.remove('open');
+  document.addEventListener('click', function (e) {
+    // Desktop dropdowns
+    var trigger = e.target.closest('.dd-trigger');
+    document.querySelectorAll('.dd-menu').forEach(function (m) {
+      if (!trigger || m.getAttribute('data-menu') !== trigger.getAttribute('data-dd')) m.classList.remove('on');
     });
-    document.querySelectorAll('.nav-dropdown-trigger').forEach(function(t) {
-      if (t.getAttribute('data-trigger') !== except) t.classList.remove('open');
-    });
-  }
-
-  document.addEventListener('click', function(e) {
-    var trigger = e.target.closest('.nav-dropdown-trigger');
-    if (!trigger) { closeAll(null); return; }
-    e.stopPropagation();
-    var id = trigger.getAttribute('data-trigger');
-    var menu = document.querySelector('[data-menu="' + id + '"]');
-    if (!menu) return;
-    var isOpen = menu.classList.contains('open');
-    closeAll(id);
-    menu.classList.toggle('open', !isOpen);
-    trigger.classList.toggle('open', !isOpen);
+    document.querySelectorAll('.dd-trigger').forEach(function (t) { if (t !== trigger) t.setAttribute('aria-expanded', 'false'); });
+    if (trigger) {
+      e.stopPropagation();
+      var menu = document.querySelector('[data-menu="' + trigger.getAttribute('data-dd') + '"]');
+      if (menu) trigger.setAttribute('aria-expanded', menu.classList.toggle('on') ? 'true' : 'false');
+      return;
+    }
+    // Mobile menu open / close
+    if (e.target.closest('.nav-burger')) { e.stopPropagation(); openMenu(); return; }
+    if (e.target.closest('.mnav-close') || e.target.closest('.mnav-backdrop')) { closeMenu(); return; }
+    if (e.target.closest('.mnav a')) { closeMenu(); }
   });
 
-  // Kept for any page still calling the old handler inline.
-  window.toggleNavDropdown = function(e) { if (e && e.stopPropagation) e.stopPropagation(); };
-
+  document.addEventListener('keydown', function (e) {
+    var trigger = e.target.closest && e.target.closest('.dd-trigger');
+    if (trigger && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); trigger.click(); }
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.dd-menu.on').forEach(function (m) { m.classList.remove('on'); });
+      closeMenu();
+    }
+  });
 })();
