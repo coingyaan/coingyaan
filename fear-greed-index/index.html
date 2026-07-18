@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="dark" />
 <title>Crypto Fear &amp; Greed Index Today | Live Market Sentiment | CoinGyaan</title>
 <meta name="description" content="Live crypto Fear &amp; Greed Index with current market sentiment, a gauge reading and the drivers behind today's score." />
-<meta name="robots" content="noindex, follow" />
+<meta name="robots" content="index, follow" />
 <link rel="canonical" href="https://coingyaan.com/fear-greed-index/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="CoinGyaan" />
@@ -123,16 +123,65 @@
 </head>
 <body>
 <div id="site-nav"></div>
-<main class="wrap page">
-  <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/intelligence/">Intelligence</a><span>/</span><span>Fear & Greed Index</span></nav>
+<main class="wrap ol">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/intelligence/">Intelligence</a><span>/</span><span>Fear &amp; Greed Index</span></nav>
   <span class="page-eyebrow">Intelligence</span>
-  <h1>Fear & Greed Index</h1>
-  <p class="page-lead">Track how the market is feeling right now across volatility, momentum, volume and dominance.</p>
-  <div class="page-note"><span class="page-badge">In progress</span><p>This CoinGyaan intelligence product is being built as part of the Version 2 rollout. It is set to noindex until the content is complete, so search engines only see it once it is ready.</p></div>
-  <div class="page-explore"><h2>Explore Intelligence</h2><div class="page-links"><a href="/bitcoin-outlook/">Bitcoin Outlook</a><a href="/funding-rate/">Funding Rate</a><a href="/open-interest/">Open Interest</a><a href="/etf-flows/">ETF Flows</a><a href="/intelligence/">Intelligence</a></div></div>
+  <h1>Crypto Fear and Greed Index <em class="gold-em">Today</em></h1>
+  <p class="page-lead">A live read on market sentiment from 0 extreme fear to 100 extreme greed, with the CoinGyaan interpretation of what it means and how it is moving.</p>
+
+  <section class="fg-hero" aria-label="Current Fear and Greed reading">
+    <div>
+      <div class="ipc-k">Current reading</div>
+      <div class="fg-big" data-cg="fg-value">--<span> / 100</span></div>
+      <div class="fg-class" data-cg="fg-class">Loading</div>
+      <div class="fg-scale"><i class="fng-marker" data-cg="fg-marker" style="left:50%"></i></div>
+      <div class="fg-legend"><span>Extreme Fear</span><span>Neutral</span><span>Extreme Greed</span></div>
+    </div>
+    <div class="fg-deltas">
+      <div class="fg-drow"><span class="m">Trend</span><span class="v" data-cg="fg-trend">--</span></div>
+      <div class="fg-drow"><span class="m">Yesterday</span><span class="v" data-cg="fg-yesterday">--</span></div>
+      <div class="fg-drow"><span class="m">Change vs last week</span><span class="v" data-cg="fg-d7">--</span></div>
+      <div class="fg-drow"><span class="m">Change vs last month</span><span class="v" data-cg="fg-d30">--</span></div>
+      <svg class="fg-spark" data-cg="fg-spark" viewBox="0 0 300 70" preserveAspectRatio="none" aria-hidden="true"></svg>
+    </div>
+  </section>
+
+  <section class="ol-sec">
+    <h2>What the market is feeling</h2>
+    <p class="ol-sub" data-cg="fg-interp">Loading the current interpretation.</p>
+    <div class="ol-reasons" data-cg="fg-contrarian-wrap" style="display:none">
+      <div class="ol-reason ol-neutral"><span class="ol-rtag">CoinGyaan view</span><span data-cg="fg-contrarian"></span></div>
+    </div>
+  </section>
+
+  <section class="ol-sec ol-prose">
+    <h2>How to read the Fear and Greed Index</h2>
+    <p>The index compresses market sentiment into a single number from 0 to 100. Low readings mean fear, when traders are nervous and selling pressure builds. High readings mean greed, when buyers are confident and chasing price. The scale breaks into five bands: extreme fear from 0 to 24, fear from 25 to 44, neutral from 45 to 55, greed from 56 to 75 and extreme greed from 76 to 100.</p>
+    <h3>Why sentiment matters</h3>
+    <p>Sentiment does not predict price on its own, but it frames risk. Markets tend to overshoot in both directions. When everyone is fearful the easy selling may already be done, and when everyone is greedy the market can be fragile. That is why many investors treat the index as a contrarian tool rather than a signal to follow the crowd.</p>
+    <h3>The CoinGyaan approach</h3>
+    <p>We show the live value, the direction it is travelling and how far it has moved over a day, a week and a month, so you see momentum in sentiment and not just a snapshot. Extreme readings get a contrarian note because that is where crowd behaviour and opportunity most often diverge. The underlying value comes from a public sentiment index and the interpretation is ours.</p>
+    <h2>Frequently asked questions</h2>
+    <h3>What does the Fear and Greed Index measure?</h3>
+    <p>It blends signals such as volatility, market momentum, volume and social sentiment into one score from 0 to 100 that summarises whether the market is fearful or greedy.</p>
+    <h3>Is extreme fear a buy signal?</h3>
+    <p>Not on its own. Extreme fear is where contrarians start researching because downside may already be priced in, but it is context for your own analysis and not financial advice.</p>
+    <h3>How often does it update?</h3>
+    <p>The reading refreshes every 5 minutes on this page and the source value updates through the day. The last updated time is shown on the homepage card.</p>
+    <p class="ol-final">CoinGyaan provides market intelligence and educational analysis. Nothing here is financial advice. Cryptocurrency is volatile and you can lose money. Make your own decisions.</p>
+  </section>
 </main>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What does the Fear and Greed Index measure?","acceptedAnswer":{"@type":"Answer","text":"It blends signals such as volatility, market momentum, volume and social sentiment into one score from 0 to 100 that summarises whether the market is fearful or greedy."}},
+{"@type":"Question","name":"Is extreme fear a buy signal?","acceptedAnswer":{"@type":"Answer","text":"Not on its own. Extreme fear is where contrarians start researching because downside may already be priced in, but it is context and not financial advice."}},
+{"@type":"Question","name":"How often does the Fear and Greed Index update?","acceptedAnswer":{"@type":"Answer","text":"The reading refreshes every 5 minutes and the source value updates through the day."}}
+]}
+</script>
 <div id="site-footer"></div>
 <script src="/assets/js/nav.js"></script>
 <script src="/assets/js/footer.js"></script>
+<script defer src="/assets/js/fng-page.js"></script>
 </body>
 </html>

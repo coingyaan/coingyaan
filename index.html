@@ -248,8 +248,15 @@
       </div>
       <div class="ipc">
         <div class="ipc-hd"><span class="ipc-t">Fear &amp; Greed Index</span><span class="ipc-live">LIVE</span></div>
-        <svg class="ipc-gauge" viewBox="0 0 170 104" width="158" height="97"><path d="M15 92 A70 70 0 0 1 155 92" fill="none" stroke="#1e3048" stroke-width="11" stroke-linecap="round"/><path d="M15 92 A70 70 0 0 1 122.5 32.9" fill="none" stroke="#f59e0b" stroke-width="11" stroke-linecap="round"/><text x="85" y="80" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="30" font-weight="800" fill="#f59e0b">68</text><text x="85" y="98" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" letter-spacing="1.5" fill="#94a3b8">GREED</text></svg>
-        <p class="ipc-note ipc-mid">Sentiment sits in greed. Momentum and volatility are the main drivers right now.</p>
+        <div class="ipc-k">Current Sentiment</div>
+        <div class="ipc-big" data-cg="fng-value" style="color:var(--gold)">68<span> / 100</span></div>
+        <div class="fng-scale"><i class="fng-marker" data-cg="fng-marker" style="left:68%"></i></div>
+        <div class="fng-legend"><span>Extreme Fear</span><span>Extreme Greed</span></div>
+        <div class="ipc-rows">
+          <div class="ipc-row"><span class="m">Classification</span><span class="v" data-cg="fng-class">Greed</span></div>
+          <div class="ipc-row"><span class="m">Trend</span><span class="v" data-cg="fng-trend">Steady</span></div>
+        </div>
+        <p class="ipc-note" data-cg="fng-note">Sentiment sits in greed.</p>
         <a class="ipc-cta" href="/fear-greed-index/">View Full Index &#8594;</a>
       </div>
       <div class="ipc">
@@ -646,5 +653,6 @@
 })();
 </script>
 <script defer src="/assets/js/outlook-home.js"></script>
+<script defer src="/assets/js/fng-home.js"></script>
 </body>
 </html>

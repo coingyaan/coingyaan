@@ -456,3 +456,28 @@ main.page h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.
   .ol-reasons{grid-template-columns:1fr}
   .ol-big{font-size:52px}
 }
+
+/* ============================================================
+   Fear and Greed — homepage scale bar + full page
+   (appended; adds only)
+   ============================================================ */
+.fng-scale{position:relative;height:8px;border-radius:5px;margin:14px 0 6px;border:1px solid var(--border2);
+  background:linear-gradient(90deg,var(--red) 0%,#fb923c 34%,#facc15 50%,#84cc16 66%,var(--green) 100%)}
+.fng-marker{position:absolute;top:50%;width:3px;height:16px;background:#fff;border-radius:2px;transform:translate(-50%,-50%);box-shadow:0 0 0 2px var(--card)}
+.fng-legend{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+
+.fg-hero{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px 24px;margin:22px 0 30px}
+.fg-big{font-family:var(--mono);font-size:72px;font-weight:800;line-height:1;letter-spacing:-.03em}
+.fg-big span{font-size:26px;font-weight:600;color:var(--muted)}
+.fg-class{font-size:22px;font-weight:700;margin:8px 0 16px}
+.fg-scale{position:relative;height:10px;border-radius:6px;border:1px solid var(--border2);
+  background:linear-gradient(90deg,var(--red) 0%,#fb923c 34%,#facc15 50%,#84cc16 66%,var(--green) 100%)}
+.fg-scale .fng-marker{height:20px;width:4px}
+.fg-legend{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:8px 0 0}
+.fg-deltas{display:flex;flex-direction:column;gap:0}
+.fg-drow{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-top:1px solid var(--border2);font-size:13.5px}
+.fg-drow:first-child{border-top:0}
+.fg-drow .m{color:var(--muted)}
+.fg-drow .v{font-family:var(--mono);font-weight:600}
+.fg-spark{width:100%;height:70px;margin-top:8px}
+.fg-up{color:var(--green)} .fg-down{color:var(--red)} .fg-flat{color:var(--muted)}

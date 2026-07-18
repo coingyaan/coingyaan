@@ -1,6 +1,7 @@
 // /api/refresh?key=SECRET   (POST or GET)
-// Protected. Forces a recompute and writes KV. Called by the cron worker.
+// Protected. Forces a recompute of every engine and writes KV. Cron calls this.
 import { refreshOutlook } from "../_lib/cache.js";
+import { refreshFearGreed } from "../_lib/fng-cache.js";
 
 export async function onRequest(context) {
   const { env, request } = context;
@@ -10,14 +11,15 @@ export async function onRequest(context) {
   if (!env.REFRESH_KEY || key !== env.REFRESH_KEY) {
     return json({ ok: false, error: "unauthorized" }, 401);
   }
-  try {
-    const r = await refreshOutlook(env);
-    // Always 200 so the diagnostic body (ok flag + providers) is visible.
-    // The cron worker treats any 2xx as success and simply retries next tick.
-    return json(r, 200);
-  } catch (e) {
-    return json({ ok: false, error: String(e) }, 200);
-  }
+  // Refresh each engine independently so one failing does not block the others.
+  const [outlook, fng] = await Promise.allSettled([
+    refreshOutlook(env),
+    refreshFearGreed(env),
+  ]);
+  const unwrap = (r) => (r.status === "fulfilled" ? r.value : { ok: false, error: String(r.reason) });
+  const body = { ok: true, outlook: unwrap(outlook), fng: unwrap(fng) };
+  // Always 200 so the diagnostic body is visible; cron treats any 2xx as success.
+  return json(body, 200);
 }
 
 function json(obj, status = 200) {
