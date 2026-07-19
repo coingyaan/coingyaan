@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="dark" />
 <title>Bitcoin Open Interest Today | Crypto Derivatives Intelligence | CoinGyaan</title>
 <meta name="description" content="Bitcoin open interest today with 24 hour change and derivatives market activity to gauge capital entering the market." />
-<meta name="robots" content="noindex, follow" />
+<meta name="robots" content="index, follow" />
 <link rel="canonical" href="https://coingyaan.com/open-interest/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="CoinGyaan" />
@@ -123,16 +123,67 @@
 </head>
 <body>
 <div id="site-nav"></div>
-<main class="wrap page">
+<main class="wrap ol">
   <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/intelligence/">Intelligence</a><span>/</span><span>Open Interest</span></nav>
   <span class="page-eyebrow">Intelligence</span>
-  <h1>Open Interest</h1>
-  <p class="page-lead">Track capital entering and leaving crypto derivatives and what rising or falling open interest signals.</p>
-  <div class="page-note"><span class="page-badge">In progress</span><p>This CoinGyaan intelligence product is being built as part of the Version 2 rollout. It is set to noindex until the content is complete, so search engines only see it once it is ready.</p></div>
-  <div class="page-explore"><h2>Explore Intelligence</h2><div class="page-links"><a href="/bitcoin-outlook/">Bitcoin Outlook</a><a href="/fear-greed-index/">Fear & Greed Index</a><a href="/funding-rate/">Funding Rate</a><a href="/etf-flows/">ETF Flows</a><a href="/intelligence/">Intelligence</a></div></div>
+  <h1>Bitcoin Open Interest <em class="gold-em">Today</em></h1>
+  <p class="page-lead">Total capital held in Bitcoin perpetual futures across major venues, and the CoinGyaan read on whether money is entering or leaving. This is market analysis, not financial advice.</p>
+
+  <section class="ol-panel" aria-label="Current open interest">
+    <div class="ol-phd">
+      <span class="ol-phd-t"><i class="dot"></i>CoinGyaan Open Interest · BTC</span>
+      <span class="bmo-live" data-cg="oi-stamp"><i class="dot"></i>Loading live data</span>
+    </div>
+    <div class="ol-verdict">
+      <div class="ol-vmain">
+        <div class="ol-big" data-cg="oi-value">--</div>
+        <div class="bmo-cap">Aggregate open interest across venues</div>
+        <div class="ol-dir" data-cg="oi-activity">Reading the market</div>
+        <p class="bmo-note" data-cg="oi-interp">Fetching open interest across venues.</p>
+      </div>
+      <div class="ol-vmeta">
+        <div class="ol-metric"><span class="m">24 hour change</span><span class="v" data-cg="oi-change">--</span></div>
+        <div class="ol-metric"><span class="m">Activity</span><span class="v"><i class="st st-amber" data-cg="oi-activity-st">--</i></span></div>
+        <div class="ol-metric"><span class="m">Venues counted</span><span class="v" data-cg="oi-venue-count">--</span></div>
+      </div>
+    </div>
+    <p class="bmo-disc">Aggregate of the venues that respond. Absolute totals may differ from other trackers. Not financial advice.</p>
+  </section>
+
+  <section class="ol-sec">
+    <h2>Open interest by venue</h2>
+    <p class="ol-sub">Current open interest in US dollars on each venue we aggregate. The 24 hour change is measured on the deepest venue history so it reflects a real move, not a blend.</p>
+    <table class="ol-table"><thead><tr><th>Venue</th><th>Open interest</th></tr></thead><tbody data-cg="oi-venues"><tr><td colspan="2" class="ol-empty">Loading venues</td></tr></tbody></table>
+  </section>
+
+  <section class="ol-sec ol-prose">
+    <h2>How to read open interest</h2>
+    <p>Open interest is the total value of derivative positions that are currently open. It rises when new positions are created and falls when positions are closed. Unlike volume, which counts every trade, open interest tells you how much money is committed to the market right now.</p>
+    <h3>Rising versus falling</h3>
+    <p>Rising open interest means new money is entering and traders are building positions, which tends to confirm the conviction behind a move. Falling open interest means positions are being closed and leverage is leaving, which often lines up with a move running out of steam or traders taking profit. Reading it next to price is where it gets powerful: rising open interest with rising price is a strong trend, while rising open interest with flat price can signal a build up before a larger move.</p>
+    <h3>The CoinGyaan approach</h3>
+    <p>We sum current open interest in US dollars across several venues to get a picture closer to the whole market, and we measure the 24 hour change from venue history so it is a real delta. Because venues report size differently, we normalise each to dollars, so our absolute total can differ from other trackers while the direction stays honest.</p>
+    <h2>Frequently asked questions</h2>
+    <h3>What is open interest?</h3>
+    <p>It is the total value of open derivative positions in the market. It grows when new positions open and shrinks when they close.</p>
+    <h3>Is rising open interest bullish?</h3>
+    <p>Not on its own. Rising open interest shows conviction and new money, but whether that is bullish or bearish depends on price direction and funding. It is context, not a signal to act.</p>
+    <h3>How often does it update?</h3>
+    <p>This page refreshes every 5 minutes from live venue data.</p>
+    <p class="ol-final">CoinGyaan provides market intelligence and educational analysis. Nothing here is financial advice. Cryptocurrency is volatile and you can lose money. Make your own decisions.</p>
+  </section>
 </main>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is open interest in crypto?","acceptedAnswer":{"@type":"Answer","text":"It is the total value of open derivative positions in the market. It grows when new positions open and shrinks when they close."}},
+{"@type":"Question","name":"Is rising open interest bullish?","acceptedAnswer":{"@type":"Answer","text":"Not on its own. Rising open interest shows conviction and new money, but whether that is bullish or bearish depends on price direction and funding."}},
+{"@type":"Question","name":"How often does open interest update?","acceptedAnswer":{"@type":"Answer","text":"This page refreshes every 5 minutes from live venue data."}}
+]}
+</script>
 <div id="site-footer"></div>
 <script src="/assets/js/nav.js"></script>
 <script src="/assets/js/footer.js"></script>
+<script defer src="/assets/js/oi-page.js"></script>
 </body>
 </html>
