@@ -33,16 +33,22 @@ function authorOf(a) {
   return NEWS_AUTHORS[k] || { name: "CoinGyaan Team", title: "CoinGyaan" };
 }
 
-/* ---------- V7 covers with official-style asset logos ---------- */
-/* Brand marks. Asset marks use their own brand color; category marks use accent. */
-function assetMark(tagSlug) {
-  switch (tagSlug) {
-    case "bitcoin": return '<circle cx="0" cy="0" r="42" fill="#f7931a"/><text x="0" y="20" font-size="62" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle" fill="#fff">&#8383;</text>';
-    case "ethereum": return '<g fill="#627eea"><path d="M0 -46 L26 3 L0 18 Z" opacity=".9"/><path d="M0 -46 L-26 3 L0 18 Z" opacity=".6"/><path d="M0 24 L26 8 L0 46 Z" opacity=".9"/><path d="M0 24 L-26 8 L0 46 Z" opacity=".6"/></g>';
-    case "solana": return '<defs><linearGradient id="sol" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#9945ff"/><stop offset="100%" stop-color="#14f195"/></linearGradient></defs><g fill="url(#sol)"><path d="M-34 -22 h56 l-12 12 h-56 z"/><path d="M-34 -4 h56 l-12 12 h-56 z" opacity=".85"/><path d="M-34 14 h56 l-12 12 h-56 z"/></g>';
-    case "base": return '<circle cx="0" cy="0" r="42" fill="#0052ff"/><rect x="-16" y="-16" width="32" height="32" rx="4" fill="#fff" transform="rotate(45)"/>';
-    default: return null;
+/* ---------- V7 covers with official asset logos ---------- */
+/* Load logo SVGs from assets/logos/{tag}.svg once. Returns inner markup. */
+const LOGO_DIR = path.join(ROOT, "assets/logos");
+const logoCache = {};
+function logoInner(tag) {
+  if (!tag) return null;
+  if (tag in logoCache) return logoCache[tag];
+  const f = path.join(LOGO_DIR, tag + ".svg");
+  let inner = null;
+  if (fs.existsSync(f)) {
+    const raw = fs.readFileSync(f, "utf8");
+    const m = raw.match(/<svg[^>]*>([\s\S]*?)<\/svg>/i);
+    inner = m ? m[1].trim() : null;
   }
+  logoCache[tag] = inner;
+  return inner;
 }
 const CAT_ICONS = {
   blocks: '<rect x="-26" y="-26" width="22" height="22" rx="3" fill="COLOR"/><rect x="4" y="-26" width="22" height="22" rx="3" fill="COLOR" opacity=".55"/><rect x="-26" y="4" width="22" height="22" rx="3" fill="COLOR" opacity=".55"/><rect x="4" y="4" width="22" height="22" rx="3" fill="COLOR"/>',
@@ -51,9 +57,10 @@ const CAT_ICONS = {
   gavel: '<rect x="-24" y="-24" width="30" height="12" rx="3" transform="rotate(45)" fill="COLOR"/><rect x="-4" y="16" width="34" height="8" rx="4" fill="COLOR" opacity=".7"/>',
   mic: '<rect x="-9" y="-30" width="18" height="34" rx="9" fill="COLOR"/><path d="M-16 0 A16 16 0 0 0 16 0" fill="none" stroke="COLOR" stroke-width="4" opacity=".7"/><rect x="-2" y="16" width="4" height="12" fill="COLOR" opacity=".7"/>',
 };
-function coverSvg({ accent, catIcon, assetTag, label }) {
-  const mark = assetTag ? assetMark(assetTag) : null;
-  const inner = mark || (CAT_ICONS[catIcon] || CAT_ICONS.blocks).replace(/COLOR/g, accent);
+function coverSvg({ accent, catIcon, logo, label }) {
+  const centerpiece = logo
+    ? `<g transform="translate(600 275) scale(1.75) translate(-64 -64)">${logo}</g>`
+    : `<g transform="translate(600 280) scale(2.7)">${(CAT_ICONS[catIcon] || CAT_ICONS.blocks).replace(/COLOR/g, accent)}</g>`;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="${esc(label)}">
   <defs>
     <radialGradient id="glow" cx="50%" cy="42%" r="55%">
@@ -65,16 +72,25 @@ function coverSvg({ accent, catIcon, assetTag, label }) {
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
   <rect width="1200" height="630" fill="url(#glow)"/>
-  <g transform="translate(600 280) scale(2.7)">${inner}</g>
+  ${centerpiece}
   <text x="600" y="470" font-family="JetBrains Mono, monospace" font-size="24" letter-spacing="6" text-anchor="middle" fill="#8a94a6">COINGYAAN INTELLIGENCE</text>
   <text x="600" y="510" font-family="Inter, sans-serif" font-size="28" font-weight="600" text-anchor="middle" fill="#e6ebf5">${esc(label)}</text>
 </svg>`;
 }
+let __coverUid = 0;
+function uniquifyIds(svg) {
+  const uid = "c" + (++__coverUid);
+  return svg
+    .replace(/id="([^"]+)"/g, (m, id) => `id="${id}-${uid}"`)
+    .replace(/url\(#([^)]+)\)/g, (m, id) => `url(#${id}-${uid})`)
+    .replace(/(xlink:href|href)="#([^"]+)"/g, (m, attr, id) => `${attr}="#${id}-${uid}"`);
+}
 function coverFor(article) {
   const cat = catBySlug[article.category] || NEWS_CATEGORIES[0];
-  const assetTag = article.coverTag && assetMark(article.coverTag) ? article.coverTag : null;
+  const logo = article.coverTag ? logoInner(article.coverTag) : null;
   const accent = (article.coverTag && tagBySlug[article.coverTag] && tagBySlug[article.coverTag].accent) || cat.accent;
-  return { svg: coverSvg({ accent, catIcon: cat.icon, assetTag, label: assetTag ? tagBySlug[assetTag].name : cat.name }), auto: !article.cover || article.cover === "auto" };
+  const label = logo && tagBySlug[article.coverTag] ? tagBySlug[article.coverTag].name : cat.name;
+  return { svg: uniquifyIds(coverSvg({ accent, catIcon: cat.icon, logo, label })), auto: !article.cover || article.cover === "auto" };
 }
 
 /* ---------- relationships ---------- */

@@ -26,10 +26,18 @@ var NEWS_CATEGORIES = [
    accent optional (used for asset tags to tint covers when an article is
    asset specific). */
 var NEWS_TAGS = [
-  { slug: "bitcoin", name: "Bitcoin", accent: "#f59e0b", icon: "bitcoin" },
-  { slug: "ethereum", name: "Ethereum", accent: "#60a5fa", icon: "ethereum" },
+  { slug: "bitcoin", name: "Bitcoin", accent: "#f7931a", icon: "bitcoin" },
+  { slug: "ethereum", name: "Ethereum", accent: "#627eea", icon: "ethereum" },
   { slug: "solana", name: "Solana", accent: "#14f195" },
   { slug: "base", name: "Base", accent: "#0052ff" },
+  { slug: "arbitrum", name: "Arbitrum", accent: "#28a0f0" },
+  { slug: "optimism", name: "Optimism", accent: "#ff0420" },
+  { slug: "linea", name: "Linea", accent: "#61dfff" },
+  { slug: "metamask", name: "MetaMask", accent: "#e2761b" },
+  { slug: "bnb", name: "BNB", accent: "#f3ba2f" },
+  { slug: "xrp", name: "XRP", accent: "#23292f" },
+  { slug: "polygon", name: "Polygon", accent: "#8247e5" },
+  { slug: "avalanche", name: "Avalanche", accent: "#e84142" },
   { slug: "layer-2", name: "Layer 2" },
   { slug: "funding-rate", name: "Funding Rate" },
   { slug: "open-interest", name: "Open Interest" },
