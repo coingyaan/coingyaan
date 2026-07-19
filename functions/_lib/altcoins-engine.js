@@ -9,17 +9,26 @@ const P = PARAMS;
 export function computeAltcoins({ dominance, btcChange, alts, prevDominance }) {
   const haveSeason = Number.isFinite(btcChange) && Array.isArray(alts) && alts.length >= 10;
 
-  let index = null, outperform = null, total = null, movers = [];
+  let index = null, outperform = null, total = null, movers = [], gainers = null;
   if (haveSeason) {
     const list = alts.slice(0, P.topN);
     total = list.length;
     outperform = list.filter((a) => Number.isFinite(a.change) && a.change > btcChange).length;
+    gainers = list.filter((a) => Number.isFinite(a.change) && a.change > 0).length;
     index = Math.round((outperform / total) * 100);
     movers = list
       .filter((a) => Number.isFinite(a.change))
       .sort((a, b) => b.change - a.change)
       .slice(0, P.moversCount)
       .map((a) => ({ symbol: a.symbol, name: a.name, change: +a.change.toFixed(1) }));
+  }
+
+  // market breadth label from the season index
+  let breadth = "Unavailable", breadthTone = "neutral";
+  if (index != null) {
+    if (index >= P.expandMid) { breadth = "Improving"; breadthTone = "up"; }
+    else if (index >= P.compressLow) { breadth = "Mixed"; breadthTone = "neutral"; }
+    else { breadth = "Weakening"; breadthTone = "down"; }
   }
 
   // season label + card outlook word from the index
@@ -57,7 +66,7 @@ export function computeAltcoins({ dominance, btcChange, alts, prevDominance }) {
       seasonIndex: index,
       seasonLabel: label,
       outlook, tone,
-      outperform, total, window: P.windowLabel,
+      outperform, total, gainers, breadth, breadthTone, window: P.windowLabel,
       note, interpretation,
     },
     movers,

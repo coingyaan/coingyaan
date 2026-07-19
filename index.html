@@ -156,12 +156,12 @@
       </div>
     </div>
     <div class="snap">
-      <div class="snap-hd"><span>Live Market Snapshot</span><span class="live"><i class="dot"></i>LIVE</span></div>
+      <div class="snap-hd"><span>Market Pulse</span><span class="live"><i class="dot"></i>LIVE</span></div>
       <div class="snap-grid">
-        <div class="snap-cell"><div class="snap-k">Bitcoin Outlook</div><div class="snap-v" data-cg="snap-outlook" style="color:var(--gold)">Neutral</div></div>
-        <div class="snap-cell"><div class="snap-k">Fear &amp; Greed</div><div class="snap-v" data-cg="snap-fng" style="color:var(--gold)">68</div></div>
-        <div class="snap-cell"><div class="snap-k">Funding Rate</div><div class="snap-v" data-cg="snap-funding" style="color:var(--green)">Positive</div></div>
-        <div class="snap-cell"><div class="snap-k">Open Interest</div><div class="snap-v" data-cg="snap-oi" style="color:var(--green)">Increasing</div></div>
+        <div class="snap-cell"><div class="snap-k">Bitcoin Momentum</div><div class="snap-v" data-cg="pulse-momentum" style="color:var(--gold)">Reading</div></div>
+        <div class="snap-cell"><div class="snap-k">Market Sentiment</div><div class="snap-v" data-cg="pulse-sentiment" style="color:var(--gold)">Reading</div></div>
+        <div class="snap-cell"><div class="snap-k">Funding Bias</div><div class="snap-v" data-cg="pulse-funding" style="color:var(--green)">Reading</div></div>
+        <div class="snap-cell"><div class="snap-k">Market Liquidity</div><div class="snap-v" data-cg="pulse-liquidity" style="color:var(--green)">Reading</div></div>
       </div>
       <div class="snap-foot" data-cg="snap-foot">Updated just now</div>
     </div>
@@ -199,7 +199,7 @@
 
         <!-- key signals -->
         <div class="bmo-sig">
-          <div class="bmo-row bmo-row-hd"><span>Metric</span><span>Value</span><span>Status</span></div>
+          <div class="bmo-row bmo-row-hd"><span>24H Intelligence</span><span></span><span></span></div>
           <div class="bmo-row"><span class="m">Market Direction</span><span class="v" data-cg="direction">Neutral</span><span><i class="st st-amber" data-cg="direction-st">Neutral</i></span></div>
           <div class="bmo-row"><span class="m">Confidence</span><span class="v" data-cg="confidence">Low</span><span><i class="st st-amber" data-cg="confidence-st">Low</i></span></div>
           <div class="bmo-row"><span class="m">Market Condition</span><span class="v" data-cg="condition">Recovery Phase</span><span><i class="st st-blue" data-cg="condition-st">Recovery Phase</i></span></div>
@@ -298,35 +298,37 @@
       <a class="tile" href="/markets/bitcoin/">
         <div class="mkt-hd"><div class="mkt-ic" style="background:none;border:0"><svg class="logo-mark" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#F7931A"/><path d="M23.2 14.2c.3-2.1-1.3-3.2-3.5-4l.7-2.8-1.7-.4-.7 2.8c-.5-.1-.9-.2-1.4-.3l.7-2.8-1.7-.4-.7 2.8c-.4-.1-.7-.2-1.1-.2l-2.4-.6-.5 1.8s1.3.3 1.2.3c.7.2.8.6.8 1l-.8 3.2c0 0 .1 0 .2.1l-.2 0-1.1 4.5c-.1.2-.3.5-.8.4 0 0-1.2-.3-1.2-.3l-.9 2 2.2.6c.4.1.8.2 1.2.3l-.7 2.9 1.7.4.7-2.8c.5.1.9.2 1.4.4l-.7 2.8 1.7.4.7-2.9c2.9.6 5.1.3 6-2.3.7-2.1 0-3.3-1.6-4.1 1.1-.3 2-1 2.2-2.5zm-3.9 5.5c-.5 2.1-4.1 1-5.2.7l.9-3.8c1.2.3 4.9.9 4.3 3.1zm.5-5.5c-.5 1.9-3.4.9-4.4.7l.8-3.4c1 .2 4.1.7 3.6 2.7z" fill="#fff"/></svg></div>
           <div><div class="mkt-name">Bitcoin</div><div class="mkt-px"><span data-cg="mk-btc-px">$64,100</span> <span class="up" data-cg="mk-btc-ch">+2.4%</span></div></div></div>
-        <div class="mkt-row"><span>Market Outlook</span><b data-cg="mk-btc-outlook">Neutral</b></div>
-        <div class="mkt-row"><span>24h High</span><b data-cg="mk-btc-high">--</b></div>
-        <div class="mkt-row"><span>24h Low</span><b data-cg="mk-btc-low">--</b></div>
-        <div class="mkt-row"><span>Latest News</span><b>3 new</b></div>
+        <div class="mkt-row"><span>24H Outlook</span><b data-cg="mk-btc-outlook">Neutral</b></div>
+        <div class="mkt-row"><span>Funding Rate</span><b data-cg="mk-btc-funding">--</b></div>
+        <div class="mkt-row"><span>Open Interest</span><b data-cg="mk-btc-oi">--</b></div>
+        <div class="mkt-row"><span>BTC Dominance</span><b data-cg="mk-btc-dom">--</b></div>
         <span class="tile-go" style="display:inline-block;margin-top:12px">View Market Intelligence →</span>
       </a>
       <a class="tile" href="/markets/ethereum/">
         <div class="mkt-hd"><div class="mkt-ic" style="background:none;border:0"><svg class="logo-mark" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#627EEA"/><path d="M16.5 4v8.9l7.5 3.3z" fill="#fff" fill-opacity=".6"/><path d="M16.5 4L9 16.2l7.5-3.3z" fill="#fff"/><path d="M16.5 21.9v6.1l7.5-10.4z" fill="#fff" fill-opacity=".6"/><path d="M16.5 28v-6.1L9 17.6z" fill="#fff"/><path d="M16.5 20.5l7.5-4.3-7.5-3.3z" fill="#fff" fill-opacity=".2"/><path d="M9 16.2l7.5 4.3v-7.6z" fill="#fff" fill-opacity=".6"/></svg></div>
           <div><div class="mkt-name">Ethereum</div><div class="mkt-px"><span data-cg="mk-eth-px">$1,883.64</span> <span class="up" data-cg="mk-eth-ch">+1.8%</span></div></div></div>
-        <div class="mkt-row"><span>Market Outlook</span><b data-cg="mk-eth-outlook">Neutral</b></div>
-        <div class="mkt-row"><span>24h High</span><b data-cg="mk-eth-high">--</b></div>
-        <div class="mkt-row"><span>24h Low</span><b data-cg="mk-eth-low">--</b></div>
-        <div class="mkt-row"><span>Latest News</span><b>2 new</b></div>
+        <div class="mkt-row"><span>24H Outlook</span><b data-cg="mk-eth-outlook">Neutral</b></div>
+        <div class="mkt-row"><span>Gas Fees</span><b class="soon">soon</b></div>
+        <div class="mkt-row"><span>TVL</span><b class="soon">soon</b></div>
+        <div class="mkt-row"><span>ETF Sentiment</span><b class="soon">soon</b></div>
         <span class="tile-go" style="display:inline-block;margin-top:12px">View Market Intelligence →</span>
       </a>
       <a class="tile" href="/markets/altcoins/">
         <div class="mkt-hd"><div class="mkt-ic" style="background:none;border:0"><svg class="logo-mark" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#1a2740"/><ellipse cx="16" cy="10.5" rx="7.5" ry="3" fill="none" stroke="#a78bfa" stroke-width="1.6"/><path d="M8.5 10.5v4c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-4" fill="none" stroke="#a78bfa" stroke-width="1.6"/><path d="M8.5 14.5v4c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-4" fill="none" stroke="#a78bfa" stroke-width="1.6" opacity=".65"/><path d="M8.5 18.5v3c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-3" fill="none" stroke="#a78bfa" stroke-width="1.6" opacity=".35"/></svg></div>
           <div><div class="mkt-name">Altcoins</div><div class="mkt-px">Dominance <span data-cg="mk-alt-dom">45.8%</span></div></div></div>
-        <div class="mkt-row"><span>Market Outlook</span><b data-cg="mk-alt-outlook">Compressing</b></div>
+        <div class="mkt-row"><span>24H Outlook</span><b data-cg="mk-alt-outlook">Compressing</b></div>
         <div class="mkt-row"><span>Altcoin Season</span><b data-cg="mk-alt-season">32 / 100</b></div>
-        <div class="mkt-row"><span>Latest News</span><b>5 new</b></div>
+        <div class="mkt-row"><span>Market Breadth</span><b data-cg="mk-alt-breadth">--</b></div>
+        <div class="mkt-row"><span>Top Gainers</span><b data-cg="mk-alt-gainers">--</b></div>
         <span class="tile-go" style="display:inline-block;margin-top:12px">View Market Intelligence →</span>
       </a>
       <a class="tile" href="/markets/stablecoins/">
         <div class="mkt-hd"><div class="mkt-ic" style="background:none;border:0"><svg class="logo-mark" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#0d2a1a"/><circle cx="16" cy="16" r="9.5" fill="none" stroke="#22c55e" stroke-width="1.7"/><path d="M16 9.5v13" stroke="#22c55e" stroke-width="1.7" stroke-linecap="round"/><path d="M19 12.4c-.7-.9-1.8-1.4-3-1.4-1.9 0-3.2 1-3.2 2.4 0 3.2 6.4 1.6 6.4 4.9 0 1.5-1.4 2.6-3.2 2.6-1.3 0-2.5-.5-3.2-1.5" fill="none" stroke="#22c55e" stroke-width="1.7" stroke-linecap="round"/></svg></div>
-          <div><div class="mkt-name">Stablecoins</div><div class="mkt-px">Supply $178.4B</div></div></div>
-        <div class="mkt-row"><span>Supply Trend</span><b>Expanding</b></div>
-        <div class="mkt-row"><span>Exchange Balance</span><b>Rising</b></div>
-        <div class="mkt-row"><span>Latest News</span><b>3 new</b></div>
+          <div><div class="mkt-name">Stablecoins</div><div class="mkt-px">Liquidity view</div></div></div>
+        <div class="mkt-row"><span>Supply Trend</span><b class="soon">soon</b></div>
+        <div class="mkt-row"><span>Exchange Balance</span><b class="soon">soon</b></div>
+        <div class="mkt-row"><span>Net Mint/Burn</span><b class="soon">soon</b></div>
+        <div class="mkt-row"><span>Liquidity Outlook</span><b class="soon">soon</b></div>
         <span class="tile-go" style="display:inline-block;margin-top:12px">View Market Intelligence →</span>
       </a>
     </div>

@@ -1,12 +1,17 @@
-/* CoinGyaan · Markets dashboard cards (Bitcoin, Ethereum) hydration.
-   Wires price (from /api/markets) and Market Outlook (from the per-asset outlook
-   API). Altcoins and Stablecoins stay static until their engines exist. */
+/* CoinGyaan · Markets dashboard cards hydration.
+   Bitcoin: outlook, funding, open interest, dominance (all live).
+   Ethereum: outlook live; gas/TVL/ETF marked "soon" until that engine exists.
+   Altcoins: outlook, season, breadth, top gainers (all live).
+   Stablecoins: all fields "soon" until the stablecoins engine exists. */
 (function () {
   "use strict";
   var outlookColor = { Bullish: "#16c784", Bearish: "#ea3943", Neutral: "#f59e0b" };
+  var GREEN = "#16c784", RED = "#ea3943", AMBER = "#f59e0b";
 
   function q(sel) { return document.querySelector('[data-cg="' + sel + '"]'); }
   function txt(sel, v) { var el = q(sel); if (el && v != null) el.textContent = v; }
+  function color(sel, c) { var el = q(sel); if (el && c) el.style.color = c; }
+  function toneCol(t) { return t === "up" ? GREEN : t === "down" ? RED : AMBER; }
 
   function price(n) {
     if (n == null) return null;
@@ -19,21 +24,10 @@
     var ch = q(chSel);
     if (ch && coin.changePct != null) { ch.textContent = (coin.changePct >= 0 ? "+" : "") + coin.changePct.toFixed(1) + "%"; ch.className = coin.changePct >= 0 ? "up" : "down"; }
   }
-  function setMove(sel, coin) {
-    if (!coin || coin.changePct == null) return;
-    var el = q(sel); if (!el) return;
-    el.textContent = (coin.changePct >= 0 ? "+" : "") + coin.changePct.toFixed(1) + "%";
-    el.style.color = coin.changePct >= 0 ? "#16c784" : "#ea3943";
-  }
-  function setHL(highSel, lowSel, coin) {
-    if (!coin) return;
-    if (coin.high != null) txt(highSel, price(coin.high));
-    if (coin.low != null) txt(lowSel, price(coin.low));
-  }
   function setOutlook(sel, p) {
     if (!p || !p.data) return;
     var el = q(sel);
-    if (el) { el.textContent = p.data.direction; el.style.color = outlookColor[p.data.direction] || "#f59e0b"; }
+    if (el) { el.textContent = p.data.direction; el.style.color = outlookColor[p.data.direction] || AMBER; }
   }
 
   function pull(url, fn) {
@@ -45,18 +39,36 @@
       if (!p || !p.data) return;
       setPx("mk-btc-px", "mk-btc-ch", p.data.btc);
       setPx("mk-eth-px", "mk-eth-ch", p.data.eth);
-      setHL("mk-btc-high", "mk-btc-low", p.data.btc);
-      setHL("mk-eth-high", "mk-eth-low", p.data.eth);
+      if (p.data.dominance != null) txt("mk-btc-dom", p.data.dominance.toFixed(1) + "%");
     });
     pull("/api/bitcoin-outlook", function (p) { setOutlook("mk-btc-outlook", p); });
     pull("/api/eth-outlook", function (p) { setOutlook("mk-eth-outlook", p); });
+
+    // Bitcoin card: funding rate
+    pull("/api/funding-rate", function (p) {
+      if (!p || !p.data) return;
+      var d = p.data;
+      var word = d.bias === "Long" ? "Positive" : d.bias === "Short" ? "Negative" : "Flat";
+      txt("mk-btc-funding", word); color("mk-btc-funding", toneCol(d.tone));
+    });
+    // Bitcoin card: open interest activity
+    pull("/api/open-interest", function (p) {
+      if (!p || !p.data) return;
+      var t = p.data.activityTone;
+      var word = t === "up" ? "Rising" : t === "down" ? "Falling" : "Steady";
+      txt("mk-btc-oi", word); color("mk-btc-oi", toneCol(t));
+    });
+
+    // Altcoins card: outlook, season, breadth, top gainers
     pull("/api/altcoins", function (p) {
       if (!p || !p.data) return;
       var d = p.data;
       if (d.dominance != null) txt("mk-alt-dom", d.dominance.toFixed(1) + "%");
       var ol = q("mk-alt-outlook");
-      if (ol) { ol.textContent = d.outlook; ol.style.color = d.tone === "up" ? "#16c784" : d.tone === "down" ? "#ea3943" : "#f59e0b"; }
+      if (ol) { ol.textContent = d.outlook; ol.style.color = toneCol(d.tone); }
       if (d.seasonIndex != null) txt("mk-alt-season", d.seasonIndex + " / 100");
+      if (d.breadth) { txt("mk-alt-breadth", d.breadth); color("mk-alt-breadth", toneCol(d.breadthTone)); }
+      if (d.gainers != null && d.total != null) txt("mk-alt-gainers", d.gainers + " / " + d.total);
     });
   }
   if (document.readyState !== "loading") load();

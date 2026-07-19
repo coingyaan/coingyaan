@@ -36,14 +36,22 @@
     var d = p.data, color = toneColor[d.tone] || "#f59e0b";
     txt("tk-fng", d.value);
     var lbl = q("tk-fng-lbl"); if (lbl) { lbl.textContent = d.classification; lbl.className = d.tone === "up" ? "up" : d.tone === "down" ? "down" : ""; }
-    var s = q("snap-fng"); if (s) { s.textContent = d.value; s.style.color = color; }
+    // Market Pulse: Market Sentiment
+    var s = q("pulse-sentiment"); if (s) { s.textContent = d.classification; s.style.color = color; }
   }
 
   function outlook(p) {
     if (!p || !p.data) return;
     var d = p.data;
-    var el = q("snap-outlook");
-    if (el) { el.textContent = d.direction; el.style.color = toneColor[d.direction] || "#f59e0b"; }
+    // Market Pulse: Bitcoin Momentum (word + arrow from the momentum driver)
+    var mo = q("pulse-momentum");
+    if (mo) {
+      var lean = 0;
+      (d.reasons || []).forEach(function (r) { if (r.key === "momentum") lean = r.lean; });
+      var arrow = lean > 0 ? "\u2191 " : lean < 0 ? "\u2193 " : "";
+      mo.textContent = arrow + (d.momentum || "Steady");
+      mo.style.color = lean > 0 ? "#16c784" : lean < 0 ? "#ea3943" : "#f59e0b";
+    }
     var foot = q("snap-foot");
     if (foot) foot.textContent = "Updated " + (p.ageSeconds == null || p.ageSeconds < 60 ? "just now" : Math.round(p.ageSeconds / 60) + "m ago");
   }
@@ -52,9 +60,11 @@
     if (!p || !p.data) return;
     var d = p.data;
     var word = d.bias === "Long" ? "Positive" : d.bias === "Short" ? "Negative" : "Flat";
-    var color = toneColor[d.tone] || "#f59e0b";
     var tk = q("tk-funding"); if (tk) { tk.textContent = word; tk.className = d.tone === "up" ? "up" : d.tone === "down" ? "down" : ""; }
-    var sn = q("snap-funding"); if (sn) { sn.textContent = word; sn.style.color = color; }
+    // Market Pulse: Funding Bias
+    var pulseWord = d.bias === "Long" ? "Longs Paying" : d.bias === "Short" ? "Shorts Paying" : "Balanced";
+    var color = toneColor[d.tone] || "#f59e0b";
+    var sn = q("pulse-funding"); if (sn) { sn.textContent = pulseWord; sn.style.color = color; }
   }
 
   function oi(p) {
@@ -63,7 +73,8 @@
     var word = d.activityTone === "up" ? "Increasing" : d.activityTone === "down" ? "Decreasing" : "Steady";
     var color = toneColor[d.activityTone] || "#f59e0b";
     var tk = q("tk-oi"); if (tk) { tk.textContent = word; tk.className = d.activityTone === "up" ? "up" : d.activityTone === "down" ? "down" : ""; }
-    var sn = q("snap-oi"); if (sn) { sn.textContent = word; sn.style.color = color; }
+    // Market Pulse: Market Liquidity
+    var sn = q("pulse-liquidity"); if (sn) { sn.textContent = word; sn.style.color = color; }
   }
 
   function pull(url, fn) {

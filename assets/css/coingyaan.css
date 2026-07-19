@@ -491,3 +491,6 @@ main.page h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.
 .hub-v{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--text);letter-spacing:-.01em}
 .hub-sub{font-size:11.5px;color:var(--muted)}
 @media(max-width:760px){.hub-grid{grid-template-columns:1fr 1fr}}
+
+/* "soon" placeholder badge on dashboard cards where the engine is not built yet */
+.mkt-row b.soon{color:var(--dim);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
