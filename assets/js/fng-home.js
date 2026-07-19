@@ -21,7 +21,18 @@
 
     var cls = q("fng-class"); if (cls) { cls.textContent = d.classification; cls.style.color = color; }
     txt("fng-trend", d.trend);
-    txt("fng-note", d.note);
+
+    // Momentum derived from the 7 day sentiment change
+    var mo = q("fng-momentum");
+    if (mo) {
+      var dd = d.delta7d;
+      var word = "Flat", c = "#f59e0b";
+      if (dd != null) {
+        if (dd >= 4) { word = "Improving"; c = "#16c784"; }
+        else if (dd <= -4) { word = "Fading"; c = "#ea3943"; }
+      }
+      mo.textContent = word; mo.style.color = c;
+    }
   }
 
   function load() {

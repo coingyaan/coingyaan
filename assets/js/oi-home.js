@@ -27,13 +27,24 @@
     txt("oi-value", d.oiUsdDisplay);
     var ch = q("oi-change"); if (ch) { ch.textContent = d.changeDisplay; ch.style.color = toneColor[d.changeTone] || "#f59e0b"; }
     txt("oi-activity", d.activity);
-    txt("oi-note", d.note);
     drawBars(d.bars, d.changeTone);
+  }
+
+  // Positioning derived from funding bias (net long/short of the market)
+  function applyPositioning(p) {
+    if (!p || !p.data) return;
+    var pos = q("oi-positioning"); if (!pos) return;
+    var b = p.data.bias;
+    var word = b === "Long" ? "Net long" : b === "Short" ? "Net short" : "Balanced";
+    var c = b === "Long" ? "#16c784" : b === "Short" ? "#ea3943" : "#f59e0b";
+    pos.textContent = word; pos.style.color = c;
   }
 
   function load() {
     fetch(API, { headers: { accept: "application/json" } })
       .then(function (r) { return r.json(); }).then(apply).catch(function () {});
+    fetch("/api/funding-rate", { headers: { accept: "application/json" } })
+      .then(function (r) { return r.json(); }).then(applyPositioning).catch(function () {});
   }
   if (document.readyState !== "loading") load();
   else document.addEventListener("DOMContentLoaded", load);

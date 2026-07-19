@@ -20,7 +20,15 @@
 
     var bias = q("fr-bias"); if (bias) { bias.textContent = d.bias; bias.style.color = color; }
     txt("fr-positioning", d.positioning);
-    txt("fr-note", d.note);
+
+    // Leverage derived from the funding crowding read
+    var lev = q("fr-leverage");
+    if (lev) {
+      var word = "Moderate", c = "#f59e0b";
+      if (d.crowding && d.crowding.indexOf("Crowded") === 0) { word = "Elevated"; c = toneColor[d.crowdTone] || "#ea3943"; }
+      else if (d.bias === "Neutral") { word = "Low"; c = "#94a3b8"; }
+      lev.textContent = word; lev.style.color = c;
+    }
   }
 
   function load() {
