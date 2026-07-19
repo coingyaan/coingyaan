@@ -132,10 +132,11 @@ async function coingeckoDominance() {
   return btc != null ? btc : null;
 }
 
-async function coingeckoPrice() {
-  const d = await getJson("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true");
-  if (!d?.bitcoin?.usd) return null;
-  return { price: d.bitcoin.usd, changePct: d.bitcoin.usd_24h_change ?? 0 };
+async function coingeckoPrice(coinId = "bitcoin") {
+  const d = await getJson(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd&include_24hr_change=true`);
+  const row = d?.[coinId];
+  if (!row?.usd) return null;
+  return { price: row.usd, changePct: row.usd_24h_change ?? 0 };
 }
 
 // ---------- Alternative.me ----------
@@ -147,7 +148,7 @@ async function fearGreed() {
 
 // ---------- orchestration ----------
 export async function assembleMarket(cfg) {
-  const { symbol, hlCoin, klineInterval, klineLimit } = cfg;
+  const { symbol, hlCoin, klineInterval, klineLimit, coinId } = cfg;
 
   const [klines, tick, bnFund, bnOI, bybit, hl, dom, fg, cgPrice, okx] = await Promise.all([
     getKlines(symbol, klineInterval, klineLimit),
@@ -158,7 +159,7 @@ export async function assembleMarket(cfg) {
     hyperliquid(hlCoin),
     coingeckoDominance(),
     fearGreed(),
-    coingeckoPrice(),
+    coingeckoPrice(coinId),
     okxTicker(symbol),
   ]);
 

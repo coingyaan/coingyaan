@@ -79,6 +79,7 @@ export const PARAMS = {
 export const REFRESH = {
   symbol: "BTCUSDT", // Binance/Bybit perp symbol
   hlCoin: "BTC", // Hyperliquid coin name
+  coinId: "bitcoin", // CoinGecko id (price fallback)
   klineInterval: "1h",
   klineLimit: 200,
   ttlSeconds: 300, // 5 min: below this, cache is "fresh"
@@ -86,4 +87,13 @@ export const REFRESH = {
   lockSeconds: 90, // refresh lock TTL to avoid stampede
   kvKey: "outlook:btc:v1",
   lockKey: "outlook:btc:lock",
+};
+
+// Per-asset overrides. Shared timings and kline settings come from REFRESH; each
+// asset supplies its own symbols and cache keys. BTC values match REFRESH exactly
+// so the existing Bitcoin outlook is untouched.
+export const ASSETS = {
+  btc: { symbol: "BTCUSDT", hlCoin: "BTC", coinId: "bitcoin", kvKey: "outlook:btc:v1", lockKey: "outlook:btc:lock" },
+  eth: { symbol: "ETHUSDT", hlCoin: "ETH", coinId: "ethereum", kvKey: "outlook:eth:v1", lockKey: "outlook:eth:lock" },
+  sol: { symbol: "SOLUSDT", hlCoin: "SOL", coinId: "solana", kvKey: "outlook:sol:v1", lockKey: "outlook:sol:lock" },
 };

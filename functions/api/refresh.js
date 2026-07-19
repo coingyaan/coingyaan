@@ -15,15 +15,16 @@ export async function onRequest(context) {
     return json({ ok: false, error: "unauthorized" }, 401);
   }
   // Refresh each engine independently so one failing does not block the others.
-  const [outlook, fng, markets, funding, oi] = await Promise.allSettled([
+  const [outlook, ethOutlook, fng, markets, funding, oi] = await Promise.allSettled([
     refreshOutlook(env),
+    refreshOutlook(env, "eth"),
     refreshFearGreed(env),
     refreshMarkets(env),
     refreshFunding(env),
     refreshOpenInterest(env),
   ]);
   const unwrap = (r) => (r.status === "fulfilled" ? r.value : { ok: false, error: String(r.reason) });
-  const body = { ok: true, outlook: unwrap(outlook), fng: unwrap(fng), markets: unwrap(markets), funding: unwrap(funding), oi: unwrap(oi) };
+  const body = { ok: true, outlook: unwrap(outlook), ethOutlook: unwrap(ethOutlook), fng: unwrap(fng), markets: unwrap(markets), funding: unwrap(funding), oi: unwrap(oi) };
   // Always 200 so the diagnostic body is visible; cron treats any 2xx as success.
   return json(body, 200);
 }
