@@ -26,20 +26,23 @@ async function dominance() {
   return d != null ? parseFloat(d) : null;
 }
 
-// Top coins with 30d performance. Returns { btcChange, alts:[{symbol,name,change}] }
+// Top coins with 7d performance from Coinlore (light, edge-friendly).
+// Returns { btcChange, alts:[{symbol,name,change}] }
 async function performance() {
-  const rows = await getJson("https://api.coinpaprika.com/v1/tickers?quotes=USD", 8000);
+  const d = await getJson("https://api.coinlore.net/api/tickers/?start=0&limit=100", 6000);
+  const rows = d?.data;
   if (!Array.isArray(rows) || !rows.length) return { btcChange: null, alts: [] };
-  // rows are rank-sorted ascending
   let btcChange = null;
   const alts = [];
   for (const r of rows) {
     const sym = (r.symbol || "").toUpperCase();
-    const chg = r?.quotes?.USD?.percent_change_30d;
+    const chg = r.percent_change_7d;
     if (sym === "BTC") { if (chg != null) btcChange = parseFloat(chg); continue; }
     if (EXCLUDE.has(sym)) continue;
-    if (chg == null) continue;
-    alts.push({ symbol: sym, name: r.name || sym, change: parseFloat(chg) });
+    if (chg == null || chg === "") continue;
+    const v = parseFloat(chg);
+    if (!Number.isFinite(v)) continue;
+    alts.push({ symbol: sym, name: r.name || sym, change: v });
     if (alts.length >= PARAMS.topN) break;
   }
   return { btcChange, alts };

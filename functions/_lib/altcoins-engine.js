@@ -45,7 +45,7 @@ export function computeAltcoins({ dominance, btcChange, alts, prevDominance }) {
 
   let interpretation;
   if (index == null) interpretation = "The altcoin season reading could not be computed from current data. Bitcoin dominance is still shown above.";
-  else interpretation = `Over the last 30 days, ${outperform} of the top ${total} coins outperformed Bitcoin, which puts the Altcoin Season Index at ${index} out of 100. ${index >= P.expandMid ? "That leans toward altcoin strength, where capital rotates from Bitcoin into higher risk assets." : "That leans toward Bitcoin strength, where capital concentrates in Bitcoin and most altcoins lag."} Bitcoin dominance sits at ${Number.isFinite(dominance) ? dominance.toFixed(1) + "%" : "an unavailable level"}.`;
+  else interpretation = `Over the last ${P.windowLabel}, ${outperform} of the top ${total} coins outperformed Bitcoin, which puts the Altcoin Season Index at ${index} out of 100. ${index >= P.expandMid ? "That leans toward altcoin strength, where capital rotates from Bitcoin into higher risk assets." : "That leans toward Bitcoin strength, where capital concentrates in Bitcoin and most altcoins lag."} Bitcoin dominance sits at ${Number.isFinite(dominance) ? dominance.toFixed(1) + "%" : "an unavailable level"}.`;
 
   return {
     asOf: new Date().toISOString(),
@@ -57,7 +57,7 @@ export function computeAltcoins({ dominance, btcChange, alts, prevDominance }) {
       seasonIndex: index,
       seasonLabel: label,
       outlook, tone,
-      outperform, total, window: "30 days",
+      outperform, total, window: P.windowLabel,
       note, interpretation,
     },
     movers,

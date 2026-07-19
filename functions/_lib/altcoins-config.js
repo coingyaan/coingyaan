@@ -4,7 +4,8 @@
 
 export const PARAMS = {
   topN: 50, // top coins by rank, after exclusions
-  window: "30d", // performance window used (CoinPaprika exposes 30d at the edge)
+  window: "7d", // performance window (Coinlore exposes 7d at the edge)
+  windowLabel: "7 days",
   seasonHigh: 75, // index >= this: Altcoin Season
   expandMid: 50, // index >= this: alts expanding
   compressLow: 25, // index < this: Bitcoin Season
