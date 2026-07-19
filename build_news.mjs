@@ -57,13 +57,16 @@ const CAT_ICONS = {
   gavel: '<rect x="-24" y="-24" width="30" height="12" rx="3" transform="rotate(45)" fill="COLOR"/><rect x="-4" y="16" width="34" height="8" rx="4" fill="COLOR" opacity=".7"/>',
   mic: '<rect x="-9" y="-30" width="18" height="34" rx="9" fill="COLOR"/><path d="M-16 0 A16 16 0 0 0 16 0" fill="none" stroke="COLOR" stroke-width="4" opacity=".7"/><rect x="-2" y="16" width="4" height="12" fill="COLOR" opacity=".7"/>',
 };
-function coverSvg({ accent, catIcon, logo, label }) {
+function coverSvg({ accent, catIcon, logo, label, showLabel }) {
   const centerpiece = logo
-    ? `<g transform="translate(600 275) scale(1.75) translate(-64 -64)">${logo}</g>`
-    : `<g transform="translate(600 280) scale(2.7)">${(CAT_ICONS[catIcon] || CAT_ICONS.blocks).replace(/COLOR/g, accent)}</g>`;
+    ? `<g transform="translate(600 300) scale(1.9) translate(-64 -64)">${logo}</g>`
+    : `<g transform="translate(600 300) scale(3)">${(CAT_ICONS[catIcon] || CAT_ICONS.blocks).replace(/COLOR/g, accent)}</g>`;
+  const name = showLabel
+    ? `<text x="600" y="472" font-family="JetBrains Mono, monospace" font-size="30" font-weight="600" letter-spacing="8" text-anchor="middle" fill="#e6ebf5">${esc((label || "").toUpperCase())}</text>`
+    : "";
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="${esc(label)}">
   <defs>
-    <radialGradient id="glow" cx="50%" cy="42%" r="55%">
+    <radialGradient id="glow" cx="50%" cy="45%" r="52%">
       <stop offset="0%" stop-color="${accent}" stop-opacity="0.30"/>
       <stop offset="55%" stop-color="${accent}" stop-opacity="0.05"/>
       <stop offset="100%" stop-color="${accent}" stop-opacity="0"/>
@@ -73,8 +76,7 @@ function coverSvg({ accent, catIcon, logo, label }) {
   <rect width="1200" height="630" fill="url(#bg)"/>
   <rect width="1200" height="630" fill="url(#glow)"/>
   ${centerpiece}
-  <text x="600" y="470" font-family="JetBrains Mono, monospace" font-size="24" letter-spacing="6" text-anchor="middle" fill="#8a94a6">COINGYAAN INTELLIGENCE</text>
-  <text x="600" y="510" font-family="Inter, sans-serif" font-size="28" font-weight="600" text-anchor="middle" fill="#e6ebf5">${esc(label)}</text>
+  ${name}
 </svg>`;
 }
 let __coverUid = 0;
@@ -89,8 +91,9 @@ function coverFor(article) {
   const cat = catBySlug[article.category] || NEWS_CATEGORIES[0];
   const logo = article.coverTag ? logoInner(article.coverTag) : null;
   const accent = (article.coverTag && tagBySlug[article.coverTag] && tagBySlug[article.coverTag].accent) || cat.accent;
-  const label = logo && tagBySlug[article.coverTag] ? tagBySlug[article.coverTag].name : cat.name;
-  return { svg: uniquifyIds(coverSvg({ accent, catIcon: cat.icon, logo, label })), auto: !article.cover || article.cover === "auto" };
+  const isAsset = !!(logo && tagBySlug[article.coverTag]);
+  const label = isAsset ? tagBySlug[article.coverTag].name : cat.name;
+  return { svg: uniquifyIds(coverSvg({ accent, catIcon: cat.icon, logo, label, showLabel: isAsset })), auto: !article.cover || article.cover === "auto" };
 }
 
 /* ---------- relationships ---------- */
