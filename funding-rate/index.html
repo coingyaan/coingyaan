@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="dark" />
 <title>Bitcoin Funding Rate Today | Long vs Short Positioning | CoinGyaan</title>
 <meta name="description" content="Bitcoin funding rate today with long versus short positioning, market bias and what current leverage implies about the move." />
-<meta name="robots" content="noindex, follow" />
+<meta name="robots" content="index, follow" />
 <link rel="canonical" href="https://coingyaan.com/funding-rate/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="CoinGyaan" />
@@ -123,16 +123,70 @@
 </head>
 <body>
 <div id="site-nav"></div>
-<main class="wrap page">
+<main class="wrap ol">
   <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/intelligence/">Intelligence</a><span>/</span><span>Funding Rate</span></nav>
   <span class="page-eyebrow">Intelligence</span>
-  <h1>Funding Rate</h1>
-  <p class="page-lead">See how leverage is positioned across perpetual venues and what it implies about the current move.</p>
-  <div class="page-note"><span class="page-badge">In progress</span><p>This CoinGyaan intelligence product is being built as part of the Version 2 rollout. It is set to noindex until the content is complete, so search engines only see it once it is ready.</p></div>
-  <div class="page-explore"><h2>Explore Intelligence</h2><div class="page-links"><a href="/bitcoin-outlook/">Bitcoin Outlook</a><a href="/fear-greed-index/">Fear & Greed Index</a><a href="/open-interest/">Open Interest</a><a href="/etf-flows/">ETF Flows</a><a href="/intelligence/">Intelligence</a></div></div>
+  <h1>Bitcoin Funding Rate <em class="gold-em">Today</em></h1>
+  <p class="page-lead">Live perpetual funding across major venues, with the CoinGyaan read on how leverage is positioned and what it implies. This is market analysis, not financial advice.</p>
+
+  <section class="ol-panel" aria-label="Current funding">
+    <div class="ol-phd">
+      <span class="ol-phd-t"><i class="dot"></i>CoinGyaan Funding · BTC</span>
+      <span class="bmo-live" data-cg="fr-stamp"><i class="dot"></i>Loading live data</span>
+    </div>
+    <div class="ol-verdict">
+      <div class="ol-vmain">
+        <div class="ol-big" data-cg="fr-rate">--<b>%</b></div>
+        <div class="bmo-cap">Average funding rate, next 8 hours</div>
+        <div class="ol-dir" data-cg="fr-bias">Reading the market</div>
+        <p class="bmo-note" data-cg="fr-interp">Fetching funding across venues.</p>
+        <div class="ipc-split" style="margin-top:18px"><i data-cg="fr-split-long" style="width:50%;background:var(--green)"></i><i data-cg="fr-split-short" style="width:50%;background:var(--red)"></i></div>
+        <div class="bias-legend"><span class="up" data-cg="fr-leg-long">Long 50%</span><span class="down" data-cg="fr-leg-short">Short 50%</span></div>
+      </div>
+      <div class="ol-vmeta">
+        <div class="ol-metric"><span class="m">Market bias</span><span class="v"><i class="st st-amber" data-cg="fr-bias-st">--</i></span></div>
+        <div class="ol-metric"><span class="m">Positioning</span><span class="v" data-cg="fr-positioning">--</span></div>
+        <div class="ol-metric"><span class="m">Crowding</span><span class="v"><i class="st st-amber" data-cg="fr-crowding">--</i></span></div>
+        <div class="ol-metric"><span class="m">Annualized</span><span class="v" data-cg="fr-annual">--</span></div>
+      </div>
+    </div>
+    <p class="bmo-disc">Funding is a positioning signal, not a price prediction. Not financial advice.</p>
+  </section>
+
+  <section class="ol-sec">
+    <h2>Funding by venue</h2>
+    <p class="ol-sub">The 8 hour rate on each exchange and its annualized equivalent. We average the venues that respond, so one exchange being down does not skew the read.</p>
+    <table class="ol-table"><thead><tr><th>Venue</th><th>Funding (8h)</th><th>Annualized</th><th>Lean</th></tr></thead><tbody data-cg="fr-venues"><tr><td colspan="4" class="ol-empty">Loading venues</td></tr></tbody></table>
+  </section>
+
+  <section class="ol-sec ol-prose">
+    <h2>How to read the funding rate</h2>
+    <p>Perpetual futures use funding to keep their price tied to spot. When funding is positive, longs pay shorts, which tells you traders are leaning long and are willing to pay to hold that exposure. When funding is negative, shorts pay longs, so the lean is bearish. The size of the rate tells you how strong the lean is.</p>
+    <h3>Why crowding matters</h3>
+    <p>Funding is most useful at the extremes. Very high positive funding means the long side is crowded and paying a lot to stay in, which often precedes a sharp unwind if price stalls. Very negative funding means shorts are crowded, which can set up a squeeze higher. Balanced funding near zero suggests no strong positioning either way.</p>
+    <h3>The CoinGyaan approach</h3>
+    <p>We pull funding from several venues, average the ones that respond and translate the number into a plain read: the bias, who is paying whom, and whether leverage looks crowded. The annualized figure shows what the current rate would cost or pay over a year if it held. The venues can change and the interpretation is ours.</p>
+    <h2>Frequently asked questions</h2>
+    <h3>What is a funding rate?</h3>
+    <p>It is a periodic payment between long and short holders of a perpetual future that keeps the contract price close to spot. Positive means longs pay shorts, negative means shorts pay longs.</p>
+    <h3>Is positive funding bullish?</h3>
+    <p>It reflects bullish positioning, but very high positive funding can be a caution sign because crowded longs are prone to sharp unwinds. Read it together with price and open interest.</p>
+    <h3>How often does it update?</h3>
+    <p>This page refreshes every 5 minutes. Venues typically settle funding every 8 hours.</p>
+    <p class="ol-final">CoinGyaan provides market intelligence and educational analysis. Nothing here is financial advice. Cryptocurrency is volatile and you can lose money. Make your own decisions.</p>
+  </section>
 </main>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is a crypto funding rate?","acceptedAnswer":{"@type":"Answer","text":"It is a periodic payment between long and short holders of a perpetual future that keeps the contract price close to spot. Positive means longs pay shorts, negative means shorts pay longs."}},
+{"@type":"Question","name":"Is positive funding bullish?","acceptedAnswer":{"@type":"Answer","text":"It reflects bullish positioning, but very high positive funding can be a caution sign because crowded longs are prone to sharp unwinds."}},
+{"@type":"Question","name":"How often does the funding rate update?","acceptedAnswer":{"@type":"Answer","text":"This page refreshes every 5 minutes and venues typically settle funding every 8 hours."}}
+]}
+</script>
 <div id="site-footer"></div>
 <script src="/assets/js/nav.js"></script>
 <script src="/assets/js/footer.js"></script>
+<script defer src="/assets/js/funding-page.js"></script>
 </body>
 </html>

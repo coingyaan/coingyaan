@@ -136,7 +136,7 @@
   <span>HYPE <b data-cg="tk-hype">$44.20</b> <span class="up" data-cg="tk-hype-ch">+3.1%</span></span>
   <span>Fear &amp; Greed <b data-cg="tk-fng">68</b> <span class="up" data-cg="tk-fng-lbl">Greed</span></span>
   <span>Dominance <b data-cg="tk-dom">54.2%</b></span>
-  <span>Funding <b class="up">Positive</b></span>
+  <span>Funding <b class="up" data-cg="tk-funding">Positive</b></span>
   <span>Open Interest <b class="up">Increasing</b></span>
 </div></div>
 
@@ -160,7 +160,7 @@
       <div class="snap-grid">
         <div class="snap-cell"><div class="snap-k">Bitcoin Outlook</div><div class="snap-v" data-cg="snap-outlook" style="color:var(--gold)">Neutral</div></div>
         <div class="snap-cell"><div class="snap-k">Fear &amp; Greed</div><div class="snap-v" data-cg="snap-fng" style="color:var(--gold)">68</div></div>
-        <div class="snap-cell"><div class="snap-k">Funding Rate</div><div class="snap-v" style="color:var(--green)">Positive</div></div>
+        <div class="snap-cell"><div class="snap-k">Funding Rate</div><div class="snap-v" data-cg="snap-funding" style="color:var(--green)">Positive</div></div>
         <div class="snap-cell"><div class="snap-k">Open Interest</div><div class="snap-v" style="color:var(--green)">Increasing</div></div>
       </div>
       <div class="snap-foot" data-cg="snap-foot">Updated just now</div>
@@ -263,13 +263,13 @@
       <div class="ipc">
         <div class="ipc-hd"><span class="ipc-t">Funding Rate</span><span class="ipc-live">LIVE</span></div>
         <div class="ipc-k">Current Funding Rate</div>
-        <div class="ipc-big" style="color:var(--green)">+0.011%<span> / 8h</span></div>
-        <div class="ipc-split"><i style="width:58%;background:var(--green)"></i><i style="width:42%;background:var(--red)"></i></div>
+        <div class="ipc-big" data-cg="fr-rate" style="color:var(--green)">+0.011%<span> / 8h</span></div>
+        <div class="ipc-split"><i data-cg="fr-split-long" style="width:58%;background:var(--green)"></i><i data-cg="fr-split-short" style="width:42%;background:var(--red)"></i></div>
         <div class="ipc-rows">
-          <div class="ipc-row"><span class="m">Market Bias</span><span class="v" style="color:var(--green)">Long</span></div>
-          <div class="ipc-row"><span class="m">Positioning</span><span class="v">Longs paying shorts</span></div>
+          <div class="ipc-row"><span class="m">Market Bias</span><span class="v" data-cg="fr-bias" style="color:var(--green)">Long</span></div>
+          <div class="ipc-row"><span class="m">Positioning</span><span class="v" data-cg="fr-positioning">Longs paying shorts</span></div>
         </div>
-        <p class="ipc-note">Leverage tilts long but not at extremes. Crowded funding often precedes volatility.</p>
+        <p class="ipc-note" data-cg="fr-note">Leverage tilts long but not at extremes. Crowded funding often precedes volatility.</p>
         <a class="ipc-cta" href="/funding-rate/">View Funding Rate &#8594;</a>
       </div>
       <div class="ipc">
@@ -655,6 +655,7 @@
 </script>
 <script defer src="/assets/js/outlook-home.js"></script>
 <script defer src="/assets/js/fng-home.js"></script>
+<script defer src="/assets/js/funding-home.js"></script>
 <script defer src="/assets/js/home-live.js"></script>
 </body>
 </html>

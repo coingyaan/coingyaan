@@ -48,6 +48,15 @@
     if (foot) foot.textContent = "Updated " + (p.ageSeconds == null || p.ageSeconds < 60 ? "just now" : Math.round(p.ageSeconds / 60) + "m ago");
   }
 
+  function funding(p) {
+    if (!p || !p.data) return;
+    var d = p.data;
+    var word = d.bias === "Long" ? "Positive" : d.bias === "Short" ? "Negative" : "Flat";
+    var color = toneColor[d.tone] || "#f59e0b";
+    var tk = q("tk-funding"); if (tk) { tk.textContent = word; tk.className = d.tone === "up" ? "up" : d.tone === "down" ? "down" : ""; }
+    var sn = q("snap-funding"); if (sn) { sn.textContent = word; sn.style.color = color; }
+  }
+
   function pull(url, fn) {
     fetch(url, { headers: { accept: "application/json" } })
       .then(function (r) { return r.json(); }).then(fn).catch(function () {});
@@ -56,6 +65,7 @@
     pull("/api/markets", markets);
     pull("/api/fear-greed", fng);
     pull("/api/bitcoin-outlook", outlook);
+    pull("/api/funding-rate", funding);
   }
   if (document.readyState !== "loading") load();
   else document.addEventListener("DOMContentLoaded", load);
