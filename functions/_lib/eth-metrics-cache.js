@@ -18,6 +18,7 @@ async function getJson(url, timeout = 6000) {
   finally { clearTimeout(timer); }
 }
 
+// Gas price in gwei from a public RPC eth_gasPrice (free, no key).
 async function rpcGasGwei() {
   const body = JSON.stringify({ jsonrpc: "2.0", method: "eth_gasPrice", params: [], id: 1 });
   const rpcs = ["https://cloudflare-eth.com", "https://ethereum-rpc.publicnode.com", "https://rpc.ankr.com/eth"];
@@ -31,11 +32,15 @@ async function rpcGasGwei() {
       const j = await res.json();
       if (j && typeof j.result === "string") {
         const wei = parseInt(j.result, 16);
-        if (Number.isFinite(wei)) return wei / 1e9;
+        if (Number.isFinite(wei)) return { gwei: wei / 1e9, source: "rpc" };
       }
     } catch { /* try next */ }
   }
   return null;
+}
+
+async function gasRead() {
+  return await rpcGasGwei();
 }
 
 async function tvlHistory() {
@@ -62,9 +67,11 @@ async function chainsShare() {
 }
 
 export async function refreshEthMetrics(env) {
-  const [gasGwei, tvl, chains] = await Promise.all([rpcGasGwei(), tvlHistory(), chainsShare()]);
+  const [gas, tvl, chains] = await Promise.all([gasRead(), tvlHistory(), chainsShare()]);
+  const gasGwei = gas ? gas.gwei : null;
   if (gasGwei == null && tvl.now == null && chains.ethTvl == null) return { ok: false, reason: "no eth metrics" };
   const out = computeEthMetrics({ gasGwei, tvlNow: tvl.now, tvlPrior: tvl.prior, ethTvl: chains.ethTvl, totalTvl: chains.totalTvl });
+  if (gas && gas.source) out.data.gasSource = gas.source;
   await env.OUTLOOK_KV.put(REFRESH.kvKey, JSON.stringify(out));
   return { ok: true, ethMetrics: out };
 }

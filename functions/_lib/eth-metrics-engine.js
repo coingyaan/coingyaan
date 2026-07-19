@@ -19,7 +19,7 @@ export function computeEthMetrics({ gasGwei, tvlNow, tvlPrior, ethTvl, totalTvl 
   // Gas
   let gas = null, gasLabel = "Unavailable", gasTone = "neutral";
   if (Number.isFinite(gasGwei)) {
-    gas = +gasGwei.toFixed(gasGwei < 10 ? 2 : 1);
+    gas = gasGwei < 1 ? +gasGwei.toFixed(3) : gasGwei < 10 ? +gasGwei.toFixed(2) : +gasGwei.toFixed(1);
     if (gasGwei < P.gasLow) { gasLabel = "Low"; gasTone = "up"; }
     else if (gasGwei > P.gasHigh) { gasLabel = "Elevated"; gasTone = "down"; }
     else { gasLabel = "Normal"; gasTone = "neutral"; }

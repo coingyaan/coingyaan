@@ -48,7 +48,10 @@
     pull("/api/eth-metrics", function (p) {
       if (!p || !p.data) return;
       var d = p.data;
-      if (d.gasLabel) { txt("mk-eth-gas", d.gasLabel); color("mk-eth-gas", toneCol(d.gasTone)); }
+      if (d.gasLabel) {
+        var gasText = (d.gasGwei != null ? d.gasGwei + " gwei \u00b7 " : "") + d.gasLabel;
+        txt("mk-eth-gas", gasText); color("mk-eth-gas", toneCol(d.gasTone));
+      }
       if (d.tvlTrend) { txt("mk-eth-tvl", d.tvlTrend); color("mk-eth-tvl", toneCol(d.tvlTone)); }
       txt("mk-eth-dom", d.defiDominanceDisplay);
     });
