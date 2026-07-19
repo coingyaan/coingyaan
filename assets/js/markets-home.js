@@ -44,6 +44,15 @@
     pull("/api/bitcoin-outlook", function (p) { setOutlook("mk-btc-outlook", p); });
     pull("/api/eth-outlook", function (p) { setOutlook("mk-eth-outlook", p); });
 
+    // Ethereum card: gas, TVL trend, DeFi dominance
+    pull("/api/eth-metrics", function (p) {
+      if (!p || !p.data) return;
+      var d = p.data;
+      if (d.gasLabel) { txt("mk-eth-gas", d.gasLabel); color("mk-eth-gas", toneCol(d.gasTone)); }
+      if (d.tvlTrend) { txt("mk-eth-tvl", d.tvlTrend); color("mk-eth-tvl", toneCol(d.tvlTone)); }
+      txt("mk-eth-dom", d.defiDominanceDisplay);
+    });
+
     // Bitcoin card: funding rate
     pull("/api/funding-rate", function (p) {
       if (!p || !p.data) return;
