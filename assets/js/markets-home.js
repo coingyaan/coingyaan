@@ -70,6 +70,18 @@
       if (d.breadth) { txt("mk-alt-breadth", d.breadth); color("mk-alt-breadth", toneCol(d.breadthTone)); }
       if (d.gainers != null && d.total != null) txt("mk-alt-gainers", d.gainers + " / " + d.total);
     });
+
+    // Stablecoins card: supply, trend, dominance, mint/burn, outlook
+    pull("/api/stablecoins", function (p) {
+      if (!p || !p.data) return;
+      var d = p.data;
+      txt("mk-stable-supply", d.totalDisplay);
+      if (d.supplyTrend) { txt("mk-stable-trend", d.supplyTrend); color("mk-stable-trend", toneCol(d.trendTone)); }
+      txt("mk-stable-dom", d.leaderDisplay);
+      var fl = q("mk-stable-flow");
+      if (fl && d.netFlowDisplay) { fl.textContent = d.netFlowDisplay; fl.style.color = d.netFlow >= 0 ? GREEN : RED; }
+      if (d.outlook) { txt("mk-stable-outlook", d.outlook); color("mk-stable-outlook", toneCol(d.outlookTone)); }
+    });
   }
   if (document.readyState !== "loading") load();
   else document.addEventListener("DOMContentLoaded", load);

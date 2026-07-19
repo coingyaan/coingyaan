@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="dark" />
 <title>Stablecoin Market Dashboard | Supply, Liquidity &amp; Intelligence | CoinGyaan</title>
 <meta name="description" content="Stablecoin market dashboard tracking supply, dominance, liquidity and depeg risk across major stablecoins." />
-<meta name="robots" content="noindex, follow" />
+<meta name="robots" content="index, follow" />
 <link rel="canonical" href="https://coingyaan.com/markets/stablecoins/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="CoinGyaan" />
@@ -123,16 +123,68 @@
 </head>
 <body>
 <div id="site-nav"></div>
-<main class="wrap page">
+<main class="wrap ol">
   <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/markets/">Markets</a><span>/</span><span>Stablecoins</span></nav>
   <span class="page-eyebrow">Markets</span>
-  <h1>Stablecoin Dashboard</h1>
-  <p class="page-lead">Supply, dominance, liquidity and depeg risk across major stablecoins.</p>
-  <div class="page-note"><span class="page-badge">In progress</span><p>This CoinGyaan market dashboard is being built as part of the Version 2 rollout. It is set to noindex until the content is complete, so search engines only see it once it is ready.</p></div>
-  <div class="page-explore"><h2>Explore Markets</h2><div class="page-links"><a href="/markets/bitcoin/">Bitcoin</a><a href="/markets/ethereum/">Ethereum</a><a href="/markets/solana/">Solana</a><a href="/markets/altcoins/">Altcoins</a><a href="/markets/">Markets</a></div></div>
+  <h1>Stablecoin Liquidity <em class="gold-em">Today</em></h1>
+  <p class="page-lead">Is capital entering or leaving crypto? Stablecoin supply is the dollar liquidity behind the market. The CoinGyaan read on total supply, net mint and burn, and dominance. This is market analysis, not financial advice.</p>
+
+  <section class="ol-panel" aria-label="Stablecoin liquidity">
+    <div class="ol-phd">
+      <span class="ol-phd-t"><i class="dot"></i>CoinGyaan Stablecoins</span>
+      <span class="bmo-live" data-cg="s-stamp"><i class="dot"></i>Loading live data</span>
+    </div>
+    <div class="ol-verdict">
+      <div class="ol-vmain">
+        <div class="ol-big"><span data-cg="s-total">--</span></div>
+        <div class="bmo-cap">Total stablecoin supply</div>
+        <div class="ol-dir" data-cg="s-outlook">Reading liquidity</div>
+        <p class="bmo-note" data-cg="s-note" style="margin-top:12px">Fetching stablecoin supply.</p>
+      </div>
+      <div class="ol-vmeta">
+        <div class="ol-metric"><span class="m">Supply trend</span><span class="v"><i class="st st-amber" data-cg="s-trend">--</i></span></div>
+        <div class="ol-metric"><span class="m">Net mint and burn (7d)</span><span class="v" data-cg="s-flow">--</span></div>
+        <div class="ol-metric"><span class="m">Liquidity outlook</span><span class="v"><i class="st st-amber" data-cg="s-outlook-st">--</i></span></div>
+        <div class="ol-metric"><span class="m">Leader</span><span class="v" data-cg="s-leader">--</span></div>
+      </div>
+    </div>
+    <p class="bmo-disc">Supply measured across all tracked stablecoins. Not financial advice.</p>
+  </section>
+
+  <section class="ol-sec">
+    <h2>Stablecoin dominance</h2>
+    <p class="ol-sub">The largest stablecoins by circulating supply and their share of the total.</p>
+    <table class="ol-table"><thead><tr><th>Stablecoin</th><th>Supply</th><th>Share</th></tr></thead><tbody data-cg="s-breakdown"><tr><td colspan="3" class="ol-empty">Loading</td></tr></tbody></table>
+  </section>
+
+  <section class="ol-sec ol-prose">
+    <h2>Why stablecoin supply matters</h2>
+    <p>Stablecoins are the dollars inside crypto. When their total supply expands, new capital is entering the market and there is more liquidity available to buy assets. When supply contracts, capital is leaving and liquidity is draining. Watching the direction of stablecoin supply is one of the cleanest ways to see whether money is flowing into crypto or out of it.</p>
+    <h3>Net mint and burn</h3>
+    <p>Net mint and burn is the change in total supply over the window. A net mint means more stablecoins were created than redeemed, which usually means fresh dollars arriving. A net burn means more were redeemed than created, which usually means dollars leaving. We measure this over 7 days.</p>
+    <h3>The CoinGyaan approach</h3>
+    <p>We read total stablecoin supply and its trend, the net mint or burn over the window, and the dominance split among the largest stablecoins. From the supply direction we form a simple liquidity outlook. The data comes from public on-chain sources and the interpretation is ours.</p>
+    <h2>Frequently asked questions</h2>
+    <h3>Does expanding stablecoin supply mean prices go up?</h3>
+    <p>Not directly, but expanding supply adds liquidity that can support prices, while contracting supply removes it. It is context for your own research, not a signal on its own.</p>
+    <h3>What is stablecoin dominance?</h3>
+    <p>The share of total stablecoin supply held by the largest stablecoin, usually Tether. It shows how concentrated stablecoin liquidity is.</p>
+    <h3>How often does this update?</h3>
+    <p>This page refreshes regularly through the day from live on-chain data.</p>
+    <p class="ol-final">CoinGyaan provides market intelligence and educational analysis. Nothing here is financial advice. Cryptocurrency is volatile and you can lose money. Make your own decisions.</p>
+  </section>
 </main>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Does expanding stablecoin supply mean prices go up?","acceptedAnswer":{"@type":"Answer","text":"Not directly, but expanding supply adds liquidity that can support prices, while contracting supply removes it."}},
+{"@type":"Question","name":"What is stablecoin dominance?","acceptedAnswer":{"@type":"Answer","text":"The share of total stablecoin supply held by the largest stablecoin, usually Tether. It shows how concentrated stablecoin liquidity is."}},
+{"@type":"Question","name":"How often does the stablecoin dashboard update?","acceptedAnswer":{"@type":"Answer","text":"This page refreshes regularly through the day from live on-chain data."}}
+]}
+</script>
 <div id="site-footer"></div>
 <script src="/assets/js/nav.js"></script>
 <script src="/assets/js/footer.js"></script>
+<script defer src="/assets/js/stablecoins-hub.js"></script>
 </body>
 </html>
