@@ -45,18 +45,47 @@ var NEWS_TAGS = [
   { slug: "coinbase", name: "Coinbase" },
 ];
 
-/* Map an article to the live Intelligence products + market hubs it relates to,
-   by tag. Used to surface "Related Intelligence" and to link articles back to
-   products. Keyed by tag slug. */
+/* Author registry. Articles reference an author by key; byline shows the name.
+   Room for profile pages later at /news/author/{key}/ without changing URLs. */
+var NEWS_AUTHORS = {
+  "coingyaan-team": { name: "CoinGyaan Team", title: "CoinGyaan Intelligence Desk" },
+  "monesh-kumar": { name: "Monesh Kumar", title: "Founder, CoinGyaan" },
+  "mangal-mishra": { name: "Mangal Mishra", title: "Markets Analyst" },
+  "koh-larn": { name: "Koh Larn", title: "Research" },
+};
+
+/* Live Intelligence products, keyed by tag. Each has an API endpoint so the
+   Related Intelligence cards can pull a live value, plus a static blurb used
+   as fallback and as the card subtitle. field/render describe what to show. */
 var NEWS_INTEL_LINKS = {
-  "bitcoin": [{ label: "Bitcoin Outlook", href: "/bitcoin-outlook/" }, { label: "Bitcoin Market Hub", href: "/markets/bitcoin/" }],
-  "ethereum": [{ label: "Ethereum Market Hub", href: "/markets/ethereum/" }],
-  "solana": [{ label: "Solana Market Hub", href: "/markets/solana/" }],
-  "funding-rate": [{ label: "Funding Rate", href: "/funding-rate/" }],
-  "open-interest": [{ label: "Open Interest", href: "/open-interest/" }],
-  "fear-greed": [{ label: "Fear & Greed Index", href: "/fear-greed-index/" }],
-  "altcoins": [{ label: "Altcoins Hub", href: "/markets/altcoins/" }],
-  "stablecoins": [{ label: "Stablecoins Hub", href: "/markets/stablecoins/" }],
+  "bitcoin": [
+    { label: "Bitcoin Outlook", href: "/bitcoin-outlook/", api: "/api/bitcoin-outlook", kind: "outlook", blurb: "24 hour probability read on Bitcoin's direction" },
+    { label: "Bitcoin Market Hub", href: "/markets/bitcoin/", api: null, kind: "hub", blurb: "Everything on Bitcoin in one view" },
+  ],
+  "ethereum": [
+    { label: "Ethereum Market Hub", href: "/markets/ethereum/", api: "/api/eth-outlook", kind: "outlook", blurb: "Outlook, gas, TVL and DeFi dominance" },
+  ],
+  "solana": [
+    { label: "Solana Market Hub", href: "/markets/solana/", api: "/api/sol-outlook", kind: "outlook", blurb: "Outlook, price and derivatives for Solana" },
+  ],
+  "funding-rate": [
+    { label: "Funding Rate", href: "/funding-rate/", api: "/api/funding-rate", kind: "funding", blurb: "Live perpetual funding and market bias" },
+  ],
+  "open-interest": [
+    { label: "Open Interest", href: "/open-interest/", api: "/api/open-interest", kind: "oi", blurb: "Aggregate open interest and activity" },
+  ],
+  "fear-greed": [
+    { label: "Fear & Greed Index", href: "/fear-greed-index/", api: "/api/fear-greed", kind: "fng", blurb: "Live market sentiment reading" },
+  ],
+  "altcoins": [
+    { label: "Altcoins Hub", href: "/markets/altcoins/", api: "/api/altcoins", kind: "altcoins", blurb: "Altcoin season and dominance" },
+  ],
+  "stablecoins": [
+    { label: "Stablecoins Hub", href: "/markets/stablecoins/", api: "/api/stablecoins", kind: "stablecoins", blurb: "Supply trend and liquidity outlook" },
+  ],
+  "etf": [
+    { label: "Bitcoin Market Hub", href: "/markets/bitcoin/", api: null, kind: "hub", blurb: "ETF context inside the Bitcoin hub" },
+  ],
 };
 
 /* Articles, newest first. Dates are ISO (YYYY-MM-DD). */
@@ -69,7 +98,7 @@ var NEWS_ARTICLES = [
     tags: ["bitcoin", "funding-rate", "market-outlook", "open-interest"],
     date: "2026-07-19",
     updated: "2026-07-19",
-    author: "CoinGyaan Intelligence",
+    author: "monesh-kumar",
     readMins: 5,
     excerpt: "Bitcoin's short term outlook shifted as perpetual funding moved back to positive and open interest firmed. Here is what changed in the derivatives market and what it means for the next 24 hours.",
     cover: "auto", // "auto" = generated SVG from category/tag; or a path to an image
@@ -82,9 +111,10 @@ var NEWS_ARTICLES = [
 if (typeof window !== "undefined") {
   window.NEWS_CATEGORIES = NEWS_CATEGORIES;
   window.NEWS_TAGS = NEWS_TAGS;
+  window.NEWS_AUTHORS = NEWS_AUTHORS;
   window.NEWS_INTEL_LINKS = NEWS_INTEL_LINKS;
   window.NEWS_ARTICLES = NEWS_ARTICLES;
 }
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { NEWS_CATEGORIES, NEWS_TAGS, NEWS_INTEL_LINKS, NEWS_ARTICLES };
+  module.exports = { NEWS_CATEGORIES, NEWS_TAGS, NEWS_AUTHORS, NEWS_INTEL_LINKS, NEWS_ARTICLES };
 }

@@ -1,17 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Blockchain">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Bitcoin">
   <defs>
     <radialGradient id="glow" cx="50%" cy="42%" r="55%">
-      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.28"/>
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.30"/>
       <stop offset="55%" stop-color="#f59e0b" stop-opacity="0.05"/>
       <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#0d1424"/><stop offset="100%" stop-color="#080c16"/>
-    </linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1424"/><stop offset="100%" stop-color="#080c16"/></linearGradient>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
   <rect width="1200" height="630" fill="url(#glow)"/>
-  <g transform="translate(600 285) scale(3.1)"><path d="M0 -30 A30 30 0 1 0 0.01 -30 Z" fill="none"/><text x="0" y="14" font-size="44" font-family="JetBrains Mono, monospace" font-weight="800" text-anchor="middle" fill="#f59e0b">&#8383;</text></g>
-  <text x="600" y="470" font-family="JetBrains Mono, monospace" font-size="26" letter-spacing="6" text-anchor="middle" fill="#8a94a6">COINGYAAN INTELLIGENCE</text>
-  <text x="600" y="512" font-family="Inter, sans-serif" font-size="30" font-weight="600" text-anchor="middle" fill="#e6ebf5">Blockchain</text>
+  <g transform="translate(600 280) scale(2.7)"><circle cx="0" cy="0" r="42" fill="#f7931a"/><text x="0" y="20" font-size="62" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle" fill="#fff">&#8383;</text></g>
+  <text x="600" y="470" font-family="JetBrains Mono, monospace" font-size="24" letter-spacing="6" text-anchor="middle" fill="#8a94a6">COINGYAAN INTELLIGENCE</text>
+  <text x="600" y="510" font-family="Inter, sans-serif" font-size="28" font-weight="600" text-anchor="middle" fill="#e6ebf5">Bitcoin</text>
 </svg>
