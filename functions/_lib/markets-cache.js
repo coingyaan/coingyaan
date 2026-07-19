@@ -22,7 +22,14 @@ async function coin(symbol) {
   const bb = await getJson(`https://api.bybit.com/v5/market/tickers?category=linear&symbol=${symbol}`);
   const row = bb?.result?.list?.[0];
   if (row?.lastPrice) {
-    return { price: parseFloat(row.lastPrice), changePct: row.price24hPcnt != null ? parseFloat(row.price24hPcnt) * 100 : 0 };
+    return {
+      price: parseFloat(row.lastPrice),
+      changePct: row.price24hPcnt != null ? parseFloat(row.price24hPcnt) * 100 : 0,
+      high: row.highPrice24h != null ? parseFloat(row.highPrice24h) : null,
+      low: row.lowPrice24h != null ? parseFloat(row.lowPrice24h) : null,
+      volBase: row.volume24h != null ? parseFloat(row.volume24h) : null,
+      volUsd: row.turnover24h != null ? parseFloat(row.turnover24h) : null,
+    };
   }
   // OKX spot fallback
   const inst = symbol.replace("USDT", "-USDT");
@@ -30,7 +37,14 @@ async function coin(symbol) {
   const o = ok?.data?.[0];
   if (o?.last) {
     const last = parseFloat(o.last), open = parseFloat(o.open24h);
-    return { price: last, changePct: open ? ((last - open) / open) * 100 : 0 };
+    return {
+      price: last,
+      changePct: open ? ((last - open) / open) * 100 : 0,
+      high: o.high24h != null ? parseFloat(o.high24h) : null,
+      low: o.low24h != null ? parseFloat(o.low24h) : null,
+      volBase: o.vol24h != null ? parseFloat(o.vol24h) : null,
+      volUsd: o.volCcy24h != null ? parseFloat(o.volCcy24h) : null,
+    };
   }
   return null;
 }

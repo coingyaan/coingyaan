@@ -19,6 +19,17 @@
     var ch = q(chSel);
     if (ch && coin.changePct != null) { ch.textContent = (coin.changePct >= 0 ? "+" : "") + coin.changePct.toFixed(1) + "%"; ch.className = coin.changePct >= 0 ? "up" : "down"; }
   }
+  function setMove(sel, coin) {
+    if (!coin || coin.changePct == null) return;
+    var el = q(sel); if (!el) return;
+    el.textContent = (coin.changePct >= 0 ? "+" : "") + coin.changePct.toFixed(1) + "%";
+    el.style.color = coin.changePct >= 0 ? "#16c784" : "#ea3943";
+  }
+  function setHL(highSel, lowSel, coin) {
+    if (!coin) return;
+    if (coin.high != null) txt(highSel, price(coin.high));
+    if (coin.low != null) txt(lowSel, price(coin.low));
+  }
   function setOutlook(sel, p) {
     if (!p || !p.data) return;
     var el = q(sel);
@@ -34,6 +45,8 @@
       if (!p || !p.data) return;
       setPx("mk-btc-px", "mk-btc-ch", p.data.btc);
       setPx("mk-eth-px", "mk-eth-ch", p.data.eth);
+      setHL("mk-btc-high", "mk-btc-low", p.data.btc);
+      setHL("mk-eth-high", "mk-eth-low", p.data.eth);
     });
     pull("/api/bitcoin-outlook", function (p) { setOutlook("mk-btc-outlook", p); });
     pull("/api/eth-outlook", function (p) { setOutlook("mk-eth-outlook", p); });

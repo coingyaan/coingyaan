@@ -26,6 +26,13 @@
     if (a >= 1e6) return "$" + (n / 1e6).toFixed(1) + "M";
     return "$" + Math.round(n).toLocaleString("en-US");
   }
+  function compact(n) {
+    if (n == null) return "--";
+    var a = Math.abs(n);
+    if (a >= 1e6) return (n / 1e6).toFixed(2) + "M";
+    if (a >= 1e3) return (n / 1e3).toFixed(2) + "K";
+    return n.toLocaleString("en-US", { maximumFractionDigits: 2 });
+  }
 
   function fillOutlook(p) {
     if (!p || !p.data) { var st = q("h-stamp"); if (st) st.innerHTML = '<i class="dot"></i>Live data unavailable'; return; }
@@ -74,6 +81,11 @@
     txt("h-price", price(coin.price));
     var ch = q("h-price-ch");
     if (ch && coin.changePct != null) { ch.textContent = (coin.changePct >= 0 ? "+" : "") + coin.changePct.toFixed(1) + "% today"; ch.style.color = toneColor[coin.changePct >= 0 ? "up" : "down"]; }
+    if (coin.high != null) txt("h-high", price(coin.high));
+    if (coin.low != null) txt("h-low", price(coin.low));
+    var unit = (asset || "btc").toUpperCase();
+    if (coin.volBase != null) txt("h-volbase", compact(coin.volBase) + " " + unit);
+    if (coin.volUsd != null) txt("h-volusd", usd(coin.volUsd));
   }
 
   function fillFng(p) {
