@@ -50,6 +50,14 @@
     });
     pull("/api/bitcoin-outlook", function (p) { setOutlook("mk-btc-outlook", p); });
     pull("/api/eth-outlook", function (p) { setOutlook("mk-eth-outlook", p); });
+    pull("/api/altcoins", function (p) {
+      if (!p || !p.data) return;
+      var d = p.data;
+      if (d.dominance != null) txt("mk-alt-dom", d.dominance.toFixed(1) + "%");
+      var ol = q("mk-alt-outlook");
+      if (ol) { ol.textContent = d.outlook; ol.style.color = d.tone === "up" ? "#16c784" : d.tone === "down" ? "#ea3943" : "#f59e0b"; }
+      if (d.seasonIndex != null) txt("mk-alt-season", d.seasonIndex + " / 100");
+    });
   }
   if (document.readyState !== "loading") load();
   else document.addEventListener("DOMContentLoaded", load);
