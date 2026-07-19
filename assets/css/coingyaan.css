@@ -481,3 +481,13 @@ main.page h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.
 .fg-drow .v{font-family:var(--mono);font-weight:600}
 .fg-spark{width:100%;height:70px;margin-top:8px}
 .fg-up{color:var(--green)} .fg-down{color:var(--red)} .fg-flat{color:var(--muted)}
+
+/* ============================================================
+   Per-asset market hub — key metrics grid (appended; adds only)
+   ============================================================ */
+.hub-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.hub-cell{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:15px 16px;display:flex;flex-direction:column;gap:3px}
+.hub-k{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.hub-v{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--text);letter-spacing:-.01em}
+.hub-sub{font-size:11.5px;color:var(--muted)}
+@media(max-width:760px){.hub-grid{grid-template-columns:1fr 1fr}}

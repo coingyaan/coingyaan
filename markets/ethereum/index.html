@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="dark" />
 <title>Ethereum Market Dashboard | Analysis, Metrics &amp; News | CoinGyaan</title>
 <meta name="description" content="Ethereum market dashboard with analysis, metrics and the latest Ethereum news in one intelligence view." />
-<meta name="robots" content="noindex, follow" />
+<meta name="robots" content="index, follow" />
 <link rel="canonical" href="https://coingyaan.com/markets/ethereum/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="CoinGyaan" />
@@ -123,16 +123,70 @@
 </head>
 <body>
 <div id="site-nav"></div>
-<main class="wrap page">
+<main class="wrap ol" data-asset="eth">
   <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/markets/">Markets</a><span>/</span><span>Ethereum</span></nav>
   <span class="page-eyebrow">Markets</span>
-  <h1>Ethereum Dashboard</h1>
-  <p class="page-lead">Ethereum analysis, metrics and the latest Ethereum news in one intelligence view.</p>
-  <div class="page-note"><span class="page-badge">In progress</span><p>This CoinGyaan market dashboard is being built as part of the Version 2 rollout. It is set to noindex until the content is complete, so search engines only see it once it is ready.</p></div>
-  <div class="page-explore"><h2>Explore Markets</h2><div class="page-links"><a href="/markets/bitcoin/">Bitcoin</a><a href="/markets/solana/">Solana</a><a href="/markets/altcoins/">Altcoins</a><a href="/markets/stablecoins/">Stablecoins</a><a href="/markets/">Markets</a></div></div>
+  <h1>Ethereum Market Intelligence <em class="gold-em">Today</em></h1>
+  <p class="page-lead">A single view of Ethereum: the CoinGyaan outlook, live price, funding, open interest and market sentiment. This is market analysis, not financial advice.</p>
+
+  <section class="ol-panel" aria-label="Ethereum outlook">
+    <div class="ol-phd">
+      <span class="ol-phd-t"><i class="dot"></i>CoinGyaan Outlook · ETH</span>
+      <span class="bmo-live" data-cg="h-stamp"><i class="dot"></i>Loading live data</span>
+    </div>
+    <div class="ol-verdict">
+      <div class="ol-vmain">
+        <div class="ol-big"><span data-cg="h-upside">--</span><b>%</b></div>
+        <div class="bmo-cap">Upside probability over the next 24 hours</div>
+        <div class="ol-dir" data-cg="h-stance">Reading the market</div>
+        <p class="bmo-note" data-cg="h-summary">Fetching Ethereum signals.</p>
+        <div class="bmo-bias" style="margin-top:16px">
+          <div class="bias-bar"><span class="bias-down" data-cg="h-bias-down" style="width:50%">50%</span><span class="bias-up" data-cg="h-bias-up" style="width:50%">50%</span></div>
+          <div class="bias-legend"><span class="down" data-cg="h-legend-down">Downside 50% &#8595;</span><span class="up" data-cg="h-legend-up">&#8593; Upside 50%</span></div>
+        </div>
+      </div>
+      <div class="ol-vmeta">
+        <div class="ol-metric"><span class="m">Direction</span><span class="v"><i class="st st-amber" data-cg="h-direction">--</i></span></div>
+        <div class="ol-metric"><span class="m">Confidence</span><span class="v"><i class="st st-amber" data-cg="h-conf">--</i></span></div>
+        <div class="ol-metric"><span class="m">Market condition</span><span class="v"><i class="st st-blue" data-cg="h-condition">--</i></span></div>
+        <div class="ol-metric"><span class="m">Expected 24 hour range</span><span class="v" data-cg="h-range">--</span></div>
+      </div>
+    </div>
+    <p class="bmo-disc">Probability estimates only. Not future guarantees and not financial advice.</p>
+  </section>
+
+  <section class="ol-sec">
+    <h2>Key metrics</h2>
+    <div class="hub-grid">
+      <div class="hub-cell"><span class="hub-k">Price</span><span class="hub-v" data-cg="h-price">--</span><span class="hub-sub" data-cg="h-price-ch">--</span></div>
+      <div class="hub-cell"><span class="hub-k">Funding (8h)</span><span class="hub-v" data-cg="h-funding">--</span><span class="hub-sub" data-cg="h-funding-lbl">--</span></div>
+      <div class="hub-cell"><span class="hub-k">Open interest</span><span class="hub-v" data-cg="h-oi">--</span><span class="hub-sub">on ETH perps</span></div>
+      <div class="hub-cell"><span class="hub-k">Sentiment</span><span class="hub-v" data-cg="h-fng">--</span><span class="hub-sub" data-cg="h-fng-lbl">market wide</span></div>
+      <div class="hub-cell"><span class="hub-k">RSI (1h)</span><span class="hub-v" data-cg="h-rsi">--</span><span class="hub-sub">momentum</span></div>
+      <div class="hub-cell"><span class="hub-k">Volatility</span><span class="hub-v" data-cg="h-vol">--</span><span class="hub-sub">daily</span></div>
+    </div>
+  </section>
+
+  <section class="ol-sec">
+    <h2>What is driving Ethereum</h2>
+    <div class="ol-reasons" data-cg="h-reasons"><p class="ol-empty">Loading</p></div>
+  </section>
+
+  <section class="ol-sec">
+    <h2>Go deeper</h2>
+    <div class="page-links"><a href="/fear-greed-index/">Fear &amp; Greed</a><a href="/intelligence/">All Intelligence</a><a href="/markets/">All Markets</a></div>
+  </section>
+
+  <section class="ol-sec ol-prose">
+    <h2>About the Ethereum intelligence view</h2>
+    <p>This page brings the CoinGyaan signals for Ethereum into one place. The outlook estimates the most probable direction over the next 24 hours from live market data. The metrics below it show the current price, the perpetual funding rate on Ethereum, open interest on Ethereum perpetuals, the market wide sentiment reading and momentum. Funding and open interest here are specific to Ethereum, while sentiment is a single market wide index shared across assets.</p>
+    <p>Read the outlook and the metrics together. A direction with strong agreement across funding, momentum and trend is more reliable than one where the signals conflict. Everything here is analysis to support your own research.</p>
+    <p class="ol-final">CoinGyaan provides market intelligence and educational analysis. Nothing here is financial advice. Cryptocurrency is volatile and you can lose money. Make your own decisions.</p>
+  </section>
 </main>
 <div id="site-footer"></div>
 <script src="/assets/js/nav.js"></script>
 <script src="/assets/js/footer.js"></script>
+<script defer src="/assets/js/asset-hub.js"></script>
 </body>
 </html>
