@@ -1,1 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><circle cx="64" cy="64" r="60" fill="#1b3a8f"/><path d="M64 26a38 38 0 1 0 0 76 38 38 0 0 1 0-76z" fill="none" stroke="#4b9ce8" stroke-width="11"/></svg>
+<!-- PLACEHOLDER: not the official circle logo. Replace with the official SVG from the project brand kit. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="#141c2b"/><circle cx="64" cy="64" r="44" fill="none" stroke="#4b9ce8" stroke-width="2" opacity=".5"/><text x="64" y="82" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="700" text-anchor="middle" fill="#4b9ce8">C</text></svg>

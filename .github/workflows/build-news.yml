@@ -1,0 +1,56 @@
+name: Build News
+
+# Regenerates all news pages, covers, OG images, sitemap, RSS and search index
+# whenever you add or edit an article, a body file, or a logo. You just edit the
+# data and push. This Action bakes everything and commits the result.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "assets/js/news-data.js"
+      - "news/_content/**"
+      - "assets/logos/**"
+      - "build_news.mjs"
+      - "build_og.py"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install cairosvg (for OG images)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcairo2
+          pip install cairosvg
+
+      - name: Build news
+        run: |
+          node build_news.mjs
+          python3 build_og.py
+
+      - name: Commit generated files
+        run: |
+          git config user.name "coingyaan-bot"
+          git config user.email "bot@coingyaan.com"
+          git add news sitemap-news.xml index.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Auto-build news [skip ci]"
+            git push
+          fi

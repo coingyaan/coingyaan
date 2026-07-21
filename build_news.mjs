@@ -34,21 +34,38 @@ function authorOf(a) {
 }
 
 /* ---------- V7 covers with official asset logos ---------- */
-/* Load logo SVGs from assets/logos/{tag}.svg once. Returns inner markup. */
+/* Load logo SVGs from assets/logos/{tag}.svg once. Returns {viewBox, inner}
+   so any official SVG (arbitrary coordinate system) can be nested at its own
+   scale. Never redraws a logo. */
 const LOGO_DIR = path.join(ROOT, "assets/logos");
 const logoCache = {};
 function logoInner(tag) {
   if (!tag) return null;
   if (tag in logoCache) return logoCache[tag];
   const f = path.join(LOGO_DIR, tag + ".svg");
-  let inner = null;
+  let out = null;
   if (fs.existsSync(f)) {
     const raw = fs.readFileSync(f, "utf8");
+    const open = raw.match(/<svg[^>]*>/i);
     const m = raw.match(/<svg[^>]*>([\s\S]*?)<\/svg>/i);
-    inner = m ? m[1].trim() : null;
+    if (m) {
+      let vb = open ? (open[0].match(/viewBox="([^"]+)"/i) || [])[1] : null;
+      if (!vb) {
+        const w = open ? (open[0].match(/width="([0-9.]+)"/i) || [])[1] : null;
+        const h = open ? (open[0].match(/height="([0-9.]+)"/i) || [])[1] : null;
+        vb = w && h ? `0 0 ${w} ${h}` : "0 0 128 128";
+      }
+      out = { viewBox: vb, inner: m[1].trim() };
+    }
   }
-  logoCache[tag] = inner;
-  return inner;
+  logoCache[tag] = out;
+  return out;
+}
+/* Nest an official logo, scaled to fit a size×size box centered at (cx,cy). */
+function embedLogo(logo, cx, cy, size) {
+  if (!logo) return "";
+  const x = cx - size / 2, y = cy - size / 2;
+  return `<svg x="${x}" y="${y}" width="${size}" height="${size}" viewBox="${logo.viewBox}" preserveAspectRatio="xMidYMid meet" overflow="visible">${logo.inner}</svg>`;
 }
 const CAT_ICONS = {
   blocks: '<rect x="-26" y="-26" width="22" height="22" rx="3" fill="COLOR"/><rect x="4" y="-26" width="22" height="22" rx="3" fill="COLOR" opacity=".55"/><rect x="-26" y="4" width="22" height="22" rx="3" fill="COLOR" opacity=".55"/><rect x="4" y="4" width="22" height="22" rx="3" fill="COLOR"/>',
@@ -59,7 +76,7 @@ const CAT_ICONS = {
 };
 function coverSvg({ accent, catIcon, logo, label, showLabel }) {
   const centerpiece = logo
-    ? `<g transform="translate(600 288) scale(1.9) translate(-64 -64)">${logo}</g>`
+    ? embedLogo(logo, 600, 288, 260)
     : `<g transform="translate(600 288) scale(3)">${(CAT_ICONS[catIcon] || CAT_ICONS.blocks).replace(/COLOR/g, accent)}</g>`;
   const name = showLabel
     ? `<text x="600" y="452" font-family="JetBrains Mono, monospace" font-size="30" font-weight="700" letter-spacing="9" text-anchor="middle" fill="#e6ebf5">${esc((label || "").toUpperCase())}</text>`
@@ -80,12 +97,28 @@ function coverSvg({ accent, catIcon, logo, label, showLabel }) {
   <rect width="1200" height="630" fill="url(#glow)"/>
   ${centerpiece}
   ${name}
-  <g transform="translate(600 560)" opacity=".6">
-    <circle cx="-46" cy="-4" r="9" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
-    <path d="M-49 -4 a3 3 0 0 1 6 0" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
-    <text x="-30" y="1" font-family="JetBrains Mono, monospace" font-size="17" font-weight="700" fill="#c7cfdd">CoinGyaan</text>
-  </g>
+  ${cgBrand()}
 </svg>`;
+}
+/* Small CoinGyaan branding: official mark embedded as base64 so it renders in
+   both the browser hero and the cairosvg OG PNG. Uses assets/logos/coingyaan.png
+   if present, else assets/logos/coingyaan.svg, else a subtle text wordmark. */
+let __cgBrandCache;
+function cgBrand() {
+  if (__cgBrandCache !== undefined) return __cgBrandCache;
+  const png = path.join(LOGO_DIR, "coingyaan.png");
+  const svg = path.join(LOGO_DIR, "coingyaan.svg");
+  if (fs.existsSync(png)) {
+    const b64 = fs.readFileSync(png).toString("base64");
+    const s = 34;
+    __cgBrandCache = `<image x="${600 - s / 2}" y="${540}" width="${s}" height="${s}" href="data:image/png;base64,${b64}" opacity=".9"/>`;
+  } else if (fs.existsSync(svg)) {
+    const logo = logoInner("coingyaan");
+    __cgBrandCache = embedLogo(logo, 600, 557, 34);
+  } else {
+    __cgBrandCache = `<text x="600" y="562" font-family="JetBrains Mono, monospace" font-size="17" font-weight="700" letter-spacing="1" text-anchor="middle" fill="#c7cfdd" opacity=".55">CoinGyaan</text>`;
+  }
+  return __cgBrandCache;
 }
 let __coverUid = 0;
 function uniquifyIds(svg) {
@@ -98,7 +131,7 @@ function uniquifyIds(svg) {
 /* 400x225 homepage/listing thumbnail, same design language as the cover */
 function homeThumb({ accent, catIcon, logo, label, showLabel }) {
   const centerpiece = logo
-    ? `<g transform="translate(200 96) scale(0.62) translate(-64 -64)">${logo}</g>`
+    ? embedLogo(logo, 200, 96, 86)
     : `<g transform="translate(200 96) scale(1)">${(CAT_ICONS[catIcon] || CAT_ICONS.blocks).replace(/COLOR/g, accent)}</g>`;
   const name = showLabel
     ? `<text x="200" y="168" font-family="JetBrains Mono, monospace" font-size="13.5" font-weight="700" letter-spacing="3.5" text-anchor="middle" fill="#e2e8f0">${esc((label || "").toUpperCase())}</text>`

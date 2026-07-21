@@ -1,1 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="#241a0e"/><text x="64" y="86" font-family="Inter, Arial, sans-serif" font-size="62" font-weight="700" text-anchor="middle" fill="#f59e0b">A</text></svg>
+<!-- PLACEHOLDER: not the official arc logo. Replace with the official SVG from the project brand kit. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="#141c2b"/><circle cx="64" cy="64" r="44" fill="none" stroke="#f59e0b" stroke-width="2" opacity=".5"/><text x="64" y="82" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="700" text-anchor="middle" fill="#f59e0b">A</text></svg>

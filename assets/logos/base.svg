@@ -1,1 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><circle cx="64" cy="64" r="60" fill="#0052ff"/><path d="M63.7 100c20.1 0 36.4-16.1 36.4-36S83.8 28 63.7 28C44.6 28 28.9 42.6 27.5 61.1h48.2v9.8H27.5C28.9 89.4 44.6 100 63.7 100z" fill="#fff"/></svg>
+<!-- PLACEHOLDER: not the official base logo. Replace with the official SVG from the project brand kit. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="#141c2b"/><circle cx="64" cy="64" r="44" fill="none" stroke="#0052ff" stroke-width="2" opacity=".5"/><text x="64" y="82" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="700" text-anchor="middle" fill="#0052ff">B</text></svg>

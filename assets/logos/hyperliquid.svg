@@ -1,1 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="#072723"/><path d="M40 40v48M88 40v48M40 64h48" stroke="#97fce4" stroke-width="11" stroke-linecap="round"/></svg>
+<!-- PLACEHOLDER: not the official hyperliquid logo. Replace with the official SVG from the project brand kit. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="#141c2b"/><circle cx="64" cy="64" r="44" fill="none" stroke="#97fce4" stroke-width="2" opacity=".5"/><text x="64" y="82" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="700" text-anchor="middle" fill="#97fce4">H</text></svg>

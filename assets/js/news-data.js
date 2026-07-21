@@ -38,6 +38,8 @@ var NEWS_TAGS = [
   { slug: "xrp", name: "XRP", accent: "#23292f" },
   { slug: "polygon", name: "Polygon", accent: "#8247e5" },
   { slug: "avalanche", name: "Avalanche", accent: "#e84142" },
+  { slug: "sui", name: "Sui", accent: "#4da2ff" },
+  { slug: "aptos", name: "Aptos", accent: "#06f7c9" },
   { slug: "chainlink", name: "Chainlink", accent: "#375bd2" },
   { slug: "circle", name: "Circle", accent: "#4b9ce8" },
   { slug: "hyperliquid", name: "Hyperliquid", accent: "#97fce4" },

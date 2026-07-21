@@ -1,1 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="#2a1a4a"/><text x="64" y="86" font-family="Inter, Arial, sans-serif" font-size="62" font-weight="700" text-anchor="middle" fill="#b18cff">M</text></svg>
+<!-- PLACEHOLDER: not the official miden logo. Replace with the official SVG from the project brand kit. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="#141c2b"/><circle cx="64" cy="64" r="44" fill="none" stroke="#b18cff" stroke-width="2" opacity=".5"/><text x="64" y="82" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="700" text-anchor="middle" fill="#b18cff">M</text></svg>

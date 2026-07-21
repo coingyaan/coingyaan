@@ -1,1 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><circle cx="64" cy="64" r="60" fill="#e84142"/><g fill="#fff"><path d="M70 46c3-5 8-5 11 0l17 30c3 5 .5 9-5 9H70c-5 0-8-4-5-9z"/><path d="M50 62c3-5 7-5 10 0l4 7 8 14c2 4-.5 7-5 7H37c-5 0-7-3-5-7z"/></g></svg>
+<!-- PLACEHOLDER: not the official avalanche logo. Replace with the official SVG from the project brand kit. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="#141c2b"/><circle cx="64" cy="64" r="44" fill="none" stroke="#e84142" stroke-width="2" opacity=".5"/><text x="64" y="82" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="700" text-anchor="middle" fill="#e84142">A</text></svg>

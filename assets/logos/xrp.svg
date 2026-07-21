@@ -1,1 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><circle cx="64" cy="64" r="60" fill="#23292f"/><path d="M88 40h9L78 60c-8 8-20 8-28 0L31 40h9l15 15c5 5 13 5 18 0z" fill="#fff"/><path d="M40 88h-9l19-20c8-8 20-8 28 0l19 20h-9L73 73c-5-5-13-5-18 0z" fill="#fff"/></svg>
+<!-- PLACEHOLDER: not the official xrp logo. Replace with the official SVG from the project brand kit. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="#141c2b"/><circle cx="64" cy="64" r="44" fill="none" stroke="#23292f" stroke-width="2" opacity=".5"/><text x="64" y="82" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="700" text-anchor="middle" fill="#23292f">X</text></svg>
