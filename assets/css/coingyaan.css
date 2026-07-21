@@ -51,11 +51,13 @@ header{background:rgba(11,17,32,.86);backdrop-filter:blur(12px);border-bottom:1p
 .nav{display:flex;align-items:center;gap:22px;margin-left:6px;overflow:visible}
 .nav > a,.dd-trigger{font-size:13px;color:var(--muted);cursor:pointer;transition:color .2s;white-space:nowrap;user-select:none}
 .nav > a:hover,.dd-trigger:hover{color:var(--text)}
-.dd{position:relative;display:flex;align-items:center;overflow:visible}
+.dd{position:relative;display:flex;align-items:center}
+/* Menus are portaled to <body> and positioned by nav.js so the header's
+   backdrop-filter compositing layer can never clip them. */
 .dd-menu{
-  display:none;position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%);
+  display:none;position:fixed;transform:translateX(-50%);
   background:var(--card);border:1px solid var(--border);border-radius:10px;padding:6px;min-width:200px;
-  box-shadow:0 14px 36px rgba(0,0,0,.5);z-index:1001;
+  box-shadow:0 18px 44px rgba(0,0,0,.55);z-index:10000;
 }
 .dd-menu.on{display:block}
 .dd-menu a{display:block;padding:9px 12px;font-size:13px;color:var(--muted);border-radius:7px;transition:.15s}
@@ -499,8 +501,9 @@ main.page h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.
 /* ============================================================
    News / Intelligence articles (appended; adds only)
    ============================================================ */
-.wrap.art{max-width:760px}
+.wrap.art{max-width:760px;padding-top:38px}
 .art-body{margin-top:8px}
+.art-head,.art-content h2,.art-content h3{scroll-margin-top:80px}
 .art-head{margin:14px 0 22px}
 .art-cat{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 .art-head h1{font-size:34px;line-height:1.18;margin:12px 0 14px;letter-spacing:-.01em}
@@ -545,7 +548,7 @@ main.page h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.
 @media(max-width:640px){.art-intel-cards{grid-template-columns:1fr}}
 
 /* News listing pages (index / category / tag) */
-.wrap.nl{max-width:1060px}
+.wrap.nl{max-width:1060px;padding-top:38px}
 .nl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
 .nl-card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;text-decoration:none;transition:border-color .18s,transform .18s}
 .nl-card:hover{border-color:var(--gold);transform:translateY(-2px)}

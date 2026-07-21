@@ -97,6 +97,26 @@
   if (slot) slot.outerHTML = HEADER;
   document.body.insertAdjacentHTML('beforeend', PANEL);
 
+  /* Move desktop dropdown menus OUT of the header. The header uses
+     backdrop-filter, which in Chromium clips its subtree to the header box and
+     was cutting the menus off. Portaling them to <body> removes that clip.
+     They are position:fixed and placed under their trigger by positionMenu(). */
+  var ddMenus = Array.prototype.slice.call(document.querySelectorAll('header .dd-menu'));
+  ddMenus.forEach(function (m) { document.body.appendChild(m); });
+
+  function positionMenu(menu) {
+    var trigger = document.querySelector('.dd-trigger[data-dd="' + menu.getAttribute('data-menu') + '"]');
+    if (!trigger) return;
+    var r = trigger.getBoundingClientRect();
+    menu.style.left = Math.round(r.left + r.width / 2) + 'px';
+    menu.style.top = Math.round(r.bottom + 10) + 'px';
+  }
+  function repositionOpen() {
+    document.querySelectorAll('.dd-menu.on').forEach(positionMenu);
+  }
+  window.addEventListener('scroll', repositionOpen, { passive: true });
+  window.addEventListener('resize', repositionOpen);
+
   var panel = document.getElementById('mnav');
   var backdrop = document.getElementById('mnavBackdrop');
   var root = document.documentElement;
@@ -122,7 +142,10 @@
     if (trigger) {
       e.stopPropagation();
       var menu = document.querySelector('[data-menu="' + trigger.getAttribute('data-dd') + '"]');
-      if (menu) trigger.setAttribute('aria-expanded', menu.classList.toggle('on') ? 'true' : 'false');
+      if (menu) {
+        if (!menu.classList.contains('on')) positionMenu(menu);
+        trigger.setAttribute('aria-expanded', menu.classList.toggle('on') ? 'true' : 'false');
+      }
       return;
     }
     // Mobile menu open / close
