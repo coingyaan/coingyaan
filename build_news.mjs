@@ -59,24 +59,32 @@ const CAT_ICONS = {
 };
 function coverSvg({ accent, catIcon, logo, label, showLabel }) {
   const centerpiece = logo
-    ? `<g transform="translate(600 300) scale(1.9) translate(-64 -64)">${logo}</g>`
-    : `<g transform="translate(600 300) scale(3)">${(CAT_ICONS[catIcon] || CAT_ICONS.blocks).replace(/COLOR/g, accent)}</g>`;
+    ? `<g transform="translate(600 288) scale(1.9) translate(-64 -64)">${logo}</g>`
+    : `<g transform="translate(600 288) scale(3)">${(CAT_ICONS[catIcon] || CAT_ICONS.blocks).replace(/COLOR/g, accent)}</g>`;
   const name = showLabel
-    ? `<text x="600" y="472" font-family="JetBrains Mono, monospace" font-size="30" font-weight="600" letter-spacing="8" text-anchor="middle" fill="#e6ebf5">${esc((label || "").toUpperCase())}</text>`
+    ? `<text x="600" y="452" font-family="JetBrains Mono, monospace" font-size="30" font-weight="700" letter-spacing="9" text-anchor="middle" fill="#e6ebf5">${esc((label || "").toUpperCase())}</text>`
     : "";
+  // subtle grid matching the homepage news cards
+  const grid = `<g stroke="#1e3048" stroke-width="1" opacity=".4"><path d="M0 105h1200M0 210h1200M0 315h1200M0 420h1200M0 525h1200M200 0v630M400 0v630M600 0v630M800 0v630M1000 0v630"/></g>`;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="${esc(label)}">
   <defs>
-    <radialGradient id="glow" cx="50%" cy="45%" r="52%">
-      <stop offset="0%" stop-color="${accent}" stop-opacity="0.30"/>
+    <radialGradient id="glow" cx="50%" cy="44%" r="52%">
+      <stop offset="0%" stop-color="${accent}" stop-opacity="0.26"/>
       <stop offset="55%" stop-color="${accent}" stop-opacity="0.05"/>
       <stop offset="100%" stop-color="${accent}" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1424"/><stop offset="100%" stop-color="#080c16"/></linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1626"/><stop offset="100%" stop-color="#080c16"/></linearGradient>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
+  ${grid}
   <rect width="1200" height="630" fill="url(#glow)"/>
   ${centerpiece}
   ${name}
+  <g transform="translate(600 560)" opacity=".6">
+    <circle cx="-46" cy="-4" r="9" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+    <path d="M-49 -4 a3 3 0 0 1 6 0" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+    <text x="-30" y="1" font-family="JetBrains Mono, monospace" font-size="17" font-weight="700" fill="#c7cfdd">CoinGyaan</text>
+  </g>
 </svg>`;
 }
 let __coverUid = 0;
@@ -86,6 +94,16 @@ function uniquifyIds(svg) {
     .replace(/id="([^"]+)"/g, (m, id) => `id="${id}-${uid}"`)
     .replace(/url\(#([^)]+)\)/g, (m, id) => `url(#${id}-${uid})`)
     .replace(/(xlink:href|href)="#([^"]+)"/g, (m, attr, id) => `${attr}="#${id}-${uid}"`);
+}
+/* 400x225 homepage/listing thumbnail, same design language as the cover */
+function homeThumb({ accent, catIcon, logo, label, showLabel }) {
+  const centerpiece = logo
+    ? `<g transform="translate(200 96) scale(0.62) translate(-64 -64)">${logo}</g>`
+    : `<g transform="translate(200 96) scale(1)">${(CAT_ICONS[catIcon] || CAT_ICONS.blocks).replace(/COLOR/g, accent)}</g>`;
+  const name = showLabel
+    ? `<text x="200" y="168" font-family="JetBrains Mono, monospace" font-size="13.5" font-weight="700" letter-spacing="3.5" text-anchor="middle" fill="#e2e8f0">${esc((label || "").toUpperCase())}</text>`
+    : "";
+  return `<svg viewBox="0 0 400 225" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="glow" cx="50%" cy="42%" r="60%"><stop offset="0%" stop-color="${accent}" stop-opacity=".26"/><stop offset="100%" stop-color="${accent}" stop-opacity="0"/></radialGradient></defs><rect width="400" height="225" fill="#0d1626"/><g stroke="#1e3048" stroke-width="1" opacity=".4"><path d="M0 56h400M0 112h400M0 169h400M100 0v225M200 0v225M300 0v225"/></g><rect width="400" height="225" fill="url(#glow)"/>${centerpiece}${name}</svg>`;
 }
 function coverFor(article) {
   const cat = catBySlug[article.category] || NEWS_CATEGORIES[0];
@@ -199,7 +217,7 @@ function articleHtml(article) {
   const cat = catBySlug[article.category] || NEWS_CATEGORIES[0];
   const url = `${SITE}/news/${article.slug}/`;
   const cover = coverFor(article);
-  const ogImage = cover.auto ? `${url}cover.svg` : `${SITE}${article.cover}`;
+  const ogImage = cover.auto ? `${url}cover.png` : `${SITE}${article.cover}`;
   const body = fs.readFileSync(path.join(ROOT, "news/_content", article.slug + ".html"), "utf8");
   const au = authorOf(article);
 
@@ -296,4 +314,85 @@ for (const t of NEWS_TAGS) {
     articles: originals.filter((a) => a.tags.includes(t.slug)), crumbLabel: t.name,
   }));
 }
+/* author pages */
+const authorArticles = {};
+for (const a of originals) { (authorArticles[a.author || "coingyaan-team"] ||= []).push(a); }
+for (const key of Object.keys(NEWS_AUTHORS)) {
+  const au = NEWS_AUTHORS[key];
+  const dir = path.join(ROOT, "news", "author", key); fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, "index.html"), listPage({
+    title: `${au.name} | CoinGyaan`, desc: `Articles and analysis by ${au.name}, ${au.title}.`,
+    url: `${SITE}/news/author/${key}/`, heading: au.name, sub: au.title,
+    articles: authorArticles[key] || [], crumbLabel: au.name,
+  }));
+}
+console.log(Object.keys(NEWS_AUTHORS).length + " author pages");
+
+/* sitemap-news.xml */
+const now = new Date().toISOString().slice(0, 10);
+const smUrls = [
+  `${SITE}/news/`,
+  ...NEWS_CATEGORIES.map((c) => `${SITE}/news/${c.slug}/`),
+  ...NEWS_TAGS.map((t) => `${SITE}/news/tag/${t.slug}/`),
+  ...Object.keys(NEWS_AUTHORS).map((k) => `${SITE}/news/author/${k}/`),
+  ...originals.map((a) => `${SITE}/news/${a.slug}/`),
+];
+fs.writeFileSync(path.join(ROOT, "sitemap-news.xml"),
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+  smUrls.map((u) => `  <url><loc>${u}</loc><lastmod>${now}</lastmod></url>`).join("\n") +
+  `\n</urlset>\n`);
+console.log("sitemap-news.xml (" + smUrls.length + " urls)");
+
+/* RSS feed */
+fs.mkdirSync(path.join(ROOT, "news"), { recursive: true });
+fs.writeFileSync(path.join(ROOT, "news", "rss.xml"),
+  `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel>\n` +
+  `<title>CoinGyaan Intelligence</title>\n<link>${SITE}/news/</link>\n<description>Original crypto market intelligence from CoinGyaan.</description>\n<language>en-us</language>\n` +
+  originals.slice(0, 30).map((a) => {
+    const cat = catBySlug[a.category] || NEWS_CATEGORIES[0];
+    return `<item>\n  <title>${esc(a.title)}</title>\n  <link>${SITE}/news/${a.slug}/</link>\n  <guid>${SITE}/news/${a.slug}/</guid>\n  <category>${esc(cat.name)}</category>\n  <pubDate>${new Date(a.date + "T09:00:00Z").toUTCString()}</pubDate>\n  <description>${esc(a.excerpt)}</description>\n</item>`;
+  }).join("\n") +
+  `\n</channel></rss>\n`);
+console.log("news/rss.xml");
+
+/* search index */
+fs.writeFileSync(path.join(ROOT, "news", "search-index.json"), JSON.stringify(originals.map((a) => ({
+  slug: a.slug, title: a.title, excerpt: a.excerpt, category: a.category, tags: a.tags, date: a.date,
+  author: authorOf(a).name, url: `/news/${a.slug}/`,
+})), null, 0));
+console.log("news/search-index.json");
+
+/* homepage feed injection (build-time, between markers) */
+const HOME = path.join(ROOT, "index.html");
+if (fs.existsSync(HOME)) {
+  let html = fs.readFileSync(HOME, "utf8");
+  const START = "<!-- NEWS-FEED:START -->", END = "<!-- NEWS-FEED:END -->";
+  if (html.includes(START) && html.includes(END)) {
+    const cards = originals.slice(0, 6).map((a) => {
+      const cat = catBySlug[a.category] || NEWS_CATEGORIES[0];
+      const logo = a.coverTag ? logoInner(a.coverTag) : null;
+      const accent = (a.coverTag && tagBySlug[a.coverTag] && tagBySlug[a.coverTag].accent) || cat.accent;
+      const isAsset = !!(logo && tagBySlug[a.coverTag]);
+      const thumb = uniquifyIds(homeThumb({ accent, catIcon: cat.icon, logo, label: isAsset ? tagBySlug[a.coverTag].name : cat.name, showLabel: isAsset }));
+      return `<a class="ecard" href="/news/${a.slug}/">
+        <span class="ethumb ethumb--brand">${thumb}</span>
+        <span class="ebody">
+          <span class="ecat" style="color:${cat.accent};border-color:${cat.accent}40;background:${cat.accent}14">${esc(cat.name)}</span>
+          <span class="etitle">${esc(a.title)}</span>
+          <span class="eexc">${esc(a.excerpt)}</span>
+          <span class="emeta">${esc(authorOf(a).name)} &middot; ${a.readMins || 4} min read</span>
+        </span>
+      </a>`;
+    }).join("\n");
+    const inner = originals.length
+      ? `<div class="efeed">\n${cards}\n</div>`
+      : `<div class="nl-empty" style="margin-top:8px"><p>No articles published yet.</p><p class="nl-empty-sub">CoinGyaan Intelligence articles will appear here as they publish.</p><a class="nl-empty-cta" href="/intelligence/">Explore live Intelligence &#8594;</a></div>`;
+    html = html.replace(new RegExp(START + "[\\s\\S]*?" + END), START + "\n" + inner + "\n" + END);
+    fs.writeFileSync(HOME, html);
+    console.log("homepage feed injected (" + Math.min(originals.length, 6) + " cards)");
+  } else {
+    console.log("homepage: NEWS-FEED markers not found, skipped");
+  }
+}
+
 console.log(NEWS_TAGS.length + " tag pages, " + NEWS_CATEGORIES.length + " category pages, " + n + " article(s)");
