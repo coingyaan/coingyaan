@@ -15,7 +15,7 @@
 <meta property="og:title" content="Bitcoin Market Dashboard | Outlook, Metrics &amp; News | CoinGyaan" />
 <meta property="og:description" content="Bitcoin market dashboard with outlook, metrics, analysis and the latest Bitcoin news in one intelligence view." />
 <meta property="og:url" content="https://coingyaan.com/markets/bitcoin/" />
-<meta property="og:image" content="https://coingyaan.com/assets/images/social/universal-share.png" />
+<meta property="og:image" content="https://coingyaan.com/assets/images/brand/universal-share-v1.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="CoinGyaan Crypto Intelligence" />
@@ -23,7 +23,7 @@
 <meta name="twitter:site" content="@coin_gyaan" />
 <meta name="twitter:title" content="Bitcoin Market Dashboard | Outlook, Metrics &amp; News | CoinGyaan" />
 <meta name="twitter:description" content="Bitcoin market dashboard with outlook, metrics, analysis and the latest Bitcoin news in one intelligence view." />
-<meta name="twitter:image" content="https://coingyaan.com/assets/images/social/universal-share.png" />
+<meta name="twitter:image" content="https://coingyaan.com/assets/images/brand/universal-share-v1.png" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -35,7 +35,7 @@
       "url": "https://coingyaan.com/",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://coingyaan.com/assets/images/favicon/coingyaan-android-icon-512x512.png",
+        "url": "https://coingyaan.com/assets/images/brand/logo.png",
         "width": 512,
         "height": 512
       },
@@ -120,6 +120,7 @@
 <link rel="stylesheet" href="/assets/css/coingyaan.css" />
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXY9ZZ543X"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-DXY9ZZ543X');</script>
+<!-- IMAGE-TODO: dedicated Brand v1 hero illustration pending. Using Brand Hero v1 as fallback per Image & Brand Policy. -->
 </head>
 <body>
 <div id="site-nav"></div>
@@ -181,6 +182,11 @@
     <div class="page-links"><a href="/bitcoin-outlook/">Full Bitcoin Outlook</a><a href="/funding-rate/">Funding Rate</a><a href="/open-interest/">Open Interest</a><a href="/fear-greed-index/">Fear &amp; Greed</a></div>
   </section>
 
+    <section class="ol-sec news-surface" data-news-surface="bitcoin" hidden>
+    <h2>Latest Intelligence</h2>
+    <div class="ns-mount"></div>
+  </section>
+
   <section class="ol-sec ol-prose">
     <h2>About the Bitcoin intelligence view</h2>
     <p>This page brings the CoinGyaan signals for Bitcoin into one place. The outlook estimates the most probable direction over the next 24 hours from live market data. The metrics below it show the current price, the perpetual funding rate on Bitcoin, open interest on Bitcoin perpetuals, the market wide sentiment reading and momentum. Funding and open interest here are specific to Bitcoin, while sentiment is a single market wide index shared across assets.</p>
@@ -192,5 +198,7 @@
 <script src="/assets/js/nav.js"></script>
 <script src="/assets/js/footer.js"></script>
 <script defer src="/assets/js/asset-hub.js"></script>
+<script defer src="/assets/js/news-data.js"></script>
+<script defer src="/assets/js/news-surface.js"></script>
 </body>
 </html>

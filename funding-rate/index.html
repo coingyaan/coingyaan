@@ -15,7 +15,7 @@
 <meta property="og:title" content="Bitcoin Funding Rate Today | Long vs Short Positioning | CoinGyaan" />
 <meta property="og:description" content="Bitcoin funding rate today with long versus short positioning, market bias and what current leverage implies about the move." />
 <meta property="og:url" content="https://coingyaan.com/funding-rate/" />
-<meta property="og:image" content="https://coingyaan.com/assets/images/social/universal-share.png" />
+<meta property="og:image" content="https://coingyaan.com/assets/images/brand/universal-share-v1.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="CoinGyaan Crypto Intelligence" />
@@ -23,7 +23,7 @@
 <meta name="twitter:site" content="@coin_gyaan" />
 <meta name="twitter:title" content="Bitcoin Funding Rate Today | Long vs Short Positioning | CoinGyaan" />
 <meta name="twitter:description" content="Bitcoin funding rate today with long versus short positioning, market bias and what current leverage implies about the move." />
-<meta name="twitter:image" content="https://coingyaan.com/assets/images/social/universal-share.png" />
+<meta name="twitter:image" content="https://coingyaan.com/assets/images/brand/universal-share-v1.png" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -35,7 +35,7 @@
       "url": "https://coingyaan.com/",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://coingyaan.com/assets/images/favicon/coingyaan-android-icon-512x512.png",
+        "url": "https://coingyaan.com/assets/images/brand/logo.png",
         "width": 512,
         "height": 512
       },
@@ -120,6 +120,7 @@
 <link rel="stylesheet" href="/assets/css/coingyaan.css" />
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXY9ZZ543X"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-DXY9ZZ543X');</script>
+<!-- IMAGE-TODO: dedicated Brand v1 hero illustration pending. Using Brand Hero v1 as fallback per Image & Brand Policy. -->
 </head>
 <body>
 <div id="site-nav"></div>
@@ -159,6 +160,11 @@
     <table class="ol-table"><thead><tr><th>Venue</th><th>Funding (8h)</th><th>Annualized</th><th>Lean</th></tr></thead><tbody data-cg="fr-venues"><tr><td colspan="4" class="ol-empty">Loading venues</td></tr></tbody></table>
   </section>
 
+    <section class="ol-sec news-surface" data-news-surface="funding-rate" hidden>
+    <h2>Latest Intelligence</h2>
+    <div class="ns-mount"></div>
+  </section>
+
   <section class="ol-sec ol-prose">
     <h2>How to read the funding rate</h2>
     <p>Perpetual futures use funding to keep their price tied to spot. When funding is positive, longs pay shorts, which tells you traders are leaning long and are willing to pay to hold that exposure. When funding is negative, shorts pay longs, so the lean is bearish. The size of the rate tells you how strong the lean is.</p>
@@ -188,5 +194,7 @@
 <script src="/assets/js/nav.js"></script>
 <script src="/assets/js/footer.js"></script>
 <script defer src="/assets/js/funding-page.js"></script>
+<script defer src="/assets/js/news-data.js"></script>
+<script defer src="/assets/js/news-surface.js"></script>
 </body>
 </html>

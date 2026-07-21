@@ -12,7 +12,7 @@
      Clean URLs only, no .html.
      ========================================================================== */
 
-  var LOGO = 'https://coingyaan.com/assets/images/favicon/coingyaan-android-icon-512x512.png';
+  var LOGO = 'https://coingyaan.com/assets/images/brand/logo.png';
   var YEAR = new Date().getFullYear();
 
   var FOOTER =

@@ -177,12 +177,12 @@ function head({ title, desc, url, ogImage, extraLd }) {
 <meta property="og:title" content="${esc(title)}" />
 <meta property="og:description" content="${esc(desc)}" />
 <meta property="og:url" content="${url}" />
-<meta property="og:image" content="${ogImage || SITE + "/assets/images/social/universal-share.png"}" />
+<meta property="og:image" content="${ogImage || SITE + "/assets/images/brand/universal-share-v1.png"}" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@coin_gyaan" />
 <meta name="twitter:title" content="${esc(title)}" />
 <meta name="twitter:description" content="${esc(desc)}" />
-<meta name="twitter:image" content="${ogImage || SITE + "/assets/images/social/universal-share.png"}" />
+<meta name="twitter:image" content="${ogImage || SITE + "/assets/images/brand/universal-share-v1.png"}" />
 ${extraLd ? `<script type="application/ld+json">\n${JSON.stringify(extraLd, null, 2)}\n</script>` : ""}
 <meta name="google-adsense-account" content="ca-pub-9704432095241296" />
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon/coingyaan-favicon-32x32.png" />
@@ -250,7 +250,7 @@ function articleHtml(article) {
   const cat = catBySlug[article.category] || NEWS_CATEGORIES[0];
   const url = `${SITE}/news/${article.slug}/`;
   const cover = coverFor(article);
-  const ogImage = cover.auto ? `${url}cover.png` : `${SITE}${article.cover}`;
+  const ogImage = cover.auto ? `${SITE}/assets/images/articles/${article.slug}.png` : `${SITE}${article.cover}`;
   const body = fs.readFileSync(path.join(ROOT, "news/_content", article.slug + ".html"), "utf8");
   const au = authorOf(article);
 
@@ -277,7 +277,7 @@ function articleHtml(article) {
   const ld = { "@context": "https://schema.org", "@graph": [
     { "@type": "Article", "@id": url + "#article", headline: article.title, description: article.excerpt,
       datePublished: article.date, dateModified: article.updated || article.date,
-      author: { "@type": "Person", name: au.name }, publisher: { "@type": "Organization", name: "CoinGyaan", logo: { "@type": "ImageObject", url: SITE + "/assets/images/favicon/coingyaan-android-icon-512x512.png" } },
+      author: { "@type": "Person", name: au.name }, publisher: { "@type": "Organization", name: "CoinGyaan", logo: { "@type": "ImageObject", url: SITE + "/assets/images/brand/logo.png" } },
       image: ogImage, mainEntityOfPage: { "@id": url + "#webpage" }, articleSection: cat.name, keywords: article.tags.map((t) => (tagBySlug[t] || {}).name || t).join(", "), inLanguage: "en-US" },
     { "@type": "BreadcrumbList", "@id": url + "#breadcrumb", itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: SITE + "/" },
@@ -317,7 +317,7 @@ for (const article of originals) {
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, "index.html"), articleHtml(article));
   const cover = coverFor(article);
-  if (cover.auto) fs.writeFileSync(path.join(dir, "cover.svg"), cover.svg);
+  if (cover.auto) fs.writeFileSync(path.join(ROOT, "assets/images/articles", article.slug + ".svg"), cover.svg);
   n++; console.log("article  /news/" + article.slug + "/");
 }
 /* index */

@@ -8,8 +8,8 @@
 export const SITE = {
   name: 'CoinGyaan', origin: 'https://coingyaan.com', locale: 'en_US', inLanguage: 'en-US',
   twitter: '@coin_gyaan',
-  logo: 'https://coingyaan.com/assets/images/favicon/coingyaan-android-icon-512x512.png',
-  ogImage: 'https://coingyaan.com/assets/images/social/universal-share.png',
+  logo: 'https://coingyaan.com/assets/images/brand/logo.png',
+  ogImage: 'https://coingyaan.com/assets/images/brand/universal-share-v1.png',
   ogImageAlt: 'CoinGyaan Crypto Intelligence',
   founder: 'Monesh Kumar', foundingDate: '2017',
   sameAs: ['https://twitter.com/coin_gyaan', 'https://t.me/coingyaan'],
