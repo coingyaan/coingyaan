@@ -108,14 +108,30 @@
     var trigger = document.querySelector('.dd-trigger[data-dd="' + menu.getAttribute('data-menu') + '"]');
     if (!trigger) return;
     var r = trigger.getBoundingClientRect();
-    menu.style.left = Math.round(r.left + r.width / 2) + 'px';
-    menu.style.top = Math.round(r.bottom + 10) + 'px';
+    // Measure the menu without showing it, so we can clamp to the viewport.
+    var prevVis = menu.style.visibility, prevDisp = menu.style.display;
+    menu.style.visibility = 'hidden';
+    menu.style.display = 'block';
+    var mw = menu.offsetWidth;
+    menu.style.visibility = prevVis;
+    menu.style.display = prevDisp;
+    var half = mw / 2;
+    var left = r.left + r.width / 2;
+    // Keep fully on-screen horizontally.
+    if (left - half < 10) left = half + 10;
+    if (left + half > window.innerWidth - 10) left = window.innerWidth - 10 - half;
+    // Always directly below the trigger (never above / never clipped at top).
+    var top = r.bottom + 10;
+    menu.style.left = Math.round(left) + 'px';
+    menu.style.top = Math.round(top) + 'px';
   }
-  function repositionOpen() {
-    document.querySelectorAll('.dd-menu.on').forEach(positionMenu);
+  function closeAllMenus() {
+    document.querySelectorAll('.dd-menu.on').forEach(function (m) { m.classList.remove('on'); });
+    document.querySelectorAll('.dd-trigger').forEach(function (t) { t.setAttribute('aria-expanded', 'false'); });
   }
-  window.addEventListener('scroll', repositionOpen, { passive: true });
-  window.addEventListener('resize', repositionOpen);
+  // Menus are anchored to the viewport; if the user scrolls, close them cleanly.
+  window.addEventListener('scroll', closeAllMenus, { passive: true });
+  window.addEventListener('resize', closeAllMenus);
 
   var panel = document.getElementById('mnav');
   var backdrop = document.getElementById('mnavBackdrop');

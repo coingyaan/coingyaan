@@ -40,15 +40,18 @@ section{padding:54px 0}
 .up{color:var(--green)} .down{color:var(--red)}
 
 /* ── header ── */
-header{background:rgba(11,17,32,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--border2);position:sticky;top:0;z-index:1000;isolation:isolate;overflow:visible}
-.hbar{display:flex;align-items:center;gap:28px;height:60px;overflow:visible}
+/* Header: solid opaque top layer. No backdrop-filter (it was semi-transparent,
+   so article content ghosted through on scroll, and it clipped the dropdowns).
+   Sticky is correct here because the ticker above it scrolls away first. */
+header{background:#0c1524;border-bottom:1px solid var(--border2);position:sticky;top:0;z-index:1000}
+.hbar{display:flex;align-items:center;gap:28px;height:60px}
 .brand{display:flex;align-items:center;gap:10px}
 .brand img{width:30px;height:30px;border-radius:7px}
 .brand-txt{display:flex;flex-direction:column;line-height:1.15}
 .brand-txt strong{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--gold);letter-spacing:.02em}
 .brand-txt strong span{color:var(--text)}
 .brand-tag{font-size:10px;color:var(--dim);letter-spacing:.05em;font-weight:500}
-.nav{display:flex;align-items:center;gap:22px;margin-left:6px;overflow:visible}
+.nav{display:flex;align-items:center;gap:22px;margin-left:6px}
 .nav > a,.dd-trigger{font-size:13px;color:var(--muted);cursor:pointer;transition:color .2s;white-space:nowrap;user-select:none}
 .nav > a:hover,.dd-trigger:hover{color:var(--text)}
 .dd{position:relative;display:flex;align-items:center}
