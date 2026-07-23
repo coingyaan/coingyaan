@@ -23,7 +23,7 @@
 # Uncomment each line only when its Version 2 target is live.
 /privacy.html                   /privacy-policy/     301
 /disclaimer.html                /disclaimer/         301
-# /advertise.html               /media-kit/          301
+/advertise.html               /media-kit/          301
 
 # ── Legacy .html to clean Version 2 URLs ──
 # Keep each line COMMENTED until the matching Version 2 page has real content
