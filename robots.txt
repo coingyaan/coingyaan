@@ -4,5 +4,6 @@ Allow: /
 # Internal search results add no value to the index
 Disallow: /search
 
+Sitemap: https://coingyaan.com/sitemap.xml
 Sitemap: https://coingyaan.com/sitemap-pages.xml
 Sitemap: https://coingyaan.com/sitemap-news.xml
