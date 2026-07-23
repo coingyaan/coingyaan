@@ -45,7 +45,7 @@
             '<a href="/news/press-releases/">Press Releases</a>' +
           '</div>' +
           '<div class="f-col"><h5>About</h5>' +
-            '<a href="/about/our-mission/">Our Mission</a>' +
+            '<a href="/about/mission/">Our Mission</a>' +
             '<a href="/about/editorial-policy/">Editorial Policy</a>' +
             '<a href="/about/methodology/">Methodology</a>' +
             '<a href="/about/contact/">Contact</a>' +
@@ -58,8 +58,8 @@
           '</div>' +
           '<div style="display:flex;gap:20px;align-items:center">' +
             '<div style="display:flex;gap:14px;flex-wrap:wrap">' +
-              '<a href="/privacy/" style="font-size:11.5px;color:var(--dimmer)">Privacy Policy</a>' +
-              '<a href="/terms/" style="font-size:11.5px;color:var(--dimmer)">Terms of Use</a>' +
+              '<a href="/privacy-policy/" style="font-size:11.5px;color:var(--dimmer)">Privacy Policy</a>' +
+              '<a href="/terms-of-use/" style="font-size:11.5px;color:var(--dimmer)">Terms of Use</a>' +
               '<a href="/disclaimer/" style="font-size:11.5px;color:var(--dimmer)">Disclaimer</a>' +
               '<a href="/cookie-policy/" style="font-size:11.5px;color:var(--dimmer)">Cookie Policy</a>' +
               '<a href="/media-kit/" style="font-size:11.5px;color:var(--dimmer)">Media Kit</a>' +
