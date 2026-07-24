@@ -632,3 +632,18 @@ main.page h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.
 .cgv-cards li{background:var(--card);border:1px solid var(--border2);border-radius:11px;padding:14px 15px}
 @media(min-width:640px){.cgv-cards{grid-template-columns:1fr 1fr}}
 @media(min-width:900px){.cgv-cards{grid-template-columns:repeat(3,1fr)}}
+
+/* ---- two column contrast (bullish vs bearish, healthy vs warning) ---- */
+.cgv-split{display:grid;gap:11px}
+@media(min-width:640px){.cgv-split{grid-template-columns:1fr 1fr}}
+.cgv-side{background:var(--card);border:1px solid var(--border2);border-radius:11px;padding:14px 15px}
+.cgv-side.is-bull{border-top:2px solid var(--green)}
+.cgv-side.is-bear{border-top:2px solid var(--red)}
+.cgv-side-hd{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;margin:0 0 9px}
+.cgv-side.is-bull .cgv-side-hd{color:var(--green)}
+.cgv-side.is-bear .cgv-side-hd{color:var(--red)}
+.cgv-side ul{margin:0;padding-left:16px}
+.cgv-side li{font-size:13.5px;color:var(--muted);line-height:1.6;margin:3px 0}
+.cgv-watch{margin-top:12px;padding:11px 13px;background:var(--card2);border:1px solid var(--border2);border-radius:9px}
+.cgv-watch strong{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+.cgv-watch span{font-size:13px;color:var(--muted);line-height:1.55}
