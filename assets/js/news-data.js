@@ -128,9 +128,9 @@ var NEWS_ARTICLES = [
     category: "blockchain",
     tags: ["bitcoin", "funding-rate", "market-outlook", "open-interest"],
     date: "2026-07-19",
-    updated: "2026-07-19",
+    updated: "2026-07-24",
     author: "monesh-kumar",
-    readMins: 5,
+    readMins: 9,
     excerpt: "Bitcoin's short term outlook shifted as perpetual funding moved back to positive and open interest firmed. Here is what changed in the derivatives market and what it means for the next 24 hours.",
     cover: "auto", // "auto" = generated SVG from category/tag; or a path to an image
     coverTag: "bitcoin", // which tag identity tints the cover

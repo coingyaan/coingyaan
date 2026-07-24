@@ -598,7 +598,7 @@ main.page h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.
 .cgv{margin:30px 0;border:1px solid var(--border);border-radius:14px;background:var(--card2);overflow:hidden}
 .cgv-hd{padding:16px 18px 0}
 .cgv-eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:6px}
-.cgv-title{font-family:var(--sans);font-size:17px;font-weight:700;color:var(--text);margin:0 0 4px;line-height:1.3}
+h2.cgv-title,h3.cgv-title,.cgv-title{font-family:var(--sans);font-size:17px;font-weight:700;color:var(--text);margin:0 0 4px;line-height:1.3}
 .cgv-sub{font-size:13.5px;color:var(--muted);margin:0;line-height:1.55}
 .cgv-bd{padding:18px}
 .cgv-ft{padding:0 18px 15px;font-size:12px;color:var(--dim);line-height:1.5}
