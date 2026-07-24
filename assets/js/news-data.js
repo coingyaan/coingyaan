@@ -64,6 +64,9 @@ var NEWS_TAGS = [
   { slug: "gas", name: "Gas" },
   { slug: "tvl", name: "TVL" },
   { slug: "blackrock", name: "BlackRock" },
+  { slug: "bitcoin-etf", name: "Bitcoin ETF" },
+  { slug: "ibit", name: "IBIT" },
+  { slug: "institutional-investors", name: "Institutional Investors" },
   { slug: "sec", name: "SEC" },
   { slug: "coinbase", name: "Coinbase" },
 ];
@@ -127,6 +130,21 @@ var NEWS_ARTICLES = [
     cover: "auto", // "auto" = generated SVG from category/tag; or a path to an image
     coverTag: "bitcoin", // which tag identity tints the cover
     featured: true,
+  },
+  {
+    type: "original",
+    slug: "bitcoin-etf-inflows-blackrock-ibit-institutional-demand",
+    title: "Bitcoin ETF Inflows Extend Winning Streak as BlackRock's IBIT Leads Institutional Demand",
+    category: "blockchain",
+    tags: ["bitcoin", "bitcoin-etf", "etf", "blackrock", "ibit", "institutional-investors"],
+    date: "2026-07-24",
+    updated: "2026-07-24",
+    author: "monesh-kumar",
+    readMins: 8,
+    excerpt: "Bitcoin ETF inflows continued as BlackRock's IBIT remained the largest driver of institutional demand. Here is what Bitcoin ETF today data, ETF holdings and recent outflows mean for investors.",
+    cover: "auto",
+    coverTag: "bitcoin",
+    featured: false,
   },
 ];
 
