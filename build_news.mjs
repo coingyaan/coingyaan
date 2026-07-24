@@ -22,7 +22,13 @@ const { NEWS_CATEGORIES, NEWS_TAGS, NEWS_AUTHORS, NEWS_INTEL_LINKS, NEWS_ARTICLE
 const catBySlug = Object.fromEntries(NEWS_CATEGORIES.map((c) => [c.slug, c]));
 const tagBySlug = Object.fromEntries(NEWS_TAGS.map((t) => [t.slug, t]));
 const originals = NEWS_ARTICLES.filter((a) => a.type === "original")
-  .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+  .map((a, i) => ({ a, i }))
+  .sort((x, y) =>
+    x.a.date < y.a.date ? 1 :
+    x.a.date > y.a.date ? -1 :
+    y.i - x.i          // same date: later in news-data.js (newest added) wins
+  )
+  .map((x) => x.a);
 
 function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
 function fmtDate(iso) {
