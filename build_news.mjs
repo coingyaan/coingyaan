@@ -22,13 +22,8 @@ const { NEWS_CATEGORIES, NEWS_TAGS, NEWS_AUTHORS, NEWS_INTEL_LINKS, NEWS_ARTICLE
 const catBySlug = Object.fromEntries(NEWS_CATEGORIES.map((c) => [c.slug, c]));
 const tagBySlug = Object.fromEntries(NEWS_TAGS.map((t) => [t.slug, t]));
 const originals = NEWS_ARTICLES.filter((a) => a.type === "original")
-  .map((a, i) => ({ a, i }))
-  .sort((x, y) =>
-    x.a.date < y.a.date ? 1 :
-    x.a.date > y.a.date ? -1 :
-    y.i - x.i          // same date: later in news-data.js (newest added) wins
-  )
-  .map((x) => x.a);
+  .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+const published = originals.filter((a) => !a.draft);
 
 function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
 function fmtDate(iso) {
@@ -155,7 +150,7 @@ function coverFor(article) {
 
 /* ---------- relationships ---------- */
 function relatedArticles(article, n = 3) {
-  return originals.filter((a) => a.slug !== article.slug)
+  return published.filter((a) => a.slug !== article.slug)
     .map((a) => { let s = a.category === article.category ? 2 : 0; s += a.tags.filter((t) => article.tags.includes(t)).length; return { a, s }; })
     .filter((x) => x.s > 0).sort((x, y) => y.s - x.s).slice(0, n).map((x) => x.a);
 }
@@ -221,9 +216,12 @@ const FOOT_LIST = `<div id="site-footer"></div>
 /* article listing card (used on index/category/tag pages) */
 function listCard(a) {
   const cat = catBySlug[a.category] || NEWS_CATEGORIES[0];
-  const cover = coverFor(a);
+  const custom = a.cover && a.cover !== "auto";
+  const thumb = custom
+    ? `<img src="${esc(a.cover)}" alt="${esc(a.title)}" loading="lazy" />`
+    : coverFor(a).svg;
   return `<a class="nl-card" href="/news/${a.slug}/">
-    <span class="nl-cover">${cover.svg}</span>
+    <span class="nl-cover">${thumb}</span>
     <span class="nl-body">
       <span class="nl-cat" style="color:${cat.accent}">${esc(cat.name)}</span>
       <span class="nl-title">${esc(a.title)}</span>
@@ -293,8 +291,9 @@ function articleHtml(article) {
     ] },
   ] };
 
-  return head({ title: `${article.title} | CoinGyaan`, desc: article.excerpt, url, ogImage, extraLd: null })
+  return head({ title: article.seoTitle ? article.seoTitle : `${article.title} | CoinGyaan`, desc: article.excerpt, url, ogImage, extraLd: null })
     .replace('<meta property="og:type" content="website" />', '<meta property="og:type" content="article" />')
+    .replace('<meta name="robots" content="index, follow" />', article.draft ? '<meta name="robots" content="noindex, nofollow" />' : '<meta name="robots" content="index, follow" />')
     + `<script type="application/ld+json">\n${JSON.stringify(ld, null, 2)}\n</script>` + `
 <main class="wrap art">
   <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/news/">News</a><span>/</span><a href="/news/${cat.slug}/">${esc(cat.name)}</a></nav>
@@ -331,7 +330,7 @@ fs.mkdirSync(path.join(ROOT, "news"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "news", "index.html"), listPage({
   title: "News & Intelligence | CoinGyaan", desc: "Original CoinGyaan Intelligence and the latest crypto analysis. We explain why the market moved.",
   url: SITE + "/news/", heading: "News & Intelligence", sub: "Original analysis from the CoinGyaan desk. We explain why the market moved, our live Intelligence explains what it is doing now.",
-  articles: originals, crumbLabel: null,
+  articles: published, crumbLabel: null,
 }));
 console.log("index    /news/");
 /* categories */
@@ -340,7 +339,7 @@ for (const c of NEWS_CATEGORIES) {
   fs.writeFileSync(path.join(dir, "index.html"), listPage({
     title: `${c.name} News & Analysis | CoinGyaan`, desc: `${c.blurb} CoinGyaan Intelligence and analysis on ${c.name}.`,
     url: `${SITE}/news/${c.slug}/`, heading: c.name, sub: c.blurb,
-    articles: originals.filter((a) => a.category === c.slug), crumbLabel: c.name,
+    articles: published.filter((a) => a.category === c.slug), crumbLabel: c.name,
   }));
   console.log("category /news/" + c.slug + "/");
 }
@@ -350,12 +349,12 @@ for (const t of NEWS_TAGS) {
   fs.writeFileSync(path.join(dir, "index.html"), listPage({
     title: `${t.name} | CoinGyaan News & Intelligence`, desc: `All CoinGyaan analysis and headlines tagged ${t.name}.`,
     url: `${SITE}/news/tag/${t.slug}/`, heading: t.name, sub: `Every CoinGyaan Intelligence article and headline tagged ${t.name}.`,
-    articles: originals.filter((a) => a.tags.includes(t.slug)), crumbLabel: t.name,
+    articles: published.filter((a) => a.tags.includes(t.slug)), crumbLabel: t.name,
   }));
 }
 /* author pages */
 const authorArticles = {};
-for (const a of originals) { (authorArticles[a.author || "coingyaan-team"] ||= []).push(a); }
+for (const a of published) { (authorArticles[a.author || "coingyaan-team"] ||= []).push(a); }
 for (const key of Object.keys(NEWS_AUTHORS)) {
   const au = NEWS_AUTHORS[key];
   const dir = path.join(ROOT, "news", "author", key); fs.mkdirSync(dir, { recursive: true });
@@ -374,7 +373,7 @@ const smUrls = [
   ...NEWS_CATEGORIES.map((c) => `${SITE}/news/${c.slug}/`),
   ...NEWS_TAGS.map((t) => `${SITE}/news/tag/${t.slug}/`),
   ...Object.keys(NEWS_AUTHORS).map((k) => `${SITE}/news/author/${k}/`),
-  ...originals.map((a) => `${SITE}/news/${a.slug}/`),
+  ...published.map((a) => `${SITE}/news/${a.slug}/`),
 ];
 fs.writeFileSync(path.join(ROOT, "sitemap-news.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
@@ -387,7 +386,7 @@ fs.mkdirSync(path.join(ROOT, "news"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "news", "rss.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel>\n` +
   `<title>CoinGyaan Intelligence</title>\n<link>${SITE}/news/</link>\n<description>Original crypto market intelligence from CoinGyaan.</description>\n<language>en-us</language>\n` +
-  originals.slice(0, 30).map((a) => {
+  published.slice(0, 30).map((a) => {
     const cat = catBySlug[a.category] || NEWS_CATEGORIES[0];
     return `<item>\n  <title>${esc(a.title)}</title>\n  <link>${SITE}/news/${a.slug}/</link>\n  <guid>${SITE}/news/${a.slug}/</guid>\n  <category>${esc(cat.name)}</category>\n  <pubDate>${new Date(a.date + "T09:00:00Z").toUTCString()}</pubDate>\n  <description>${esc(a.excerpt)}</description>\n</item>`;
   }).join("\n") +
@@ -395,7 +394,7 @@ fs.writeFileSync(path.join(ROOT, "news", "rss.xml"),
 console.log("news/rss.xml");
 
 /* search index */
-fs.writeFileSync(path.join(ROOT, "news", "search-index.json"), JSON.stringify(originals.map((a) => ({
+fs.writeFileSync(path.join(ROOT, "news", "search-index.json"), JSON.stringify(published.map((a) => ({
   slug: a.slug, title: a.title, excerpt: a.excerpt, category: a.category, tags: a.tags, date: a.date,
   author: authorOf(a).name, url: `/news/${a.slug}/`,
 })), null, 0));
@@ -407,12 +406,15 @@ if (fs.existsSync(HOME)) {
   let html = fs.readFileSync(HOME, "utf8");
   const START = "<!-- NEWS-FEED:START -->", END = "<!-- NEWS-FEED:END -->";
   if (html.includes(START) && html.includes(END)) {
-    const cards = originals.slice(0, 6).map((a) => {
+    const cards = published.slice(0, 6).map((a) => {
       const cat = catBySlug[a.category] || NEWS_CATEGORIES[0];
       const logo = a.coverTag ? logoInner(a.coverTag) : null;
       const accent = (a.coverTag && tagBySlug[a.coverTag] && tagBySlug[a.coverTag].accent) || cat.accent;
       const isAsset = !!(logo && tagBySlug[a.coverTag]);
-      const thumb = uniquifyIds(homeThumb({ accent, catIcon: cat.icon, logo, label: isAsset ? tagBySlug[a.coverTag].name : cat.name, showLabel: isAsset }));
+      const custom = a.cover && a.cover !== "auto";
+      const thumb = custom
+        ? `<img src="${esc(a.cover)}" alt="${esc(a.title)}" loading="lazy" />`
+        : uniquifyIds(homeThumb({ accent, catIcon: cat.icon, logo, label: isAsset ? tagBySlug[a.coverTag].name : cat.name, showLabel: isAsset }));
       return `<a class="ecard" href="/news/${a.slug}/">
         <span class="ethumb ethumb--brand">${thumb}</span>
         <span class="ebody">
@@ -423,12 +425,12 @@ if (fs.existsSync(HOME)) {
         </span>
       </a>`;
     }).join("\n");
-    const inner = originals.length
+    const inner = published.length
       ? `<div class="efeed">\n${cards}\n</div>`
       : `<div class="nl-empty" style="margin-top:8px"><p>No articles published yet.</p><p class="nl-empty-sub">CoinGyaan Intelligence articles will appear here as they publish.</p><a class="nl-empty-cta" href="/intelligence/">Explore live Intelligence &#8594;</a></div>`;
     html = html.replace(new RegExp(START + "[\\s\\S]*?" + END), START + "\n" + inner + "\n" + END);
     fs.writeFileSync(HOME, html);
-    console.log("homepage feed injected (" + Math.min(originals.length, 6) + " cards)");
+    console.log("homepage feed injected (" + Math.min(published.length, 6) + " cards)");
   } else {
     console.log("homepage: NEWS-FEED markers not found, skipped");
   }

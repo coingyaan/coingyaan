@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" font-family="Inter, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d1626"/><stop offset="100%" stop-color="#070b14"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="34%" r="42%">
+      <stop offset="0%" stop-color="#16c784" stop-opacity="0.22"/>
+      <stop offset="55%" stop-color="#3b82f6" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="coin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5eead4"/><stop offset="45%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#1e3a8a"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a7f3d0"/><stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <radialGradient id="coinshade" cx="38%" cy="32%" r="75%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.30"/><stop offset="60%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- subtle grid -->
+  <g stroke="#1e3048" stroke-width="1" opacity=".35">
+    <path d="M0 105h1200M0 210h1200M0 315h1200M0 420h1200M0 525h1200M200 0v630M400 0v630M600 0v630M800 0v630M1000 0v630"/>
+  </g>
+  <!-- faint candlestick silhouettes -->
+  <g opacity=".5">
+    <g fill="#1b3a5b"><rect x="70" y="430" width="16" height="80" rx="2"/><rect x="110" y="400" width="16" height="120" rx="2"/><rect x="150" y="450" width="16" height="70" rx="2"/></g>
+    <g fill="#3a2a1b"><rect x="1030" y="150" width="16" height="90" rx="2"/><rect x="1070" y="120" width="16" height="130" rx="2"/><rect x="1110" y="180" width="16" height="80" rx="2"/></g>
+  </g>
+  <!-- network nodes -->
+  <g fill="#3b82f6" opacity=".55"><circle cx="180" cy="150" r="3"/><circle cx="300" cy="110" r="2.5"/><circle cx="250" cy="220" r="2"/><circle cx="980" cy="470" r="3"/><circle cx="1080" cy="420" r="2.5"/><circle cx="900" cy="520" r="2"/></g>
+  <g stroke="#3b82f6" stroke-width="1" opacity=".25" fill="none"><path d="M180 150 L300 110 L250 220 Z"/><path d="M980 470 L1080 420 L900 520 Z"/></g>
+
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- coin -->
+  <g transform="translate(600 232)">
+    <circle r="118" fill="url(#rim)"/>
+    <circle r="104" fill="url(#coin)"/>
+    <circle r="104" fill="url(#coinshade)"/>
+    <circle r="104" fill="none" stroke="#0b1220" stroke-opacity=".25" stroke-width="2"/>
+    <text x="0" y="46" font-size="150" font-weight="800" text-anchor="middle" fill="#f8fafc">$</text>
+  </g>
+
+  <!-- title -->
+  <text x="600" y="452" font-size="58" font-weight="800" letter-spacing="1" text-anchor="middle" fill="#e6ebf5">WHAT ARE STABLECOINS?</text>
+  <text x="600" y="500" font-size="26" font-weight="500" letter-spacing="4" text-anchor="middle" fill="#8a94a6">A BEGINNER'S GUIDE</text>
+
+  <!-- CoinGyaan mark -->
+  <g transform="translate(600 560)" opacity=".8">
+    <circle cx="-58" cy="-4" r="10" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+    <path d="M-62 -4 a4 4 0 0 1 8 0" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+    <text x="-40" y="2" font-family="JetBrains Mono, monospace" font-size="19" font-weight="700" fill="#c7cfdd">Coin<tspan fill="#f59e0b">Gyaan</tspan></text>
+  </g>
+</svg>

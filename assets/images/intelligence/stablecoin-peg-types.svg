@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 340" width="100%" font-family="Inter, Arial, sans-serif" role="img" aria-label="Three ways stablecoins maintain their peg: fiat-backed, crypto-backed, and algorithmic">
+  <defs><linearGradient id="w2bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0f1a2b"/><stop offset="100%" stop-color="#0b1424"/></linearGradient></defs>
+  <rect x="1" y="1" width="1118" height="338" rx="16" fill="url(#w2bg)" stroke="#1e3048"/>
+  <text x="32" y="46" font-size="13" font-weight="700" letter-spacing="2" fill="#8a94a6" font-family="JetBrains Mono, monospace">THREE WAYS STABLECOINS MAINTAIN THEIR PEG</text>
+
+  <!-- col 1 fiat -->
+  <g transform="translate(32 74)">
+    <rect width="344" height="234" rx="12" fill="#0c1626" stroke="#22c55e" stroke-opacity=".45"/>
+    <circle cx="40" cy="44" r="18" fill="none" stroke="#22c55e" stroke-width="2.5"/><text x="40" y="51" font-size="19" font-weight="800" text-anchor="middle" fill="#22c55e">$</text>
+    <text x="72" y="42" font-size="19" font-weight="700" fill="#e6ebf5">Fiat-Backed</text>
+    <text x="72" y="62" font-size="12" fill="#22c55e" font-family="JetBrains Mono, monospace">MOST WIDELY ADOPTED</text>
+    <g font-size="13.5" fill="#c7cfdd"><text x="24" y="104">Backed by cash and</text><text x="24" y="126">short-term Treasuries</text></g>
+    <text x="24" y="164" font-size="12" fill="#8a94a6" font-family="JetBrains Mono, monospace">EXAMPLES</text>
+    <text x="24" y="188" font-size="15" font-weight="600" fill="#e6ebf5">USDT, USDC</text>
+    <text x="24" y="214" font-size="12.5" fill="#16c784">Low volatility</text>
+  </g>
+  <!-- col 2 crypto -->
+  <g transform="translate(388 74)">
+    <rect width="344" height="234" rx="12" fill="#0c1626" stroke="#3b82f6" stroke-opacity=".45"/>
+    <g transform="translate(40 44)" stroke="#3b82f6" stroke-width="2.5" fill="none"><path d="M0 -16 L14 8 L0 16 L-14 8 Z"/></g>
+    <text x="72" y="42" font-size="19" font-weight="700" fill="#e6ebf5">Crypto-Backed</text>
+    <text x="72" y="62" font-size="12" fill="#3b82f6" font-family="JetBrains Mono, monospace">OVERCOLLATERALIZED</text>
+    <g font-size="13.5" fill="#c7cfdd"><text x="24" y="104">Backed by crypto held</text><text x="24" y="126">above the issued value</text></g>
+    <text x="24" y="164" font-size="12" fill="#8a94a6" font-family="JetBrains Mono, monospace">EXAMPLE</text>
+    <text x="24" y="188" font-size="15" font-weight="600" fill="#e6ebf5">DAI</text>
+    <text x="24" y="214" font-size="12.5" fill="#8a94a6">Buffer absorbs swings</text>
+  </g>
+  <!-- col 3 algo -->
+  <g transform="translate(744 74)">
+    <rect width="344" height="234" rx="12" fill="#0c1626" stroke="#f59e0b" stroke-opacity=".45"/>
+    <g transform="translate(40 44)" stroke="#f59e0b" stroke-width="2.5" fill="none"><path d="M-16 8 C-8 -12 8 -12 16 8"/><path d="M-16 8 h32" stroke-dasharray="3 4"/></g>
+    <text x="72" y="42" font-size="19" font-weight="700" fill="#e6ebf5">Algorithmic</text>
+    <text x="72" y="62" font-size="12" fill="#f59e0b" font-family="JetBrains Mono, monospace">HIGHER RISK PROFILE</text>
+    <g font-size="13.5" fill="#c7cfdd"><text x="24" y="104">Software adjusts supply</text><text x="24" y="126">instead of full reserves</text></g>
+    <text x="24" y="164" font-size="12" fill="#8a94a6" font-family="JetBrains Mono, monospace">NOTE</text>
+    <text x="24" y="188" font-size="13" fill="#e6ebf5">Peg can break under</text>
+    <text x="24" y="208" font-size="13" fill="#e6ebf5">stress if confidence falls</text>
+  </g>
+</svg>

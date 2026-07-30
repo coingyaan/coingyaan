@@ -21,7 +21,7 @@
       var mount = sec.querySelector(".ns-mount");
       if (!mount) return;
       var arts = (window.NEWS_ARTICLES || [])
-        .filter(function (a) { return a.type === "original" && a.tags && a.tags.indexOf(tag) >= 0; })
+        .filter(function (a) { return a.type === "original" && !a.draft && a.tags && a.tags.indexOf(tag) >= 0; })
         .sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; })
         .slice(0, 3);
       if (!arts.length) return; // leave hidden

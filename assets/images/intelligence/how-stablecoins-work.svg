@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 300" width="100%" font-family="Inter, Arial, sans-serif" role="img" aria-label="How stablecoins maintain their value: US dollar reserve to stablecoin issuer to blockchain network to user wallet to payments and trading">
+  <defs>
+    <linearGradient id="w1bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0f1a2b"/><stop offset="100%" stop-color="#0b1424"/></linearGradient>
+    <marker id="w1arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#3b82f6"/></marker>
+  </defs>
+  <rect x="1" y="1" width="1118" height="298" rx="16" fill="url(#w1bg)" stroke="#1e3048"/>
+  <text x="32" y="46" font-size="13" font-weight="700" letter-spacing="2" fill="#8a94a6" font-family="JetBrains Mono, monospace">HOW STABLECOINS MAINTAIN THEIR VALUE</text>
+
+  <!-- 5 stages -->
+  <g>
+    <!-- stage template: box + accent bar + title + sub -->
+    <!-- 1 -->
+    <g transform="translate(32 96)">
+      <rect width="180" height="120" rx="12" fill="#0c1626" stroke="#22c55e" stroke-opacity=".5"/>
+      <circle cx="34" cy="40" r="18" fill="none" stroke="#22c55e" stroke-width="2.5"/><text x="34" y="47" font-size="20" font-weight="800" text-anchor="middle" fill="#22c55e">$</text>
+      <text x="20" y="84" font-size="16" font-weight="700" fill="#e6ebf5">Dollar Reserve</text>
+      <text x="20" y="104" font-size="12" fill="#8a94a6">Cash and Treasuries</text>
+    </g>
+    <line x1="216" y1="156" x2="252" y2="156" stroke="#3b82f6" stroke-width="2" marker-end="url(#w1arr)"/>
+    <!-- 2 -->
+    <g transform="translate(256 96)">
+      <rect width="180" height="120" rx="12" fill="#0c1626" stroke="#3b82f6" stroke-opacity=".5"/>
+      <rect x="18" y="24" width="34" height="30" rx="4" fill="none" stroke="#3b82f6" stroke-width="2.5"/><path d="M24 40h22" stroke="#3b82f6" stroke-width="2.5"/>
+      <text x="20" y="84" font-size="16" font-weight="700" fill="#e6ebf5">Issuer</text>
+      <text x="20" y="104" font-size="12" fill="#8a94a6">Mints 1 token per $1</text>
+    </g>
+    <line x1="440" y1="156" x2="476" y2="156" stroke="#3b82f6" stroke-width="2" marker-end="url(#w1arr)"/>
+    <!-- 3 -->
+    <g transform="translate(480 96)">
+      <rect width="180" height="120" rx="12" fill="#0c1626" stroke="#3b82f6" stroke-opacity=".5"/>
+      <g stroke="#3b82f6" stroke-width="2.5" fill="none"><circle cx="24" cy="34" r="7"/><circle cx="52" cy="34" r="7"/><circle cx="38" cy="52" r="7"/><path d="M30 36 L46 36 M27 40 L34 48 M49 40 L42 48"/></g>
+      <text x="20" y="84" font-size="16" font-weight="700" fill="#e6ebf5">Blockchain</text>
+      <text x="20" y="104" font-size="12" fill="#8a94a6">Tokens move on chain</text>
+    </g>
+    <line x1="664" y1="156" x2="700" y2="156" stroke="#3b82f6" stroke-width="2" marker-end="url(#w1arr)"/>
+    <!-- 4 -->
+    <g transform="translate(704 96)">
+      <rect width="180" height="120" rx="12" fill="#0c1626" stroke="#3b82f6" stroke-opacity=".5"/>
+      <rect x="18" y="24" width="40" height="28" rx="5" fill="none" stroke="#3b82f6" stroke-width="2.5"/><circle cx="50" cy="38" r="4" fill="#3b82f6"/>
+      <text x="20" y="84" font-size="16" font-weight="700" fill="#e6ebf5">User Wallet</text>
+      <text x="20" y="104" font-size="12" fill="#8a94a6">Holds and sends</text>
+    </g>
+    <line x1="888" y1="156" x2="924" y2="156" stroke="#3b82f6" stroke-width="2" marker-end="url(#w1arr)"/>
+    <!-- 5 -->
+    <g transform="translate(928 96)">
+      <rect width="160" height="120" rx="12" fill="#0c1626" stroke="#22c55e" stroke-opacity=".5"/>
+      <g stroke="#22c55e" stroke-width="2.5" fill="none"><path d="M20 40 l10 10 l18 -22"/></g>
+      <text x="20" y="84" font-size="16" font-weight="700" fill="#e6ebf5">Payments</text>
+      <text x="20" y="104" font-size="12" fill="#8a94a6">and trading</text>
+    </g>
+  </g>
+  <text x="32" y="268" font-size="12" fill="#6b7688">Redemption reverses the flow: tokens are burned and dollars are returned, which helps hold the peg.</text>
+</svg>

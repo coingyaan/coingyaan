@@ -13,18 +13,6 @@
 /*.ico     200!
 /*.xml     200!
 
-# ── Version 2 URL migrations (locked structure, 2026-07-23) ──
-# Mission moved to the final canonical path. Keep this line permanently.
-/about/our-mission/             /about/mission/      301
-
-# ── Legacy v1 root .html to Version 2 pages ──
-# These MUST sit above the /*.html 200! rule at the bottom, which would
-# otherwise keep serving the old file. First match wins.
-# Uncomment each line only when its Version 2 target is live.
-/privacy.html                   /privacy-policy/     301
-/disclaimer.html                /disclaimer/         301
-/advertise.html               /media-kit/          301
-
 # ── Legacy .html to clean Version 2 URLs ──
 # Keep each line COMMENTED until the matching Version 2 page has real content
 # and is no longer noindex. Redirecting an indexed page to an empty noindex
