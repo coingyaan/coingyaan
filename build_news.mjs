@@ -255,7 +255,11 @@ function articleHtml(article) {
   const url = `${SITE}/news/${article.slug}/`;
   const cover = coverFor(article);
   const ogImage = cover.auto ? `${SITE}/assets/images/articles/${article.slug}.png` : `${SITE}${article.cover}`;
-  const body = fs.readFileSync(path.join(ROOT, "news/_content", article.slug + ".html"), "utf8");
+  const bodyRaw = fs.readFileSync(path.join(ROOT, "news/_content", article.slug + ".html"), "utf8");
+  const body = bodyRaw.replace(/<img\s+src="\/assets\/images\/intelligence\/([a-z0-9-]+)\.svg"[^>]*\/?>/g, (m, name) => {
+    const f = path.join(ROOT, "assets/images/intelligence", name + ".svg");
+    return fs.existsSync(f) ? fs.readFileSync(f, "utf8").trim() : m;
+  });
   const au = authorOf(article);
 
   const tagChips = article.tags.map((t) => tagBySlug[t] ? `<a class="art-tag" href="/news/tag/${t}/">${esc(tagBySlug[t].name)}</a>` : "").join("");

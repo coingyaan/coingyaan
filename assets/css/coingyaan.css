@@ -590,7 +590,7 @@ main.page h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.
 
 /* In-article educational figures */
 .art-figure{margin:26px 0}
-.art-figure img{width:100%;height:auto;display:block;border:1px solid var(--border);border-radius:14px;background:#0b1424}
+.art-figure img,.art-figure svg{width:100%;height:auto;display:block;border:1px solid var(--border);border-radius:14px;background:#0b1424}
 .art-figure figcaption{margin-top:9px;font-size:12.5px;color:var(--muted);text-align:center;font-style:italic}
 .ethumb--brand img{width:100%;height:100%;object-fit:cover;display:block}
 
