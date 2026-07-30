@@ -112,7 +112,7 @@ let __cgLockupCache;
 function cgLockup() {
   if (__cgLockupCache !== undefined) return __cgLockupCache;
   var startX = 520, logoSize = 34;
-  var img = `<image x="${startX}" y="544" width="${logoSize}" height="${logoSize}" href="/assets/images/brand/logo.png"/>`;
+  var img = `<image x="${startX}" y="544" width="${logoSize}" height="${logoSize}" href="/assets/images/brand/logo.png?v=3"/>`;
   var word = `<text x="${startX + logoSize + 8}" y="569" font-family="JetBrains Mono, monospace" font-size="23" font-weight="700" letter-spacing="0.5" fill="#e6ebf5">Coin<tspan fill="#f59e0b">Gyaan</tspan></text>`;
   __cgLockupCache = img + word;
   return __cgLockupCache;
@@ -314,7 +314,7 @@ function articleHtml(article) {
   const ld = { "@context": "https://schema.org", "@graph": [
     { "@type": "Article", "@id": url + "#article", headline: article.title, description: article.excerpt,
       datePublished: article.date, dateModified: article.updated || article.date,
-      author: { "@type": "Person", name: au.name, url: `${SITE}/authors/${au.slug}/`, ...(au.x ? { sameAs: [au.x] } : {}) }, publisher: { "@type": "Organization", name: "CoinGyaan", logo: { "@type": "ImageObject", url: SITE + "/assets/images/brand/logo.png" } },
+      author: { "@type": "Person", name: au.name, url: `${SITE}/authors/${au.slug}/`, ...(au.x ? { sameAs: [au.x] } : {}) }, publisher: { "@type": "Organization", name: "CoinGyaan", logo: { "@type": "ImageObject", url: SITE + "/assets/images/brand/logo.png?v=3" } },
       image: ogImage, mainEntityOfPage: { "@id": url + "#webpage" }, articleSection: cat.name, keywords: article.tags.map((t) => (tagBySlug[t] || {}).name || t).join(", "), inLanguage: "en-US" },
     { "@type": "BreadcrumbList", "@id": url + "#breadcrumb", itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: SITE + "/" },
