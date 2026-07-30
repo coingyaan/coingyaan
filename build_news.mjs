@@ -31,7 +31,7 @@ function fmtDate(iso) {
 }
 function authorOf(a) {
   const k = a.author || "coingyaan-team";
-  return NEWS_AUTHORS[k] || { name: "CoinGyaan Team", title: "CoinGyaan" };
+  return NEWS_AUTHORS[k] || { name: "CoinGyaan Team", slug: "coingyaan-team", role: "CoinGyaan" };
 }
 
 /* ---------- V7 covers with official asset logos ---------- */
@@ -281,7 +281,7 @@ function articleHtml(article) {
   const ld = { "@context": "https://schema.org", "@graph": [
     { "@type": "Article", "@id": url + "#article", headline: article.title, description: article.excerpt,
       datePublished: article.date, dateModified: article.updated || article.date,
-      author: { "@type": "Person", name: au.name }, publisher: { "@type": "Organization", name: "CoinGyaan", logo: { "@type": "ImageObject", url: SITE + "/assets/images/brand/logo.png" } },
+      author: { "@type": "Person", name: au.name, url: `${SITE}/authors/${au.slug}/`, ...(au.x ? { sameAs: [au.x] } : {}) }, publisher: { "@type": "Organization", name: "CoinGyaan", logo: { "@type": "ImageObject", url: SITE + "/assets/images/brand/logo.png" } },
       image: ogImage, mainEntityOfPage: { "@id": url + "#webpage" }, articleSection: cat.name, keywords: article.tags.map((t) => (tagBySlug[t] || {}).name || t).join(", "), inLanguage: "en-US" },
     { "@type": "BreadcrumbList", "@id": url + "#breadcrumb", itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: SITE + "/" },
@@ -301,9 +301,13 @@ function articleHtml(article) {
     <header class="art-head">
       <a class="art-cat" href="/news/${cat.slug}/" style="color:${cat.accent}">${esc(cat.name)}</a>
       <h1>${esc(article.title)}</h1>
-      <div class="art-byline"><span class="art-author">${esc(au.name)}</span><span class="art-dot">&#183;</span><time datetime="${article.date}">${fmtDate(article.date)}</time><span class="art-dot">&#183;</span><span>${article.readMins || 4} min read</span></div>
+      <div class="art-byline"><a class="art-author" href="/authors/${au.slug}/">${esc(au.name)}</a><span class="art-dot">&#183;</span><time datetime="${article.date}">${fmtDate(article.date)}</time><span class="art-dot">&#183;</span><span>${article.readMins || 4} min read</span></div>
     </header>
-    <figure class="art-cover">${cover.svg}</figure>
+    <figure class="art-cover">${
+      article.heroImage
+        ? `<img src="${esc(article.heroImage)}" alt="${esc(article.title)}" width="1200" height="630" />`
+        : (cover.auto ? cover.svg : `<img src="${esc(article.cover)}" alt="${esc(article.title)}" width="1200" height="630" />`)
+    }</figure>
     <div class="art-content">
 ${body}
     </div>
@@ -352,19 +356,48 @@ for (const t of NEWS_TAGS) {
     articles: published.filter((a) => a.tags.includes(t.slug)), crumbLabel: t.name,
   }));
 }
-/* author pages */
+/* author profile pages at /authors/{slug}/ */
 const authorArticles = {};
 for (const a of published) { (authorArticles[a.author || "coingyaan-team"] ||= []).push(a); }
+function authorPage(au, arts) {
+  const url = `${SITE}/authors/${au.slug}/`;
+  const socials = [];
+  if (au.x) socials.push(`<a class="au-social" href="${esc(au.x)}" target="_blank" rel="noopener noreferrer">X (Twitter) &#8599;</a>`);
+  if (au.website) socials.push(`<a class="au-social" href="${esc(au.website)}" target="_blank" rel="noopener noreferrer">Website &#8599;</a>`);
+  const avatar = au.avatar
+    ? `<img class="au-avatar" src="${esc(au.avatar)}" alt="${esc(au.name)}" width="88" height="88" />`
+    : `<span class="au-avatar au-initials">${esc((au.name.match(/\b\w/g) || []).slice(0, 2).join(""))}</span>`;
+  const cards = arts.length
+    ? `<div class="nl-grid">${arts.map(listCard).join("")}</div>`
+    : `<p class="page-lead">No published articles yet.</p>`;
+  const ld = { "@context": "https://schema.org", "@type": "ProfilePage", mainEntity: {
+    "@type": "Person", name: au.name, url, jobTitle: au.role, description: au.bio,
+    ...(au.x || au.website ? { sameAs: [au.x, au.website].filter(Boolean) } : {}),
+    worksFor: { "@type": "Organization", name: "CoinGyaan", url: SITE + "/" },
+  } };
+  return head({ title: `${au.name} | CoinGyaan`, desc: au.bio, url, ogImage: SITE + "/assets/images/brand/universal-share-v1.png", extraLd: ld }) + `
+<main class="wrap nl">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/news/">News</a><span>/</span><span>${esc(au.name)}</span></nav>
+  <header class="au-head">
+    ${avatar}
+    <div class="au-meta">
+      <h1>${esc(au.name)}</h1>
+      <div class="au-role">${esc(au.role)}</div>
+      <p class="au-bio">${esc(au.bio)}</p>
+      <div class="au-socials">${socials.join("")}</div>
+    </div>
+  </header>
+  <h2 class="au-articles-h">Articles by ${esc(au.name)}</h2>
+  ${cards}
+</main>
+` + FOOT_LIST;
+}
 for (const key of Object.keys(NEWS_AUTHORS)) {
   const au = NEWS_AUTHORS[key];
-  const dir = path.join(ROOT, "news", "author", key); fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, "index.html"), listPage({
-    title: `${au.name} | CoinGyaan`, desc: `Articles and analysis by ${au.name}, ${au.title}.`,
-    url: `${SITE}/news/author/${key}/`, heading: au.name, sub: au.title,
-    articles: authorArticles[key] || [], crumbLabel: au.name,
-  }));
+  const dir = path.join(ROOT, "authors", au.slug); fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, "index.html"), authorPage(au, authorArticles[key] || []));
 }
-console.log(Object.keys(NEWS_AUTHORS).length + " author pages");
+console.log(Object.keys(NEWS_AUTHORS).length + " author profile pages at /authors/");
 
 /* sitemap-news.xml */
 const now = new Date().toISOString().slice(0, 10);
@@ -372,7 +405,7 @@ const smUrls = [
   `${SITE}/news/`,
   ...NEWS_CATEGORIES.map((c) => `${SITE}/news/${c.slug}/`),
   ...NEWS_TAGS.map((t) => `${SITE}/news/tag/${t.slug}/`),
-  ...Object.keys(NEWS_AUTHORS).map((k) => `${SITE}/news/author/${k}/`),
+  ...Object.keys(NEWS_AUTHORS).map((k) => `${SITE}/authors/${NEWS_AUTHORS[k].slug}/`),
   ...published.map((a) => `${SITE}/news/${a.slug}/`),
 ];
 fs.writeFileSync(path.join(ROOT, "sitemap-news.xml"),
@@ -406,7 +439,7 @@ if (fs.existsSync(HOME)) {
   let html = fs.readFileSync(HOME, "utf8");
   const START = "<!-- NEWS-FEED:START -->", END = "<!-- NEWS-FEED:END -->";
   if (html.includes(START) && html.includes(END)) {
-    const cards = published.slice(0, 6).map((a) => {
+    const cards = published.map((a) => {
       const cat = catBySlug[a.category] || NEWS_CATEGORIES[0];
       const logo = a.coverTag ? logoInner(a.coverTag) : null;
       const accent = (a.coverTag && tagBySlug[a.coverTag] && tagBySlug[a.coverTag].accent) || cat.accent;
@@ -426,7 +459,7 @@ if (fs.existsSync(HOME)) {
       </a>`;
     }).join("\n");
     const inner = published.length
-      ? `<div class="efeed">\n${cards}\n</div>`
+      ? `<div class="efeed">\n${cards}\n</div>\n<div class="efeed-more"><a class="btn btn-ghost btn-lg" href="/news/">View all news &#8594;</a></div>`
       : `<div class="nl-empty" style="margin-top:8px"><p>No articles published yet.</p><p class="nl-empty-sub">CoinGyaan Intelligence articles will appear here as they publish.</p><a class="nl-empty-cta" href="/intelligence/">Explore live Intelligence &#8594;</a></div>`;
     html = html.replace(new RegExp(START + "[\\s\\S]*?" + END), START + "\n" + inner + "\n" + END);
     fs.writeFileSync(HOME, html);

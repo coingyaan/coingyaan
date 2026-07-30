@@ -75,10 +75,10 @@ var NEWS_TAGS = [
 /* Author registry. Articles reference an author by key; byline shows the name.
    Room for profile pages later at /news/author/{key}/ without changing URLs. */
 var NEWS_AUTHORS = {
-  "coingyaan-team": { name: "CoinGyaan Team", title: "CoinGyaan Intelligence Desk" },
-  "monesh-kumar": { name: "Monesh Kumar", title: "Founder, CoinGyaan" },
-  "mangal-mishra": { name: "Mangal Mishra", title: "Markets Analyst" },
-  "koh-larn": { name: "Koh Larn", title: "Research" },
+  "coingyaan-team": { name: "CoinGyaan Team", slug: "coingyaan-team", role: "Editorial Desk", bio: "The CoinGyaan editorial desk covers crypto markets, intelligence and education, turning on-chain data and market signals into clear, practical analysis.", avatar: null, x: null, website: "https://coingyaan.com" },
+  "monesh-kumar": { name: "Monesh Kumar", slug: "monesh-kumar", role: "Founder, CoinGyaan", bio: "Monesh Kumar is the founder of CoinGyaan and a Web3 builder focused on crypto market intelligence, research and education.", avatar: null, x: "https://x.com/mkoneth", website: null },
+  "mangal-mishra": { name: "Mangal Mishra", slug: "mangal-mishra", role: "Markets Analyst", bio: "Mangal Mishra is a markets analyst at CoinGyaan covering derivatives, on-chain flows and market structure.", avatar: null, x: "https://x.com/mani001eth", website: null },
+  "kohlarn": { name: "Kohlarn", slug: "kohlarn", role: "Research Analyst", bio: "Kohlarn is a research analyst at CoinGyaan writing beginner-friendly explainers on crypto, stablecoins and digital assets.", avatar: null, x: "https://x.com/kohlarneth", website: null },
 };
 
 /* Live Intelligence products, keyed by tag. Each has an API endpoint so the
@@ -126,10 +126,11 @@ var NEWS_ARTICLES = [
     tags: ["stablecoins", "usdt", "usdc", "digital-assets", "payments"],
     date: "2026-07-23",
     updated: "2026-07-23",
-    author: "koh-larn",
+    author: "kohlarn",
     readMins: 8,
     excerpt: "Learn what stablecoins are, how they work, the different types of stablecoins, their benefits, risks and why digital dollars like USDT and USDC have become essential to the global crypto economy.",
     cover: "/assets/images/articles/what-are-stablecoins.png",
+    heroImage: "/assets/images/articles/what-are-stablecoins-hero.png",
     featured: true,
   },
   {

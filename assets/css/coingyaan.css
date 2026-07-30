@@ -607,3 +607,18 @@ main.page h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.
 .art-learn li{padding:8px 0;border-bottom:1px solid var(--border2);font-size:14.5px}
 .art-soon{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);border:1px solid var(--border);border-radius:20px;padding:2px 8px;margin-left:6px}
 @media(max-width:640px){.art-learn{grid-template-columns:1fr}}
+
+/* Author byline link + author profile pages */
+.art-author{color:var(--text);font-weight:600;text-decoration:none;border-bottom:1px solid rgba(245,158,11,.35)}
+.art-author:hover{color:var(--gold)}
+.au-head{display:flex;gap:22px;align-items:flex-start;margin:14px 0 30px;padding-bottom:26px;border-bottom:1px solid var(--border)}
+.au-avatar{width:88px;height:88px;border-radius:50%;flex:none;border:1px solid var(--border);object-fit:cover}
+.au-initials{display:flex;align-items:center;justify-content:center;background:var(--card);color:var(--gold);font-family:var(--mono);font-weight:700;font-size:30px}
+.au-meta h1{font-size:30px;margin:0 0 4px}
+.au-role{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.au-bio{font-size:15.5px;color:var(--text);line-height:1.6;margin:0 0 14px;max-width:640px}
+.au-socials{display:flex;gap:14px;flex-wrap:wrap}
+.au-social{font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--gold);text-decoration:none;border:1px solid var(--border);border-radius:20px;padding:6px 14px}
+.au-social:hover{border-color:var(--gold)}
+.au-articles-h{font-size:18px;margin:0 0 16px}
+@media(max-width:560px){.au-head{flex-direction:column;gap:14px}}
