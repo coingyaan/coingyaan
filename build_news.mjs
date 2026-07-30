@@ -8,6 +8,7 @@
 */
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
 
@@ -75,13 +76,15 @@ const CAT_ICONS = {
   gavel: '<rect x="-24" y="-24" width="30" height="12" rx="3" transform="rotate(45)" fill="COLOR"/><rect x="-4" y="16" width="34" height="8" rx="4" fill="COLOR" opacity=".7"/>',
   mic: '<rect x="-9" y="-30" width="18" height="34" rx="9" fill="COLOR"/><path d="M-16 0 A16 16 0 0 0 16 0" fill="none" stroke="COLOR" stroke-width="4" opacity=".7"/><rect x="-2" y="16" width="4" height="12" fill="COLOR" opacity=".7"/>',
 };
-function coverSvg({ accent, catIcon, logo, label, showLabel }) {
+function coverSvg({ accent, catIcon, logo, label, showLabel, brand }) {
   const centerpiece = logo
     ? embedLogo(logo, 600, 288, 260)
     : `<g transform="translate(600 288) scale(3)">${(CAT_ICONS[catIcon] || CAT_ICONS.blocks).replace(/COLOR/g, accent)}</g>`;
   const name = showLabel
     ? `<text x="600" y="452" font-family="JetBrains Mono, monospace" font-size="30" font-weight="700" letter-spacing="9" text-anchor="middle" fill="#e6ebf5">${esc((label || "").toUpperCase())}</text>`
     : "";
+  // brand: "none" for thumbnails (icon + name only), "lockup" for article heroes (official CoinGyaan lockup)
+  const brandMark = brand === "lockup" ? cgLockup() : (brand === "none" ? "" : cgBrand());
   // subtle grid matching the homepage news cards
   const grid = `<g stroke="#1e3048" stroke-width="1" opacity=".4"><path d="M0 105h1200M0 210h1200M0 315h1200M0 420h1200M0 525h1200M200 0v630M400 0v630M600 0v630M800 0v630M1000 0v630"/></g>`;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="${esc(label)}">
@@ -98,8 +101,21 @@ function coverSvg({ accent, catIcon, logo, label, showLabel }) {
   <rect width="1200" height="630" fill="url(#glow)"/>
   ${centerpiece}
   ${name}
-  ${cgBrand()}
+  ${brandMark}
 </svg>`;
+}
+
+/* Official CoinGyaan lockup (logo + wordmark) for article heroes, matching the header.
+   The hero SVG is inlined in the article HTML, so we reference the logo by URL (browser
+   caches it once across pages) rather than embedding a heavy base64 copy per article. */
+let __cgLockupCache;
+function cgLockup() {
+  if (__cgLockupCache !== undefined) return __cgLockupCache;
+  var startX = 520, logoSize = 34;
+  var img = `<image x="${startX}" y="544" width="${logoSize}" height="${logoSize}" href="/assets/images/brand/logo.png"/>`;
+  var word = `<text x="${startX + logoSize + 8}" y="569" font-family="JetBrains Mono, monospace" font-size="23" font-weight="700" letter-spacing="0.5" fill="#e6ebf5">Coin<tspan fill="#f59e0b">Gyaan</tspan></text>`;
+  __cgLockupCache = img + word;
+  return __cgLockupCache;
 }
 /* Small CoinGyaan branding: official mark embedded as base64 so it renders in
    both the browser hero and the cairosvg OG PNG. Uses assets/logos/coingyaan.png
@@ -145,7 +161,20 @@ function coverFor(article) {
   const accent = (article.coverTag && tagBySlug[article.coverTag] && tagBySlug[article.coverTag].accent) || cat.accent;
   const isAsset = !!(logo && tagBySlug[article.coverTag]);
   const label = isAsset ? tagBySlug[article.coverTag].name : cat.name;
-  return { svg: uniquifyIds(coverSvg({ accent, catIcon: cat.icon, logo, label, showLabel: isAsset })), auto: !article.cover || article.cover === "auto" };
+  const base = { accent, catIcon: cat.icon, logo, label, showLabel: isAsset };
+  return {
+    thumbSvg: uniquifyIds(coverSvg({ ...base, brand: "none" })),   // cards, listings, OG: topic art + name only
+    heroSvg: uniquifyIds(coverSvg({ ...base, brand: "lockup" })),  // in-article hero: + official CoinGyaan lockup
+    auto: !article.cover || article.cover === "auto",
+  };
+}
+
+/* Cache-busted thumbnail URL: ?v=<hash of the thumbnail art> so replacing a
+   thumbnail (same filename) is never served stale from a browser or CDN cache. */
+function thumbUrl(article) {
+  if (article.cover && article.cover !== "auto") return article.cover;
+  const h = crypto.createHash("md5").update(coverFor(article).thumbSvg).digest("hex").slice(0, 8);
+  return `/assets/images/articles/${article.slug}.png?v=${h}`;
 }
 
 /* ---------- relationships ---------- */
@@ -219,7 +248,7 @@ function listCard(a) {
   const custom = a.cover && a.cover !== "auto";
   const thumb = custom
     ? `<img src="${esc(a.cover)}" alt="${esc(a.title)}" loading="lazy" />`
-    : coverFor(a).svg;
+    : coverFor(a).thumbSvg;
   return `<a class="nl-card" href="/news/${a.slug}/">
     <span class="nl-cover">${thumb}</span>
     <span class="nl-body">
@@ -254,7 +283,7 @@ function articleHtml(article) {
   const cat = catBySlug[article.category] || NEWS_CATEGORIES[0];
   const url = `${SITE}/news/${article.slug}/`;
   const cover = coverFor(article);
-  const ogImage = cover.auto ? `${SITE}/assets/images/articles/${article.slug}.png` : `${SITE}${article.cover}`;
+  const ogImage = `${SITE}${thumbUrl(article)}`;
   const bodyRaw = fs.readFileSync(path.join(ROOT, "news/_content", article.slug + ".html"), "utf8");
   const body = bodyRaw.replace(/<img\s+src="\/assets\/images\/intelligence\/([a-z0-9-]+)\.svg"[^>]*\/?>/g, (m, name) => {
     const f = path.join(ROOT, "assets/images/intelligence", name + ".svg");
@@ -310,7 +339,7 @@ function articleHtml(article) {
     <figure class="art-cover">${
       article.heroImage
         ? `<img src="${esc(article.heroImage)}" alt="${esc(article.title)}" width="1200" height="630" />`
-        : (cover.auto ? cover.svg : `<img src="${esc(article.cover)}" alt="${esc(article.title)}" width="1200" height="630" />`)
+        : (cover.auto ? cover.heroSvg : `<img src="${esc(article.cover)}" alt="${esc(article.title)}" width="1200" height="630" />`)
     }</figure>
     <div class="art-content">
 ${body}
@@ -330,7 +359,7 @@ for (const article of originals) {
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, "index.html"), articleHtml(article));
   const cover = coverFor(article);
-  if (cover.auto) fs.writeFileSync(path.join(ROOT, "assets/images/articles", article.slug + ".svg"), cover.svg);
+  if (cover.auto) fs.writeFileSync(path.join(ROOT, "assets/images/articles", article.slug + ".svg"), cover.thumbSvg);
   n++; console.log("article  /news/" + article.slug + "/");
 }
 /* index */
@@ -443,7 +472,7 @@ if (fs.existsSync(HOME)) {
   let html = fs.readFileSync(HOME, "utf8");
   const START = "<!-- NEWS-FEED:START -->", END = "<!-- NEWS-FEED:END -->";
   if (html.includes(START) && html.includes(END)) {
-    const thumbFor = (a) => (!a.cover || a.cover === "auto") ? `/assets/images/articles/${a.slug}.png` : a.cover;
+    const thumbFor = (a) => thumbUrl(a);
     const cardData = published.map((a) => {
       const cat = catBySlug[a.category] || NEWS_CATEGORIES[0];
       return { slug: a.slug, title: a.title, excerpt: a.excerpt, author: authorOf(a).name, readMins: a.readMins || 4, thumb: thumbFor(a), cat: { name: cat.name, accent: cat.accent } };
