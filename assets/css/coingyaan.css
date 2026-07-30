@@ -622,3 +622,7 @@ main.page h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.
 .au-social:hover{border-color:var(--gold)}
 .au-articles-h{font-size:18px;margin:0 0 16px}
 @media(max-width:560px){.au-head{flex-direction:column;gap:14px}}
+
+/* Homepage feed: single column on small phones */
+@media(max-width:560px){.efeed{grid-template-columns:1fr}}
+#home-feed-sentinel{height:1px}

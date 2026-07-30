@@ -443,31 +443,35 @@ if (fs.existsSync(HOME)) {
   let html = fs.readFileSync(HOME, "utf8");
   const START = "<!-- NEWS-FEED:START -->", END = "<!-- NEWS-FEED:END -->";
   if (html.includes(START) && html.includes(END)) {
-    const cards = published.map((a) => {
+    const thumbFor = (a) => (!a.cover || a.cover === "auto") ? `/assets/images/articles/${a.slug}.png` : a.cover;
+    const cardData = published.map((a) => {
       const cat = catBySlug[a.category] || NEWS_CATEGORIES[0];
-      const logo = a.coverTag ? logoInner(a.coverTag) : null;
-      const accent = (a.coverTag && tagBySlug[a.coverTag] && tagBySlug[a.coverTag].accent) || cat.accent;
-      const isAsset = !!(logo && tagBySlug[a.coverTag]);
-      const custom = a.cover && a.cover !== "auto";
-      const thumb = custom
-        ? `<img src="${esc(a.cover)}" alt="${esc(a.title)}" loading="lazy" />`
-        : uniquifyIds(homeThumb({ accent, catIcon: cat.icon, logo, label: isAsset ? tagBySlug[a.coverTag].name : cat.name, showLabel: isAsset }));
-      return `<a class="ecard" href="/news/${a.slug}/">
-        <span class="ethumb ethumb--brand">${thumb}</span>
+      return { slug: a.slug, title: a.title, excerpt: a.excerpt, author: authorOf(a).name, readMins: a.readMins || 4, thumb: thumbFor(a), cat: { name: cat.name, accent: cat.accent } };
+    });
+    // manifest of ALL published articles (ordered newest first) for infinite scroll
+    fs.writeFileSync(path.join(ROOT, "news", "feed.json"), JSON.stringify(cardData));
+
+    const cardHtml = (a) => `<a class="ecard" href="/news/${a.slug}/">
+        <span class="ethumb ethumb--brand"><img src="${a.thumb}" alt="${esc(a.title)}" loading="lazy" width="400" height="225" /></span>
         <span class="ebody">
-          <span class="ecat" style="color:${cat.accent};border-color:${cat.accent}40;background:${cat.accent}14">${esc(cat.name)}</span>
+          <span class="ecat" style="color:${a.cat.accent};border-color:${a.cat.accent}40;background:${a.cat.accent}14">${esc(a.cat.name)}</span>
           <span class="etitle">${esc(a.title)}</span>
           <span class="eexc">${esc(a.excerpt)}</span>
-          <span class="emeta">${esc(authorOf(a).name)} &middot; ${a.readMins || 4} min read</span>
+          <span class="emeta">${esc(a.author)} &middot; ${a.readMins} min read</span>
         </span>
       </a>`;
-    }).join("\n");
-    const inner = published.length
-      ? `<div class="efeed">\n${cards}\n</div>\n<div class="efeed-more"><a class="btn btn-ghost btn-lg" href="/news/">View all news &#8594;</a></div>`
+
+    const PAGE = 9;
+    const initial = cardData.slice(0, PAGE);
+    const inner = cardData.length
+      ? `<div class="efeed" id="home-feed" data-shown="${initial.length}" data-total="${cardData.length}">\n${initial.map(cardHtml).join("\n")}\n</div>
+<div id="home-feed-sentinel" aria-hidden="true"></div>
+<div class="efeed-more"><a class="btn btn-ghost btn-lg" href="/news/">View all news &#8594;</a></div>
+<script defer src="/assets/js/home-feed.js"></script>`
       : `<div class="nl-empty" style="margin-top:8px"><p>No articles published yet.</p><p class="nl-empty-sub">CoinGyaan Intelligence articles will appear here as they publish.</p><a class="nl-empty-cta" href="/intelligence/">Explore live Intelligence &#8594;</a></div>`;
     html = html.replace(new RegExp(START + "[\\s\\S]*?" + END), START + "\n" + inner + "\n" + END);
     fs.writeFileSync(HOME, html);
-    console.log("homepage feed injected (" + Math.min(published.length, 6) + " cards)");
+    console.log("homepage feed injected (" + initial.length + " of " + cardData.length + " baked, rest lazy-loaded)");
   } else {
     console.log("homepage: NEWS-FEED markers not found, skipped");
   }
