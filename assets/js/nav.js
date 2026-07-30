@@ -10,7 +10,7 @@
      Clean URLs only, no .html.
      ========================================================================== */
 
-  var LOGO = 'https://coingyaan.com/assets/images/brand/logo.png?v=3';
+  var LOGO = 'https://coingyaan.com/assets/images/brand/coingyaan-mark.png';
 
   var NAV = [
     { label: 'Home', href: '/' },

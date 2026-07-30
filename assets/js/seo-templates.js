@@ -8,7 +8,7 @@
 export const SITE = {
   name: 'CoinGyaan', origin: 'https://coingyaan.com', locale: 'en_US', inLanguage: 'en-US',
   twitter: '@coin_gyaan',
-  logo: 'https://coingyaan.com/assets/images/brand/logo.png?v=3',
+  logo: 'https://coingyaan.com/assets/images/brand/coingyaan-mark.png',
   ogImage: 'https://coingyaan.com/assets/images/brand/universal-share-v1.png',
   ogImageAlt: 'CoinGyaan Crypto Intelligence',
   founder: 'Monesh Kumar', foundingDate: '2017',
