@@ -28,5 +28,15 @@
 /studio/*                     /gone.html   410
 /studio                       /gone.html   410
 
+# ── Legacy root .html -> V2 (301 to real, indexable V2 pages) ──
+/about.html                    /about/                301
+/contact.html                  /about/contact/        301
+/editorial-policy.html         /about/editorial-policy/  301
+/bitcoin.html                  /markets/bitcoin/      301
+/bitcoin-sentiment-today.html  /bitcoin-outlook/      301
+/fear-greed-index-today.html   /fear-greed-index/     301
+# Pure legacy template, noindex, no V2 role -> 410
+/page-template.html            /gone.html             410
+
 # Any remaining .html serves normally.
 /*.html    200!
