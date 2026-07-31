@@ -13,19 +13,20 @@
 /*.ico     200!
 /*.xml     200!
 
-# ── Legacy .html to clean Version 2 URLs ──
-# Keep each line COMMENTED until the matching Version 2 page has real content
-# and is no longer noindex. Redirecting an indexed page to an empty noindex
-# page would drop it from search. Uncomment one line as you migrate each page.
-# /bitcoin-sentiment-today.html   /bitcoin-outlook/    301
-# /fear-greed-index-today.html    /fear-greed-index/   301
-# /bitcoin.html                   /markets/bitcoin/    301
-# /markets/ethereum.html          /markets/ethereum/   301
-# /markets/altcoins.html          /markets/altcoins/   301
-# /about.html                     /about/              301
-# /contact.html                   /about/contact/      301
-# guides.html is not in Version 2 nav. Keep it live, or retire it later:
-# /guides.html                    /                    301
+# ── V1 retirement ──
+# 301 where a genuine V2 replacement exists (order matters: these must precede the /guides/* rule).
+/guides/fear-greed-index-explained.html            /fear-greed-index/                                              301
+/guides/how-to-read-crypto-fear-greed-index.html   /fear-greed-index/                                              301
+/guides/bitcoin-etf-explained-everyday-investors-2026.html  /news/bitcoin-etf-inflows-blackrock-ibit-institutional-demand/  301
+# 410 Gone for retired content with no V2 replacement (serves /gone.html body with a 410 status).
+/guides/*                     /gone.html   410
+/guides.html                  /gone.html   410
+/crypto-wallet-recovery.html  /gone.html   410
+/airdrop-rescue.html          /gone.html   410
+/play.html                    /gone.html   410
+/api-docs.html                /gone.html   410
+/studio/*                     /gone.html   410
+/studio                       /gone.html   410
 
-# Any remaining .html (guides, tools, advertise) keeps serving normally.
+# Any remaining .html serves normally.
 /*.html    200!
