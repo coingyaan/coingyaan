@@ -36,7 +36,7 @@
       { label: 'Press Releases', href: '/news/press-releases/' }
     ] },
     { label: 'About', key: 'a', items: [
-      { label: 'Our Mission',      href: '/about/our-mission/' },
+      { label: 'Our Mission',      href: '/about/mission/' },
       { label: 'Editorial Policy', href: '/about/editorial-policy/' },
       { label: 'Methodology',      href: '/about/methodology/' },
       { label: 'Data Sources',     href: '/about/data-sources/' },

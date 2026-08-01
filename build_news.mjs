@@ -16,6 +16,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 const ROOT = __dirname;
 const SITE = "https://coingyaan.com";
+// Taxonomy maturity: a category/tag/author page is indexed + in the sitemap only at 2+ published articles.
+const MATURITY = 2;
+const matureRobots = (n) => (n >= MATURITY ? "index, follow" : "noindex, follow");
 
 const { NEWS_CATEGORIES, NEWS_TAGS, NEWS_AUTHORS, NEWS_INTEL_LINKS, NEWS_ARTICLES } =
   require(path.join(ROOT, "assets/js/news-data.js"));
@@ -190,7 +193,7 @@ function relatedIntel(article) {
 }
 
 /* ---------- shared head + chrome ---------- */
-function head({ title, desc, url, ogImage, extraLd }) {
+function head({ title, desc, url, ogImage, extraLd, robots }) {
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -200,7 +203,7 @@ function head({ title, desc, url, ogImage, extraLd }) {
 <meta name="color-scheme" content="dark" />
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}" />
-<meta name="robots" content="index, follow" />
+<meta name="robots" content="${robots || "index, follow"}" />
 <link rel="canonical" href="${url}" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="CoinGyaan" />
@@ -258,7 +261,7 @@ function listCard(a) {
     </span>
   </a>`;
 }
-function listPage({ title, desc, url, heading, sub, articles, crumbLabel }) {
+function listPage({ title, desc, url, heading, sub, articles, crumbLabel, robots }) {
   const ld = { "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
     { "@type": "ListItem", position: 1, name: "Home", item: SITE + "/" },
     { "@type": "ListItem", position: 2, name: "News", item: SITE + "/news/" },
@@ -267,7 +270,7 @@ function listPage({ title, desc, url, heading, sub, articles, crumbLabel }) {
   const grid = articles.length
     ? `<div class="nl-grid">${articles.map(listCard).join("")}</div>`
     : `<div class="nl-empty"><p>No articles yet.</p><p class="nl-empty-sub">CoinGyaan Intelligence on this topic is coming soon. In the meantime, explore our live market intelligence.</p><a class="nl-empty-cta" href="/intelligence/">Explore Intelligence &#8594;</a></div>`;
-  return head({ title, desc, url, extraLd: ld }) + `
+  return head({ title, desc, url, extraLd: ld, robots }) + `
 <main class="wrap nl">
   <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/news/">News</a>${crumbLabel ? `<span>/</span><span>${esc(crumbLabel)}</span>` : ""}</nav>
   <span class="page-eyebrow">News</span>
@@ -312,7 +315,7 @@ function articleHtml(article) {
   </section>` : "";
 
   const ld = { "@context": "https://schema.org", "@graph": [
-    { "@type": "Article", "@id": url + "#article", headline: article.title, description: article.excerpt,
+    { "@type": "NewsArticle", "@id": url + "#article", headline: article.title, description: article.excerpt,
       datePublished: article.date, dateModified: article.updated || article.date,
       author: { "@type": "Person", name: au.name, url: `${SITE}/authors/${au.slug}/`, ...(au.x ? { sameAs: [au.x] } : {}) }, publisher: { "@type": "Organization", name: "CoinGyaan", logo: { "@type": "ImageObject", url: SITE + "/assets/images/brand/coingyaan-mark.png" } },
       image: ogImage, mainEntityOfPage: { "@id": url + "#webpage" }, articleSection: cat.name, keywords: article.tags.map((t) => (tagBySlug[t] || {}).name || t).join(", "), inLanguage: "en-US" },
@@ -377,6 +380,7 @@ for (const c of NEWS_CATEGORIES) {
     title: `${c.name} News & Analysis | CoinGyaan`, desc: `${c.blurb} CoinGyaan Intelligence and analysis on ${c.name}.`,
     url: `${SITE}/news/${c.slug}/`, heading: c.name, sub: c.blurb,
     articles: published.filter((a) => a.category === c.slug), crumbLabel: c.name,
+    robots: matureRobots(published.filter((a) => a.category === c.slug).length),
   }));
   console.log("category /news/" + c.slug + "/");
 }
@@ -387,6 +391,7 @@ for (const t of NEWS_TAGS) {
     title: `${t.name} | CoinGyaan News & Intelligence`, desc: `All CoinGyaan analysis and headlines tagged ${t.name}.`,
     url: `${SITE}/news/tag/${t.slug}/`, heading: t.name, sub: `Every CoinGyaan Intelligence article and headline tagged ${t.name}.`,
     articles: published.filter((a) => a.tags.includes(t.slug)), crumbLabel: t.name,
+    robots: matureRobots(published.filter((a) => a.tags.includes(t.slug)).length),
   }));
 }
 /* author profile pages at /authors/{slug}/ */
@@ -408,7 +413,7 @@ function authorPage(au, arts) {
     ...(au.x || au.website ? { sameAs: [au.x, au.website].filter(Boolean) } : {}),
     worksFor: { "@type": "Organization", name: "CoinGyaan", url: SITE + "/" },
   } };
-  return head({ title: `${au.name} | CoinGyaan`, desc: au.bio, url, ogImage: SITE + "/assets/images/brand/universal-share-v1.png", extraLd: ld }) + `
+  return head({ title: `${au.name} | CoinGyaan`, desc: au.bio, url, ogImage: SITE + "/assets/images/brand/universal-share-v1.png", extraLd: ld, robots: matureRobots(arts.length) }) + `
 <main class="wrap nl">
   <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/news/">News</a><span>/</span><span>${esc(au.name)}</span></nav>
   <header class="au-head">
@@ -436,9 +441,9 @@ console.log(Object.keys(NEWS_AUTHORS).length + " author profile pages at /author
 const now = new Date().toISOString().slice(0, 10);
 const smUrls = [
   `${SITE}/news/`,
-  ...NEWS_CATEGORIES.map((c) => `${SITE}/news/${c.slug}/`),
-  ...NEWS_TAGS.map((t) => `${SITE}/news/tag/${t.slug}/`),
-  ...Object.keys(NEWS_AUTHORS).map((k) => `${SITE}/authors/${NEWS_AUTHORS[k].slug}/`),
+  ...NEWS_CATEGORIES.filter((c) => published.filter((a) => a.category === c.slug).length >= MATURITY).map((c) => `${SITE}/news/${c.slug}/`),
+  ...NEWS_TAGS.filter((t) => published.filter((a) => a.tags.includes(t.slug)).length >= MATURITY).map((t) => `${SITE}/news/tag/${t.slug}/`),
+  ...Object.keys(NEWS_AUTHORS).filter((k) => (authorArticles[k] || []).length >= MATURITY).map((k) => `${SITE}/authors/${NEWS_AUTHORS[k].slug}/`),
   ...published.map((a) => `${SITE}/news/${a.slug}/`),
 ];
 fs.writeFileSync(path.join(ROOT, "sitemap-news.xml"),

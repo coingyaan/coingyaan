@@ -45,7 +45,7 @@
             '<a href="/news/press-releases/">Press Releases</a>' +
           '</div>' +
           '<div class="f-col"><h5>About</h5>' +
-            '<a href="/about/our-mission/">Our Mission</a>' +
+            '<a href="/about/mission/">Our Mission</a>' +
             '<a href="/about/editorial-policy/">Editorial Policy</a>' +
             '<a href="/about/methodology/">Methodology</a>' +
             '<a href="/about/contact/">Contact</a>' +

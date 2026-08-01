@@ -38,5 +38,7 @@
 # Pure legacy template, noindex, no V2 role -> 410
 /page-template.html            /gone.html             410
 
+/about/our-mission/            /about/mission/        301
+
 # Any remaining .html serves normally.
 /*.html    200!
