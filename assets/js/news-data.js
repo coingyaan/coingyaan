@@ -55,7 +55,10 @@ var NEWS_TAGS = [
   { slug: "giwa", name: "GIWA", accent: "#6db3ff" },
   { slug: "layer-2", name: "Layer 2" },
   { slug: "funding-rate", name: "Funding Rate" },
-  { slug: "open-interest", name: "Open Interest" },
+  { slug: "open-interest", name: "Open Interest", accent: "#22d3ee" },
+  { slug: "derivatives", name: "Derivatives" },
+  { slug: "futures", name: "Futures" },
+  { slug: "leverage", name: "Leverage" },
   { slug: "fear-greed", name: "Fear & Greed" },
   { slug: "etf", name: "ETF" },
   { slug: "stablecoins", name: "Stablecoins", accent: "#3b82f6" },
@@ -85,7 +88,7 @@ var NEWS_TAGS = [
 var NEWS_AUTHORS = {
   "coingyaan-team": { name: "CoinGyaan Team", slug: "coingyaan-team", role: "Editorial Desk", bio: "The CoinGyaan editorial desk covers crypto markets, intelligence and education, turning on-chain data and market signals into clear, practical analysis.", avatar: null, x: null, website: "https://coingyaan.com" },
   "monesh-kumar": { name: "Monesh Kumar", slug: "monesh-kumar", role: "Founder, CoinGyaan", bio: "Monesh Kumar is the founder of CoinGyaan and a Web3 builder focused on crypto market intelligence, research and education.", avatar: null, x: "https://x.com/mkoneth", website: null },
-  "mangal-mishra": { name: "Mangal Mishra", slug: "mangal-mishra", role: "Markets Analyst", bio: "Mangal Mishra is a markets analyst at CoinGyaan covering derivatives, on-chain flows and market structure.", avatar: null, x: "https://x.com/mani001eth", website: null },
+  "mangal-mishra": { name: "Mangal Mishra", slug: "mangal-mishra", role: "Content Head, CoinGyaan", bio: "Mangal Mishra is the Content Head at CoinGyaan, specializing in Bitcoin intelligence, crypto education, SEO and Web3 content strategy. He creates research driven content that simplifies complex blockchain concepts and helps readers understand digital assets, market trends and emerging technologies.", avatar: null, x: null, linkedin: "https://www.linkedin.com/in/mangal-mishra/", website: null },
   "kohlarn": { name: "Kohlarn", slug: "kohlarn", role: "Research Analyst", bio: "Kohlarn is a research analyst at CoinGyaan writing beginner-friendly explainers on crypto, stablecoins and digital assets.", avatar: null, x: "https://x.com/kohlarneth", website: null },
 };
 
@@ -125,6 +128,22 @@ var NEWS_INTEL_LINKS = {
 
 /* Articles, newest first. Dates are ISO (YYYY-MM-DD). */
 var NEWS_ARTICLES = [
+  {
+    type: "original",
+    slug: "what-is-open-interest-in-crypto",
+    title: "What Is Open Interest in Crypto? A Complete Beginner's Guide (2026)",
+    seoTitle: "What Is Open Interest in Crypto? Complete Guide for Beginners | CoinGyaan",
+    category: "blockchain",
+    tags: ["open-interest", "bitcoin", "derivatives", "futures", "leverage", "funding-rate", "liquidations", "trading"],
+    date: "2026-08-01",
+    updated: "2026-08-01",
+    author: "mangal-mishra",
+    readMins: 12,
+    excerpt: "Learn what open interest in crypto means, how it works, why traders monitor it and how it helps identify market trends. A beginner friendly guide with real world examples.",
+    cover: "auto",
+    coverTag: "open-interest",
+    featured: true,
+  },
   {
     type: "original",
     slug: "what-are-stablecoins",

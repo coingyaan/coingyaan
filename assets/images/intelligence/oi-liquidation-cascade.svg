@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 470" role="img" aria-label="Liquidation cascade: a price decline causes leveraged long positions to lose margin, triggering forced liquidations, which makes open interest fall, adds selling pressure and raises volatility">
+<rect width="760" height="470" rx="16" fill="#0b1424"/>
+<g font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">
+<rect x="230" y="24" width="300" height="52" rx="10" fill="#221016" stroke="#f87171" stroke-opacity=".4"/><text x="380" y="56" fill="#f87171">Price declines</text>
+<rect x="205" y="104" width="350" height="52" rx="10" fill="#101d30" stroke="#1e3048"/><text x="380" y="136" fill="#e6ebf5" font-size="14">Leveraged longs lose margin</text>
+<rect x="230" y="184" width="300" height="52" rx="10" fill="#101d30" stroke="#1e3048"/><text x="380" y="216" fill="#e6ebf5" font-size="14">Forced liquidations</text>
+<rect x="230" y="264" width="300" height="52" rx="10" fill="#0e2233" stroke="#22d3ee" stroke-opacity=".5"/><text x="380" y="296" fill="#22d3ee">Open interest falls</text>
+<rect x="230" y="344" width="300" height="52" rx="10" fill="#101d30" stroke="#1e3048"/><text x="380" y="376" fill="#e6ebf5" font-size="14">Additional selling pressure</text>
+<rect x="240" y="410" width="280" height="46" rx="10" fill="#221016" stroke="#f87171" stroke-opacity=".4"/><text x="380" y="439" fill="#f87171" font-size="14">Higher volatility</text>
+<g stroke="#334155" stroke-width="2" fill="none"><path d="M380 76 L380 104"/><path d="M380 156 L380 184"/><path d="M380 236 L380 264"/><path d="M380 316 L380 344"/><path d="M380 396 L380 410"/></g>
+</g>
+</svg>

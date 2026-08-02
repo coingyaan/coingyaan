@@ -317,7 +317,7 @@ function articleHtml(article) {
   const ld = { "@context": "https://schema.org", "@graph": [
     { "@type": "NewsArticle", "@id": url + "#article", headline: article.title, description: article.excerpt,
       datePublished: article.date, dateModified: article.updated || article.date,
-      author: { "@type": "Person", name: au.name, url: `${SITE}/authors/${au.slug}/`, ...(au.x ? { sameAs: [au.x] } : {}) }, publisher: { "@type": "Organization", name: "CoinGyaan", logo: { "@type": "ImageObject", url: SITE + "/assets/images/brand/coingyaan-mark.png" } },
+      author: { "@type": "Person", name: au.name, url: `${SITE}/authors/${au.slug}/`, ...((au.x||au.linkedin||au.website) ? { sameAs: [au.x, au.linkedin, au.website].filter(Boolean) } : {}) }, publisher: { "@type": "Organization", name: "CoinGyaan", logo: { "@type": "ImageObject", url: SITE + "/assets/images/brand/coingyaan-mark.png" } },
       image: ogImage, mainEntityOfPage: { "@id": url + "#webpage" }, articleSection: cat.name, keywords: article.tags.map((t) => (tagBySlug[t] || {}).name || t).join(", "), inLanguage: "en-US" },
     { "@type": "BreadcrumbList", "@id": url + "#breadcrumb", itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: SITE + "/" },
@@ -402,6 +402,7 @@ function authorPage(au, arts) {
   const socials = [];
   if (au.x) socials.push(`<a class="au-social" href="${esc(au.x)}" target="_blank" rel="noopener noreferrer">X (Twitter) &#8599;</a>`);
   if (au.website) socials.push(`<a class="au-social" href="${esc(au.website)}" target="_blank" rel="noopener noreferrer">Website &#8599;</a>`);
+  if (au.linkedin) socials.push(`<a class="au-social" href="${esc(au.linkedin)}" target="_blank" rel="noopener noreferrer">LinkedIn &#8599;</a>`);
   const avatar = au.avatar
     ? `<img class="au-avatar" src="${esc(au.avatar)}" alt="${esc(au.name)}" width="88" height="88" />`
     : `<span class="au-avatar au-initials">${esc((au.name.match(/\b\w/g) || []).slice(0, 2).join(""))}</span>`;
@@ -410,7 +411,7 @@ function authorPage(au, arts) {
     : `<p class="page-lead">No published articles yet.</p>`;
   const ld = { "@context": "https://schema.org", "@type": "ProfilePage", mainEntity: {
     "@type": "Person", name: au.name, url, jobTitle: au.role, description: au.bio,
-    ...(au.x || au.website ? { sameAs: [au.x, au.website].filter(Boolean) } : {}),
+    ...((au.x || au.linkedin || au.website) ? { sameAs: [au.x, au.linkedin, au.website].filter(Boolean) } : {}),
     worksFor: { "@type": "Organization", name: "CoinGyaan", url: SITE + "/" },
   } };
   return head({ title: `${au.name} | CoinGyaan`, desc: au.bio, url, ogImage: SITE + "/assets/images/brand/universal-share-v1.png", extraLd: ld, robots: matureRobots(arts.length) }) + `
