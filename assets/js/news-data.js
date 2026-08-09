@@ -54,10 +54,11 @@ var NEWS_TAGS = [
   { slug: "arc", name: "Arc", accent: "#f59e0b" },
   { slug: "giwa", name: "GIWA", accent: "#6db3ff" },
   { slug: "layer-2", name: "Layer 2" },
-  { slug: "funding-rate", name: "Funding Rate" },
+  { slug: "funding-rate", name: "Funding Rate", accent: "#38bdf8" },
   { slug: "open-interest", name: "Open Interest", accent: "#22d3ee" },
   { slug: "derivatives", name: "Derivatives" },
   { slug: "futures", name: "Futures" },
+  { slug: "perpetual-futures", name: "Perpetual Futures" },
   { slug: "leverage", name: "Leverage" },
   { slug: "fear-greed", name: "Fear & Greed" },
   { slug: "etf", name: "ETF" },
@@ -128,6 +129,22 @@ var NEWS_INTEL_LINKS = {
 
 /* Articles, newest first. Dates are ISO (YYYY-MM-DD). */
 var NEWS_ARTICLES = [
+  {
+    type: "original",
+    slug: "what-are-funding-rates-in-crypto",
+    title: "What Are Funding Rates in Crypto? A Complete Beginner's Guide",
+    seoTitle: "What Are Funding Rates in Crypto? Beginner's Guide | CoinGyaan",
+    category: "blockchain",
+    tags: ["funding-rate", "bitcoin", "perpetual-futures", "derivatives", "futures", "leverage", "market-sentiment", "open-interest", "trading"],
+    date: "2026-08-02",
+    updated: "2026-08-02",
+    author: "mangal-mishra",
+    readMins: 14,
+    excerpt: "Learn what crypto funding rates mean, how positive and negative rates work, how funding fees are calculated and what they reveal about market sentiment.",
+    cover: "auto",
+    coverTag: "funding-rate",
+    featured: true,
+  },
   {
     type: "original",
     slug: "what-is-open-interest-in-crypto",

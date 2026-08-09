@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 240" role="img" aria-label="Funding rate spectrum from extreme negative through neutral to extreme positive, mapping to crowded shorts, bearish positioning, balanced, bullish positioning and crowded longs">
+<rect width="860" height="240" rx="16" fill="#0b1424"/>
+<defs><linearGradient id="frspec" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#f59e0b"/><stop offset="50%" stop-color="#334155"/><stop offset="100%" stop-color="#38bdf8"/></linearGradient></defs>
+<rect x="40" y="70" width="780" height="26" rx="13" fill="url(#frspec)" opacity=".85"/>
+<g font-family="Inter, Arial, sans-serif" font-size="12.5" font-weight="700" text-anchor="middle" fill="#e6ebf5">
+<text x="110" y="58">Extreme Negative</text><text x="290" y="58">Negative</text><text x="430" y="58">Neutral</text><text x="570" y="58">Positive</text><text x="760" y="58">Extreme Positive</text>
+</g>
+<g font-family="Inter, Arial, sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">
+<text x="110" y="140">Crowded Shorts</text><text x="290" y="140">Bearish</text><text x="290" y="156">Positioning</text><text x="430" y="140">Balanced</text><text x="570" y="140">Bullish</text><text x="570" y="156">Positioning</text><text x="760" y="140">Crowded Longs</text>
+</g>
+<g stroke="#475569" stroke-width="1.5"><path d="M110 96 V116"/><path d="M290 96 V116"/><path d="M430 96 V116"/><path d="M570 96 V116"/><path d="M760 96 V116"/></g>
+<text x="430" y="205" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" fill="#64748b">Funding is a positioning indicator, not a guaranteed reversal signal.</text>
+</svg>

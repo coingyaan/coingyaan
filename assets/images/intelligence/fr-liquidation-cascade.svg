@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" role="img" aria-label="Funding to liquidation cascade: rising funding leads to crowded longs, then a price reversal, long liquidations, open interest falls and additional selling pressure">
+<rect width="520" height="520" rx="16" fill="#0b1424"/>
+<g font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">
+<rect x="150" y="24" width="220" height="48" rx="10" fill="#0e2233" stroke="#38bdf8" stroke-opacity=".4"/><text x="260" y="53" fill="#38bdf8">Rising Funding</text>
+<rect x="150" y="104" width="220" height="48" rx="10" fill="#101d30" stroke="#1e3048"/><text x="260" y="133" fill="#e6ebf5">Crowded Longs</text>
+<rect x="150" y="184" width="220" height="48" rx="10" fill="#231a10" stroke="#f59e0b" stroke-opacity=".4"/><text x="260" y="213" fill="#f59e0b">Price Reversal</text>
+<rect x="150" y="264" width="220" height="48" rx="10" fill="#221016" stroke="#f87171" stroke-opacity=".4"/><text x="260" y="293" fill="#f87171">Long Liquidations</text>
+<rect x="150" y="344" width="220" height="48" rx="10" fill="#101d30" stroke="#1e3048"/><text x="260" y="373" fill="#e6ebf5" font-size="14">Open Interest Falls</text>
+<rect x="130" y="424" width="260" height="52" rx="10" fill="#221016" stroke="#f87171" stroke-opacity=".4"/><text x="260" y="456" fill="#f87171" font-size="14">Additional Selling Pressure</text>
+<g stroke="#334155" stroke-width="2"><path d="M260 72 V104"/><path d="M260 152 V184"/><path d="M260 232 V264"/><path d="M260 312 V344"/><path d="M260 392 V424"/></g>
+</g>
+</svg>
