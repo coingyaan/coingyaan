@@ -636,3 +636,25 @@ main.page h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.
 .dir-go{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.03em;color:var(--gold)}
 @media(max-width:860px){.dir-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.dir-grid{grid-template-columns:1fr}}
+
+/* ---- Short Term Signals (Bitcoin Outlook page) ---- */
+.ol-short .stf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:4px}
+.stf-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:15px 16px;display:flex;flex-direction:column;gap:9px}
+.stf-card.stf-off{opacity:.6}
+.stf-tf{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.stf-dir .st{font-size:12px;padding:4px 11px}
+.stf-prob{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px}
+.stf-prob .stf-up{color:var(--green)} .stf-prob .stf-dn{color:var(--red)}
+.stf-bar{height:6px;border-radius:6px;background:rgba(239,68,68,.18);overflow:hidden}
+.stf-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:6px}
+.stf-conf{font-family:var(--mono);font-size:11px;color:var(--muted)} .stf-conf b{color:var(--text)}
+.stf-int{font-size:13px;line-height:1.5;color:var(--muted)}
+.stf-upd{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--dimmer);margin-top:auto}
+@media(max-width:760px){.ol-short .stf-grid{grid-template-columns:1fr}}
+
+/* ---- Short Term snapshot row (homepage BMO card) ---- */
+.bmo-stf{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:13px 22px;border-top:1px solid var(--border2);background:var(--card2)}
+.bmo-stf-k{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--dim)}
+.bmo-stf-v{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.bmo-stf-i{font-family:var(--mono);font-size:11px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.bmo-stf-i .st{font-size:10.5px;padding:2px 8px}

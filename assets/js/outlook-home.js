@@ -64,6 +64,22 @@
     var idir = q("ipc-direction"); if (idir) { idir.textContent = d.direction; idir.style.color = toneColor[t.direction] || "#60a5fa"; }
     txt("ipc-confidence", d.confidenceLabel);
     txt("ipc-condition", d.condition);
+
+    // compact short term snapshot row (quick glance only; full detail on the page)
+    renderShortRow(p);
+  }
+
+  function renderShortRow(p) {
+    var wrap = q("short-wrap"), row = q("short-row");
+    if (!wrap || !row) return;
+    var st = p && p.shortTerm;
+    var frames = st && st.frames ? st.frames.filter(function (f) { return f.available; }) : [];
+    if (!frames.length) { wrap.style.display = "none"; return; }
+    wrap.style.display = "";
+    row.innerHTML = frames.map(function (f) {
+      var cls = toneClass[f.tone] || "st-amber";
+      return '<span class="bmo-stf-i">' + f.short + ' <i class="st ' + cls + '">' + f.direction + "</i></span>";
+    }).join("");
   }
 
   function load() {

@@ -30,8 +30,8 @@ const SAPI = "https://api.binance.com";
 // Candles are the one hard dependency. Binance blocks many cloud IPs (451 at the
 // edge), so we fall back to Bybit then OKX, which are not geo-blocked. Each
 // source returns OHLCV; Bybit and OKX come newest-first and are reversed.
-const BYBIT_IV = { "1h": "60", "4h": "240", "1d": "D" };
-const OKX_IV = { "1h": "1H", "4h": "4H", "1d": "1D" };
+const BYBIT_IV = { "15m": "15", "1h": "60", "4h": "240", "1d": "D" };
+const OKX_IV = { "15m": "15m", "1h": "1H", "4h": "4H", "1d": "1D" };
 
 async function getKlines(symbol, interval, limit) {
   // 1) Binance USD-M futures, then spot
@@ -58,6 +58,14 @@ async function getKlines(symbol, interval, limit) {
     return { closes: asc.map((r) => parseFloat(r[4])), volumes: asc.map((r) => parseFloat(r[5])), src: "okx" };
   }
   return null;
+}
+
+// Fetch just the close series for an arbitrary interval. Reuses the same
+// Binance -> Bybit -> OKX fallback chain as the 24h engine. Returns null on
+// total failure so callers can mark a timeframe unavailable rather than fake it.
+export async function getIntervalCloses(symbol, interval, limit) {
+  const k = await getKlines(symbol, interval, limit);
+  return k && Array.isArray(k.closes) && k.closes.length ? k.closes : null;
 }
 
 async function okxTicker(symbol) {

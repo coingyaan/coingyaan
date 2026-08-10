@@ -3,8 +3,9 @@
 // and cache keys are unchanged. readOutlook: serve fresh, serve stale + refresh
 // in background, or synchronously refresh on cold/very-stale. Never throws.
 
-import { assembleMarket } from "./providers.js";
+import { assembleMarket, getIntervalCloses } from "./providers.js";
 import { computeOutlook } from "./engine.js";
+import { computeShortTerm } from "./shortterm.js";
 import { REFRESH, ASSETS } from "./engine-config.js";
 
 function cfgFor(asset) {
@@ -21,6 +22,27 @@ export async function refreshOutlook(env, asset = "btc") {
   const outlook = computeOutlook(market);
   outlook.asset = asset;
   outlook.providers = status;
+
+  // Short Term Signals (BTC only). Additive: computed on separate intraday
+  // candles and never alters the 24h outlook above. 1h is reused from the 24h
+  // market; only 15m and 4h are fetched. Any failure leaves shortTerm null.
+  if (asset === "btc") {
+    try {
+      const [closes15m, closes4h] = await Promise.all([
+        getIntervalCloses(cfg.symbol, "15m", 150),
+        getIntervalCloses(cfg.symbol, "4h", 150),
+      ]);
+      outlook.shortTerm = computeShortTerm({
+        closes15m,
+        closes1h: market.closes1h,
+        closes4h,
+        price: market.price,
+      });
+    } catch {
+      outlook.shortTerm = null;
+    }
+  }
+
   await env.OUTLOOK_KV.put(cfg.kvKey, JSON.stringify(outlook));
   return { ok: true, outlook, providers: status };
 }

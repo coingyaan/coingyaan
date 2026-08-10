@@ -85,6 +85,38 @@
       var label = p.status === "stale" ? "Delayed" : "Live";
       stamp.innerHTML = '<i class="dot"></i>' + label + " \u00b7 updated " + age(p.ageSeconds);
     }
+
+    renderShort(p);
+  }
+
+  function renderShort(p) {
+    var host = q("p-short");
+    if (!host) return;
+    var st = p && p.shortTerm;
+    if (!st || !st.frames || !st.frames.length) {
+      host.innerHTML = '<div class="ol-empty">Short term signals are not available right now.</div>';
+      return;
+    }
+    var updated = age(p.ageSeconds);
+    host.innerHTML = st.frames.map(function (f) {
+      if (!f.available) {
+        return '<div class="stf-card stf-off">' +
+          '<div class="stf-tf">' + esc(f.label) + '</div>' +
+          '<div class="stf-dir"><i class="st st-muted">Not available</i></div>' +
+          '<div class="stf-int">' + esc(f.interpretation || "") + '</div>' +
+          '</div>';
+      }
+      var cls = toneClass[f.tone] || "st-amber";
+      return '<div class="stf-card">' +
+        '<div class="stf-tf">' + esc(f.label) + '</div>' +
+        '<div class="stf-dir"><i class="st ' + cls + '">' + esc(f.direction) + '</i></div>' +
+        '<div class="stf-prob"><span class="stf-up">Upside ' + f.upside + '%</span><span class="stf-dn">Downside ' + f.downside + '%</span></div>' +
+        '<div class="stf-bar"><i style="width:' + f.upside + '%"></i></div>' +
+        '<div class="stf-conf">Confidence <b>' + esc(f.confidenceLabel) + '</b> (' + f.confidence + ')</div>' +
+        '<div class="stf-int">' + esc(f.interpretation) + '</div>' +
+        '<div class="stf-upd">Updated ' + updated + '</div>' +
+        '</div>';
+    }).join("");
   }
 
   function stampError() {
