@@ -5,7 +5,7 @@
 // (funding, open interest, sentiment) are intentionally excluded because they are
 // not meaningful at intraday resolution. The 24h engine is untouched.
 
-import { rsi, macd, ema, realizedVol, clamp, tanh } from "./indicators.js";
+import { rsi, rsiAt, macd, ema, realizedVol, clamp, tanh } from "./indicators.js";
 import { WEIGHTS, PARAMS } from "./engine-config.js";
 
 // candles per day, used to normalise per-candle volatility to a daily-equivalent
@@ -13,6 +13,8 @@ import { WEIGHTS, PARAMS } from "./engine-config.js";
 const CANDLES_PER_DAY = { "15m": 96, "1h": 24, "4h": 6 };
 const TF_LABEL = { "15m": "15 min", "1h": "1 hour", "4h": "4 hours" };
 const TF_SHORT = { "15m": "15M", "1h": "1H", "4h": "4H" };
+// Grammatical form used inside the interpretation sentence.
+const TF_PHRASE = { "15m": "15 minute", "1h": "1 hour", "4h": "4 hour" };
 
 // Minimum candles needed for EMA50 + MACD(26,9) to be meaningful.
 const MIN_CANDLES = 60;
@@ -26,22 +28,34 @@ function unavailable(tf) {
   };
 }
 
-function buildInterpretation(direction, trendScore, momScore, rsiV) {
-  const t = trendScore == null ? 0 : trendScore;
+// Describe where price sits against its moving averages on this timeframe.
+function trendClause(trendScore) {
+  if (trendScore == null) return "trend structure is unclear";
+  const t = trendScore;
+  if (t > 0.35) return "price is pushing well above its moving averages";
+  if (t > 0.1) return "price is holding above its moving averages";
+  if (t < -0.35) return "price is pressing well below its moving averages";
+  if (t < -0.1) return "price is trading below its moving averages";
+  return "price is hugging its moving averages";
+}
+
+// Describe momentum from the RSI level, the momentum score sign and whether RSI
+// is rising or falling on this timeframe.
+function momentumClause(momScore, rsiV, momUp) {
+  const r = rsiV != null ? " with RSI " + Math.round(rsiV) : "";
+  if (rsiV != null && rsiV >= 70) return "momentum is stretched" + r;
+  if (rsiV != null && rsiV <= 30) return "momentum is oversold" + r;
   const m = momScore == null ? 0 : momScore;
-  const rsiTxt = rsiV != null ? " RSI " + Math.round(rsiV) + "." : "";
-  if (direction === "Bullish") {
-    if (rsiV != null && rsiV > 70) return "Price leads its short term averages but momentum is stretched." + rsiTxt;
-    if (m > 0.1) return "Price is holding above its short term averages and momentum is firming." + rsiTxt;
-    return "Price sits above its short term averages though momentum is only mild." + rsiTxt;
-  }
-  if (direction === "Bearish") {
-    if (rsiV != null && rsiV < 30) return "Price trades below its short term averages but selling looks stretched." + rsiTxt;
-    if (m < -0.1) return "Price is trading below its short term averages and momentum is soft." + rsiTxt;
-    return "Price sits below its short term averages with momentum only mildly negative." + rsiTxt;
-  }
-  if (Math.abs(t) < 0.1 && Math.abs(m) < 0.1) return "Trend and momentum are flat with no clear edge on this timeframe." + rsiTxt;
-  return "Trend and momentum disagree so the short term read is mixed." + rsiTxt;
+  if (m > 0.1) return (momUp ? "momentum is firming" : "momentum is positive but easing") + r;
+  if (m < -0.1) return (momUp ? "momentum is soft but stabilising" : "momentum is fading") + r;
+  return (momUp ? "momentum is flat and ticking up" : "momentum is flat") + r;
+}
+
+// Compose one timeframe-specific sentence from that frame's own signals. Because
+// trendClause and momentumClause are driven by this frame's trend score, RSI
+// level and RSI slope, the sentence differs whenever the underlying numbers do.
+function buildInterpretation(label, trendScore, momScore, rsiV, momUp) {
+  return "On the " + label + " timeframe " + trendClause(trendScore) + " and " + momentumClause(momScore, rsiV, momUp) + ".";
 }
 
 // Score one timeframe from its own closes. Returns null when data is insufficient.
@@ -62,6 +76,7 @@ function frameScore(closes, price, interval) {
 
   // ---- momentum: RSI + MACD (same blend as the 24h engine) ----
   const rsiV = rsi(closes, PARAMS.rsiPeriod);
+  const rsiPrev = rsiAt(closes, PARAMS.rsiPeriod, PARAMS.rsiLookback);
   const macdV = macd(closes, PARAMS.macdFast, PARAMS.macdSlow, PARAMS.macdSignal);
   let momScore = null;
   if (rsiV != null) {
@@ -70,6 +85,10 @@ function frameScore(closes, price, interval) {
     if (macdV) mScore = clamp(tanh((macdV.hist / (PARAMS.macdScale * last)) || 0));
     momScore = clamp(rScore * PARAMS.momentumRsiWeight + mScore * PARAMS.momentumMacdWeight);
   }
+  // Is momentum rising on THIS timeframe? RSI slope or MACD histogram slope.
+  const rsiUp = rsiPrev != null && rsiV != null && rsiV > rsiPrev;
+  const macdUp = macdV && macdV.prevHist != null && macdV.hist > macdV.prevHist;
+  const momUp = rsiUp || macdUp;
 
   if (trendScore == null && momScore == null) return null;
 
@@ -111,7 +130,7 @@ function frameScore(closes, price, interval) {
     upside, downside,
     confidence: confidencePct, confidenceLabel,
     rsi: rsiV != null ? +rsiV.toFixed(1) : null,
-    interpretation: buildInterpretation(direction, trendScore, momScore, rsiV),
+    interpretation: buildInterpretation(TF_PHRASE[interval], trendScore, momScore, rsiV, momUp),
   };
 }
 

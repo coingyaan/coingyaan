@@ -650,6 +650,7 @@ main.page h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.
 .stf-conf{font-family:var(--mono);font-size:11px;color:var(--muted)} .stf-conf b{color:var(--text)}
 .stf-int{font-size:13px;line-height:1.5;color:var(--muted)}
 .stf-upd{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--dimmer);margin-top:auto}
+.ol-short .bmo-disc{display:block;margin-top:22px}
 @media(max-width:760px){.ol-short .stf-grid{grid-template-columns:1fr}}
 
 /* ---- Short Term snapshot row (homepage BMO card) ---- */

@@ -112,7 +112,7 @@
         '<div class="stf-dir"><i class="st ' + cls + '">' + esc(f.direction) + '</i></div>' +
         '<div class="stf-prob"><span class="stf-up">Upside ' + f.upside + '%</span><span class="stf-dn">Downside ' + f.downside + '%</span></div>' +
         '<div class="stf-bar"><i style="width:' + f.upside + '%"></i></div>' +
-        '<div class="stf-conf">Confidence <b>' + esc(f.confidenceLabel) + '</b> (' + f.confidence + ')</div>' +
+        '<div class="stf-conf">Confidence: <b>' + esc(f.confidenceLabel) + '</b> \u00b7 ' + f.confidence + '/100</div>' +
         '<div class="stf-int">' + esc(f.interpretation) + '</div>' +
         '<div class="stf-upd">Updated ' + updated + '</div>' +
         '</div>';
