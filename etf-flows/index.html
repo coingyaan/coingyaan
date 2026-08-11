@@ -127,13 +127,124 @@
 <main class="wrap page">
   <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/intelligence/">Intelligence</a><span>/</span><span>ETF Flows</span></nav>
   <span class="page-eyebrow">Intelligence</span>
-  <h1>ETF Flows</h1>
-  <p class="page-lead">Follow institutional capital moving into and out of spot Bitcoin ETFs.</p>
-  <div class="page-note"><span class="page-badge">In progress</span><p>This CoinGyaan intelligence product is being built as part of the Version 2 rollout. It is set to noindex until the content is complete, so search engines only see it once it is ready.</p></div>
-  <div class="page-explore"><h2>Explore Intelligence</h2><div class="page-links"><a href="/bitcoin-outlook/">Bitcoin Outlook</a><a href="/fear-greed-index/">Fear & Greed Index</a><a href="/funding-rate/">Funding Rate</a><a href="/open-interest/">Open Interest</a><a href="/intelligence/">Intelligence</a></div></div>
-  <section class="ol-sec" style="text-align:center;padding-top:8px">
-    <a class="btn btn-ghost btn-lg" href="/news/tag/bitcoin-etf/">Read the latest Bitcoin ETF news &#8594;</a>
+  <h1>Bitcoin ETF Flows</h1>
+  <p class="page-lead">Institutional Bitcoin ETF flow intelligence. What US spot Bitcoin ETFs are doing with capital, and what that suggests about market conditions.</p>
+
+  <div class="etf-empty" data-cg="empty" hidden></div>
+  <div data-cg="product">
+
+  <section class="etf-head" aria-label="ETF flow headline metrics">
+    <div class="etf-stamp" data-cg="stamp"><i class="dot"></i>--</div>
+    <div class="etf-head-grid">
+      <div class="etf-hero">
+        <div class="etf-hero-k">Latest net flow</div>
+        <div class="etf-hero-v" data-cg="m-latest">--</div>
+        <div class="etf-hero-sub">as of <span data-cg="m-latest-date">--</span></div>
+      </div>
+      <div class="etf-metrics">
+        <div class="etf-m"><span>1D</span><b data-cg="m-1d">--</b></div>
+        <div class="etf-m"><span>5D</span><b data-cg="m-5d">--</b></div>
+        <div class="etf-m"><span>20D</span><b data-cg="m-20d">--</b></div>
+        <div class="etf-m"><span>90D</span><b data-cg="m-90d">--</b></div>
+        <div class="etf-m"><span>Cumulative net inflow</span><b data-cg="m-cum">--</b></div>
+        <div class="etf-m"><span>Total net assets</span><b data-cg="m-aum">--</b></div>
+      </div>
+    </div>
   </section>
+
+  <section class="ol-sec">
+    <h2>Institutional demand</h2>
+    <div class="etf-summary-head"><span class="st" data-cg="s-headline">--</span></div>
+    <ul class="etf-obs" data-cg="s-obs"></ul>
+  </section>
+
+  <section class="ol-sec etf-signal">
+    <h2>ETF Flow Signal</h2>
+    <div class="etf-signal-row"><span class="st st-lg" data-cg="sig-state">--</span><span class="etf-signal-score">Blended score <b data-cg="sig-score">--</b> $m</span></div>
+    <div class="etf-break" data-cg="sig-break"></div>
+    <p class="etf-note">This signal reads ETF positioning only. It is one input into the Bitcoin Outlook and does not replace it.</p>
+  </section>
+
+  <section class="ol-sec">
+    <h2>Daily US spot Bitcoin ETF net flows</h2>
+    <div class="etf-range" data-cg="range-daily"><button data-range="7">7D</button><button data-range="30" class="on">30D</button><button data-range="90">90D</button><button data-range="260">1Y</button><button data-range="all">Max</button></div>
+    <div class="etf-chart" data-cg="chart-daily"></div>
+    <p class="etf-note">Green is net inflow, red is net outflow. Max shows the most recent available window, not the full since launch history.</p>
+  </section>
+
+  <section class="ol-sec">
+    <h2>Cumulative US spot Bitcoin ETF net flows</h2>
+    <div class="etf-range" data-cg="range-cum"><button data-range="30">30D</button><button data-range="90" class="on">90D</button><button data-range="260">1Y</button><button data-range="all">Max</button></div>
+    <div class="etf-chart" data-cg="chart-cum"></div>
+    <p class="etf-note">Each point is the true cumulative net inflow since launch. The headline cumulative figure above is exact even when the chart window is shorter.</p>
+  </section>
+
+  <section class="ol-sec">
+    <h2>ETF flows vs Bitcoin price</h2>
+    <div class="etf-range" data-cg="range-cmp"><button data-range="30">30D</button><button data-range="90" class="on">90D</button><button data-range="260">1Y</button><button data-range="all">Max</button></div>
+    <div class="etf-chart" data-cg="chart-cmp"></div>
+    <p class="etf-note">Price sits above, daily flows below. Shown together for context. This is correlation, not causation.</p>
+  </section>
+
+  <section class="ol-sec">
+    <h2>ETF leaderboard</h2>
+    <div class="etf-table-wrap"><table class="etf-table"><thead><tr><th>ETF</th><th>Ticker</th><th class="r">AUM</th><th class="r">1D flow</th><th class="r">Cumulative</th></tr></thead><tbody data-cg="lb-body"></tbody></table></div>
+    <p class="etf-note">Per fund 5D and 20D flows are deferred until per fund history is wired. They are not approximated here.</p>
+  </section>
+
+  <section class="ol-sec">
+    <h2>Flow concentration</h2>
+    <p class="etf-lead2" data-cg="conc-lead">--</p>
+    <div class="etf-bars" data-cg="conc-bars"></div>
+    <p class="etf-note" data-cg="conc-note"></p>
+  </section>
+
+  <section class="ol-sec">
+    <h2>Current period vs previous period</h2>
+    <div class="etf-compare" data-cg="compare"></div>
+  </section>
+
+  <section class="ol-sec etf-connect">
+    <h2>ETF flows in Bitcoin Intelligence</h2>
+    <p>ETF flows are one of the signals CoinGyaan uses to assess Bitcoin market conditions. The ETF signal contributes 12 percent to the broader Bitcoin Intelligence model and is read alongside trend, momentum, funding, open interest and Fear and Greed. It does not independently determine the Bitcoin Outlook.</p>
+    <pre class="etf-formula">etfNet = 5D average daily aggregate net inflow / 1,000,000
+etfScore = tanh(etfNet / 300)
+contribution = etfScore x 0.12</pre>
+    <div class="page-links"><a href="/bitcoin-outlook/">Bitcoin Outlook</a><a href="/funding-rate/">Funding Rate</a><a href="/open-interest/">Open Interest</a><a href="/fear-greed-index/">Fear &amp; Greed</a></div>
+  </section>
+
+  <section class="ol-sec etf-source">
+    <h2>Data source</h2>
+    <div class="etf-src" data-cg="src"></div>
+    <p class="etf-note">ETF flow data may be delayed depending on the underlying source. Figures are net flows in US dollars.</p>
+  </section>
+
+  <section class="ol-sec etf-method">
+    <h2>Methodology</h2>
+    <h3>What ETF flows measure</h3>
+    <p>Net capital entering or leaving the tracked US spot Bitcoin ETF products, in US dollars.</p>
+    <h3>How aggregate flow is calculated</h3>
+    <p>The daily aggregate net flow, total net assets and cumulative net inflow come directly from the provider's aggregate series for US spot Bitcoin ETFs. No values are estimated.</p>
+    <h3>How flow momentum is calculated</h3>
+    <p>The average daily net flow over the most recent 5 trading days compared with the prior 5 trading days. A difference beyond 40 million dollars reads Accelerating or Decelerating, otherwise Stable.</p>
+    <h3>How flow concentration is calculated</h3>
+    <p>Each fund's share of total ETF assets under management, which is always well defined between 0 and 100 percent. Cumulative flow share is deliberately avoided because funds with large lifetime outflows can distort it.</p>
+    <h3>How the ETF Flow Signal is calculated</h3>
+    <p>A blended score in millions of dollars: 50 percent the 5 day average daily net flow, 30 percent the 20 day average, 20 percent the flow momentum. Bands are at or above 250 Strongly Bullish, at or above 60 Bullish, at or below minus 60 Bearish, at or below minus 250 Strongly Bearish, otherwise Neutral.</p>
+    <h3>How ETF flows contribute to Bitcoin Intelligence</h3>
+    <p>etfNet is the 5 day average daily aggregate net inflow divided by 1,000,000. The engine applies etfScore = tanh(etfNet / 300) at a fixed 0.12 weight. The 5 day smoothing prevents a single unusual flow day from dominating the 24 hour outlook.</p>
+    <h3>Limitations</h3>
+    <ul>
+      <li>ETF flows do not equal all institutional Bitcoin activity.</li>
+      <li>ETF data can be delayed.</li>
+      <li>ETF flows do not guarantee Bitcoin price direction.</li>
+      <li>Different providers can have methodology differences.</li>
+      <li>Flow data should be read alongside broader market indicators.</li>
+    </ul>
+  </section>
+
+  </div>
+  <script src="/assets/js/etf-page.js"></script>
 </main>
 <div id="site-footer"></div>
 <script src="/assets/js/nav.js"></script>

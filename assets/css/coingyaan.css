@@ -659,3 +659,67 @@ main.page h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.
 .bmo-stf-v{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .bmo-stf-i{font-family:var(--mono);font-size:11px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
 .bmo-stf-i .st{font-size:10.5px;padding:2px 8px}
+
+/* ================= ETF Flows product ================= */
+.etf-empty{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;color:var(--muted);text-align:center;margin:18px 0}
+.etf-head{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin:16px 0 8px;position:relative}
+.etf-stamp{font-family:var(--mono);font-size:11px;color:var(--dim);display:flex;align-items:center;gap:7px;margin-bottom:14px}
+.etf-stamp .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block}
+.etf-head-grid{display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:22px;align-items:center}
+.etf-hero-k{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.etf-hero-v{font-size:40px;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:4px 0}
+.etf-hero-sub{font-family:var(--mono);font-size:11px;color:var(--dimmer)}
+.etf-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.etf-m{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:11px 13px}
+.etf-m span{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+.etf-m b{font-size:16px;font-weight:700}
+.etf-summary-head{margin-bottom:10px}
+.etf-obs{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px}
+.etf-obs li{font-size:14px;color:var(--muted);line-height:1.5;padding-left:16px;position:relative}
+.etf-obs li:before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.st-lg{font-size:15px;padding:6px 15px}
+.etf-signal-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.etf-signal-score{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.etf-break{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;max-width:420px}
+.etf-break-r{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;font-family:var(--mono);font-size:12px;padding:3px 0}
+.etf-break-r span{color:var(--muted)} .etf-break-r em{color:var(--dim);font-style:normal;font-size:11px}
+.etf-break-eq{border-top:1px solid var(--border2);margin-top:7px;padding-top:7px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.etf-range{display:flex;gap:6px;margin:2px 0 12px;flex-wrap:wrap}
+.etf-range button{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--dim);background:var(--card2);border:1px solid var(--border2);border-radius:7px;padding:5px 11px;cursor:pointer}
+.etf-range button.on{color:var(--ink,#0b1120);background:var(--gold);border-color:var(--gold)}
+.etf-chart{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px}
+.etf-chart svg{width:100%;height:auto;display:block}
+.etf-na{color:var(--dim);font-family:var(--mono);font-size:12px;padding:28px 8px;text-align:center}
+.etf-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px}
+.etf-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.etf-table th,.etf-table td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border2);white-space:nowrap}
+.etf-table th{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);background:var(--card2)}
+.etf-table td.r,.etf-table th.r{text-align:right;font-family:var(--mono)}
+.etf-table td.mono{font-family:var(--mono);color:var(--muted)}
+.etf-table tr:last-child td{border-bottom:none}
+.etf-lead2{font-size:15px;color:var(--text);margin-bottom:12px}
+.etf-bars{display:flex;flex-direction:column;gap:8px;max-width:560px}
+.etf-bar{display:grid;grid-template-columns:52px 1fr 52px;gap:10px;align-items:center}
+.etf-bar-k{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--muted)}
+.etf-bar-t{height:10px;background:var(--card2);border-radius:6px;overflow:hidden}
+.etf-bar-t i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:6px}
+.etf-bar-v{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:right}
+.etf-compare{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:560px}
+.etf-cmp-cell{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:13px 15px}
+.etf-cmp-cell span{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+.etf-cmp-cell b{font-size:19px;font-weight:800}
+.etf-formula{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:13px 15px;font-family:var(--mono);font-size:12.5px;color:var(--muted);white-space:pre-wrap;line-height:1.7;margin:12px 0}
+.etf-src{display:flex;flex-direction:column;gap:1px;max-width:560px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.etf-src-r{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;background:var(--card);border-bottom:1px solid var(--border2);font-size:13px}
+.etf-src-r:last-child{border-bottom:none}
+.etf-src-r span{color:var(--dim);font-family:var(--mono);font-size:11px}
+.etf-method h3{font-size:14.5px;font-weight:700;margin:16px 0 5px}
+.etf-method p{font-size:13.5px;color:var(--muted);line-height:1.65;margin:0}
+.etf-method ul{margin:6px 0 0;padding-left:18px;color:var(--muted);font-size:13.5px;line-height:1.7}
+.etf-note{font-size:12px;color:var(--dim);line-height:1.55;margin-top:10px;max-width:720px}
+@media(max-width:760px){
+  .etf-head-grid{grid-template-columns:1fr;gap:16px}
+  .etf-hero-v{font-size:32px}
+  .etf-metrics{grid-template-columns:repeat(2,1fr)}
+  .etf-compare{grid-template-columns:1fr}
+}

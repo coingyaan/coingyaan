@@ -6,6 +6,7 @@
 import { assembleMarket, getIntervalCloses } from "./providers.js";
 import { computeOutlook } from "./engine.js";
 import { computeShortTerm } from "./shortterm.js";
+import { readEtfNet } from "./etf-cache.js";
 import { REFRESH, ASSETS } from "./engine-config.js";
 
 function cfgFor(asset) {
@@ -19,6 +20,15 @@ export async function refreshOutlook(env, asset = "btc") {
   if (!market.price || !Array.isArray(market.closes1h) || market.closes1h.length < 60) {
     return { ok: false, reason: "insufficient market data", providers: status };
   }
+
+  // Additive: supply the real ETF signal (BTC only) into the slot the engine
+  // already has. etfNet is the 5 day average daily aggregate net inflow in $m,
+  // computed by the ETF module. If unavailable it stays null and the engine
+  // redistributes weight exactly as before. Weights and etfScale are unchanged.
+  if (asset === "btc") {
+    try { const v = await readEtfNet(env); if (typeof v === "number") market.etfNet = v; } catch { /* leave null */ }
+  }
+
   const outlook = computeOutlook(market);
   outlook.asset = asset;
   outlook.providers = status;

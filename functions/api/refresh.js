@@ -8,6 +8,7 @@ import { refreshOpenInterest } from "../_lib/oi-cache.js";
 import { refreshAltcoins } from "../_lib/altcoins-cache.js";
 import { refreshStablecoins } from "../_lib/stablecoins-cache.js";
 import { refreshEthMetrics } from "../_lib/eth-metrics-cache.js";
+import { refreshETF } from "../_lib/etf-cache.js";
 
 export async function onRequest(context) {
   const { env, request } = context;
@@ -18,7 +19,7 @@ export async function onRequest(context) {
     return json({ ok: false, error: "unauthorized" }, 401);
   }
   // Refresh each engine independently so one failing does not block the others.
-  const [outlook, ethOutlook, solOutlook, fng, markets, funding, oi, altcoins, stablecoins, ethMetrics] = await Promise.allSettled([
+  const [outlook, ethOutlook, solOutlook, fng, markets, funding, oi, altcoins, stablecoins, ethMetrics, etf] = await Promise.allSettled([
     refreshOutlook(env),
     refreshOutlook(env, "eth"),
     refreshOutlook(env, "sol"),
@@ -29,9 +30,10 @@ export async function onRequest(context) {
     refreshAltcoins(env),
     refreshStablecoins(env),
     refreshEthMetrics(env),
+    refreshETF(env),
   ]);
   const unwrap = (r) => (r.status === "fulfilled" ? r.value : { ok: false, error: String(r.reason) });
-  const body = { ok: true, outlook: unwrap(outlook), ethOutlook: unwrap(ethOutlook), solOutlook: unwrap(solOutlook), fng: unwrap(fng), markets: unwrap(markets), funding: unwrap(funding), oi: unwrap(oi), altcoins: unwrap(altcoins), stablecoins: unwrap(stablecoins), ethMetrics: unwrap(ethMetrics) };
+  const body = { ok: true, outlook: unwrap(outlook), ethOutlook: unwrap(ethOutlook), solOutlook: unwrap(solOutlook), fng: unwrap(fng), markets: unwrap(markets), funding: unwrap(funding), oi: unwrap(oi), altcoins: unwrap(altcoins), stablecoins: unwrap(stablecoins), ethMetrics: unwrap(ethMetrics), etf: unwrap(etf) };
   // Always 200 so the diagnostic body is visible; cron treats any 2xx as success.
   return json(body, 200);
 }
