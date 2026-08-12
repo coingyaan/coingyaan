@@ -168,6 +168,30 @@
     <p class="bmo-disc" style="margin-top:18px">Probability estimates only. Not future guarantees and not financial advice.</p>
   </section>
 
+  <section class="ol-sec ol-move" aria-label="Bitcoin 7 day movement">
+    <div class="mv-head">
+      <div class="mv-title">
+        <h2>Bitcoin 7 day movement</h2>
+        <p class="ol-sub">Daily reference at 06:00 UTC. This is what Bitcoin actually did over the last 7 days, observed independently across two sources. It is historical context, not a prediction.</p>
+      </div>
+      <div class="mv-metrics">
+        <div class="mv-m"><span>7D change</span><b data-cg="mv-chg">--</b></div>
+        <div class="mv-m"><span>7D high</span><b data-cg="mv-high">--</b></div>
+        <div class="mv-m"><span>7D low</span><b data-cg="mv-low">--</b></div>
+      </div>
+    </div>
+    <div class="mv-legend">
+      <span class="mv-lg mv-lg-cg"><i></i>CoinGyaan reference <b data-cg="mv-cg-chg"></b></span>
+      <span class="mv-lg mv-lg-hl"><i></i>Hyperliquid reference <b data-cg="mv-hl-chg"></b></span>
+    </div>
+    <div class="mv-chart-wrap">
+      <div class="mv-chart" data-cg="mv-chart"></div>
+      <div class="mv-tip" data-cg="mv-tip" hidden></div>
+    </div>
+    <div class="mv-empty" data-cg="mv-empty" hidden></div>
+    <p class="mv-foot">7D high is the highest BTC price during the 7 day period and 7D low is the lowest, both from the CoinGyaan primary source. The two lines are independent observations of price, not forecasts. Hyperliquid figures come from its BTC perpetual market.</p>
+  </section>
+
   <section class="ol-sec">
     <h2>The signals behind today's outlook</h2>
     <p class="ol-sub">Each signal is scored from strongly bearish to strongly bullish then weighted into one number. When a signal is missing its weight is shared across the signals we do have, so the outlook stays honest on a thin data day.</p>
@@ -220,5 +244,6 @@
 <script src="/assets/js/nav.js"></script>
 <script src="/assets/js/footer.js"></script>
 <script defer src="/assets/js/outlook-page.js"></script>
+<script defer src="/assets/js/movement-page.js"></script>
 </body>
 </html>

@@ -723,3 +723,35 @@ main.page h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.
   .etf-metrics{grid-template-columns:repeat(2,1fr)}
   .etf-compare{grid-template-columns:1fr}
 }
+
+/* ============ Bitcoin 7 day movement (outlook page) ============ */
+.ol-move .mv-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap}
+.mv-title{flex:1 1 320px;min-width:280px}
+.mv-metrics{display:flex;gap:10px;flex-wrap:wrap}
+.mv-m{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:9px 13px;min-width:88px}
+.mv-m span{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.mv-m b{font-size:16px;font-weight:700}
+.mv-legend{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0 8px}
+.mv-lg{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+.mv-lg i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.mv-lg b{font-family:var(--mono);font-size:12px}
+.mv-lg-cg i{background:var(--gold)}
+.mv-lg-hl i{background:#60a5fa;height:0;border-top:2px dashed #60a5fa}
+.mv-chart-wrap{position:relative;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px 8px 2px;margin-top:4px}
+.mv-chart svg{display:block;width:100%;height:auto}
+.mv-tip{position:absolute;top:10px;pointer-events:none;background:rgba(15,23,42,.97);border:1px solid var(--border);border-radius:9px;padding:9px 11px;min-width:172px;box-shadow:0 8px 24px rgba(0,0,0,.35);z-index:5}
+.mv-tip-date{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;border-bottom:1px solid var(--border2);padding-bottom:5px}
+.mv-tip-row{display:flex;justify-content:space-between;gap:14px;font-size:12.5px;padding:2px 0;font-family:var(--mono)}
+.mv-tip-row span:first-child{color:var(--muted)}
+.mv-tip-row span:last-child{color:var(--text);font-weight:600}
+.mv-k{display:inline-flex;align-items:center;gap:6px}
+.mv-k:before{content:"";width:9px;height:3px;border-radius:2px;display:inline-block}
+.mv-k-cg:before{background:var(--gold)}
+.mv-k-hl:before{background:#60a5fa}
+.mv-foot{font-size:12px;color:var(--dim);line-height:1.55;margin-top:12px;max-width:760px}
+.mv-empty{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;color:var(--muted);text-align:center;margin-top:6px}
+@media(max-width:640px){
+  .ol-move .mv-head{flex-direction:column;gap:12px}
+  .mv-metrics{width:100%}
+  .mv-m{flex:1 1 0;min-width:0}
+}
