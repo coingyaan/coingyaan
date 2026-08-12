@@ -142,11 +142,35 @@ export function buildMovement(primary, hyper, now = Date.now()) {
   const cgHas = points.some((p) => p.cg != null);
   const hlHas = points.some((p) => p.hl != null);
 
+  // Continuous hourly series across the full 7 day window. The primary source is
+  // the x spine; each point is that hour's OPEN price (a real observed value, no
+  // interpolation). Hyperliquid is matched on the exact hour, else null (gap).
+  // The 06:00 UTC references are the subset flagged ref:true, so they sit exactly
+  // on the line. windowStart is the oldest daily reference (t0 - 7 days).
+  const windowStart = t0 - 7 * 24 * 3600 * 1000;
+  const hlByTs = new Map();
+  (hlRows || []).forEach((r) => { hlByTs.set(r.t, r.o); });
+  const refTs = new Set(stamps);
+  const series = cgRows
+    .filter((r) => r.t >= windowStart && r.t <= now)
+    .map((r) => {
+      const hlv = hlByTs.has(r.t) ? hlByTs.get(r.t) : null;
+      return {
+        t: r.t,
+        cg: round1(r.o),
+        hl: hlv == null ? null : round1(hlv),
+        ref: refTs.has(r.t),
+      };
+    });
+
   return {
     available: cgHas,
     referenceHourUTC: CFG.refHourUTC,
     windowDays: 7,
+    windowStart,
+    windowEnd: now,
     points,
+    series,
     cg7dChangePct,
     hl7dChangePct,
     high7d: hl.high,
