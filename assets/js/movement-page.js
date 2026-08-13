@@ -2,16 +2,19 @@
    Historical, descriptive. Continuous hourly BTC price across the full 7 day
    window from two independent sources: CoinGyaan reference (dominant, gold, area
    fill) and Hyperliquid reference (secondary, blue). The standardized 06:00 UTC
-   daily references are marked on the line. Interactive crosshair on hover and tap.
-   Never a prediction. Independent of the outlook. No interpolated or fake data. */
+   daily references are marked on the line. Lines are smoothed with monotone cubic
+   interpolation, which passes through every real point and never overshoots, so
+   no movement is invented. Interactive crosshair on hover and tap. Never a
+   prediction. Independent of the outlook. No interpolated or fake data. */
 (function () {
   "use strict";
   var API = "/api/btc-7d";
-  var CG = "#f59e0b", HL = "#60a5fa", GREEN = "#16c784", RED = "#ea3943", MUTE = "#94a3b8", GRID = "rgba(148,163,184,.14)", REF = "rgba(245,158,11,.28)";
+  var CG = "#f59e0b", HL = "#60a5fa", GREEN = "#16c784", RED = "#ea3943", MUTE = "#94a3b8", GRID = "rgba(148,163,184,.12)", REF = "rgba(245,158,11,.26)";
   var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   var state = null;
 
   function q(sel) { return document.querySelector('[data-cg="' + sel + '"]'); }
+  function f1(n) { return (Math.round(n * 10) / 10).toString(); }
   function fmtUsd(n, dp) { return n == null ? "n/a" : "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: dp || 0, maximumFractionDigits: dp || 0 }); }
   function fmtPct(n) { return n == null ? "n/a" : (n >= 0 ? "+" : "") + n.toFixed(2) + "%"; }
   function fmtDiff(n) { return n == null ? "n/a" : (n >= 0 ? "+$" : "-$") + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 }); }
@@ -20,7 +23,10 @@
 
   function boot() {
     fetch(API).then(function (r) { return r.json(); }).then(function (p) {
-      if (!p || p.available === false || !p.series || p.series.length < 2) return empty();
+      if (!p || p.available === false) return empty();
+      var series = (p.series && p.series.length >= 2) ? p.series : pointsToSeries(p.points);
+      if (!series || series.length < 2) return empty();
+      p.series = series;
       fill(p);
       var refPct = {};
       (p.points || []).forEach(function (pt) { if (pt.cgPctFromPrev != null) refPct[pt.ts] = pt.cgPctFromPrev; });
@@ -28,6 +34,12 @@
       draw();
       window.addEventListener("resize", debounce(draw, 150));
     }).catch(empty);
+  }
+
+  function pointsToSeries(points) {
+    if (!points) return null;
+    var out = points.filter(function (pt) { return pt.cg != null; }).map(function (pt) { return { t: pt.ts, cg: pt.cg, hl: pt.hl, ref: true }; });
+    return out.length >= 2 ? out : null;
   }
 
   function empty() {
@@ -47,6 +59,45 @@
 
   function debounce(fn, ms) { var t; return function () { clearTimeout(t); t = setTimeout(fn, ms); }; }
 
+  // ---- monotone cubic (Fritsch-Carlson): smooth path through real points, no overshoot ----
+  function tangents(pts) {
+    var n = pts.length, dx = [], slope = [], m = [];
+    for (var i = 0; i < n - 1; i++) { dx[i] = pts[i + 1].x - pts[i].x; slope[i] = (pts[i + 1].y - pts[i].y) / dx[i]; }
+    m[0] = slope[0]; m[n - 1] = slope[n - 2];
+    for (var i = 1; i < n - 1; i++) { m[i] = (slope[i - 1] * slope[i] <= 0) ? 0 : (slope[i - 1] + slope[i]) / 2; }
+    for (var i = 0; i < n - 1; i++) {
+      if (slope[i] === 0) { m[i] = 0; m[i + 1] = 0; continue; }
+      var a = m[i] / slope[i], b = m[i + 1] / slope[i], h = a * a + b * b;
+      if (h > 9) { var tt = 3 / Math.sqrt(h); m[i] = tt * a * slope[i]; m[i + 1] = tt * b * slope[i]; }
+    }
+    return m;
+  }
+  function curveCs(pts) {
+    if (pts.length < 2) return "";
+    var m = tangents(pts), s = "";
+    for (var i = 0; i < pts.length - 1; i++) {
+      var d = pts[i + 1].x - pts[i].x;
+      s += " C" + f1(pts[i].x + d / 3) + " " + f1(pts[i].y + m[i] * d / 3) + " " + f1(pts[i + 1].x - d / 3) + " " + f1(pts[i + 1].y - m[i + 1] * d / 3) + " " + f1(pts[i + 1].x) + " " + f1(pts[i + 1].y);
+    }
+    return s;
+  }
+  function segsOf(s, key, xOf, yOf) {
+    var segs = [], cur = [];
+    for (var i = 0; i < s.length; i++) {
+      if (s[i][key] == null) { if (cur.length) { segs.push(cur); cur = []; } }
+      else cur.push({ x: xOf(i), y: yOf(s[i][key]) });
+    }
+    if (cur.length) segs.push(cur);
+    return segs;
+  }
+  function linePath(segs) { return segs.map(function (pts) { return pts.length < 2 ? "" : "M" + f1(pts[0].x) + " " + f1(pts[0].y) + curveCs(pts); }).join(" "); }
+  function areaPath(segs, baseY) {
+    return segs.map(function (pts) {
+      if (pts.length < 2) return "";
+      return "M" + f1(pts[0].x) + " " + f1(baseY) + " L" + f1(pts[0].x) + " " + f1(pts[0].y) + curveCs(pts) + " L" + f1(pts[pts.length - 1].x) + " " + f1(baseY) + " Z";
+    }).join(" ");
+  }
+
   function draw() {
     if (!state) return;
     var host = q("mv-chart"); if (!host) return;
@@ -55,7 +106,7 @@
     var mobile = W < 560;
     var H = mobile ? 260 : 330;
     var padL = 54, padR = 14, padT = 16, padB = 30;
-    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var plotW = W - padL - padR, plotH = H - padT - padB, baseY = padT + plotH;
 
     var vals = [];
     for (var k = 0; k < n; k++) { if (s[k].cg != null) vals.push(s[k].cg); if (s[k].hl != null) vals.push(s[k].hl); }
@@ -75,7 +126,7 @@
     var refIdx = [];
     for (var r = 0; r < n; r++) if (s[r].ref) refIdx.push(r);
     var ticks = refIdx.map(function (i) {
-      return '<line x1="' + xOf(i).toFixed(1) + '" y1="' + padT + '" x2="' + xOf(i).toFixed(1) + '" y2="' + (padT + plotH) + '" stroke="' + REF + '" stroke-width="1" stroke-dasharray="2 4"/>';
+      return '<line x1="' + xOf(i).toFixed(1) + '" y1="' + padT + '" x2="' + xOf(i).toFixed(1) + '" y2="' + baseY + '" stroke="' + REF + '" stroke-width="1" stroke-dasharray="2 4"/>';
     }).join("");
     var labelPick = refIdx.length <= 4 ? refIdx : [refIdx[0], refIdx[Math.floor(refIdx.length / 2)], refIdx[refIdx.length - 1]];
     var xl = labelPick.map(function (i) {
@@ -84,20 +135,19 @@
       return '<text x="' + xOf(i).toFixed(1) + '" y="' + (H - 10) + '" text-anchor="' + anchor + '" fill="' + MUTE + '" font-size="10">' + String(d.getUTCDate()).padStart(2, "0") + " " + MONTHS[d.getUTCMonth()] + '</text>';
     }).join("");
 
-    var cgPath = pathFor(s, "cg", xOf, yOf);
-    var hlPath = pathFor(s, "hl", xOf, yOf);
-    var area = areaFor(s, "cg", xOf, yOf, padT + plotH);
+    var cgSegs = segsOf(s, "cg", xOf, yOf), hlSegs = segsOf(s, "hl", xOf, yOf);
+    var cgPath = linePath(cgSegs), hlPath = linePath(hlSegs), area = areaPath(cgSegs, baseY);
     var refDots = refIdx.map(function (i) {
-      return s[i].cg == null ? "" : '<circle cx="' + xOf(i).toFixed(1) + '" cy="' + yOf(s[i].cg).toFixed(1) + '" r="3" fill="' + CG + '" stroke="#0b1120" stroke-width="1"/>';
+      return s[i].cg == null ? "" : '<circle cx="' + xOf(i).toFixed(1) + '" cy="' + yOf(s[i].cg).toFixed(1) + '" r="2.8" fill="' + CG + '" stroke="#0b1120" stroke-width="1"/>';
     }).join("");
 
     host.innerHTML =
       '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="' + H + '" role="img" aria-label="Bitcoin 7 day price movement, hourly">' +
       '<defs><linearGradient id="mvfill" x1="0" y1="0" x2="0" y2="1">' +
-      '<stop offset="0%" stop-color="' + CG + '" stop-opacity="0.20"/><stop offset="100%" stop-color="' + CG + '" stop-opacity="0"/></linearGradient></defs>' +
+      '<stop offset="0%" stop-color="' + CG + '" stop-opacity="0.18"/><stop offset="100%" stop-color="' + CG + '" stop-opacity="0"/></linearGradient></defs>' +
       grid + ticks + xl +
       (area ? '<path d="' + area + '" fill="url(#mvfill)"/>' : '') +
-      (hlPath ? '<path d="' + hlPath + '" fill="none" stroke="' + HL + '" stroke-width="1.4" opacity="0.72" stroke-linejoin="round" stroke-linecap="round"/>' : '') +
+      (hlPath ? '<path d="' + hlPath + '" fill="none" stroke="' + HL + '" stroke-width="1.5" opacity="0.7" stroke-linejoin="round" stroke-linecap="round"/>' : '') +
       (cgPath ? '<path d="' + cgPath + '" fill="none" stroke="' + CG + '" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>' : '') +
       refDots +
       '<g data-cg="mv-cross" style="display:none"><line stroke="' + MUTE + '" stroke-width="1" stroke-dasharray="3 3"></line><circle r="4.5" fill="none" stroke="' + CG + '" stroke-width="2"></circle><circle r="4" fill="none" stroke="' + HL + '" stroke-width="2"></circle></g>' +
@@ -106,27 +156,6 @@
 
     state.geom = { W: W, H: H, padL: padL, padT: padT, plotW: plotW, plotH: plotH, n: n, xOf: xOf, yOf: yOf };
     wireHover();
-  }
-
-  function pathFor(s, key, xOf, yOf) {
-    var d = "", pen = false;
-    for (var i = 0; i < s.length; i++) {
-      if (s[i][key] == null) { pen = false; continue; }
-      d += (pen ? "L" : "M") + xOf(i).toFixed(1) + " " + yOf(s[i][key]).toFixed(1) + " ";
-      pen = true;
-    }
-    return d.trim();
-  }
-  function areaFor(s, key, xOf, yOf, baseY) {
-    var segs = [], cur = [];
-    for (var i = 0; i < s.length; i++) { if (s[i][key] == null) { if (cur.length) { segs.push(cur); cur = []; } } else cur.push([xOf(i), yOf(s[i][key])]); }
-    if (cur.length) segs.push(cur);
-    return segs.filter(function (x) { return x.length > 1; }).map(function (seg) {
-      var d = "M" + seg[0][0].toFixed(1) + " " + baseY.toFixed(1);
-      seg.forEach(function (pp) { d += " L" + pp[0].toFixed(1) + " " + pp[1].toFixed(1); });
-      d += " L" + seg[seg.length - 1][0].toFixed(1) + " " + baseY.toFixed(1) + " Z";
-      return d;
-    }).join(" ");
   }
 
   function wireHover() {
