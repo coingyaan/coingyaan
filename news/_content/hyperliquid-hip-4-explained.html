@@ -1,0 +1,217 @@
+<p class="art-lead">Hyperliquid has spent much of its rise building a reputation around onchain perpetual futures. HIP-4 points toward something broader. The upgrade introduces a framework for outcome markets, letting traders take positions on whether a defined event or outcome will occur rather than simply betting on the future price of an asset. That distinction could matter far beyond Hyperliquid.</p>
+
+<div class="art-key">
+  <h3>Key takeaways</h3>
+  <ul>
+    <li>HIP-4 is Hyperliquid Improvement Proposal 4, and it introduces infrastructure for outcome markets rather than another price based contract.</li>
+    <li>An outcome market is built around a defined question with defined possible outcomes, so the underlying does not always have to be the price of an asset.</li>
+    <li>HIP-4 outcome contracts are fully collateralized and do not use the leveraged liquidation model associated with perpetual futures.</li>
+    <li>The August 14 implementation update added deployer functionality, configurable outcome fees and more testnet templates, alongside a deliberately conservative mainnet rollout.</li>
+    <li>The real test is not how many markets get created but whether liquidity, settlement and discovery grow with them.</li>
+  </ul>
+</div>
+
+<p>If perpetuals turn market views into price exposure, outcome markets can turn real world events, market conditions and other defined questions into tradable positions. It moves Hyperliquid closer to a broader onchain marketplace where the underlying question does not always have to be the price of an asset.</p>
+<p>HIP-4 is still being rolled out in stages, and its specifications are evolving. The latest implementation updates provide a clearer picture of where Hyperliquid is heading. The August 14 update added new deployer functionality, additional testnet templates and configurable outcome fees. It also outlined conservative initial limits for the mainnet rollout, with each deployer expected to begin with up to 100 concurrent outcomes and a network wide limit of 500 outcome deployments per day. The planned limits are expected to increase once the system stabilizes.</p>
+<p>This makes HIP-4 worth watching not simply as another Hyperliquid upgrade, but as a potential change in how markets are created and traded onchain.</p>
+
+<h2>What is Hyperliquid HIP-4?</h2>
+<p>HIP-4 stands for Hyperliquid Improvement Proposal 4. At its core, HIP-4 introduces infrastructure for outcome markets on Hyperliquid. An outcome market is built around a specific question or event with defined possible outcomes. Instead of buying an asset because you believe its price will rise, a trader can take a position tied to whether a particular outcome occurs.</p>
+<p>Consider a simplified example. A market could ask whether Bitcoin will trade above a specified level at a particular time. A traditional perpetual market lets a trader take a leveraged long or short position on Bitcoin's price. An outcome market approaches the same broader question differently. The trader is taking exposure to a defined outcome rather than continuously trading the underlying asset's price.</p>
+<p>That distinction is important because outcome markets can potentially cover questions that do not have a conventional financial asset behind them. They can be designed around events, conditions or other objectively defined outcomes. This is why HIP-4 has attracted attention beyond the usual Hyperliquid trading community. It potentially expands the range of questions that can become financial markets.</p>
+
+<figure class="art-figure">
+  <img src="/assets/images/intelligence/hip4-paths.svg" alt="An asset leads to a price and a perpetual market, an event leads to an outcome and an outcome market, and a question leads to a result and a settlement" loading="lazy" />
+  <figcaption>A perpetual market starts with an asset. An outcome market can start with a question.</figcaption>
+</figure>
+
+<h2>From perpetuals to outcomes</h2>
+<p>Hyperliquid's growth has been closely associated with perpetual futures. Perpetual contracts allow traders to speculate on the price of assets without an expiration date. They have become one of the most important products in crypto derivatives and a major part of Hyperliquid's identity.</p>
+<p>HIP-4 potentially extends that model. The important change is not simply that Hyperliquid can host another type of contract. It is that the market itself can be defined around an outcome. A perpetual market generally starts with an asset, moving from BTC to price to a long or short position. An outcome market can start with a question, moving from a question to possible outcomes to a position and a settlement.</p>
+<p>This difference gives developers another primitive for creating onchain markets. It also explains why the HIP-4 discussion is increasingly connected to prediction markets. Prediction markets are one obvious use case for outcome based trading, but the underlying infrastructure can potentially support more than conventional prediction markets. Traders already read market signals such as <a href="/news/bitcoin-trend-reversal-signals/">market signals such as funding rates and open interest</a> to gauge positioning, and outcome markets add another lens on what participants expect to happen.</p>
+
+<h2>Why outcome markets matter</h2>
+<p>The biggest potential advantage of outcome markets is simple: they can turn information into a market. Financial markets have historically been built around assets. Stocks represent companies. Bonds represent debt. Commodities represent physical or financial commodities. Derivatives derive their value from an underlying asset or reference rate.</p>
+<p>Outcome markets start from a different point. They can begin with a clearly defined question and create a market around the possible result. That means the range of potential markets can become much broader. A market could potentially be structured around an economic release, a policy decision, a sports result, a market condition, a technology milestone, a predefined crypto event or another objectively verifiable outcome.</p>
+<p>The exact markets that can be deployed depend on the templates, rules and settlement mechanisms supported by the protocol. This is where HIP-4 becomes more interesting than simply calling it a prediction market feature. It is better understood as market creation infrastructure for defined outcomes.</p>
+
+<h2>Permissionless market creation changes the equation</h2>
+<p>One of the most important parts of the HIP-4 design is its focus on allowing developers to deploy outcome markets using approved templates. That matters because market creation has traditionally been controlled by a relatively small number of platforms. A platform decides which markets exist. Users then choose which of those markets to trade.</p>
+<p>A more permissionless model reverses part of that relationship. Developers can create new markets within the rules established by the protocol, while traders decide whether those markets deserve liquidity and attention. This creates a potential marketplace for markets themselves.</p>
+<p>But permissionless does not mean unrestricted. HIP-4 uses templates and protocol rules to define how outcome markets are created and settled. The August 14 implementation update also shows that Hyperliquid is taking a staged approach rather than opening unlimited deployment immediately. The long term vision may be permissionless market creation. The initial rollout is deliberately controlled.</p>
+
+<h2>What changed in the latest HIP-4 update?</h2>
+<p>The August 14 implementation update provides some of the clearest evidence yet that HIP-4 is moving deeper into the deployment stage. Several additional features have been implemented.</p>
+<h3>Additional named outcomes</h3>
+<p>Deployer actions now support <code>registerAndAssociateNamedOutcomeFromTemplate</code>. In practical terms, this allows a deployer to add additional named outcomes to an existing question after its creation. The initial balances of the new named outcomes are designed to match the outstanding fallback balances. This gives developers more flexibility when constructing outcome markets without requiring every possible named outcome to be defined at the beginning.</p>
+<h3>Configurable deployer fees</h3>
+<p>HIP-4 template instantiations now require a <code>deployerFeeScale</code> for questions and standalone outcomes. The scale acts as a multiplier on the base fee that deployers can configure to collect and is bounded between 0 and 10. That introduces an economic layer to market creation. A developer is not simply deploying a market. The market can also have a defined fee structure.</p>
+<h3>More testnet templates</h3>
+<p>Additional templates have been added to testnet. The update also notes that template IDs are suffixed with an index and older templates in each series can become deprecated as newer versions are introduced. That is a sign of an evolving system rather than a finished static specification.</p>
+<h3>Settlement details are changing</h3>
+<p>The latest update also says settlement details are being pruned from the Layer 1 state. Applications that need historical settlement information may therefore need to index those details separately. For developers building analytics or market history tools around HIP-4, this is an important architectural consideration.</p>
+
+<figure class="art-figure">
+  <img src="/assets/images/intelligence/hip4-timeline.svg" alt="HIP-4 evolution from design to testnet templates to deployer functionality to fee infrastructure to a staged mainnet rollout" loading="lazy" />
+  <figcaption>HIP-4 is arriving in stages, not as a single finished specification.</figcaption>
+</figure>
+
+<h2>HIP-4 is not just another prediction market</h2>
+<p>It is tempting to describe HIP-4 as Hyperliquid's answer to prediction markets. That is only part of the story. Prediction markets are an important use case because they demonstrate why outcome contracts can be useful. But the underlying concept is broader. An outcome market can be designed around a defined result rather than requiring a traditional asset as the underlying reference.</p>
+<p>This is also why comparisons with platforms such as Polymarket and Kalshi need to be made carefully. Those platforms are strongly associated with prediction markets and event based trading. Hyperliquid is approaching the opportunity from an existing onchain trading infrastructure. The bigger question is whether outcome markets become another major category of onchain trading alongside spot markets and derivatives. If that happens, HIP-4 could become much more significant than its name suggests.</p>
+
+<h2>The first mainnet rollout will be conservative</h2>
+<p>Hyperliquid's latest update makes it clear that HIP-4 will not launch with unlimited market creation. The initial mainnet design is expected to limit each deployer to 100 concurrent outcomes, with a network wide limit of 500 outcome deployments per day. The update says these limits are expected to increase after the technology stabilizes. The proposed next stage would raise the limits to 1,000 concurrent outcomes per deployer and 5,000 outcome deployments per day, with further increases potentially following based on feedback.</p>
+<p>These limits are important because they reveal how Hyperliquid appears to be approaching the rollout. Rather than maximizing the number of markets from day one, the system can start with controlled capacity and expand as developers, traders and validators gain experience with the new market structure. The number of markets created will matter. But so will their quality. A large number of markets does not automatically create a useful market. Liquidity, participation, settlement reliability and sustained trading activity will determine whether outcome markets become a meaningful part of Hyperliquid's ecosystem.</p>
+
+<figure class="art-figure">
+  <img src="/assets/images/intelligence/hip4-rollout.svg" alt="Initial rollout of 100 concurrent outcomes and 500 deployments per day, with a planned expansion to 1000 concurrent outcomes and 5000 deployments per day" loading="lazy" />
+  <figcaption>The planned starting capacity is deliberately small, with room to expand.</figcaption>
+</figure>
+
+<h2>How do Hyperliquid HIP-4 outcome markets work?</h2>
+<p>The simplest way to understand HIP-4 is to think of an outcome contract as a position on a clearly defined result. A traditional perpetual contract has continuous exposure. Its value changes as the underlying asset moves and the position can remain open indefinitely, subject to the contract's rules. An outcome contract has a defined question, defined possible outcomes and a defined settlement condition.</p>
+<p>For a simple binary market, the two sides can be thought of as yes and no. If a yes contract trades at 0.60 dollars, the market is effectively pricing the probability of that outcome at around 60 percent, before considering fees, liquidity and other market effects. If the outcome occurs at settlement, the winning contract pays 1 dollar. If it does not, it settles at 0. The trader's maximum loss is therefore limited to the amount paid for the position.</p>
+<p>HIP-4 can also support questions with multiple possible outcomes. In that structure, the market can represent several mutually exclusive results rather than forcing every question into a simple yes or no format. This is one reason the term outcome markets is more accurate than simply calling HIP-4 a prediction market platform.</p>
+
+<figure class="art-figure">
+  <img src="/assets/images/intelligence/hip4-binary.svg" alt="A question splits into yes and no, trades at a market price that reflects implied probability, and at expiry settles at one dollar or zero" loading="lazy" />
+  <figcaption>A binary outcome contract prices the probability of a defined result, then settles at 1 or 0.</figcaption>
+</figure>
+
+<h2>Outcome markets are different from perpetuals</h2>
+<p>The difference between HIP-4 and perpetual futures becomes clearer when the same market view is expressed through both products. Suppose a trader believes Bitcoin will finish above a specific level at a specific time. With a perpetual, the trader opens a position and gains or loses as Bitcoin's price changes. With an outcome contract, the trader is taking a position on the defined result at the specified settlement time. The payoff is therefore tied to the outcome rather than every intermediate price movement.</p>
+<p>This creates a different risk profile. HIP-4 outcome contracts are fully collateralized and do not use the same leveraged liquidation model associated with perpetual futures. In perpetuals, traders watch <a href="/news/what-are-funding-rates-in-crypto/">funding rates in crypto</a> and margin closely because a position can be liquidated. An outcome contract lets a trader express a defined event view without exposing the position to traditional perpetual liquidation mechanics. Because the contracts are fully collateralized, often in <a href="/news/what-are-stablecoins/">stablecoins</a> or other onchain collateral, the maximum loss is known in advance. That does not make outcome markets risk free. Liquidity, pricing, settlement rules and the possibility of being wrong about the outcome still matter. The important point is that the risk is structured differently.</p>
+
+<h2>The role of templates</h2>
+<p>Templates are central to the HIP-4 architecture. Instead of requiring every market creator to design an entirely new contract from scratch, templates establish the structure that an outcome market follows. This creates a balance between flexibility and standardization. Developers can create markets around different questions while the underlying contract structure remains governed by defined protocol rules.</p>
+<p>The August 14 implementation update shows that this template system is still evolving. Additional templates have been added to testnet and older versions can become deprecated as newer versions are introduced. That matters because a permissionless market ecosystem needs predictable contract behavior. A market creator should not be able to arbitrarily change the meaning of a contract after traders have entered it. Templates help establish that boundary.</p>
+
+<h2>How settlement works</h2>
+<p>Settlement is one of the most important parts of any outcome market. A market can have excellent liquidity and a sophisticated trading interface, but if participants cannot determine objectively how the final outcome will be resolved, the market becomes difficult to trust. HIP-4 therefore defines settlement rules as part of the market structure.</p>
+<p>The outcome is determined according to the specific rules attached to the market. For a price based contract, that can involve a defined Hyperliquid reference price at a particular time. For a real world event, the market needs an objective source or defined settlement mechanism capable of determining the result. Hyperliquid's evolving HIP-4 implementation includes both protocol level outcome markets and validator deployed markets for defined real world events. Galaxy Research notes that canonical markets have expanded beyond crypto price outcomes into areas such as Federal Reserve decisions, inflation data and sports events. That expansion makes settlement quality increasingly important.</p>
+
+<figure class="art-figure">
+  <img src="/assets/images/intelligence/hip4-settlement.svg" alt="A market question moves through a trading period to expiry, a verified resolution source determines the winning outcome, then the market settles" loading="lazy" />
+  <figcaption>Objective, transparent settlement is what makes an outcome market trustworthy.</figcaption>
+</figure>
+
+<h2>Why the order book matters</h2>
+<p>One of HIP-4's biggest differences is where the markets live. Hyperliquid built its reputation around an onchain order book and high frequency trading infrastructure. HIP-4 puts outcome contracts into that broader trading environment rather than creating an entirely separate trading venue.</p>
+<p>That can have important consequences. A trader who already uses Hyperliquid does not necessarily need a completely separate market infrastructure just to express an outcome view. The same broader ecosystem can support different types of positions. The potential advantage is not simply convenience. It is composability. A trader can potentially think about an outcome position alongside existing crypto positions, and read it against measures like <a href="/news/what-is-open-interest-in-crypto/">open interest in crypto</a> that describe how much positioning is already in the market, instead of treating every market as an isolated bet.</p>
+
+<h2>Fees could become an important competitive advantage</h2>
+<p>The economics of HIP-4 are another area worth watching. The August 14 update says the average outcome trading fee will be half that of non outcome spot trading when fees are enabled for validator deployed outcome markets on the next network upgrade. It also introduces the <code>deployerFeeScale</code>, allowing deployers to configure a multiplier on the base fee within the specified bounds.</p>
+<p>This creates two separate economic layers. The protocol defines the base fee structure. The deployer can configure its fee component within the permitted range. That means market creators can have an economic incentive to deploy and operate markets. For traders, lower fees can make a meaningful difference, particularly in short duration markets where participants may enter and exit frequently. But low fees alone do not guarantee market success. A market with almost no liquidity can be more expensive to trade than a liquid market with slightly higher fees because of wider spreads and price impact. That makes the relationship between fees, liquidity and market discovery more important than any single fee number.</p>
+
+<h2>HIP-4 vs Polymarket and Kalshi</h2>
+<p>The most obvious comparison is with Polymarket and Kalshi. All three can be associated with the broader prediction and event trading category, but their starting points are different. Polymarket was built specifically around prediction markets. Kalshi operates as a regulated event contracts exchange in the United States. Hyperliquid started from crypto trading infrastructure and is adding outcome markets to that ecosystem.</p>
+
+<div class="art-tablewrap"><table class="art-table">
+<thead><tr><th></th><th>Hyperliquid HIP-4</th><th>Polymarket</th><th>Kalshi</th></tr></thead>
+<tbody>
+<tr><td>Core identity</td><td>Onchain trading venue with outcome markets</td><td>Prediction market platform</td><td>Regulated event contracts exchange</td></tr>
+<tr><td>Market structure</td><td>HyperCore order book</td><td>Dedicated prediction market infrastructure</td><td>Centralized exchange infrastructure</td></tr>
+<tr><td>Main strength</td><td>Trading infrastructure and composability</td><td>Market breadth and discovery</td><td>Regulatory positioning and event depth</td></tr>
+<tr><td>Outcome markets</td><td>Native to Hyperliquid</td><td>Core product</td><td>Core product</td></tr>
+<tr><td>Crypto trader integration</td><td>Strong</td><td>Strong</td><td>More limited</td></tr>
+<tr><td>Market discovery</td><td>Still developing</td><td>Mature</td><td>Mature</td></tr>
+<tr><td>Permissionless creation</td><td>Expanding through HIP-4</td><td>More curated</td><td>Platform controlled</td></tr>
+</tbody>
+</table></div>
+
+<p>The table should not be read as saying one platform is universally better. They are solving different problems. Polymarket has an established consumer experience around discovering and trading event markets. Kalshi has a very different advantage through its regulatory position and established event contract infrastructure. Hyperliquid's potential advantage is the ability to combine outcome trading with an existing onchain trading environment. Galaxy Research describes this broader competitive dynamic as a race toward platforms where more types of markets can coexist rather than remain isolated.</p>
+
+<h2>The biggest potential advantage: composability</h2>
+<p>This could ultimately be the most important part of HIP-4. Imagine a trader holding a Bitcoin position, trading perpetuals and taking a position on a defined macroeconomic outcome. On a traditional prediction market platform, these positions live in separate systems. The trader may need different collateral, different accounts and different interfaces.</p>
+<p>Hyperliquid's architecture creates the possibility of bringing these instruments closer together. That does not automatically mean every position can be cross margined or offset in every situation. The exact risk and collateral treatment depends on the protocol implementation and market design. But the underlying concept is powerful. The same trading infrastructure can support multiple forms of market exposure. The objective is not necessarily to become another prediction market. It is to make outcome exposure another primitive inside an increasingly broad trading system.</p>
+
+<h2>Why the staged rollout matters</h2>
+<p>Hyperliquid's conservative initial limits are more significant than they might appear. The planned starting point is 100 concurrent outcomes per deployer and 500 outcome deployments per day. The planned expansion is 1,000 concurrent outcomes and 5,000 deployments per day. Those limits create room for Hyperliquid and its ecosystem to observe how the system behaves before opening the floodgates.</p>
+<p>The key metrics to watch will not simply be the number of markets created. Closer attention belongs on active traders, average market liquidity, bid ask spreads, trading volume, order book depth, settlement accuracy, market duration, repeat participation, deployer activity, fee generation and concentration among market makers. If market count rises rapidly while liquidity remains thin, the ecosystem could become fragmented. If market creation and liquidity grow together, the outcome market model becomes much more compelling.</p>
+
+<h2>What could go wrong?</h2>
+<p>HIP-4 has significant potential, but there are equally important risks.</p>
+<h3>Liquidity fragmentation</h3>
+<p>Permissionless markets can create a huge number of contracts. That sounds positive until liquidity becomes spread across hundreds or thousands of markets. A trader does not benefit from having 10,000 markets if the market they care about has almost no depth.</p>
+<h3>Settlement risk</h3>
+<p>Outcome markets depend heavily on clearly defined settlement rules. Ambiguous questions can create disputes. A poorly designed market may have multiple plausible interpretations of the same event. This makes market design and resolution methodology critical.</p>
+<h3>Discovery</h3>
+<p>Polymarket and Kalshi have invested heavily in helping users discover markets. Hyperliquid's trading terminal is optimized primarily for active trading rather than browsing a huge catalog of real world questions. The builder ecosystem will therefore have an important role to play, and third party frontends may become a major part of HIP-4's user experience.</p>
+<h3>Regulatory exposure</h3>
+<p>Prediction and event markets can touch sensitive areas including elections, sports, financial events and other real world outcomes. Regulatory treatment differs significantly across the United States, United Kingdom, European markets and India. The legal status of a specific HIP-4 market can therefore depend on the jurisdiction, product structure and applicable rules. CoinGyaan is not treating HIP-4's availability as a statement about legality in any particular country.</p>
+<h3>Market quality</h3>
+<p>Permissionless deployment can also create low quality or spam markets. The economic cost of deploying a market, combined with fee incentives and deployment limits, will influence how much unwanted market creation occurs. The system therefore needs a balance between permissionless innovation and market quality.</p>
+
+<h2>HIP-4 could make Hyperliquid more than a derivatives venue</h2>
+<p>The bigger thesis behind HIP-4 is not that prediction markets are suddenly replacing perpetual futures. They are not. The more interesting possibility is that Hyperliquid is building a platform where different forms of financial and event exposure can coexist. Perpetuals answer where the price is going. Outcome markets answer what will happen. Spot markets answer what asset you want to own. Other market primitives can answer different questions.</p>
+<p>The more of these instruments can share infrastructure, liquidity and capital, the more useful the overall marketplace becomes. That is the potential significance of HIP-4. It adds another market primitive to an ecosystem that was already expanding beyond traditional crypto perpetuals. And if permissionless deployment works at scale, the number of questions that can become markets could grow dramatically.</p>
+
+<div class="art-note">
+  <strong>How to read this</strong>
+  <p>This article is educational market intelligence and not financial advice. HIP-4 is an evolving specification, and its mechanics, limits, fees and settlement rules can change. Verify the current details in Hyperliquid's official documentation before relying on them, and consider the regulatory treatment of any specific market in your own jurisdiction.</p>
+</div>
+
+<h2>What to watch next</h2>
+<p>The next phase of HIP-4 should be judged by execution rather than announcements. The most important signals are whether the staged mainnet deployment happens without major technical problems, whether independent developers create genuinely useful markets, whether new markets attract enough liquidity for efficient execution, whether Hyperliquid and third party builders create a good way to discover markets, whether outcome markets resolve consistently and transparently, whether the fee economics create sustainable incentives and whether HIP-4 can gain meaningful activity against established platforms such as Polymarket and Kalshi. These questions will determine whether HIP-4 becomes a major part of Hyperliquid or remains a niche product for existing traders.</p>
+
+<h2>Frequently asked questions</h2>
+<div class="art-faq">
+  <h3>What is Hyperliquid HIP-4?</h3>
+  <p>HIP-4 is Hyperliquid Improvement Proposal 4. It introduces infrastructure for outcome markets, which let traders take a position on whether a defined event or result will occur rather than on the future price of an asset.</p>
+  <h3>How do Hyperliquid outcome markets work?</h3>
+  <p>An outcome market is built around a defined question with defined possible outcomes and a defined settlement condition. For a binary market the two sides are yes and no, the price reflects the implied probability and at settlement the winning side pays 1 dollar while the losing side settles at 0.</p>
+  <h3>How is HIP-4 different from perpetual futures?</h3>
+  <p>A perpetual gives continuous exposure to an asset's price and can be liquidated. A HIP-4 outcome contract is tied to a defined result at a settlement time, is fully collateralized and does not use the leveraged liquidation model of perpetuals, so the maximum loss is known in advance.</p>
+  <h3>What is an outcome contract on Hyperliquid?</h3>
+  <p>It is a position on a clearly defined result. The contract has a question, possible outcomes and a settlement rule, and it can be binary or represent several mutually exclusive outcomes.</p>
+  <h3>Is HIP-4 just a prediction market?</h3>
+  <p>Prediction markets are one use case, but HIP-4 is better understood as market creation infrastructure for defined outcomes. The underlying question does not always have to be a traditional financial asset.</p>
+  <h3>How does HIP-4 compare with Polymarket and Kalshi?</h3>
+  <p>Polymarket is built around prediction markets and Kalshi is a regulated event contracts exchange. Hyperliquid starts from onchain trading infrastructure and adds outcome markets to it, so its potential edge is composability with existing crypto positions rather than a standalone prediction market experience.</p>
+  <h3>What changed in the August 14 HIP-4 update?</h3>
+  <p>It added deployer support for adding named outcomes after creation, a configurable deployer fee scale bounded between 0 and 10, more testnet templates and a note that settlement details are being pruned from Layer 1 state. It also outlined conservative initial mainnet limits.</p>
+  <h3>What are the initial HIP-4 deployment limits?</h3>
+  <p>The initial mainnet design is expected to allow up to 100 concurrent outcomes per deployer and 500 outcome deployments per day, with a planned expansion to 1,000 concurrent outcomes and 5,000 deployments per day as the system stabilizes.</p>
+  <h3>How do HIP-4 outcome markets settle?</h3>
+  <p>Settlement follows the rules attached to the market. A price based contract can use a defined Hyperliquid reference price at a set time, while a real world event needs an objective resolution source or defined settlement mechanism.</p>
+  <h3>Does HIP-4 use leverage and liquidation like perps?</h3>
+  <p>No. Outcome contracts are fully collateralized and do not use the perpetual liquidation model. The trade still carries risk from pricing, liquidity, settlement and simply being wrong about the outcome.</p>
+</div>
+
+<div class="art-learn">
+  <p>Keep building your understanding of onchain markets with these CoinGyaan resources:</p>
+  <ul>
+    <li><a href="/news/what-are-funding-rates-in-crypto/">What Are Funding Rates in Crypto? A Complete Beginner's Guide</a></li>
+    <li><a href="/news/what-is-open-interest-in-crypto/">What Is Open Interest in Crypto? A Complete Beginner's Guide</a></li>
+    <li><a href="/news/bitcoin-trend-reversal-signals/">How to read Bitcoin trend reversal signals</a></li>
+    <li><a href="/news/what-are-stablecoins/">What Are Stablecoins? A Complete Beginner's Guide</a></li>
+    <li><a href="/bitcoin-outlook/">Bitcoin Market Outlook intelligence</a></li>
+  </ul>
+</div>
+
+<h2>References</h2>
+<div class="art-sources">
+  <ul>
+    <li>Hyperliquid, official documentation and HIP-4 implementation notes.</li>
+    <li>Hyperliquid, August 14 HIP-4 update covering deployer actions, fees, templates and deployment limits.</li>
+    <li>Galaxy Research, analysis of Hyperliquid outcome markets and the competitive landscape.</li>
+    <li>Polymarket, product documentation.</li>
+    <li>Kalshi, event contracts exchange documentation.</li>
+  </ul>
+</div>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is Hyperliquid HIP-4?","acceptedAnswer":{"@type":"Answer","text":"HIP-4 is Hyperliquid Improvement Proposal 4. It introduces infrastructure for outcome markets, which let traders take a position on whether a defined event or result will occur rather than on the future price of an asset."}},
+{"@type":"Question","name":"How do Hyperliquid outcome markets work?","acceptedAnswer":{"@type":"Answer","text":"An outcome market is built around a defined question with defined possible outcomes and a defined settlement condition. For a binary market the two sides are yes and no, the price reflects the implied probability and at settlement the winning side pays 1 dollar while the losing side settles at 0."}},
+{"@type":"Question","name":"How is HIP-4 different from perpetual futures?","acceptedAnswer":{"@type":"Answer","text":"A perpetual gives continuous exposure to an asset's price and can be liquidated. A HIP-4 outcome contract is tied to a defined result at a settlement time, is fully collateralized and does not use the leveraged liquidation model of perpetuals, so the maximum loss is known in advance."}},
+{"@type":"Question","name":"What is an outcome contract on Hyperliquid?","acceptedAnswer":{"@type":"Answer","text":"It is a position on a clearly defined result. The contract has a question, possible outcomes and a settlement rule, and it can be binary or represent several mutually exclusive outcomes."}},
+{"@type":"Question","name":"Is HIP-4 just a prediction market?","acceptedAnswer":{"@type":"Answer","text":"Prediction markets are one use case, but HIP-4 is better understood as market creation infrastructure for defined outcomes. The underlying question does not always have to be a traditional financial asset."}},
+{"@type":"Question","name":"How does HIP-4 compare with Polymarket and Kalshi?","acceptedAnswer":{"@type":"Answer","text":"Polymarket is built around prediction markets and Kalshi is a regulated event contracts exchange. Hyperliquid starts from onchain trading infrastructure and adds outcome markets to it, so its potential edge is composability with existing crypto positions rather than a standalone prediction market experience."}},
+{"@type":"Question","name":"What changed in the August 14 HIP-4 update?","acceptedAnswer":{"@type":"Answer","text":"It added deployer support for adding named outcomes after creation, a configurable deployer fee scale bounded between 0 and 10, more testnet templates and a note that settlement details are being pruned from Layer 1 state. It also outlined conservative initial mainnet limits."}},
+{"@type":"Question","name":"What are the initial HIP-4 deployment limits?","acceptedAnswer":{"@type":"Answer","text":"The initial mainnet design is expected to allow up to 100 concurrent outcomes per deployer and 500 outcome deployments per day, with a planned expansion to 1,000 concurrent outcomes and 5,000 deployments per day as the system stabilizes."}},
+{"@type":"Question","name":"How do HIP-4 outcome markets settle?","acceptedAnswer":{"@type":"Answer","text":"Settlement follows the rules attached to the market. A price based contract can use a defined Hyperliquid reference price at a set time, while a real world event needs an objective resolution source or defined settlement mechanism."}},
+{"@type":"Question","name":"Does HIP-4 use leverage and liquidation like perps?","acceptedAnswer":{"@type":"Answer","text":"No. Outcome contracts are fully collateralized and do not use the perpetual liquidation model. The trade still carries risk from pricing, liquidity, settlement and simply being wrong about the outcome."}}
+]}
+</script>

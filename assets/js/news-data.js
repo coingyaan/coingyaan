@@ -71,6 +71,7 @@ var NEWS_TAGS = [
   { slug: "whale-activity", name: "Whale Activity" },
   { slug: "rsi", name: "RSI" },
   { slug: "trading", name: "Trading" },
+  { slug: "prediction-markets", name: "Prediction Markets" },
   { slug: "usdt", name: "USDT", accent: "#26a17b" },
   { slug: "usdc", name: "USDC", accent: "#2775ca" },
   { slug: "digital-assets", name: "Digital Assets" },
@@ -129,6 +130,22 @@ var NEWS_INTEL_LINKS = {
 
 /* Articles, newest first. Dates are ISO (YYYY-MM-DD). */
 var NEWS_ARTICLES = [
+  {
+    type: "original",
+    slug: "hyperliquid-hip-4-explained",
+    title: "Hyperliquid HIP-4 Explained: How Outcome Markets Could Change Onchain Trading",
+    seoTitle: "Hyperliquid HIP-4 Explained: How Outcome Markets Could Change Onchain Trading",
+    category: "blockchain",
+    tags: ["hyperliquid", "prediction-markets", "derivatives", "perpetual-futures", "trading"],
+    date: "2026-08-14",
+    updated: "2026-08-14",
+    author: "monesh-kumar",
+    readMins: 12,
+    excerpt: "Hyperliquid HIP-4 brings outcome markets to onchain trading. Learn how HIP-4 works, how outcome contracts differ from perps and what could come next.",
+    cover: "auto",
+    coverTag: "hyperliquid",
+    featured: true,
+  },
   {
     type: "original",
     slug: "what-are-funding-rates-in-crypto",

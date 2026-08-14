@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 210" role="img" aria-label="Settlement flow: a market question moves through a trading period to expiry, a verified resolution source determines the winning outcome, then the market settles">
+<rect width="640" height="210" rx="16" fill="#0b1424"/>
+<g font-family="Inter, Arial, sans-serif" font-size="12.5" font-weight="700" text-anchor="middle">
+<text x="320" y="32" fill="#97fce4" font-size="13" letter-spacing="1.2">HOW AN OUTCOME MARKET RESOLVES</text>
+<rect x="24" y="60" width="112" height="46" rx="10" fill="#101d30" stroke="#1e3048"/><text x="80" y="82" fill="#e6ebf5">Market</text><text x="80" y="98" fill="#cbd5e1" font-size="11">question</text>
+<rect x="156" y="60" width="112" height="46" rx="10" fill="#101d30" stroke="#1e3048"/><text x="212" y="88" fill="#cbd5e1">Trading period</text>
+<rect x="288" y="60" width="90" height="46" rx="10" fill="#101d30" stroke="#1e3048"/><text x="333" y="88" fill="#cbd5e1">Expiry</text>
+<rect x="398" y="60" width="128" height="46" rx="10" fill="#0e2233" stroke="#38bdf8" stroke-opacity=".45"/><text x="462" y="82" fill="#38bdf8">Resolution</text><text x="462" y="98" fill="#7dd3fc" font-size="11">verified source</text>
+<rect x="398" y="130" width="128" height="46" rx="10" fill="#141f14" stroke="#16c784" stroke-opacity=".5"/><text x="462" y="152" fill="#16c784">Winning outcome</text>
+<rect x="240" y="130" width="128" height="46" rx="10" fill="#241a0e" stroke="#f59e0b" stroke-opacity=".5"/><text x="304" y="158" fill="#f59e0b">Settlement</text>
+<g stroke="#334155" stroke-width="2" fill="none" marker-end="url(#ah4)">
+<path d="M136 83 H154"/><path d="M268 83 H286"/><path d="M378 83 H396"/>
+<path d="M462 106 V128"/><path d="M398 153 H370"/>
+</g>
+</g>
+<defs><marker id="ah4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#334155"/></marker></defs>
+</svg>

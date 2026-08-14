@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" role="img" aria-label="Three market paths: an asset leads to a price and a perpetual market, an event leads to an outcome and an outcome market, a question leads to a result and a settlement">
+<rect width="640" height="320" rx="16" fill="#0b1424"/>
+<g font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">
+<text x="320" y="34" fill="#97fce4" font-size="13" letter-spacing="1.5">TWO WAYS TO BUILD A MARKET</text>
+<g>
+<rect x="26" y="60" width="150" height="46" rx="10" fill="#101d30" stroke="#1e3048"/><text x="101" y="88" fill="#e6ebf5">Asset</text>
+<rect x="246" y="60" width="150" height="46" rx="10" fill="#101d30" stroke="#1e3048"/><text x="321" y="88" fill="#cbd5e1">Price</text>
+<rect x="466" y="60" width="150" height="46" rx="10" fill="#0e2233" stroke="#38bdf8" stroke-opacity=".45"/><text x="541" y="88" fill="#38bdf8">Perpetual market</text>
+</g>
+<g>
+<rect x="26" y="137" width="150" height="46" rx="10" fill="#101d30" stroke="#1e3048"/><text x="101" y="165" fill="#e6ebf5">Event</text>
+<rect x="246" y="137" width="150" height="46" rx="10" fill="#101d30" stroke="#1e3048"/><text x="321" y="165" fill="#cbd5e1">Outcome</text>
+<rect x="466" y="137" width="150" height="46" rx="10" fill="#141f14" stroke="#16c784" stroke-opacity=".5"/><text x="541" y="165" fill="#16c784">Outcome market</text>
+</g>
+<g>
+<rect x="26" y="214" width="150" height="46" rx="10" fill="#101d30" stroke="#1e3048"/><text x="101" y="242" fill="#e6ebf5">Question</text>
+<rect x="246" y="214" width="150" height="46" rx="10" fill="#101d30" stroke="#1e3048"/><text x="321" y="242" fill="#cbd5e1">Result</text>
+<rect x="466" y="214" width="150" height="46" rx="10" fill="#241a0e" stroke="#f59e0b" stroke-opacity=".5"/><text x="541" y="242" fill="#f59e0b">Settlement</text>
+</g>
+<g stroke="#334155" stroke-width="2" fill="none" marker-end="url(#ah)">
+<path d="M176 83 H244"/><path d="M396 83 H464"/>
+<path d="M176 160 H244"/><path d="M396 160 H464"/>
+<path d="M176 237 H244"/><path d="M396 237 H464"/>
+</g>
+</g>
+<defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#334155"/></marker></defs>
+</svg>

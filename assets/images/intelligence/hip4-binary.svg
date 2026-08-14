@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 250" role="img" aria-label="Binary outcome mechanics: a question splits into yes and no, trades at a market price, reaches expiry and settles at one dollar or zero">
+<rect width="640" height="250" rx="16" fill="#0b1424"/>
+<g font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">
+<rect x="30" y="100" width="120" height="50" rx="10" fill="#101d30" stroke="#1e3048"/><text x="90" y="130" fill="#e6ebf5">Question</text>
+<rect x="200" y="52" width="110" height="44" rx="10" fill="#141f14" stroke="#16c784" stroke-opacity=".5"/><text x="255" y="80" fill="#16c784">YES</text>
+<rect x="200" y="154" width="110" height="44" rx="10" fill="#231315" stroke="#ea3943" stroke-opacity=".5"/><text x="255" y="182" fill="#ea3943">NO</text>
+<rect x="356" y="100" width="120" height="50" rx="10" fill="#0e2233" stroke="#38bdf8" stroke-opacity=".45"/><text x="416" y="123" fill="#38bdf8" font-size="13">Market price</text><text x="416" y="140" fill="#7dd3fc" font-size="11">implied probability</text>
+<rect x="520" y="52" width="96" height="44" rx="10" fill="#141f14" stroke="#16c784" stroke-opacity=".45"/><text x="568" y="80" fill="#16c784">$1</text>
+<rect x="520" y="154" width="96" height="44" rx="10" fill="#231315" stroke="#ea3943" stroke-opacity=".45"/><text x="568" y="182" fill="#ea3943">$0</text>
+<text x="568" y="128" fill="#94a3b8" font-size="12" font-weight="600">expiry</text>
+<g stroke="#334155" stroke-width="2" fill="none" marker-end="url(#ah2)">
+<path d="M150 118 L198 80"/><path d="M150 132 L198 170"/>
+<path d="M310 74 L354 112"/><path d="M310 176 L354 138"/>
+<path d="M476 118 L518 80"/><path d="M476 132 L518 170"/>
+</g>
+</g>
+<defs><marker id="ah2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#334155"/></marker></defs>
+</svg>
