@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" role="img" aria-label="Four signals feed market context: Fear and Greed shows sentiment, open interest shows positioning, funding rate shows leverage bias and ETF flows show institutional demand">
+<rect width="640" height="280" rx="16" fill="#0b1424"/>
+<g font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">
+<g text-anchor="start">
+<rect x="30" y="34" width="150" height="40" rx="9" fill="#241a0e" stroke="#f59e0b" stroke-opacity=".5"/><text x="46" y="59" fill="#f59e0b">Fear and Greed</text>
+<rect x="30" y="94" width="150" height="40" rx="9" fill="#0e2233" stroke="#38bdf8" stroke-opacity=".4"/><text x="46" y="119" fill="#7dd3fc">Open Interest</text>
+<rect x="30" y="154" width="150" height="40" rx="9" fill="#0e2233" stroke="#38bdf8" stroke-opacity=".4"/><text x="46" y="179" fill="#7dd3fc">Funding Rate</text>
+<rect x="30" y="214" width="150" height="40" rx="9" fill="#0e1f18" stroke="#16c784" stroke-opacity=".45"/><text x="46" y="239" fill="#16c784">ETF Flows</text>
+</g>
+<g text-anchor="middle" font-size="12" fill="#cbd5e1" font-weight="600">
+<text x="300" y="59">Sentiment</text>
+<text x="300" y="119">Positioning</text>
+<text x="300" y="179">Leverage bias</text>
+<text x="300" y="239">Institutional demand</text>
+</g>
+<rect x="452" y="112" width="158" height="64" rx="12" fill="#101d30" stroke="#94a3b8" stroke-opacity=".4"/><text x="531" y="142" text-anchor="middle" fill="#e6ebf5" font-size="15">Market Context</text><text x="531" y="162" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="600">read together</text>
+<g stroke="#334155" stroke-width="2" fill="none" marker-end="url(#fb)">
+<path d="M180 54 H250"/><path d="M180 114 H250"/><path d="M180 174 H250"/><path d="M180 234 H250"/>
+<path d="M350 54 H420 Q450 54 450 120 V128"/><path d="M350 114 H448"/><path d="M350 174 H420 Q450 174 450 150"/><path d="M350 234 H420 Q450 234 450 168"/>
+</g>
+</g>
+<defs><marker id="fb" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#334155"/></marker></defs>
+</svg>

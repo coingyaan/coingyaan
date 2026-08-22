@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 240" role="img" aria-label="Two hypothetical sentiment paths ending at the same neutral reading: one recovering from fear to neutral to greed, one fading from greed to neutral to fear">
+<rect width="640" height="240" rx="16" fill="#0b1424"/>
+<g font-family="Inter, Arial, sans-serif">
+<text x="320" y="30" text-anchor="middle" fill="#94a3b8" font-size="13" font-weight="700" letter-spacing="1">DIRECTION MATTERS MORE THAN THE NUMBER</text>
+<g stroke="#1e3048" stroke-width="1"><path d="M70 60 H600"/><path d="M70 120 H600"/><path d="M70 180 H600"/></g>
+<g fill="#64748b" font-size="10" text-anchor="end"><text x="62" y="64">Greed</text><text x="62" y="124">Neutral</text><text x="62" y="184">Fear</text></g>
+<polyline points="90,180 300,120 560,60" fill="none" stroke="#16c784" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<g fill="#16c784"><circle cx="90" cy="180" r="4"/><circle cx="300" cy="120" r="4"/><circle cx="560" cy="60" r="4"/></g>
+<polyline points="90,60 300,120 560,180" fill="none" stroke="#ea3943" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 4"/>
+<g fill="#ea3943"><circle cx="90" cy="60" r="4"/><circle cx="300" cy="120" r="4"/><circle cx="560" cy="180" r="4"/></g>
+<g font-size="12" font-weight="700"><text x="120" y="205" fill="#16c784">Fear to Neutral to Greed (recovering)</text><text x="360" y="45" fill="#ea3943" text-anchor="end">Greed to Neutral to Fear (fading)</text></g>
+</g>
+</svg>

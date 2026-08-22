@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 190" role="img" aria-label="The five Fear and Greed zones from extreme fear at 0 through neutral in the middle to extreme greed at 100">
+<rect width="640" height="190" rx="16" fill="#0b1424"/>
+<defs><linearGradient id="fgbar" x1="0" y1="0" x2="1" y2="0">
+<stop offset="0%" stop-color="#ea3943"/><stop offset="30%" stop-color="#f59e0b"/><stop offset="50%" stop-color="#eab308"/><stop offset="70%" stop-color="#84cc16"/><stop offset="100%" stop-color="#16c784"/></linearGradient></defs>
+<g font-family="Inter, Arial, sans-serif" text-anchor="middle">
+<text x="320" y="34" fill="#94a3b8" font-size="13" font-weight="700" letter-spacing="1.2">THE FIVE SENTIMENT ZONES</text>
+<rect x="40" y="58" width="560" height="26" rx="13" fill="url(#fgbar)"/>
+<g stroke="#0b1424" stroke-width="2"><path d="M152 58 V84"/><path d="M264 58 V84"/><path d="M376 58 V84"/><path d="M488 58 V84"/></g>
+<g font-size="13" font-weight="700" fill="#e6ebf5">
+<text x="96" y="112">Extreme Fear</text><text x="208" y="112">Fear</text><text x="320" y="112">Neutral</text><text x="432" y="112">Greed</text><text x="544" y="112">Extreme Greed</text>
+</g>
+<g font-size="12" font-weight="600" fill="#94a3b8" font-family="ui-monospace, Menlo, monospace">
+<text x="96" y="132">0 to 24</text><text x="208" y="132">25 to 44</text><text x="320" y="132">45 to 55</text><text x="432" y="132">56 to 74</text><text x="544" y="132">75 to 100</text>
+</g>
+<g font-size="11" fill="#64748b">
+<text x="96" y="158">Defensive</text><text x="208" y="158">Cautious</text><text x="320" y="158">Balanced</text><text x="432" y="158">Optimistic</text><text x="544" y="158">Euphoric</text>
+</g>
+</g>
+</svg>

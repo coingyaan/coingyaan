@@ -132,6 +132,22 @@ var NEWS_INTEL_LINKS = {
 var NEWS_ARTICLES = [
   {
     type: "original",
+    slug: "how-to-read-crypto-fear-and-greed-index",
+    title: "How to Read the Crypto Fear and Greed Index",
+    seoTitle: "How to Read the Crypto Fear and Greed Index | CoinGyaan",
+    category: "blockchain",
+    tags: ["fear-greed", "bitcoin", "market-sentiment", "market-outlook", "open-interest", "funding-rate"],
+    date: "2026-08-15",
+    updated: "2026-08-15",
+    author: "kohlarn",
+    readMins: 14,
+    excerpt: "Learn how to read the crypto Fear and Greed Index, what its zones from extreme fear to extreme greed mean and how to combine sentiment with Bitcoin price, open interest, funding and ETF flows.",
+    cover: "auto",
+    coverTag: "fear-greed",
+    featured: true,
+  },
+  {
+    type: "original",
     slug: "hyperliquid-hip-4-explained",
     title: "Hyperliquid HIP-4 Explained: How Outcome Markets Could Change Onchain Trading",
     seoTitle: "Hyperliquid HIP-4 Explained: How Outcome Markets Could Change Onchain Trading",

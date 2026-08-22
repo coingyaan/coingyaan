@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 260" role="img" aria-label="The Fear and Greed gauge is one signal surrounded by context: price, derivatives, ETF flows and market structure">
+<rect width="640" height="260" rx="16" fill="#0b1424"/>
+<g font-family="Inter, Arial, sans-serif" text-anchor="middle" font-size="13" font-weight="700">
+<circle cx="320" cy="130" r="58" fill="#101d30" stroke="#f59e0b" stroke-opacity=".5"/>
+<path d="M286 150 A40 40 0 0 1 354 150" fill="none" stroke="#334155" stroke-width="7" stroke-linecap="round"/>
+<path d="M320 150 L338 122" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+<circle cx="320" cy="150" r="5" fill="#f59e0b"/>
+<text x="320" y="188" fill="#f59e0b" font-size="12">Fear and Greed</text>
+<g font-size="12" fill="#cbd5e1">
+<rect x="60" y="40" width="130" height="38" rx="9" fill="#0e2233" stroke="#38bdf8" stroke-opacity=".35"/><text x="125" y="64" fill="#7dd3fc">Price</text>
+<rect x="450" y="40" width="130" height="38" rx="9" fill="#0e2233" stroke="#38bdf8" stroke-opacity=".35"/><text x="515" y="64" fill="#7dd3fc">Derivatives</text>
+<rect x="60" y="182" width="130" height="38" rx="9" fill="#0e1f18" stroke="#16c784" stroke-opacity=".4"/><text x="125" y="206" fill="#5eead4">ETF Flows</text>
+<rect x="450" y="182" width="130" height="38" rx="9" fill="#101d30" stroke="#94a3b8" stroke-opacity=".4"/><text x="515" y="206" fill="#cbd5e1">Market structure</text>
+</g>
+<g stroke="#334155" stroke-width="2" fill="none"><path d="M190 66 L268 108"/><path d="M450 66 L372 108"/><path d="M190 194 L268 156"/><path d="M450 194 L372 156"/></g>
+<text x="320" y="238" fill="#64748b" font-size="11" font-weight="600">one signal, not a trading system</text>
+</g>
+</svg>
