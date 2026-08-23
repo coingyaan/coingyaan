@@ -348,9 +348,9 @@ function articleHtml(article) {
 ${body}
     </div>
     <div class="art-tags">${tagChips}</div>
+${relHtml}
 ${intelHtml}
   </article>
-${relHtml}
 </main>
 ` + FOOT_ARTICLE;
 }
