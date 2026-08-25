@@ -755,3 +755,32 @@ main.page h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.
   .mv-metrics{width:100%}
   .mv-m{flex:1 1 0;min-width:0}
 }
+
+/* ============ Bitcoin price action chart (outlook page) ============ */
+.ol-chart .bc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.bc-title{flex:1 1 320px;min-width:280px}
+.bc-ref{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--dim);background:var(--card2);border:1px solid var(--border2);border-radius:999px;padding:4px 11px;white-space:nowrap}
+.bc-tabs{display:flex;gap:6px;margin:14px 0 10px;flex-wrap:wrap}
+.bc-tabs button{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--dim);background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:6px 15px;cursor:pointer}
+.bc-tabs button.on{color:#0b1120;background:var(--gold);border-color:var(--gold)}
+.bc-intel{background:var(--card2);border:1px solid var(--border2);border-radius:11px;padding:12px 14px;margin-bottom:10px}
+.bc-intel-line{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:14px}
+.bc-tf{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0b1120;background:var(--gold);border-radius:5px;padding:2px 7px}
+.bc-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.bc-intel-line b{font-size:14px}
+.bc-sep{color:var(--muted);font-size:13px;position:relative;padding-left:11px}
+.bc-sep:before{content:"\00b7";position:absolute;left:2px;color:var(--dim)}
+.bc-intel-when{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:7px;font-family:var(--mono);font-size:11.5px}
+.bc-asof{color:var(--muted)} .bc-hz{color:var(--text)} .bc-upd{color:var(--dim)}
+.bc-intel-note{font-size:11.5px;color:var(--dim);line-height:1.5;margin-top:8px;max-width:760px}
+.bc-chart-wrap{position:relative;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px 8px 2px}
+.bc-chart svg{display:block;width:100%;height:auto}
+.bc-empty{color:var(--muted);text-align:center;padding:40px 8px;font-family:var(--mono);font-size:12px}
+.bc-tip{position:absolute;top:10px;pointer-events:none;background:rgba(15,23,42,.97);border:1px solid var(--border);border-radius:9px;padding:8px 10px;min-width:150px;box-shadow:0 8px 24px rgba(0,0,0,.35);z-index:5}
+.bc-tip-t{font-family:var(--mono);font-size:10.5px;letter-spacing:.03em;color:var(--dim);margin-bottom:5px;border-bottom:1px solid var(--border2);padding-bottom:4px}
+.bc-tip-r{display:flex;gap:6px;align-items:baseline;font-family:var(--mono);font-size:12px;margin-top:2px}
+.bc-tip-r span{color:var(--dim)} .bc-tip-r b{color:var(--text);margin-right:6px}
+/* short term card timing */
+.stf-when{display:flex;flex-direction:column;gap:1px;margin:2px 0 2px;font-family:var(--mono);font-size:10.5px;line-height:1.5}
+.stf-asof{color:var(--dim)} .stf-win{color:var(--muted)}
+@media(max-width:600px){.ol-chart .bc-head{flex-direction:column;gap:8px}}

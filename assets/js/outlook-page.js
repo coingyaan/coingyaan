@@ -89,6 +89,20 @@
     renderShort(p);
   }
 
+  function cgPad2(n){return (n<10?"0":"")+n;}
+  function cgUtcHM(ms){var d=new Date(ms);return cgPad2(d.getUTCHours())+":"+cgPad2(d.getUTCMinutes());}
+  function cgTfWindow(tf){
+    var ms={"15m":900000,"1h":3600000,"4h":14400000}[tf];
+    if(!ms) return null;
+    var start=Math.floor(Date.now()/ms)*ms;
+    return { asOf: cgUtcHM(start), start: cgUtcHM(start), end: cgUtcHM(start+ms) };
+  }
+  function cgWhenBlock(tf){
+    var w=cgTfWindow(tf);
+    if(!w) return "";
+    return '<div class="stf-when"><span class="stf-asof">As of \u00b7 '+w.asOf+' UTC</span>'+
+           '<span class="stf-win">Signal window \u00b7 '+w.start+' \u2192 '+w.end+' UTC</span></div>';
+  }
   function renderShort(p) {
     var host = q("p-short");
     if (!host) return;
@@ -110,6 +124,7 @@
       return '<div class="stf-card">' +
         '<div class="stf-tf">' + esc(f.label) + '</div>' +
         '<div class="stf-dir"><i class="st ' + cls + '">' + esc(f.direction) + '</i></div>' +
+        cgWhenBlock(f.tf) +
         '<div class="stf-prob"><span class="stf-up">Upside ' + f.upside + '%</span><span class="stf-dn">Downside ' + f.downside + '%</span></div>' +
         '<div class="stf-bar"><i style="width:' + f.upside + '%"></i></div>' +
         '<div class="stf-conf">Confidence: <b>' + esc(f.confidenceLabel) + '</b> \u00b7 ' + f.confidence + '/100</div>' +

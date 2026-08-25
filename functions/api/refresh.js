@@ -10,6 +10,7 @@ import { refreshStablecoins } from "../_lib/stablecoins-cache.js";
 import { refreshEthMetrics } from "../_lib/eth-metrics-cache.js";
 import { refreshETF } from "../_lib/etf-cache.js";
 import { refreshMovement } from "../_lib/movement-cache.js";
+import { refreshCandles } from "../_lib/candles-cache.js";
 
 export async function onRequest(context) {
   const { env, request } = context;
@@ -20,7 +21,7 @@ export async function onRequest(context) {
     return json({ ok: false, error: "unauthorized" }, 401);
   }
   // Refresh each engine independently so one failing does not block the others.
-  const [outlook, ethOutlook, solOutlook, fng, markets, funding, oi, altcoins, stablecoins, ethMetrics, etf, movement] = await Promise.allSettled([
+  const [outlook, ethOutlook, solOutlook, fng, markets, funding, oi, altcoins, stablecoins, ethMetrics, etf, movement, candles] = await Promise.allSettled([
     refreshOutlook(env),
     refreshOutlook(env, "eth"),
     refreshOutlook(env, "sol"),
@@ -33,9 +34,10 @@ export async function onRequest(context) {
     refreshEthMetrics(env),
     refreshETF(env),
     refreshMovement(env),
+    refreshCandles(env),
   ]);
   const unwrap = (r) => (r.status === "fulfilled" ? r.value : { ok: false, error: String(r.reason) });
-  const body = { ok: true, outlook: unwrap(outlook), ethOutlook: unwrap(ethOutlook), solOutlook: unwrap(solOutlook), fng: unwrap(fng), markets: unwrap(markets), funding: unwrap(funding), oi: unwrap(oi), altcoins: unwrap(altcoins), stablecoins: unwrap(stablecoins), ethMetrics: unwrap(ethMetrics), etf: unwrap(etf), movement: unwrap(movement) };
+  const body = { ok: true, outlook: unwrap(outlook), ethOutlook: unwrap(ethOutlook), solOutlook: unwrap(solOutlook), fng: unwrap(fng), markets: unwrap(markets), funding: unwrap(funding), oi: unwrap(oi), altcoins: unwrap(altcoins), stablecoins: unwrap(stablecoins), ethMetrics: unwrap(ethMetrics), etf: unwrap(etf), movement: unwrap(movement), candles: unwrap(candles) };
   // Always 200 so the diagnostic body is visible; cron treats any 2xx as success.
   return json(body, 200);
 }
