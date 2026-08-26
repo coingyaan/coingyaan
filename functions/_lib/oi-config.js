@@ -14,8 +14,9 @@ export const REFRESH = {
   hlCoin: "BTC",
   historyInterval: "1h",
   historyLimit: 25, // ~24h of hourly points
-  ttlSeconds: 300,
-  staleSeconds: 900,
+  ttlSeconds: 900,
+  refetchSeconds: 840,
+  staleSeconds: 2700,
   lockSeconds: 90,
   kvKey: "oi:v1",
   lockKey: "oi:lock",

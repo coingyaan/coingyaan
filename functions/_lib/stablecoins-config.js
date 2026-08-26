@@ -10,8 +10,9 @@ export const PARAMS = {
 };
 
 export const REFRESH = {
-  ttlSeconds: 900, // supply moves slowly; 15 min fresh window
-  staleSeconds: 5400,
+  ttlSeconds: 1800,
+  refetchSeconds: 1740, // supply moves slowly; 15 min fresh window
+  staleSeconds: 3600,
   lockSeconds: 120,
   kvKey: "stablecoins:v1",
   lockKey: "stablecoins:lock",

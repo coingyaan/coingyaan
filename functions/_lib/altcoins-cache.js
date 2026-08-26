@@ -4,6 +4,7 @@
 
 import { computeAltcoins } from "./altcoins-engine.js";
 import { PARAMS, EXCLUDE, REFRESH } from "./altcoins-config.js";
+import { putIfChanged, staleEnough } from "./kv-write.js";
 
 const UA = { "User-Agent": "CoinGyaan/1.0 (+https://coingyaan.com)" };
 
@@ -57,10 +58,11 @@ async function prevDominance(env) {
 }
 
 export async function refreshAltcoins(env) {
+  if (!(await staleEnough(env, REFRESH.kvKey, REFRESH.refetchSeconds))) return { ok: true, skipped: true };
   const [dom, perf, prev] = await Promise.all([dominance(), performance(), prevDominance(env)]);
   if (dom == null && (!perf.alts || !perf.alts.length)) return { ok: false, reason: "no altcoin data" };
   const out = computeAltcoins({ dominance: dom, btcChange: perf.btcChange, alts: perf.alts, prevDominance: prev });
-  await env.OUTLOOK_KV.put(REFRESH.kvKey, JSON.stringify(out));
+  await putIfChanged(env, REFRESH.kvKey, out);
   return { ok: true, altcoins: out };
 }
 

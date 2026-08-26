@@ -2,8 +2,9 @@
 // dominance from CoinPaprika then Coinlore (CoinGecko is blocked at the edge).
 // Reuses the OUTLOOK_KV binding. Same stale-while-revalidate pattern.
 
+import { putIfChanged, staleEnough } from "./kv-write.js";
 const KEY = "markets:v1", LOCK = "markets:lock";
-const TTL = 300, STALE = 900, LOCK_TTL = 90;
+const TTL = 1800, STALE = 3600, LOCK_TTL = 90, REFETCH = 1740; // SLOW 30m
 const UA = { "User-Agent": "CoinGyaan/1.0 (+https://coingyaan.com)" };
 
 async function getJson(url, opts = {}) {
@@ -58,13 +59,14 @@ async function dominance() {
 }
 
 export async function refreshMarkets(env) {
+  if (!(await staleEnough(env, KEY, REFETCH))) return { ok: true, skipped: true };
   const [btc, eth, sol, hype, dom] = await Promise.all([coin("BTCUSDT"), coin("ETHUSDT"), coin("SOLUSDT"), coin("HYPEUSDT"), dominance()]);
   if (!btc) return { ok: false, reason: "no price data" };
   const out = {
     asOf: new Date().toISOString(), status: "ok", source: "coingyaan-markets-v1",
     data: { btc, eth, sol, hype, dominance: dom },
   };
-  await env.OUTLOOK_KV.put(KEY, JSON.stringify(out));
+  await putIfChanged(env, KEY, out);
   return { ok: true, markets: out };
 }
 

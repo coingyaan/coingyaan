@@ -83,6 +83,7 @@ export const REFRESH = {
   klineInterval: "1h",
   klineLimit: 200,
   ttlSeconds: 300, // 5 min: below this, cache is "fresh"
+  refetchSeconds: 240, // FAST tier: BTC flagship refetches ~every 5 min cron tick
   staleSeconds: 1800, // above this, force a synchronous refresh on read
   lockSeconds: 90, // refresh lock TTL to avoid stampede
   kvKey: "outlook:btc:v1",
@@ -94,6 +95,6 @@ export const REFRESH = {
 // so the existing Bitcoin outlook is untouched.
 export const ASSETS = {
   btc: { symbol: "BTCUSDT", hlCoin: "BTC", coinId: "bitcoin", kvKey: "outlook:btc:v1", lockKey: "outlook:btc:lock" },
-  eth: { symbol: "ETHUSDT", hlCoin: "ETH", coinId: "ethereum", kvKey: "outlook:eth:v1", lockKey: "outlook:eth:lock" },
-  sol: { symbol: "SOLUSDT", hlCoin: "SOL", coinId: "solana", kvKey: "outlook:sol:v1", lockKey: "outlook:sol:lock" },
+  eth: { symbol: "ETHUSDT", hlCoin: "ETH", coinId: "ethereum", kvKey: "outlook:eth:v1", lockKey: "outlook:eth:lock", refetchSeconds: 840, ttlSeconds: 900, staleSeconds: 2700 }, // MEDIUM 15m
+  sol: { symbol: "SOLUSDT", hlCoin: "SOL", coinId: "solana", kvKey: "outlook:sol:v1", lockKey: "outlook:sol:lock", refetchSeconds: 840, ttlSeconds: 900, staleSeconds: 2700 }, // MEDIUM 15m
 };

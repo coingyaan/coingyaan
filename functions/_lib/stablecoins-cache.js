@@ -4,6 +4,7 @@
 
 import { computeStablecoins } from "./stablecoins-engine.js";
 import { REFRESH } from "./stablecoins-config.js";
+import { putIfChanged, staleEnough } from "./kv-write.js";
 
 const UA = { "User-Agent": "CoinGyaan/1.0 (+https://coingyaan.com)" };
 
@@ -47,10 +48,11 @@ async function assets() {
 }
 
 export async function refreshStablecoins(env) {
+  if (!(await staleEnough(env, REFRESH.kvKey, REFRESH.refetchSeconds))) return { ok: true, skipped: true };
   const [hist, ass] = await Promise.all([history(), assets()]);
   if ((!hist || !hist.length) && (!ass || !ass.length)) return { ok: false, reason: "no stablecoin data" };
   const out = computeStablecoins({ history: hist, assets: ass });
-  await env.OUTLOOK_KV.put(REFRESH.kvKey, JSON.stringify(out));
+  await putIfChanged(env, REFRESH.kvKey, out);
   return { ok: true, stablecoins: out };
 }
 

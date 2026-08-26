@@ -1,3 +1,4 @@
+import { putIfChanged } from "./kv-write.js";
 // CoinGyaan · BTC candle series (price action layer) for the Outlook chart.
 // Additive and read-only for intelligence: exposes genuine dated OHLC for
 // 15m / 1h / 4h / 1d from the SAME primary chain the intelligence uses
@@ -59,7 +60,7 @@ export async function refreshCandles(env) {
   tfs.forEach((k, i) => { const r = results[i]; if (r && r.rows.length) { tf[k] = { interval: k, source: "coingyaan-primary", venue: r.src, candles: r.rows }; venue = venue || r.src; } });
   if (!Object.keys(tf).length) return { ok: false, reason: "no candle data" };
   const payload = { asOf: new Date().toISOString(), source: "coingyaan-primary", venue, symbol: "BTCUSD", tf };
-  try { await env.OUTLOOK_KV.put(KV_KEY, JSON.stringify(payload)); } catch { /* ignore */ }
+  await putIfChanged(env, KV_KEY, payload);
   return { ok: true, candles: payload };
 }
 

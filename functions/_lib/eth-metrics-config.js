@@ -9,7 +9,8 @@ export const PARAMS = {
 };
 
 export const REFRESH = {
-  ttlSeconds: 300, // gas moves fast; 5 min fresh window
+  ttlSeconds: 1800,
+  refetchSeconds: 1740, // gas moves fast; 5 min fresh window
   staleSeconds: 3600,
   lockSeconds: 90,
   kvKey: "eth-metrics:v1",

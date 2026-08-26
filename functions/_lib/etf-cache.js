@@ -6,6 +6,7 @@
 
 import { computeEtf } from "./etf-engine.js";
 import { SOSO, REFRESH } from "./etf-config.js";
+import { putIfChanged } from "./kv-write.js";
 
 const UA = { "User-Agent": "CoinGyaan/1.0 (+https://coingyaan.com)" };
 
@@ -116,7 +117,7 @@ export async function refreshETF(env, opts) {
     provider: "SoSoValue",
     ...computed,
   };
-  try { await env.OUTLOOK_KV.put(REFRESH.kvKey, JSON.stringify(payload)); } catch { /* ignore */ }
+  await putIfChanged(env, REFRESH.kvKey, payload);
   return { ok: true, etf: payload };
 }
 

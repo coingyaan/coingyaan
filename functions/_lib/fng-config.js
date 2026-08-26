@@ -21,7 +21,8 @@ export const PARAMS = {
 
 export const REFRESH = {
   historyLimit: 31, // days of history to pull (today + 30)
-  ttlSeconds: 300, // fresh window (5 min)
+  ttlSeconds: 1800,
+  refetchSeconds: 1740, // fresh window (5 min)
   staleSeconds: 3600, // F and G moves slowly; an hour is fine before forcing sync
   lockSeconds: 90,
   kvKey: "fng:v1",

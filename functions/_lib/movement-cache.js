@@ -1,3 +1,4 @@
+import { putIfChanged, staleEnough } from "./kv-write.js";
 // CoinGyaan · Bitcoin 7 Day Movement (historical, descriptive).
 // Two independent BTC price sources sampled with the SAME 06:00 UTC daily rule:
 //   1) CoinGyaan reference: primary market chain (Binance -> Bybit -> OKX hourly)
@@ -19,6 +20,7 @@ const CFG = {
   lockKey: "movement:btc:lock",
   ttlSeconds: 1800, // 30 min: the current partial day updates, references are daily
   staleSeconds: 7200,
+  refetchSeconds: 1740, // SLOW 30m
   lockSeconds: 90,
 };
 
@@ -188,11 +190,12 @@ async function readCached(env) {
 }
 
 export async function refreshMovement(env) {
+  if (!(await staleEnough(env, CFG.kvKey, CFG.refetchSeconds))) return { ok: true, skipped: true };
   const [primary, hyper] = await Promise.all([primaryHourly(), hyperliquidHourly()]);
   const built = buildMovement(primary, hyper);
   if (!built.available) return { ok: false, reason: built.reason || "compute failed" };
   const payload = { asOf: new Date().toISOString(), source: "coingyaan-movement-v1", ...built };
-  try { await env.OUTLOOK_KV.put(CFG.kvKey, JSON.stringify(payload)); } catch { /* ignore */ }
+  await putIfChanged(env, CFG.kvKey, payload);
   return { ok: true, movement: payload };
 }
 

@@ -8,6 +8,7 @@ import { computeOutlook } from "./engine.js";
 import { computeShortTerm } from "./shortterm.js";
 import { readEtfNet } from "./etf-cache.js";
 import { REFRESH, ASSETS } from "./engine-config.js";
+import { putIfChanged, staleEnough } from "./kv-write.js";
 
 function cfgFor(asset) {
   const a = ASSETS[asset] || ASSETS.btc;
@@ -16,6 +17,7 @@ function cfgFor(asset) {
 
 export async function refreshOutlook(env, asset = "btc") {
   const cfg = cfgFor(asset);
+  if (!(await staleEnough(env, cfg.kvKey, cfg.refetchSeconds))) return { ok: true, skipped: true };
   const { market, status } = await assembleMarket(cfg);
   if (!market.price || !Array.isArray(market.closes1h) || market.closes1h.length < 60) {
     return { ok: false, reason: "insufficient market data", providers: status };
@@ -53,7 +55,7 @@ export async function refreshOutlook(env, asset = "btc") {
     }
   }
 
-  await env.OUTLOOK_KV.put(cfg.kvKey, JSON.stringify(outlook));
+  await putIfChanged(env, cfg.kvKey, outlook);
   return { ok: true, outlook, providers: status };
 }
 

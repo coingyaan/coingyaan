@@ -4,6 +4,7 @@
 
 import { computeFunding } from "./funding-engine.js";
 import { REFRESH } from "./funding-config.js";
+import { putIfChanged, staleEnough } from "./kv-write.js";
 
 const UA = { "User-Agent": "CoinGyaan/1.0 (+https://coingyaan.com)" };
 
@@ -42,6 +43,7 @@ async function binance(symbol) {
 }
 
 export async function refreshFunding(env) {
+  if (!(await staleEnough(env, REFRESH.kvKey, REFRESH.refetchSeconds))) return { ok: true, skipped: true };
   const [bb, hl, ok, bn] = await Promise.all([
     bybit(REFRESH.symbol), hyperliquid(REFRESH.hlCoin), okx(REFRESH.okxInst), binance(REFRESH.symbol),
   ]);
@@ -49,7 +51,7 @@ export async function refreshFunding(env) {
   if (!venues.length) return { ok: false, reason: "no funding data" };
   const out = computeFunding(venues);
   if (out.status !== "ok") return { ok: false, reason: out.error || "compute failed" };
-  await env.OUTLOOK_KV.put(REFRESH.kvKey, JSON.stringify(out));
+  await putIfChanged(env, REFRESH.kvKey, out);
   return { ok: true, funding: out };
 }
 

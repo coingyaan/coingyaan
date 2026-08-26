@@ -4,6 +4,7 @@
 
 import { computeOpenInterest } from "./oi-engine.js";
 import { REFRESH } from "./oi-config.js";
+import { putIfChanged, staleEnough } from "./kv-write.js";
 
 const UA = { "User-Agent": "CoinGyaan/1.0 (+https://coingyaan.com)" };
 
@@ -72,6 +73,7 @@ async function okxChange(ccy) {
 }
 
 export async function refreshOpenInterest(env) {
+  if (!(await staleEnough(env, REFRESH.kvKey, REFRESH.refetchSeconds))) return { ok: true, skipped: true };
   const [bb, ok, hl, hist] = await Promise.all([
     bybitOI(REFRESH.symbol), okxOI(REFRESH.okxInst), hyperliquidOI(REFRESH.hlCoin),
     bybitHistory(REFRESH.symbol, REFRESH.historyInterval, REFRESH.historyLimit),
@@ -88,7 +90,7 @@ export async function refreshOpenInterest(env) {
 
   const out = computeOpenInterest({ venues, change24hPct: change, history: series });
   if (out.status !== "ok") return { ok: false, reason: out.error || "compute failed" };
-  await env.OUTLOOK_KV.put(REFRESH.kvKey, JSON.stringify(out));
+  await putIfChanged(env, REFRESH.kvKey, out);
   return { ok: true, oi: out };
 }
 

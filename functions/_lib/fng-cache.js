@@ -3,6 +3,7 @@
 
 import { computeFearGreed } from "./fng-engine.js";
 import { REFRESH } from "./fng-config.js";
+import { putIfChanged, staleEnough } from "./kv-write.js";
 
 async function fetchHistory(limit) {
   const ctrl = new AbortController();
@@ -29,11 +30,12 @@ async function fetchHistory(limit) {
 }
 
 export async function refreshFearGreed(env) {
+  if (!(await staleEnough(env, REFRESH.kvKey, REFRESH.refetchSeconds))) return { ok: true, skipped: true };
   const history = await fetchHistory(REFRESH.historyLimit);
   if (!history || !history.length) return { ok: false, reason: "no fng data" };
   const out = computeFearGreed(history);
   if (out.status !== "ok") return { ok: false, reason: out.error || "compute failed" };
-  await env.OUTLOOK_KV.put(REFRESH.kvKey, JSON.stringify(out));
+  await putIfChanged(env, REFRESH.kvKey, out);
   return { ok: true, fng: out };
 }
 

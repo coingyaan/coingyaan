@@ -22,7 +22,8 @@ export const EXCLUDE = new Set([
 ]);
 
 export const REFRESH = {
-  ttlSeconds: 600, // alts move slower than price; 10 min fresh window
+  ttlSeconds: 1800,
+  refetchSeconds: 1740, // alts move slower than price; 10 min fresh window
   staleSeconds: 3600,
   lockSeconds: 120,
   kvKey: "altcoins:v1",

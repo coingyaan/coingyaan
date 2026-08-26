@@ -4,6 +4,7 @@
 
 import { computeEthMetrics } from "./eth-metrics-engine.js";
 import { PARAMS, REFRESH } from "./eth-metrics-config.js";
+import { putIfChanged, staleEnough } from "./kv-write.js";
 
 const UA = { "User-Agent": "CoinGyaan/1.0 (+https://coingyaan.com)" };
 
@@ -67,12 +68,13 @@ async function chainsShare() {
 }
 
 export async function refreshEthMetrics(env) {
+  if (!(await staleEnough(env, REFRESH.kvKey, REFRESH.refetchSeconds))) return { ok: true, skipped: true };
   const [gas, tvl, chains] = await Promise.all([gasRead(), tvlHistory(), chainsShare()]);
   const gasGwei = gas ? gas.gwei : null;
   if (gasGwei == null && tvl.now == null && chains.ethTvl == null) return { ok: false, reason: "no eth metrics" };
   const out = computeEthMetrics({ gasGwei, tvlNow: tvl.now, tvlPrior: tvl.prior, ethTvl: chains.ethTvl, totalTvl: chains.totalTvl });
   if (gas && gas.source) out.data.gasSource = gas.source;
-  await env.OUTLOOK_KV.put(REFRESH.kvKey, JSON.stringify(out));
+  await putIfChanged(env, REFRESH.kvKey, out);
   return { ok: true, ethMetrics: out };
 }
 
