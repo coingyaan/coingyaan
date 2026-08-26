@@ -55,6 +55,14 @@
     var cgc = q("mv-cg-chg"); if (cgc) { cgc.textContent = fmtPct(p.cg7dChangePct); cgc.style.color = col(p.cg7dChangePct); }
     var hlc = q("mv-hl-chg");
     if (hlc) { if (p.hlAvailable) { hlc.textContent = fmtPct(p.hl7dChangePct); hlc.style.color = col(p.hl7dChangePct); } else { hlc.textContent = "unavailable"; hlc.style.color = MUTE; } }
+    var cur = currentPrice(p);
+    var dh = q("mv-dhigh"); if (dh) dh.textContent = (cur != null && p.high7d) ? ((p.high7d - cur) / p.high7d * 100).toFixed(1) + "%" : "--";
+    var dl = q("mv-dlow"); if (dl) dl.textContent = (cur != null && p.low7d) ? ((cur - p.low7d) / p.low7d * 100).toFixed(1) + "%" : "--";
+  }
+  function currentPrice(p) {
+    if (p.series && p.series.length) { for (var i = p.series.length - 1; i >= 0; i--) if (p.series[i].cg != null) return p.series[i].cg; }
+    if (p.points && p.points.length) { for (var j = p.points.length - 1; j >= 0; j--) if (p.points[j].cg != null) return p.points[j].cg; }
+    return null;
   }
 
   function debounce(fn, ms) { var t; return function () { clearTimeout(t); t = setTimeout(fn, ms); }; }

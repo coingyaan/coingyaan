@@ -20,7 +20,9 @@
     if (el.classList.contains("st")) el.className = "st " + (toneClass[tone] || "st-amber");
   }
 
+  var lastPayload = null;
   function apply(p) {
+    lastPayload = p;
     if (!p || !p.data) { stampError(); return; }
     var d = p.data, t = d.tones || {}, s = p.signals || {}, sc = p.scores || {}, w = p.weights || {};
 
@@ -98,10 +100,11 @@
     return { asOf: cgUtcHM(start), start: cgUtcHM(start), end: cgUtcHM(start+ms) };
   }
   function cgWhenBlock(tf){
-    var w=cgTfWindow(tf);
-    if(!w) return "";
-    return '<div class="stf-when"><span class="stf-asof">As of \u00b7 '+w.asOf+' UTC</span>'+
-           '<span class="stf-win">Signal window \u00b7 '+w.start+' \u2192 '+w.end+' UTC</span></div>';
+    var ms={"15m":900000,"1h":3600000,"4h":14400000}[tf];
+    if(!ms||!window.CGTime) return "";
+    var start=window.CGTime.floorUTC(Date.now(), ms);
+    return '<div class="stf-when"><span class="stf-asof">As of \u00b7 '+window.CGTime.stamp(start)+'</span>'+
+           '<span class="stf-win">Signal window \u00b7 '+window.CGTime.window(start, start+ms)+'</span></div>';
   }
   function renderShort(p) {
     var host = q("p-short");
@@ -142,6 +145,8 @@
   function load() {
     fetch(API, { headers: { accept: "application/json" } })
       .then(function (r) { return r.json(); }).then(apply).catch(stampError);
+    window.addEventListener("cg-tz-change", function(){ if(lastPayload) renderShort(lastPayload); });
+    setInterval(function(){ if(lastPayload) renderShort(lastPayload); }, 20000);
   }
   if (document.readyState !== "loading") load();
   else document.addEventListener("DOMContentLoaded", load);

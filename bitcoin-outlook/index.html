@@ -165,7 +165,11 @@
         <h2>Bitcoin price action</h2>
         <p class="ol-sub">Real BTC price from the CoinGyaan primary market source. Switch the timeframe to see the exact period each CoinGyaan reading refers to. The chart shows price action and CoinGyaan intelligence interprets it.</p>
       </div>
-      <div class="bc-ref">Daily reference &#183; 06:00 UTC</div>
+      <div class="bc-controls">
+        <div class="bc-tz" data-cg="bc-tz" role="group" aria-label="Timezone"><button data-mode="local">Local</button><button data-mode="utc">UTC</button></div>
+        <button class="bc-reset" data-cg="bc-reset" type="button">Reset</button>
+        <span class="bc-ref">Daily reference &#183; 06:00 UTC</span>
+      </div>
     </div>
     <div class="bc-tabs" data-cg="bc-tabs">
       <button data-tf="15m">15m</button><button data-tf="1h" class="on">1h</button><button data-tf="4h">4h</button><button data-tf="24h">24h</button>
@@ -183,16 +187,18 @@
     <p class="bmo-disc" style="margin-top:18px">Probability estimates only. Not future guarantees and not financial advice.</p>
   </section>
 
-  <section class="ol-sec ol-move" aria-label="Bitcoin 7 day movement">
+  <section class="ol-sec ol-move" aria-label="Bitcoin market context">
     <div class="mv-head">
       <div class="mv-title">
-        <h2>Bitcoin 7 day movement</h2>
-        <p class="ol-sub">Continuous hourly Bitcoin price across the last 7 days from two independent sources. The dots mark the standardized 06:00 UTC daily references used for the 7 day comparison. This is observed history, not a prediction.</p>
+        <h2>Bitcoin market context</h2>
+        <p class="ol-sub">Where Bitcoin sits within its recent 7 day range. Continuous hourly price from two independent sources, CoinGyaan and Hyperliquid, each shown as its own observation. The dots mark the standardized 06:00 UTC daily reference. This is observed context, not a prediction and not a confirmation signal.</p>
       </div>
       <div class="mv-metrics">
         <div class="mv-m"><span>7D change</span><b data-cg="mv-chg">--</b></div>
         <div class="mv-m"><span>7D high</span><b data-cg="mv-high">--</b></div>
         <div class="mv-m"><span>7D low</span><b data-cg="mv-low">--</b></div>
+        <div class="mv-m"><span>Below 7D high</span><b data-cg="mv-dhigh">--</b></div>
+        <div class="mv-m"><span>Above 7D low</span><b data-cg="mv-dlow">--</b></div>
       </div>
     </div>
     <div class="mv-legend">
@@ -204,7 +210,7 @@
       <div class="mv-tip" data-cg="mv-tip" hidden></div>
     </div>
     <div class="mv-empty" data-cg="mv-empty" hidden></div>
-    <p class="mv-foot">7D change is measured from the standardized 06:00 UTC daily references. 7D high and 7D low are the actual highest and lowest BTC prices across the full 7 day period from the CoinGyaan primary source. The two lines are independent observations of price, not forecasts. Hyperliquid figures come from its BTC perpetual market.</p>
+    <p class="mv-foot">7D change is measured from the standardized 06:00 UTC daily reference. 7D high and 7D low are the actual highest and lowest BTC prices across the full 7 day period from the CoinGyaan primary source, and the distance readings show where the latest price sits within that range. The CoinGyaan and Hyperliquid lines are two independent observations of price. Neither confirms nor predicts the other. Hyperliquid figures come from its BTC perpetual market and appear only in this market context section.</p>
   </section>
 
   <section class="ol-sec">
@@ -258,8 +264,10 @@
 <div id="site-footer"></div>
 <script src="/assets/js/nav.js"></script>
 <script src="/assets/js/footer.js"></script>
+<script defer src="/assets/js/cg-time.js"></script>
 <script defer src="/assets/js/outlook-page.js"></script>
 <script defer src="/assets/js/movement-page.js"></script>
+<script defer src="/assets/js/vendor/lightweight-charts.standalone.js"></script>
 <script defer src="/assets/js/btc-chart.js"></script>
 </body>
 </html>

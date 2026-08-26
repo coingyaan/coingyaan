@@ -784,3 +784,14 @@ main.page h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.
 .stf-when{display:flex;flex-direction:column;gap:1px;margin:2px 0 2px;font-family:var(--mono);font-size:10.5px;line-height:1.5}
 .stf-asof{color:var(--dim)} .stf-win{color:var(--muted)}
 @media(max-width:600px){.ol-chart .bc-head{flex-direction:column;gap:8px}}
+
+/* ---- price action chart engine (Lightweight Charts) + controls ---- */
+.bc-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.bc-tz{display:inline-flex;border:1px solid var(--border2);border-radius:8px;overflow:hidden}
+.bc-tz button{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--dim);background:var(--card2);border:none;padding:5px 11px;cursor:pointer}
+.bc-tz button.on{color:#0b1120;background:var(--gold)}
+.bc-reset{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--dim);background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:5px 11px;cursor:pointer}
+.bc-reset:hover{color:var(--text)}
+.ol-chart .bc-chart{height:380px;width:100%}
+.mv-m [data-cg="mv-dhigh"],.mv-m [data-cg="mv-dlow"]{color:var(--muted)}
+@media(max-width:600px){.ol-chart .bc-chart{height:300px}}
