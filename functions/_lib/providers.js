@@ -110,7 +110,9 @@ async function bybitTicker(symbol) {
   if (!row) return null;
   return {
     funding: row.fundingRate != null ? parseFloat(row.fundingRate) : null, // 8h
-    oiUsd: row.openInterestValue != null ? parseFloat(row.openInterestValue) : null,
+    // single side to match Binance, OKX and Hyperliquid; both sides halved as a last resort
+    oiUsd: row.singleOpenInterestValue != null ? parseFloat(row.singleOpenInterestValue)
+      : row.openInterestValue != null ? parseFloat(row.openInterestValue) / 2 : null,
     price: row.lastPrice != null ? parseFloat(row.lastPrice) : null,
   };
 }

@@ -153,7 +153,7 @@
 
   <section class="ol-sec">
     <h2>Open interest by venue</h2>
-    <p class="ol-sub">Current open interest in US dollars on each venue we aggregate. The 24 hour change is measured on the deepest venue history so it reflects a real move, not a blend.</p>
+    <p class="ol-sub">Current open interest in single side US dollars on each venue we aggregate. The 24 hour change is measured on the deepest venue history so it reflects a real move, not a blend.</p>
     <table class="ol-table"><thead><tr><th>Venue</th><th>Open interest</th></tr></thead><tbody data-cg="oi-venues"><tr><td colspan="2" class="ol-empty">Loading venues</td></tr></tbody></table>
   </section>
 
@@ -167,14 +167,14 @@
     <h3>Rising versus falling</h3>
     <p>Rising open interest means new money is entering and traders are building positions, which tends to confirm the conviction behind a move. Falling open interest means positions are being closed and leverage is leaving, which often lines up with a move running out of steam or traders taking profit. Reading it next to price is where it gets powerful: rising open interest with rising price is a strong trend, while rising open interest with flat price can signal a build up before a larger move.</p>
     <h3>The CoinGyaan approach</h3>
-    <p>We sum current open interest in US dollars across several venues to get a picture closer to the whole market, and we measure the 24 hour change from venue history so it is a real delta. Because venues report size differently, we normalise each to dollars, so our absolute total can differ from other trackers while the direction stays honest.</p>
+    <p>We sum current open interest in US dollars across several venues to get a picture closer to the whole market, and we measure the 24 hour change from venue history so it is a real delta. Venues report open interest differently. Some publish the combined long and short total while others publish one side only, so we normalize every venue to a single side US dollar figure before we sum it. That keeps each venue comparable and matches the convention used across the market.</p>
     <h2>Frequently asked questions</h2>
     <h3>What is open interest?</h3>
     <p>It is the total value of open derivative positions in the market. It grows when new positions open and shrinks when they close.</p>
     <h3>Is rising open interest bullish?</h3>
     <p>Not on its own. Rising open interest shows conviction and new money, but whether that is bullish or bearish depends on price direction and funding. It is context, not a signal to act.</p>
     <h3>How often does it update?</h3>
-    <p>This page refreshes every 5 minutes from live venue data.</p>
+    <p>Open interest refreshes every 15 minutes from live venue data.</p>
     <p class="ol-final">CoinGyaan provides market intelligence and educational analysis. Nothing here is financial advice. Cryptocurrency is volatile and you can lose money. Make your own decisions.</p>
   </section>
 </main>
@@ -183,7 +183,7 @@
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"What is open interest in crypto?","acceptedAnswer":{"@type":"Answer","text":"It is the total value of open derivative positions in the market. It grows when new positions open and shrinks when they close."}},
 {"@type":"Question","name":"Is rising open interest bullish?","acceptedAnswer":{"@type":"Answer","text":"Not on its own. Rising open interest shows conviction and new money, but whether that is bullish or bearish depends on price direction and funding."}},
-{"@type":"Question","name":"How often does open interest update?","acceptedAnswer":{"@type":"Answer","text":"This page refreshes every 5 minutes from live venue data."}}
+{"@type":"Question","name":"How often does open interest update?","acceptedAnswer":{"@type":"Answer","text":"Open interest refreshes every 15 minutes from live venue data."}}
 ]}
 </script>
 <div id="site-footer"></div>

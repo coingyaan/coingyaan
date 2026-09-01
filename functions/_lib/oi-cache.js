@@ -23,8 +23,14 @@ async function getJson(url, opts = {}) {
 async function bybitOI(symbol) {
   const d = await getJson(`https://api.bybit.com/v5/market/tickers?category=linear&symbol=${symbol}`);
   const row = d?.result?.list?.[0];
-  if (row?.openInterestValue) return { name: "Bybit", oiUsd: parseFloat(row.openInterestValue) };
-  if (row?.openInterest && row?.lastPrice) return { name: "Bybit", oiUsd: parseFloat(row.openInterest) * parseFloat(row.lastPrice) };
+  // Bybit publishes BOTH sides (openInterestValue, openInterest) and SINGLE side
+  // (singleOpenInterestValue, singleOpenInterest). Binance, OKX and Hyperliquid all
+  // report single side, so we read single side here to keep every venue on one
+  // convention before summing. Last resort halves the both sides value, which Bybit
+  // defines as the sum of two equal sides, so Bybit never silently drops out.
+  if (row?.singleOpenInterestValue) return { name: "Bybit", oiUsd: parseFloat(row.singleOpenInterestValue) };
+  if (row?.singleOpenInterest && row?.lastPrice) return { name: "Bybit", oiUsd: parseFloat(row.singleOpenInterest) * parseFloat(row.lastPrice) };
+  if (row?.openInterestValue) return { name: "Bybit", oiUsd: parseFloat(row.openInterestValue) / 2 };
   return null;
 }
 async function okxOI(inst) {
